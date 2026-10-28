@@ -1,0 +1,10 @@
+[project]
+name = "sy-comfyui-nodes"
+description = "SY helper nodes for ComfyUI by Stable Yogi"
+version = "0.0.1"
+license = { file = "LICENSE" }
+dependencies = []
+
+[tool.comfy]
+PublisherId = "stableyogi"
+DisplayName = "SY Nodes"
