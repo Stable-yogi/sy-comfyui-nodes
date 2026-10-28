@@ -13,3 +13,7 @@
 - Batches D1 and D2: LLM text helpers (chat/system prompt builders, chunker, token trim, JSON build/get, negative prompts, caption request) and loaders (checkpoint, VAE, CLIP, Unet, name picker) plus video helpers (frame counter, loop, frame rate convert, split, range info). 137 nodes in total.
 - Batch E: XY Values List, XY Pick, XY Grid Assemble, XY Label Strip; Paint Mask editor; Set SY / Get SY (wireless links); hover help cards (144 nodes).
 - Batch F: 3D Scene SY (no-library 3D scene editor with shaded and depth output); real-file test of the 4 loaders; Paint backdrop and save/reload verified (145 nodes).
+- Batch G: Timestamp, Seed Stepper, Seed List, Random Choice, Short ID, Text Stats, Orientation, Colour Swatch (everyday helpers, 153 nodes).
+- 3D Scene SY loads .glb model files (up to 3000 triangles, shown as shaded and depth pictures).
+- Status dot in the node title: gold ready, yellow missing link, green ran fine, red stopped (setting SY.StatusBadge).
+- docs/node-tests/: one test page per node plus an index, made by a harness that tries every option.

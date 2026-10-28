@@ -5,7 +5,8 @@ import { pal } from "./sy_core.js";
 const RENDER_SIDE = 512; // long side of the stored pictures; the node resizes them to width x height
 const MAX_CHARS = 1500000; // about 1.5 MB of text per stored picture
 const MAX_OBJECTS = 64;
-const KINDS = ["cube", "sphere", "cylinder", "plane"];
+const KINDS = ["cube", "sphere", "cylinder", "plane"]; // shapes with an Add button
+const ALL_KINDS = [...KINDS, "model"];
 const DEFAULT_CAM = { yaw: 0.7, pitch: 0.45, dist: 9 };
 const DIST_MIN = 1.5;
 const DIST_MAX = 60;
@@ -22,6 +23,234 @@ function norm(a) {
 const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+
+// ---------- GLB (binary glTF 2.0) reader: our own, no library. Pure functions, no browser calls. ----------
+// GLB BEGIN
+const GLB_MAX_BYTES = 30 * 1024 * 1024;
+const MODEL_MAX_TRIS = 3000;
+const MODEL_MAX_VERTS = 3 * MODEL_MAX_TRIS;
+const MODEL_SIDE = 2; // longest side of a stored model, in scene units
+const MODEL_MAX_CHARS = 350000; // size budget of one stored mesh as JSON text
+const SCENE_MAX_CHARS = 400000; // size budget of the whole scene text
+
+function glbFail(msg) {
+  throw new Error(msg);
+}
+
+function mat4Mul(a, b) {
+  const o = new Array(16).fill(0);
+  for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) for (let k = 0; k < 4; k++) o[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
+  return o;
+}
+
+function nodeMatrix(n) {
+  if (Array.isArray(n.matrix) && n.matrix.length === 16) return n.matrix.map(Number);
+  const t = Array.isArray(n.translation) && n.translation.length === 3 ? n.translation.map(Number) : [0, 0, 0];
+  const r = Array.isArray(n.rotation) && n.rotation.length === 4 ? n.rotation.map(Number) : [0, 0, 0, 1];
+  const s = Array.isArray(n.scale) && n.scale.length === 3 ? n.scale.map(Number) : [1, 1, 1];
+  const len = Math.hypot(r[0], r[1], r[2], r[3]) || 1;
+  const [x, y, z, w] = [r[0] / len, r[1] / len, r[2] / len, r[3] / len];
+  return [
+    (1 - 2 * (y * y + z * z)) * s[0], 2 * (x * y + z * w) * s[0], 2 * (x * z - y * w) * s[0], 0,
+    2 * (x * y - z * w) * s[1], (1 - 2 * (x * x + z * z)) * s[1], 2 * (y * z + x * w) * s[1], 0,
+    2 * (x * z + y * w) * s[2], 2 * (y * z - x * w) * s[2], (1 - 2 * (x * x + y * y)) * s[2], 0,
+    t[0], t[1], t[2], 1,
+  ];
+}
+
+// Reads one accessor into a plain array of numbers (count * parts). Plain data only (no sparse).
+function readAccessor(gltf, bin, index) {
+  const acc = (gltf.accessors || [])[index];
+  if (!acc) glbFail("The model points at a missing data block.");
+  if (acc.sparse) glbFail("This model uses sparse data, which is not supported.");
+  const view = (gltf.bufferViews || [])[acc.bufferView];
+  if (!view) glbFail("The model points at a missing data view.");
+  if ((view.buffer || 0) !== 0) glbFail("This model keeps its data in another file; use a single .glb file.");
+  const parts = { SCALAR: 1, VEC2: 2, VEC3: 3, VEC4: 4 }[acc.type];
+  const size = { 5120: 1, 5121: 1, 5122: 2, 5123: 2, 5125: 4, 5126: 4 }[acc.componentType];
+  if (!parts || !size) glbFail("The model uses a data type that is not supported.");
+  const count = acc.count | 0;
+  if (count < 0 || count > 20000000) glbFail("The model has too much data.");
+  const stride = view.byteStride || parts * size;
+  const start = bin.byteOffset + (view.byteOffset || 0) + (acc.byteOffset || 0);
+  const end = start + (count > 0 ? (count - 1) * stride + parts * size : 0);
+  if (end > bin.byteOffset + bin.byteLength) glbFail("The model data is cut off or damaged.");
+  const dv = new DataView(bin.buffer);
+  const get = { 5120: "getInt8", 5121: "getUint8", 5122: "getInt16", 5123: "getUint16", 5125: "getUint32", 5126: "getFloat32" }[acc.componentType];
+  const out = new Array(count * parts);
+  for (let i = 0; i < count; i++) {
+    for (let p = 0; p < parts; p++) {
+      const at = start + i * stride + p * size;
+      out[i * parts + p] = size === 1 ? dv[get](at) : dv[get](at, true);
+    }
+  }
+  return out;
+}
+
+// Reads a .glb (ArrayBuffer) into { positions: flat world-space xyz, indices: flat triangle corner list }.
+function parseGlb(buffer) {
+  if (!buffer || buffer.byteLength < 20) glbFail("That file is too small to be a .glb model.");
+  if (buffer.byteLength > GLB_MAX_BYTES) glbFail("That model file is over 30 MB; use a smaller one.");
+  const dv = new DataView(buffer);
+  if (dv.getUint32(0, true) !== 0x46546c67) glbFail("That file is not a .glb model (the start of the file is wrong).");
+  if (dv.getUint32(4, true) !== 2) glbFail("Only glTF version 2 models are supported.");
+  const total = Math.min(dv.getUint32(8, true), buffer.byteLength);
+  let pos = 12;
+  let json = null;
+  let bin = null;
+  while (pos + 8 <= total) {
+    const len = dv.getUint32(pos, true);
+    const type = dv.getUint32(pos + 4, true);
+    const at = pos + 8;
+    if (at + len > buffer.byteLength) glbFail("The model file is cut off or damaged.");
+    if (type === 0x4e4f534a && json === null) {
+      try {
+        json = JSON.parse(new TextDecoder("utf-8").decode(new Uint8Array(buffer, at, len)));
+      } catch (e) {
+        glbFail("The model description inside the file cannot be read.");
+      }
+    } else if (type === 0x004e4942 && bin === null) {
+      bin = new Uint8Array(buffer, at, len);
+    }
+    pos = at + ((len + 3) & ~3);
+  }
+  if (!json || typeof json !== "object") glbFail("The model file has no description part.");
+  if (!bin) bin = new Uint8Array(buffer, 0, 0);
+  const nodes = Array.isArray(json.nodes) ? json.nodes : [];
+  const meshes = Array.isArray(json.meshes) ? json.meshes : [];
+  const positions = [];
+  const indices = [];
+  const identity = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+
+  const addMesh = (mesh, m) => {
+    for (const prim of mesh.primitives || []) {
+      const mode = prim.mode === undefined ? 4 : prim.mode;
+      if (mode !== 4 && mode !== 5 && mode !== 6) continue; // only triangles; points and lines are ignored
+      const pa = prim.attributes && prim.attributes.POSITION;
+      if (pa === undefined) continue;
+      const p = readAccessor(json, bin, pa);
+      const nv = p.length / 3;
+      const base = positions.length / 3;
+      for (let i = 0; i < nv; i++) {
+        const x = p[i * 3], y = p[i * 3 + 1], z = p[i * 3 + 2];
+        positions.push(
+          m[0] * x + m[4] * y + m[8] * z + m[12],
+          m[1] * x + m[5] * y + m[9] * z + m[13],
+          m[2] * x + m[6] * y + m[10] * z + m[14]
+        );
+      }
+      let idx;
+      if (prim.indices !== undefined) idx = readAccessor(json, bin, prim.indices);
+      else {
+        idx = new Array(nv);
+        for (let i = 0; i < nv; i++) idx[i] = i;
+      }
+      const tri = (a, b, c) => {
+        if (a < nv && b < nv && c < nv) indices.push(base + a, base + b, base + c);
+      };
+      if (mode === 4) {
+        for (let i = 0; i + 2 < idx.length; i += 3) tri(idx[i], idx[i + 1], idx[i + 2]);
+      } else if (mode === 5) {
+        for (let i = 0; i + 2 < idx.length; i++) {
+          if (i % 2 === 0) tri(idx[i], idx[i + 1], idx[i + 2]);
+          else tri(idx[i + 1], idx[i], idx[i + 2]);
+        }
+      } else {
+        for (let i = 1; i + 1 < idx.length; i++) tri(idx[0], idx[i], idx[i + 1]);
+      }
+    }
+  };
+
+  const visit = (ni, parent, depth) => {
+    const n = nodes[ni];
+    if (!n || depth > 64) return;
+    const m = mat4Mul(parent, nodeMatrix(n));
+    if (n.mesh !== undefined && meshes[n.mesh]) addMesh(meshes[n.mesh], m);
+    for (const c of n.children || []) visit(c, m, depth + 1);
+  };
+  const scenes = Array.isArray(json.scenes) ? json.scenes : [];
+  const scene = scenes[json.scene === undefined ? 0 : json.scene];
+  if (scene && Array.isArray(scene.nodes)) {
+    for (const r of scene.nodes) visit(r, identity, 0);
+  } else {
+    const child = new Set();
+    nodes.forEach((n) => (n.children || []).forEach((c) => child.add(c)));
+    nodes.forEach((n, i) => {
+      if (!child.has(i)) visit(i, identity, 0);
+    });
+  }
+  return { positions, indices };
+}
+
+// Makes the stored mesh: at most maxTris triangles (dropped evenly), centred, longest side 2, rounded to 3 decimals.
+// Returns { v: flat xyz, i: flat ints } or throws a plain Error when there is nothing to show.
+function normaliseMesh(raw, maxTris) {
+  const P = raw.positions;
+  const I = raw.indices;
+  const good = [];
+  for (let t = 0; t + 2 < I.length; t += 3) {
+    const a = I[t], b = I[t + 1], c = I[t + 2];
+    if (a === b || b === c || a === c) continue;
+    let ok = true;
+    for (const k of [a, b, c]) if (!isFinite(P[k * 3]) || !isFinite(P[k * 3 + 1]) || !isFinite(P[k * 3 + 2])) ok = false;
+    if (ok) good.push(t);
+  }
+  if (!good.length) glbFail("That model has no triangles to show.");
+  const keep = [];
+  const want = Math.max(1, Math.min(maxTris, good.length));
+  for (let k = 0; k < want; k++) keep.push(good[Math.floor((k * good.length) / want)]);
+  const lo = [Infinity, Infinity, Infinity];
+  const hi = [-Infinity, -Infinity, -Infinity];
+  for (const t of keep) {
+    for (let j = 0; j < 3; j++) {
+      const k = I[t + j];
+      for (let d = 0; d < 3; d++) {
+        lo[d] = Math.min(lo[d], P[k * 3 + d]);
+        hi[d] = Math.max(hi[d], P[k * 3 + d]);
+      }
+    }
+  }
+  const side = Math.max(hi[0] - lo[0], hi[1] - lo[1], hi[2] - lo[2]);
+  if (!(side > 0)) glbFail("That model has no size (all points are in one place).");
+  const k = MODEL_SIDE / side;
+  const mid = [(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, (lo[2] + hi[2]) / 2];
+  const r3 = (x) => Math.round(x * 1000) / 1000 + 0; // + 0 turns -0 into 0
+  const v = [];
+  const idx = [];
+  const seen = new Map();
+  const vertex = (src) => {
+    const x = r3((P[src * 3] - mid[0]) * k), y = r3((P[src * 3 + 1] - mid[1]) * k), z = r3((P[src * 3 + 2] - mid[2]) * k);
+    const key = x + "," + y + "," + z;
+    let n = seen.get(key);
+    if (n === undefined) {
+      n = v.length / 3;
+      seen.set(key, n);
+      v.push(x, y, z);
+    }
+    return n;
+  };
+  for (const t of keep) {
+    const a = vertex(I[t]), b = vertex(I[t + 1]), c = vertex(I[t + 2]);
+    if (a !== b && b !== c && a !== c) idx.push(a, b, c);
+  }
+  if (!idx.length) glbFail("That model has no triangles to show.");
+  return { v, i: idx };
+}
+
+// Full path: parse, then shrink the triangle count until the stored text fits the size budget.
+function glbToMesh(buffer, budgetChars) {
+  const raw = parseGlb(buffer);
+  const budget = budgetChars || MODEL_MAX_CHARS;
+  let tris = MODEL_MAX_TRIS;
+  while (tris >= 12) {
+    const mesh = normaliseMesh(raw, tris);
+    if (JSON.stringify(mesh).length <= budget) return mesh;
+    tris = Math.floor(tris * 0.75);
+  }
+  return glbFail("That model is too detailed to store in the scene, even after shrinking it.");
+}
+// GLB END
+export { parseGlb, normaliseMesh, glbToMesh };
 
 // ---------- unit meshes: verts + tris [a, b, c, edgeMask]; edgeMask bit0 = a-b, bit1 = b-c, bit2 = c-a is drawn ----------
 function quadTris(a, b, c, d) {
@@ -85,6 +314,28 @@ function buildPlane() {
 
 const MESH = { cube: buildCube(), sphere: buildSphere(), cylinder: buildCylinder(), plane: buildPlane() };
 
+// A stored model ({v: flat xyz, i: flat ints}) as a drawable mesh. Shown from both sides, so mixed triangle winding is fine.
+function modelMesh(o) {
+  if (!o.mesh) return null;
+  if (!o._m) {
+    const v = [];
+    for (let k = 0; k + 2 < o.mesh.v.length; k += 3) v.push([o.mesh.v[k], o.mesh.v[k + 1], o.mesh.v[k + 2]]);
+    const t = [];
+    for (let k = 0; k + 2 < o.mesh.i.length; k += 3) t.push([o.mesh.i[k], o.mesh.i[k + 1], o.mesh.i[k + 2], 7]);
+    o._m = { v, t, solid: false };
+  }
+  return o._m;
+}
+
+// true when a stored mesh is usable: flat number lists, corners in range
+function meshOk(m) {
+  if (!m || !Array.isArray(m.v) || !Array.isArray(m.i)) return false;
+  if (!m.v.length || m.v.length % 3 || m.v.length > 3 * MODEL_MAX_VERTS) return false;
+  if (!m.i.length || m.i.length % 3 || m.i.length > 3 * MODEL_MAX_TRIS) return false;
+  const nv = m.v.length / 3;
+  return m.v.every((x) => typeof x === "number" && isFinite(x)) && m.i.every((k) => Number.isInteger(k) && k >= 0 && k < nv);
+}
+
 // ---------- projection and drawing ----------
 function cameraBasis(cam) {
   const cp = Math.cos(cam.pitch);
@@ -101,7 +352,7 @@ function buildTris(scene, W, H) {
   const focal = H / 2 / Math.tan(FOV / 2);
   const out = [];
   scene.objects.forEach((o, oi) => {
-    const mesh = MESH[o.kind];
+    const mesh = o.kind === "model" ? modelMesh(o) : MESH[o.kind];
     if (!mesh) return;
     const centre = [o.x, o.y, o.z];
     const world = mesh.v.map((p) => [p[0] * o.scale + o.x, p[1] * o.scale + o.y, p[2] * o.scale + o.z]);
@@ -214,7 +465,8 @@ function cleanScene(raw) {
   sc.camera.dist = num(cam.dist, DEFAULT_CAM.dist, DIST_MIN, DIST_MAX);
   if (Array.isArray(raw.objects)) {
     raw.objects.slice(0, MAX_OBJECTS).forEach((o, i) => {
-      if (!o || !KINDS.includes(o.kind)) return;
+      if (!o || !ALL_KINDS.includes(o.kind)) return;
+      if (o.kind === "model" && !meshOk(o.mesh)) return;
       sc.objects.push({
         id: Number.isInteger(o.id) ? o.id : i + 1,
         kind: o.kind,
@@ -222,6 +474,7 @@ function cleanScene(raw) {
         y: num(o.y, 0, -100, 100),
         z: num(o.z, 0, -100, 100),
         scale: num(o.scale, 1, 0.05, 50),
+        ...(o.kind === "model" ? { mesh: { v: o.mesh.v, i: o.mesh.i } } : {}),
       });
     });
   }
@@ -263,6 +516,8 @@ function addSceneEditor(node) {
     return [d[0], d[1], d[2]];
   };
   const base = { cube: rgbOf(P.gold), sphere: rgbOf(P.text), cylinder: rgbOf(P.muted), plane: rgbOf(P.gold_dim) };
+  const mixed = [0, 1, 2].map((k) => Math.round((rgbOf(P.gold)[k] + rgbOf(P.text)[k]) / 2));
+  base.model = mixed;
 
   const state = { scene: cleanScene(null), selected: null };
   let hits = [];
@@ -293,7 +548,9 @@ function addSceneEditor(node) {
     b.onclick = () => addObject(k);
     return b;
   });
-  addRow.append(...addButtons);
+  const bModel = mk("Add model", "Load a .glb model file (shapes only, no colours) and put it in the scene.");
+  bModel.onclick = () => chooseModel();
+  addRow.append(...addButtons, bModel);
   const toolRow = document.createElement("div");
   toolRow.style.cssText = "display:flex;gap:4px";
   const bDelete = mk("Delete selected", "Remove the selected object.");
@@ -361,7 +618,7 @@ function addSceneEditor(node) {
     ctx.strokeStyle = P.void;
     ctx.globalAlpha = 0.45;
     ctx.beginPath();
-    for (const t of tris) if (state.scene.objects[t.oi].id !== state.selected) wireTri(ctx, t);
+    for (const t of tris) if (state.scene.objects[t.oi].id !== state.selected && state.scene.objects[t.oi].kind !== "model") wireTri(ctx, t);
     ctx.stroke();
     ctx.globalAlpha = 1;
     ctx.strokeStyle = P.gold;
@@ -382,7 +639,7 @@ function addSceneEditor(node) {
       wScene.value = JSON.stringify({
         version: 1,
         camera: { yaw: sc.camera.yaw, pitch: sc.camera.pitch, dist: sc.camera.dist },
-        objects: sc.objects.map((o) => ({ id: o.id, kind: o.kind, x: o.x, y: o.y, z: o.z, scale: o.scale })),
+        objects: sc.objects.map((o) => ({ id: o.id, kind: o.kind, x: o.x, y: o.y, z: o.z, scale: o.scale, ...(o.mesh ? { mesh: o.mesh } : {}) })),
       });
       if (!sc.objects.length) {
         wRender.value = "";
@@ -439,6 +696,45 @@ function addSceneEditor(node) {
     sc.objects.push({ id, kind, x: ((n % 5) - 2) * 1.5, y: 0, z: -Math.floor(n / 5) * 1.5, scale: 1 });
     state.selected = id;
     changed(false);
+  }
+  function chooseModel() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".glb";
+    input.onchange = async () => {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      await addModel(file);
+    };
+    input.click();
+  }
+  async function addModel(file) {
+    const sc = state.scene;
+    if (sc.objects.length >= MAX_OBJECTS) {
+      note.textContent = "That is the most objects this scene can hold (" + MAX_OBJECTS + ").";
+      return;
+    }
+    if (file.size > GLB_MAX_BYTES) {
+      note.textContent = "That model file is over 30 MB; use a smaller one.";
+      return;
+    }
+    try {
+      const n = sc.objects.length;
+      const id = sc.objects.reduce((m, o) => Math.max(m, o.id), 0) + 1;
+      const used = JSON.stringify({ camera: sc.camera, objects: sc.objects.map((o) => ({ ...o, _m: undefined })) }).length;
+      const budget = Math.min(MODEL_MAX_CHARS, SCENE_MAX_CHARS - used - 300);
+      if (budget < 2000) {
+        note.textContent = "The scene is already full of model data; delete a model first.";
+        return;
+      }
+      const mesh = glbToMesh(await file.arrayBuffer(), budget);
+      sc.objects.push({ id, kind: "model", x: ((n % 5) - 2) * 1.5, y: 0, z: -Math.floor(n / 5) * 1.5, scale: 1, mesh });
+      state.selected = id;
+      changed(false);
+      note.textContent = "Model added: " + mesh.i.length / 3 + " triangles.";
+    } catch (e) {
+      note.textContent = e && e.message ? e.message : "That model could not be read.";
+    }
   }
   bDelete.onclick = () => {
     const o = selectedObj();

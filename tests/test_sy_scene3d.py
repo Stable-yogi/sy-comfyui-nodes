@@ -51,6 +51,31 @@ def run():
     assert h.parse_scene('{"objects": [{"kind": "plane"}]}')["objects"][0]["scale"] == 1.0; n += 1
     assert h.parse_scene('{"objects": [{"kind": "plane"}]}')["camera"] == h.DEFAULT_CAMERA; n += 1
     assert h.parse_scene('{"objects": [{"kind": "cube"}]}')["objects"][0]["id"] == 1; n += 1
+    # model objects (a tiny hand-made mesh: one triangle and one square)
+    mesh = {"v": [0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0], "i": [0, 1, 2, 1, 3, 2]}
+
+    def with_mesh(mm):
+        return json.dumps({"objects": [{"kind": "model", "x": 1, "mesh": mm}]})
+
+    assert h.summary_from_text(with_mesh(mesh)) == "1 object: model"; n += 1
+    two = json.dumps({"objects": [{"kind": "cube"}, {"kind": "model", "mesh": mesh}]})
+    assert h.summary_from_text(two) == "2 objects: cube, model"; n += 1
+    mo = h.parse_scene(with_mesh(mesh))["objects"][0]
+    assert mo["kind"] == "model" and mo["x"] == 1.0 and mo["mesh"]["i"] == [0, 1, 2, 1, 3, 2]; n += 1
+    assert mo["mesh"]["v"][3] == 1.0 and len(mo["mesh"]["v"]) == 12; n += 1
+    assert "mesh" not in h.parse_scene(scene_text("cube"))["objects"][0]; n += 1
+    assert "mesh" in raises(h.parse_scene, '{"objects": [{"kind": "model"}]}'); n += 1
+    assert "lists" in raises(h.parse_scene, with_mesh({"v": [0, 0, 0]})); n += 1
+    assert "empty" in raises(h.parse_scene, with_mesh({"v": [], "i": []})); n += 1
+    assert "groups of 3" in raises(h.parse_scene, with_mesh({"v": [0, 0, 0, 1], "i": [0, 0, 0]})); n += 1
+    assert "groups of 3" in raises(h.parse_scene, with_mesh({"v": mesh["v"], "i": [0, 1]})); n += 1
+    assert "past the last" in raises(h.parse_scene, with_mesh({"v": mesh["v"], "i": [0, 1, 4]})); n += 1
+    assert "past the last" in raises(h.parse_scene, with_mesh({"v": mesh["v"], "i": [0, 1, -1]})); n += 1
+    assert "whole numbers" in raises(h.parse_scene, with_mesh({"v": mesh["v"], "i": [0, 1, 1.5]})); n += 1
+    assert "number" in raises(h.parse_scene, with_mesh({"v": ["a", 0, 0], "i": [0, 0, 0]})); n += 1
+    assert "between" in raises(h.parse_scene, with_mesh({"v": [0, 0, 5000], "i": [0, 0, 0]})); n += 1
+    assert "too big" in raises(h.parse_scene, with_mesh({"v": [0, 0, 0], "i": [0] * (3 * h.MAX_MODEL_TRIS + 3)})); n += 1
+    assert "mesh" in raises(h.parse_scene, with_mesh([1, 2, 3])); n += 1
     # parse errors are plain words
     assert "JSON" in raises(h.parse_scene, "{not json"); n += 1
     assert "object" in raises(h.parse_scene, "[1, 2]"); n += 1

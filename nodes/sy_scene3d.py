@@ -39,7 +39,7 @@ def picture_tensor(text, width, height, empty_value, what):
 
 
 class SYScene3D:
-    DESCRIPTION = "Place cubes, spheres, cylinders and planes in a small 3D editor. Gives a shaded picture, a depth picture and a text list of the objects."
+    DESCRIPTION = "Place cubes, spheres, cylinders, planes and loaded .glb models in a small 3D editor. Gives a shaded picture, a depth picture and a text list of the objects."
     CATEGORY = category("Editors")
     FUNCTION = "run"
     RETURN_TYPES = ("IMAGE", "IMAGE", "STRING")

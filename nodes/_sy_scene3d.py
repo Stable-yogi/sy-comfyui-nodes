@@ -3,7 +3,10 @@ import json
 import math
 
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
-KINDS = ("cube", "sphere", "cylinder", "plane")
+KINDS = ("cube", "sphere", "cylinder", "plane", "model")
+MAX_MODEL_TRIS = 3000
+MAX_MODEL_VERTS = 3 * MAX_MODEL_TRIS
+MODEL_COORD_LIMIT = 1000.0
 MAX_OBJECTS = 64
 MAX_DATA_CHARS = 24 * 1024 * 1024
 MAX_PICTURE_SIDE = 8192
@@ -31,6 +34,32 @@ def _number(value, name, low, high):
     if v < low or v > high:
         raise ValueError("scene value '%s' must be between %g and %g" % (name, low, high))
     return v
+
+
+def _mesh(value, n):
+    """Checks the stored mesh of model object n: {'v': flat xyz numbers, 'i': flat corner numbers}. Returns a clean copy."""
+    who = "scene object %d (model)" % n
+    if not isinstance(value, dict):
+        raise ValueError("%s needs a 'mesh' with lists 'v' and 'i'; delete it and add the model again" % who)
+    v, idx = value.get("v"), value.get("i")
+    if not isinstance(v, list) or not isinstance(idx, list):
+        raise ValueError("%s mesh needs the lists 'v' (points) and 'i' (triangle corners); add the model again" % who)
+    if not v or not idx:
+        raise ValueError("%s has an empty mesh; delete it and add the model again" % who)
+    if len(v) % 3 or len(idx) % 3:
+        raise ValueError("%s mesh lists must hold groups of 3 numbers; delete it and add the model again" % who)
+    if len(v) > 3 * MAX_MODEL_VERTS or len(idx) > 3 * MAX_MODEL_TRIS:
+        raise ValueError("%s mesh is too big (more than %d triangles); add a lighter model" % (who, MAX_MODEL_TRIS))
+    pts = [_number(x, "mesh point", -MODEL_COORD_LIMIT, MODEL_COORD_LIMIT) for x in v]
+    count = len(pts) // 3
+    corners = []
+    for k in idx:
+        if isinstance(k, bool) or not isinstance(k, int):
+            raise ValueError("%s mesh triangle corners must be whole numbers; add the model again" % who)
+        if k < 0 or k >= count:
+            raise ValueError("%s mesh has a triangle corner that points past the last point; add the model again" % who)
+        corners.append(k)
+    return {"v": pts, "i": corners}
 
 
 def parse_scene(text):
@@ -67,14 +96,17 @@ def parse_scene(text):
         if kind not in KINDS:
             raise ValueError("scene object %d has kind %r; use one of: %s" % (i + 1, kind, ", ".join(KINDS)))
         oid = o.get("id")
-        out.append({
+        item = {
             "id": oid if isinstance(oid, int) and not isinstance(oid, bool) else i + 1,
             "kind": kind,
             "x": _number(o.get("x", 0), "x", -POS_LIMIT, POS_LIMIT),
             "y": _number(o.get("y", 0), "y", -POS_LIMIT, POS_LIMIT),
             "z": _number(o.get("z", 0), "z", -POS_LIMIT, POS_LIMIT),
             "scale": _number(o.get("scale", 1), "scale", SCALE_MIN, SCALE_MAX),
-        })
+        }
+        if kind == "model":
+            item["mesh"] = _mesh(o.get("mesh"), i + 1)
+        out.append(item)
     return {"version": 1, "camera": cam, "objects": out}
 
 
