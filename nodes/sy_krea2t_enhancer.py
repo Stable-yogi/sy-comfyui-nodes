@@ -161,13 +161,15 @@ def _run_txtfusion_parts(txtfusion, x, mask=None, transformer_options=None):
     return out, projected
 
 
-def _enhanced_txtfusion_forward(txtfusion, x, mask=None, transformer_options=None, strength=1.0, collect_debug=False):
+def _enhanced_txtfusion_forward(txtfusion, x, mask=None, transformer_options=None, strength=1.0, collect_debug=False,
+                                 original_forward=None):
     import torch
 
     transformer_options = transformer_options or {}
     b, seq, taps, dim = x.shape
     if taps != len(KREA2_TAP_LAYERS) or dim != KREA2_TAP_DIM:
-        out = txtfusion._krea2t_enhancer_original_forward(
+        # changed by Stable Yogi: the Advanced node passes its own saved forward (the original looked it up under the basic node's name only)
+        out = (original_forward or txtfusion._krea2t_enhancer_original_forward)(
             x,
             mask=mask,
             transformer_options=transformer_options,
@@ -356,6 +358,7 @@ def krea2t_enhancer_advanced_wrapper(executor, *args, **kwargs):
                 transformer_options=transformer_options or {},
                 strength=strength,
                 collect_debug=debug_enabled,
+                original_forward=original_txtfusion_forward,
             )
         finally:
             if hasattr(txtfusion, ADV_ORIGINAL_TXTFUSION_ATTR):
