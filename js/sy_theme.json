@@ -114,6 +114,36 @@
       "label": "Notes and headers",
       "color": "#8b6914",
       "bgcolor": "#2d2616"
+    },
+    "sampler": {
+      "label": "Samplers: text to image",
+      "color": "#2e6b3f",
+      "bgcolor": "#1a2d21"
+    },
+    "sampler_b": {
+      "label": "Samplers: image to image",
+      "color": "#6b7a1f",
+      "bgcolor": "#262b14"
+    },
+    "seed": {
+      "label": "Seed",
+      "color": "#4e3d80",
+      "bgcolor": "#241f38"
+    },
+    "pick": {
+      "label": "Pick and switch",
+      "color": "#8a2f6b",
+      "bgcolor": "#301827"
+    },
+    "decode": {
+      "label": "Latent and decode",
+      "color": "#3a5f73",
+      "bgcolor": "#1b2830"
+    },
+    "preview": {
+      "label": "Preview",
+      "color": "#8c2f31",
+      "bgcolor": "#34191a"
     }
   },
   "group_roles": {
@@ -141,15 +171,28 @@
     "save": [
       "SYSaveImageToFolder",
       "SYSaveText",
-      "SYSaveWithCaption",
+      "SYSaveWithCaption"
+    ],
+    "info": [
+      "SYWorkflowHeader",
+      "SYNote"
+    ],
+    "preview": [
       "SYImageCompare",
       "SYShowText",
       "SYMaskOverlayPreview",
       "SYLayoutBoxesPreview"
     ],
-    "info": [
-      "SYWorkflowHeader",
-      "SYNote"
+    "seed": [
+      "SYSeed",
+      "SYSeedList",
+      "SYSeedStepper"
+    ],
+    "pick": [
+      "SYSwitch"
+    ],
+    "sampler": [
+      "SYEmptyLatent"
     ]
   }
 }

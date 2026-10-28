@@ -54,3 +54,6 @@ Older repo `comfyui-stableyogi-prompt` uses `StableYogiPrompt` / category `Stabl
 
 ## 6. Release gate
 Owner OK on every public word. Selftest PASS. `os_home.py check` clean. Registry scanner clean. No push before the owner says.
+
+## After a ComfyUI update: the master test
+Load `master/StableYogi-SY-Master-Test.json`, or run `py -3.12 master/sy_master_check.py --port 8188`. Every SY node must run or say it needs a file. A new node goes into the master too (see `master/README.md`).

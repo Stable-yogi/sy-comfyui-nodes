@@ -27,3 +27,5 @@
 - Time badge on each node after a run and a run clock in the top right corner (settings SY.TimeBadge, SY.RunClock).
 - Browser parts (js/sy_header.js, js/sy_save.js, js/sy_runtime.js, js/sy_ui_kit.js) were run on the CPU test ComfyUI: banner, token buttons, Will save as, preview mode, picker window and graph reload checked. Open and Folder buttons (Explorer) were not clicked in the test.
 - Krea 2 Turbo W01 replacement rebuilt with the header, role colours and a 20 px grid (181 nodes in the pack).
+- Colour roles split: sampler, second sampler, seed, pick and save, decode, preview and save now have their own colours (js/sy_theme.json).
+- Master test: one workflow with all 181 SY nodes plus sy_master_check.py, which runs it on a ComfyUI server and reports which node is broken (folder master/). Use it after every ComfyUI update.
