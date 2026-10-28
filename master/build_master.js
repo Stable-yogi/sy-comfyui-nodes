@@ -2,9 +2,17 @@
 //   (0, eval)(await (await fetch('/api/userdata/master_build.js')).text())
 // It makes one node for every SY node, wires the inputs, adds a preview for every result, groups by category,
 // then saves the workflow and its API prompt next to each other.
+// One part only: set window.__masterPart to "text", "picture", "tools" or "numbers" first. Without it you get all nodes in one file.
 (async () => {
   const app = window.app, LG = window.LiteGraph, graph = app.graph;
   graph.clear();
+  const PARTS = {
+    text: { n: 1, name: "Text", cats: ["SY/Text"] },
+    picture: { n: 2, name: "Picture", cats: ["SY/Image", "SY/Resize"] },
+    tools: { n: 3, name: "Tools", cats: ["SY/Utility", "SY/Editors"] },
+    numbers: { n: 4, name: "Numbers and logic", cats: ["SY/Values", "SY/Logic", "SY/Notes"] },
+  };
+  const PART = PARTS[window.__masterPart] || null;
   const log = { missing: [], noSink: [], noInput: [], made: 0 };
   const mk = (type, title) => {
     const n = LG.createNode(type);
@@ -141,7 +149,20 @@
     if (!sinks.length && !rec.n.constructor?.nodeData?.output_node) log.noSink.push(rec.t);
     cells.push({ ...rec, sinks });
   }
-  // models: show what the loaders give back (the LoRA stack uses them)
+  // ---- one part: keep its nodes and whatever feeds them, drop the rest
+  if (PART) {
+    const keep = new Set([load]);
+    const up = (n) => {
+      if (!n || keep.has(n)) return;
+      keep.add(n);
+      for (const i of n.inputs || []) if (i.link != null) { const l = graph.links[i.link]; if (l) up(graph.getNodeById(l.origin_id)); }
+    };
+    for (const c of cells) if (PART.cats.includes(c.cat)) { up(c.n); c.sinks.forEach(up); }
+    for (const n of [...graph._nodes]) if (!keep.has(n) && n !== head) graph.remove(n);
+    for (let i = cells.length - 1; i >= 0; i--) if (!keep.has(cells[i].n)) cells.splice(i, 1);
+    for (const c of cells) { c.sinks = c.sinks.filter((s) => keep.has(s)); if (!PART.cats.includes(c.cat)) c.cat = "HELPERS"; }
+    log.part = PART.name; log.partNodes = cells.filter((c) => c.cat !== "HELPERS").length;
+  }
   // ---- layout
   const GAP = 60, TITLE = 30;
   for (const c of cells) { size(c.n); for (const s of c.sinks) { s.size = s.type === "PreviewImage" ? [240, 240] : (s.type === "MaskToImage" || s.type === "VAEDecode") ? [200, 60] : [240, 110]; } }
@@ -168,18 +189,19 @@
   head.pos = [20, 40]; head.size = [1800, 170];
   let y = 280;
   // sources group
-  const srcList = [{ n: load, sinks: [] }, { n: toMask, sinks: [] }, { n: two, sinks: [] }, { n: yes, sinks: [] }, { n: seedSrc, sinks: [] }, { n: unet, sinks: [] }, { n: clip, sinks: [] }];
+  const srcList = [{ n: load, sinks: [] }, { n: toMask, sinks: [] }, { n: two, sinks: [] }, { n: yes, sinks: [] }, { n: seedSrc, sinks: [] }, { n: unet, sinks: [] }, { n: clip, sinks: [] }]
+    .filter((s) => !PART || graph._nodes.includes(s.n));
   for (const c of srcList) size(c.n);
   y = placeGroup("SOURCES: picture, mask, seed, two model files", srcList, 0, y, 5, "#1f4e79");
-  const order = ["SY/Image", "SY/Resize", "SY/Editors", "SY/Text", "SY/Values", "SY/Logic", "SY/Utility", "SY/Notes"];
+  const order = ["SY/Image", "SY/Resize", "SY/Editors", "SY/Text", "SY/Values", "SY/Logic", "SY/Utility", "SY/Notes", "HELPERS"];
   for (const cat of order) {
     const list = cells.filter((c) => c.cat === cat && !srcList.some((s) => s.n === c.n));
     if (list.length) y = placeGroup(cat.replace("SY/", "").toUpperCase() + " nodes (" + list.length + ")", list, 0, y, 5, roleColor(cat));
   }
   for (const [i, g] of groups.entries()) { const gr = new LG.LGraphGroup(g.title); gr.color = g.color; gr.font_size = g.font_size; gr.pos = [g.bounding[0], g.bounding[1]]; gr.size = [g.bounding[2], g.bounding[3]]; graph.add(gr); }
 
-  head.properties.sy_title = "SY Master Test";
-  head.properties.sy_subtitle = "Every SY node in one workflow. Press Run after each ComfyUI update.";
+  head.properties.sy_title = PART ? "SY Test " + PART.n + " of 4: " + PART.name : "SY Master Test";
+  head.properties.sy_subtitle = PART ? "Groups: " + PART.cats.map((c) => c.replace("SY/", "")).join(", ") + ". Press Run after each ComfyUI update." : "Every SY node in one workflow. Press Run after each ComfyUI update.";
   head.properties.sy_install = "This workflow needs only SY Nodes by Stable Yogi.\nTwo model files make the model nodes work: the Krea 2 Turbo model and the Qwen text encoder (the same two as in the Krea 2 Turbo workflow).\nThe test picture is the first picture in your ComfyUI input folder.";
   head.properties.sy_howto = "1. Press Run.\n2. Every SY node runs once. Each one has a Result box next to it.\n3. A red node means that node is broken now. Write down its name.\n4. Model nodes stay red if the two model files are missing. That is fine.\n\nFor a report with no clicking, run sy_master_check.py (see the docs).";
   head.properties.sy_info = "Groups follow the node groups: Image, Resize, Editors, Text, Values, Logic, Utility, Notes.\nThe SOURCES box feeds one picture, one mask and one seed to all nodes.\nWires can be hidden with the link button at the bottom right of the canvas.";

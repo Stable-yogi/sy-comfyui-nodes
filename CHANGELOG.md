@@ -29,3 +29,4 @@
 - Krea 2 Turbo W01 replacement rebuilt with the header, role colours and a 20 px grid (181 nodes in the pack).
 - Colour roles split: sampler, second sampler, seed, pick and save, decode, preview and save now have their own colours (js/sy_theme.json).
 - Master test: one workflow with all 181 SY nodes plus sy_master_check.py, which runs it on a ComfyUI server and reports which node is broken (folder master/). Use it after every ComfyUI update.
+- Master test split in 4 workflows (Text 52, Picture 51, Tools 48, Numbers and logic 29 nodes, plus the header in each) with a written pass rule. sy_master_check.py runs all four and checks that no SY node is missing; sy_master_fit.py fits all four to one computer; the 3-hour watcher runs the check after every ComfyUI update.

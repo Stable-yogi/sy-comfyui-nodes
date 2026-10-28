@@ -56,4 +56,10 @@ Older repo `comfyui-stableyogi-prompt` uses `StableYogiPrompt` / category `Stabl
 Owner OK on every public word. Selftest PASS. `os_home.py check` clean. Registry scanner clean. No push before the owner says.
 
 ## After a ComfyUI update: the master test
-Load `master/StableYogi-SY-Master-Test.json`, or run `py -3.12 master/sy_master_check.py --port 8188`. Every SY node must run or say it needs a file. A new node goes into the master too (see `master/README.md`).
+Every SY node sits in one of four test workflows in `master/`: `StableYogi-SY-Test-1-Text`, `-2-Picture`, `-3-Tools`, `-4-Numbers-Logic` (each has a matching `prompt_*.json` for the no-click check). Run `py -3.12 master/sy_master_check.py --port 8188`, or let the 3-hour watcher do it. A new node goes into the test too (see `master/README.md`).
+
+PASS means all of this:
+- Every SY node of every part ran, or says "needs a file" (a model or file this computer does not have).
+- No node is broken and none waits behind a broken one.
+- No SY node that ComfyUI knows is missing from the four prompts (the check lists it: add it).
+One part not clean = the whole check is NOT CLEAN. The test proves a node runs with small test input. It does not prove a nice picture from a real model, and it does not test browser buttons (the watcher has a separate browser check).
