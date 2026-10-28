@@ -83,6 +83,7 @@
     SYCharacterSheetPrompt: { character: "a knight in silver armour" },
     SYChatPromptBuilder: { system: "You are a helpful guide.", user: "Say hello." },
     SYCyclePick: { items: "one\ntwo\nthree" },
+    SYEmptyLatent: { latent_type: "flux 16ch /8" },
     SYEditInstruction: { target: "the sky", to_value: "a sunset sky" },
     SYEditStepsList: { step_1: "remove the lamp", step_2: "add a tree" },
     SYFewShotBlock: { task: "Translate to French", new_input: "hello" },
@@ -133,8 +134,9 @@
     let sinks = rec.n.constructor?.nodeData?.output_node ? [] : sinkOf(rec.n);
     if (rec.t === "SYVAELoader") {
       setFirst(rec.n, 0, "qwen_image_vae.safetensors");
-      const d = mk("VAEDecode", "Empty latent + VAE to picture"), p = mk("PreviewImage", "Result: VAE test picture");
-      rec.n.connect(0, d, 1); byType.SYEmptyLatent.connect(0, d, 0); d.connect(0, p, 0); sinks = [d, p];
+      // a VAE decode needs a latent that fits that VAE (the Qwen VAE wants 5 dimensions): show the two results instead
+      const p1 = mk("PreviewAny", "Result: VAE"), p2 = mk("PreviewAny", "Result: empty latent");
+      rec.n.connect(0, p1, 0); byType.SYEmptyLatent.connect(0, p2, 0); sinks = [p1, p2];
     }
     if (!sinks.length && !rec.n.constructor?.nodeData?.output_node) log.noSink.push(rec.t);
     cells.push({ ...rec, sinks });

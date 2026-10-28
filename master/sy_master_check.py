@@ -49,6 +49,27 @@ def dependents(prompt, bad):
     return out
 
 
+def fit_lists(prompt, info):
+    """A saved file name that is not in this computer's list is swapped for one that is (same file name in another folder
+    first, else the first entry). Returns a list of what was swapped, for the report."""
+    done = []
+    for nid, n in prompt.items():
+        spec = info.get(n["class_type"])
+        if not spec:
+            continue
+        allin = dict(spec["input"].get("required", {}))
+        allin.update(spec["input"].get("optional", {}))
+        for name, v in list(n["inputs"].items()):
+            s = allin.get(name)
+            if isinstance(v, list) or not s or not isinstance(s[0], list) or not s[0] or v in s[0]:
+                continue
+            base = str(v).replace("\\", "/").split("/")[-1]
+            pick = next((x for x in s[0] if str(x).replace("\\", "/").split("/")[-1] == base), s[0][0])
+            n["inputs"][name] = pick
+            done.append("%s.%s: %r -> %r" % (n["class_type"], name, v, pick))
+    return done
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8188)
@@ -62,7 +83,7 @@ def main():
     if code != 200:
         print("FAIL: no ComfyUI answers on port %d" % a.port)
         return 2
-    sy_types = sorted(k for k in info if k.startswith("SY"))
+    sy_types = sorted(k for k, v in info.items() if k.startswith("SY") and "sy-comfyui-nodes" in str(v.get("python_module", "sy-comfyui-nodes")))
     # the test picture: the first picture in this ComfyUI's input folder
     pics = (info.get("LoadImage", {}).get("input", {}).get("required", {}).get("image") or [[]])[0]
     png = next((p for p in pics if p.lower().endswith(".png")), pics[0] if pics else "")
@@ -71,6 +92,7 @@ def main():
             n["inputs"]["image"] = png
         if n["class_type"] == "SYImageMetadataReader" and png:
             n["inputs"]["file"] = png
+    fitted = fit_lists(prompt, info)
     # Load Text SY reads notes.txt from the input folder: make a small one (ComfyUI keeps it in the input folder)
     boundary = "----symaster"
     body = ("--%s\r\nContent-Disposition: form-data; name=\"image\"; filename=\"notes.txt\"\r\nContent-Type: text/plain\r\n\r\n"
@@ -145,6 +167,8 @@ def main():
     lines = ["# SY Master Check", "", "Server port: %d. Rounds: %d. Time: %.0f s." % (a.port, rounds, time.time() - t0), "",
              "SY node types in this ComfyUI: %d. In the master prompt: %d." % (len(sy_types), len(sy_in_prompt)),
              "PASS: %d. BROKEN: %d. Need a file: %d. Not reached: %d." % (len(sy_run), len(failed_roots), len(needs_file), len(sy_not_run)), ""]
+    if fitted:
+        lines += ["## Names swapped for files this computer has", ""] + ["- " + f for f in fitted] + [""]
     if failed_roots:
         lines += ["## Broken nodes", ""]
         for nid, why in sorted(failed_roots.items(), key=lambda x: prompt[x[0]]["class_type"]):

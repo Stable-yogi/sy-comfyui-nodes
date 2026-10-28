@@ -5,13 +5,16 @@ One workflow that holds every SY node. Use it to check that all nodes still work
 ## Files
 - `StableYogi-SY-Master-Test.json`: the workflow. Load it in ComfyUI. Every SY node sits in a group by node group, with a Result box next to it.
 - `master_prompt.json`: the same graph in API form, used by the check script.
+- `sy_master_fit.py`: makes a copy of the workflow that fits your computer (see below).
 - `sy_master_check.py`: the check with no clicking. It sends the graph to ComfyUI, takes out each broken node, and sends it again. It writes `master_report.md`.
 - `build_master.js`: makes the workflow again inside a ComfyUI page. Run it after you add a node.
 
 ## Check by hand
-1. Put one picture (PNG) in the ComfyUI `input` folder.
-2. Load `StableYogi-SY-Master-Test.json`. Press Run.
-3. A red node is a broken node. The two model loaders stay red when the two Krea 2 model files are missing. That is fine.
+File names differ on every computer, so the workflow must be fitted to yours first.
+1. Put one picture (PNG) in the ComfyUI `input` folder. Start ComfyUI.
+2. Run: `py -3.12 sy_master_fit.py --port 8188`. It writes `StableYogi-SY-Master-Test-fitted.json` next to the script. It swaps each model name for a file you have, picks a test picture, and puts a small `notes.txt` in the input folder.
+3. Load the fitted file in ComfyUI. Press Run. A red node is a broken node. Write down its name.
+(The fitted file holds your own file names. It is not kept in git.)
 
 ## Check with no clicking
 ```

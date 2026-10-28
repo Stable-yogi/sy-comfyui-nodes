@@ -1,3 +1,5 @@
 reports/
 reports_neg/
 __pycache__/
+master/*-fitted.json
+master/master_report.md
