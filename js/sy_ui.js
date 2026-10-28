@@ -1,6 +1,7 @@
 // SY Nodes by Stable Yogi: colour coding, SY mark and the SY Nodes side panel.
 // Reads colours from sy_theme.json (the one colour file). No network, no eval, no storage of secrets.
 import { app } from "../../scripts/app.js";
+import { pal } from "./sy_core.js";
 
 const EXT = "sy.ui";
 const PREFIX = "SY";
@@ -120,11 +121,12 @@ function addNodeToCanvas(type) {
 }
 
 function renderPanel(el) {
+  const P = pal();
   el.innerHTML = "";
-  el.style.cssText = "padding:10px;font-family:'DM Sans',sans-serif;color:" + (theme?.tokens?.text || "#f2f3f5");
+  el.style.cssText = "padding:10px;font-family:'DM Sans',sans-serif;color:" + P.text;
   const title = document.createElement("div");
   title.textContent = "SY Nodes";
-  title.style.cssText = "font-weight:700;font-size:16px;margin-bottom:2px;color:" + (theme?.tokens?.gold || "#d4a537");
+  title.style.cssText = "font-weight:700;font-size:16px;margin-bottom:2px;color:" + P.gold;
   const sub = document.createElement("div");
   sub.textContent = "Click a node to put it on the canvas. Hover a node for help.";
   sub.style.cssText = "font-size:12px;opacity:.75;margin-bottom:8px";
@@ -132,7 +134,7 @@ function renderPanel(el) {
   search.type = "search";
   search.placeholder = "Search SY nodes";
   search.style.cssText = "width:100%;box-sizing:border-box;margin-bottom:8px;padding:6px;border-radius:6px;border:1px solid " +
-    (theme?.tokens?.gold_dim || "#8b6914") + ";background:" + (theme?.tokens?.abyss || "#1e1f22") + ";color:inherit";
+    P.gold_dim + ";background:" + P.abyss + ";color:inherit";
   const list = document.createElement("div");
   el.append(title, sub, search, list);
 
@@ -154,7 +156,7 @@ function renderPanel(el) {
       row.type = "button";
       const g = theme?.groups?.[n.group];
       row.style.cssText = "display:block;width:100%;text-align:left;margin-bottom:4px;padding:6px 8px;border-radius:6px;cursor:pointer;" +
-        "border:0;border-left:6px solid " + (g?.color || "#8b6914") + ";background:" + (theme?.tokens?.surface || "#2b2d31") + ";color:inherit";
+        "border:0;border-left:6px solid " + (g?.color || "#8b6914") + ";background:" + P.surface + ";color:inherit";
       const nm = document.createElement("div");
       nm.textContent = n.name;
       nm.style.fontWeight = "600";
@@ -199,14 +201,14 @@ function closeHelp() {
 function openHelp(focusType) {
   if (helpEl && !focusType) return closeHelp();
   closeHelp();
-  const t = theme?.tokens || {};
+  const t = pal();
   helpEl = document.createElement("div");
   helpEl.id = "sy-help";
   helpEl.setAttribute("role", "dialog");
   helpEl.setAttribute("aria-label", "SY Nodes help");
   helpEl.style.cssText = "position:fixed;top:70px;right:20px;width:420px;max-height:75vh;overflow:auto;z-index:9999;" +
     "padding:12px;border-radius:10px;font-family:'DM Sans',sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.5);" +
-    "background:" + (t.void || "#1a1b1e") + ";color:" + (t.text || "#f2f3f5") + ";border:1px solid " + (t.gold_dim || "#8b6914");
+    "background:" + t.void + ";color:" + t.text + ";border:1px solid " + (t.gold_dim || "#8b6914");
   const bar = document.createElement("div");
   bar.style.cssText = "display:flex;justify-content:space-between;align-items:center;margin-bottom:8px";
   const h = document.createElement("b");
@@ -297,6 +299,14 @@ app.registerExtension({
       options: ["Group colours", "Gold only", "Off"],
       defaultValue: "Group colours",
       tooltip: "Group colours: each SY group has its own title colour. Gold only: all SY nodes share one. Off: ComfyUI default.",
+    },
+    {
+      id: "SY.Look",
+      name: "SY nodes: panel look",
+      type: "combo",
+      options: ["Auto", "Dark", "Light"],
+      defaultValue: "Auto",
+      tooltip: "Auto follows your ComfyUI theme. The SY help, side panel and palette use it.",
     },
     {
       id: SETTING_MARK,
