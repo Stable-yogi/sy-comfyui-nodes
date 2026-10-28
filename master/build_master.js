@@ -68,6 +68,8 @@
     SYSwitch: { a: [load, 0], b: [byType.SYColourSwatch, 0] },
     SYLayoutBoxesMerge: { boxes_3: [byType.SYLayoutBox, 0], boxes_4: [byType.SYLayoutBox, 0] },
     SYAssert: { condition: [yes, 0] }, SYFrameInterpolateBlend: { images: [two, 0] },
+    SYInpaintStitch: { stitch: [byType.SYInpaintCrop, 0] },
+    SYKrea2ConditioningRebalance: { conditioning: [byType.SYKrea2EditGroundedEncode, 0] },
   };
   for (const { n, t } of nodes) {
     const ins = (n.inputs || []).filter((i) => !i.widget);

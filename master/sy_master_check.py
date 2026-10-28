@@ -25,7 +25,7 @@ import urllib.request
 import uuid
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SOFT_WORDS = ("were found", "found in the input folder", "no checkpoints")  # "needs a file", not a fault
+SOFT_WORDS = ("were found", "found in the input folder", "no checkpoints", "could not auto-find")  # "needs a file", not a fault
 
 
 def call(port, path, data=None, timeout=120):
