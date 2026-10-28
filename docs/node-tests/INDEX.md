@@ -2,7 +2,7 @@
 
 Every input option of every node is run by `sy_nodetest.py` (kept with the project tools). Each node has its own page with the inputs, how it was tested and every case.
 
-Totals: **186** nodes, **1321** cases, **1112** passed, **209** rejected (expected), **0** failed, **11** nodes skipped.
+Totals: **191** nodes, **1321** cases, **1112** passed, **209** rejected (expected), **0** failed, **16** nodes skipped.
 
 ## Failures
 
@@ -80,7 +80,12 @@ No failing cases.
 | [JSON Field Get SY](SYJSONFieldGet.md) | SYJSONFieldGet | 3 | 2 | 1 | 0 | ok |
 | [JSON From Reply SY](SYJSONFromReply.md) | SYJSONFromReply | 4 | 1 | 3 | 0 | ok |
 | [JSON Prompt Builder SY](SYJSONPromptBuilder.md) | SYJSONPromptBuilder | 6 | 5 | 1 | 0 | ok |
+| [Krea2ConditioningRebalance SY](SYKrea2ConditioningRebalance.md) | SYKrea2ConditioningRebalance | 0 | 0 | 0 | 0 | Maths checked against an independent reference in script and torch tests. Not run on a real Krea 2 prompt yet |
+| [Krea2EditGroundedEncode SY](SYKrea2EditGroundedEncode.md) | SYKrea2EditGroundedEncode | 0 | 0 | 0 | 0 | NOT run with a real Krea 2 model. Script tests plus a torch run with fake inputs passed. Inputs and outputs... |
+| [Krea2EditModelPatch SY](SYKrea2EditModelPatch.md) | SYKrea2EditModelPatch | 0 | 0 | 0 | 0 | NOT run with a real Krea 2 model. Script tests plus a torch run with a tiny fake model passed (frame order,... |
 | [Krea2OneClick SY](SYKrea2OneClick.md) | SYKrea2OneClick | 0 | 0 | 0 | 0 | NOT run end to end yet: it needs real model files. Its signature matches the older node exactly and its cho... |
+| [Krea2TEnhancer SY](SYKrea2TEnhancer.md) | SYKrea2TEnhancer | 0 | 0 | 0 | 0 | Torch run with a tiny fake model passed (scale, limit on change, restore). Not run on a real Krea 2 model yet |
+| [Krea2TEnhancerAdvanced SY](SYKrea2TEnhancerAdvanced.md) | SYKrea2TEnhancerAdvanced | 0 | 0 | 0 | 0 | Torch run with a tiny fake model passed. Not run on a real Krea 2 model yet. Source quirk kept: a wrong tex... |
 | [LLM Reply Clean SY](SYLLMReplyClean.md) | SYLLMReplyClean | 7 | 7 | 0 | 0 | ok |
 | [Labelled AB Grid SY](SYLabelledABGrid.md) | SYLabelledABGrid | 13 | 12 | 1 | 0 | ok |
 | [Layout Box SY](SYLayoutBox.md) | SYLayoutBox | 21 | 21 | 0 | 0 | ok |
