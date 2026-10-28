@@ -19,3 +19,11 @@
 - docs/node-tests/: one test page per node plus an index, made by a harness that tries every option.
 - Batches H and I: Frame Count Snap, Duration Frames, Prompt Schedule, Prompt Schedule List, Video Size Fit, Time Code, Number Wrap, Text Repeat, Date Parts, Cycle Pick, Percent Of, Line Pick, Hex Colour Mix, Ratio Split (167 nodes with Set/Get). Node-test docs now cover file nodes in a throw-away folder.
 - Batches J and K: LLM Reply Clean, JSON From Reply, Prompt Emphasis Strip, Prompt Diff, Tag Sort, Prompt Sections, Few Shot Block, Text Between, Sentence Pick, Edit Instruction, Multi Ref Label, Character Sheet Prompt, Text In Image, Edit Preset Pick, Edit Steps List (182 nodes with Set/Get). Lora Loader Stack and Sampler Settings Unpack were run in a real graph with a real checkpoint and LoRAs.
+- Look update: nodes are coloured by job (loaders blue, working nodes green, text teal, numbers and logic purple, save brown, notes gold) with white titles; setting "SY.ColorMode" (Role colours, Group colours, Gold only, Off).
+- Workflow Header SY: a title banner with three buttons (Nodes to Install, How to Use, Nodes Info) and an edit panel; the texts travel inside the workflow file.
+- Save Image To Folder SY: token buttons (+Date +Time +Seed +Counter +Width +Height +Batch +Model +Input), live "Will save as" line, Open / Copy / Folder buttons, Browse folders, PNG / JPG / WebP and Save / Preview switches, date folder, picture grid with n/N badges and a size line. New tokens width, height, batch, model, input.
+- Load Image From Folder SY: Browse folders button and a "picks picture n of m" line.
+- Folder helper routes /sy/folder/list, /plan, /open: limited to the ComfyUI output and input folders, picture files only (the one audited place that opens Explorer).
+- Time badge on each node after a run and a run clock in the top right corner (settings SY.TimeBadge, SY.RunClock).
+- Browser parts (js/sy_header.js, js/sy_save.js, js/sy_runtime.js, js/sy_ui_kit.js) were run on the CPU test ComfyUI: banner, token buttons, Will save as, preview mode, picker window and graph reload checked. Open and Folder buttons (Explorer) were not clicked in the test.
+- Krea 2 Turbo W01 replacement rebuilt with the header, role colours and a 20 px grid (181 nodes in the pack).

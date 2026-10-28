@@ -48,11 +48,23 @@ class SYSaveImageToFolder:
             "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
         }
 
-    def run(self, images, subfolder, filename_pattern, format, quality, seed, embed_workflow=True, prompt=None, extra_pnginfo=None):
-        paths, ui = save_images(images, subfolder, filename_pattern, format, quality, seed,
+    def run(self, images, subfolder, filename_pattern, format, quality, seed, embed_workflow=True, output_mode="save",
+            date_folder=False, model_name="", input_name="", prompt=None, extra_pnginfo=None):
+        preview = output_mode == "preview"
+        sub = "sy_preview" if preview else (date_subfolder(subfolder) if date_folder else subfolder)
+        paths, ui = save_images(images, sub, filename_pattern, format, quality, seed,
                                 prompt=prompt if embed_workflow else None,
-                                extra_pnginfo=extra_pnginfo if embed_workflow else None)
-        return {"ui": {"images": ui}, "result": ("\n".join(paths),)}
+                                extra_pnginfo=extra_pnginfo if embed_workflow else None,
+                                root="temp" if preview else "output",
+                                extra={"model": model_name, "input": input_name})
+        height, width = int(images.shape[1]), int(images.shape[2])
+        for item in ui:
+            item["width"], item["height"] = width, height
+        summary = saved_summary(ui, width, height)
+        if preview:
+            summary = summary.replace(" saved ", " shown ")
+        return {"ui": {"images": ui, "sy_saved": ui, "sy_summary": [summary]},
+                "result": ("" if preview else "\n".join(paths),)}
 
 
 NODE_CLASS_MAPPINGS = {}

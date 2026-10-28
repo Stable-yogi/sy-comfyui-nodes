@@ -2,7 +2,7 @@
 
 Every input option of every node is run by `sy_nodetest.py` (kept with the project tools). Each node has its own page with the inputs, how it was tested and every case.
 
-Totals: **180** nodes, **1305** cases, **1097** passed, **208** rejected (expected), **0** failed, **8** nodes skipped.
+Totals: **181** nodes, **1310** cases, **1102** passed, **208** rejected (expected), **0** failed, **8** nodes skipped.
 
 ## Failures
 
@@ -141,7 +141,7 @@ No failing cases.
 | [Safetensors Header Info SY](SYSafetensorsHeaderInfo.md) | SYSafetensorsHeaderInfo | 3 | 3 | 0 | 0 | ok |
 | [Sampler Settings SY](SYSamplerSettings.md) | SYSamplerSettings | 23 | 23 | 0 | 0 | ok |
 | [Sampler Settings Unpack SY](SYSamplerSettingsUnpack.md) | SYSamplerSettingsUnpack | 0 | 0 | 0 | 0 | run by hand in a real graph on the processor (2026-10-28): Sampler Settings SY then Unpack gave 3 (int), 6.... |
-| [Save Image To Folder SY](SYSaveImageToFolder.md) | SYSaveImageToFolder | 11 | 10 | 1 | 0 | ok |
+| [Save Image To Folder SY](SYSaveImageToFolder.md) | SYSaveImageToFolder | 15 | 14 | 1 | 0 | ok |
 | [Save Text SY](SYSaveText.md) | SYSaveText | 7 | 5 | 2 | 0 | ok |
 | [Save With Caption SY](SYSaveWithCaption.md) | SYSaveWithCaption | 11 | 0 | 11 | 0 | ok |
 | [3D Scene SY](SYScene3D.md) | SYScene3D | 0 | 0 | 0 | 0 | tested in a real ComfyUI page: added shapes, turned the camera, loaded a .glb cube, saved and reloaded the ... |
@@ -188,6 +188,7 @@ No failing cases.
 | [Video Size Presets SY](SYVideoSizePresets.md) | SYVideoSizePresets | 6 | 6 | 0 | 0 | ok |
 | [Vignette SY](SYVignette.md) | SYVignette | 6 | 6 | 0 | 0 | ok |
 | [VRAM Estimate SY](SYVramEstimate.md) | SYVramEstimate | 7 | 7 | 0 | 0 | ok |
+| [Workflow Header SY](SYWorkflowHeader.md) | SYWorkflowHeader | 1 | 1 | 0 | 0 | ok |
 | [XY Grid Assemble SY](SYXYGridAssemble.md) | SYXYGridAssemble | 13 | 12 | 1 | 0 | ok |
 | [XY Label Strip SY](SYXYLabelStrip.md) | SYXYLabelStrip | 5 | 0 | 5 | 0 | ok |
 | [XY Pick SY](SYXYPick.md) | SYXYPick | 6 | 4 | 2 | 0 | ok |
