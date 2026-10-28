@@ -31,3 +31,4 @@
 - Master test: one workflow with all 181 SY nodes plus sy_master_check.py, which runs it on a ComfyUI server and reports which node is broken (folder master/). Use it after every ComfyUI update.
 - Master test split in 4 workflows (Text 52, Picture 51, Tools 48, Numbers and logic 29 nodes, plus the header in each) with a written pass rule. sy_master_check.py runs all four and checks that no SY node is missing; sy_master_fit.py fits all four to one computer; the 3-hour watcher runs the check after every ComfyUI update.
 - CLIP Loader SY now reads the type list from your ComfyUI, so new model families (for example minimax) work without an update here.
+- Older nodes now in this pack with the same ids as before, so saved workflows still load: Inpaint Crop SY, Inpaint Stitch SY, Krea2 One-Click SY. New: H3 Save Bundle SY and H3 Load Bundle SY (save and reload a latent, prompt, seed and up to 3 reference pictures as one folder). 186 nodes with Set/Get.

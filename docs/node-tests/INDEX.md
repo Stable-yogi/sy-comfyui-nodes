@@ -2,7 +2,7 @@
 
 Every input option of every node is run by `sy_nodetest.py` (kept with the project tools). Each node has its own page with the inputs, how it was tested and every case.
 
-Totals: **181** nodes, **1310** cases, **1102** passed, **208** rejected (expected), **0** failed, **8** nodes skipped.
+Totals: **186** nodes, **1321** cases, **1112** passed, **209** rejected (expected), **0** failed, **11** nodes skipped.
 
 ## Failures
 
@@ -61,6 +61,8 @@ No failing cases.
 | [Frame Select SY](SYFrameSelect.md) | SYFrameSelect | 8 | 4 | 4 | 0 | ok |
 | [Free VRAM SY](SYFreeVRAM.md) | SYFreeVRAM | 2 | 2 | 0 | 0 | ok |
 | [Gaussian Blur SY](SYGaussianBlur.md) | SYGaussianBlur | 4 | 4 | 0 | 0 | ok |
+| [H3LoadBundle SY](SYH3LoadBundle.md) | SYH3LoadBundle | 1 | 0 | 1 | 0 | ok |
+| [H3SaveBundle SY](SYH3SaveBundle.md) | SYH3SaveBundle | 0 | 0 | 0 | 0 | needs real model, covered by loader test (inputs: latent (LATENT)) |
 | [HexColourMix SY](SYHexColourMix.md) | SYHexColourMix | 5 | 3 | 2 | 0 | ok |
 | [If Else Number SY](SYIfElseNumber.md) | SYIfElseNumber | 6 | 6 | 0 | 0 | ok |
 | [If Else Text SY](SYIfElseText.md) | SYIfElseText | 4 | 4 | 0 | 0 | ok |
@@ -72,10 +74,13 @@ No failing cases.
 | [Image Info SY](SYImageInfo.md) | SYImageInfo | 1 | 1 | 0 | 0 | ok |
 | [Image Metadata Reader SY](SYImageMetadataReader.md) | SYImageMetadataReader | 2 | 0 | 2 | 0 | ok |
 | [Image Resize SY](SYImageResize.md) | SYImageResize | 22 | 22 | 0 | 0 | ok |
+| [InpaintCrop SY](SYInpaintCrop.md) | SYInpaintCrop | 10 | 10 | 0 | 0 | ok |
+| [InpaintStitch SY](SYInpaintStitch.md) | SYInpaintStitch | 0 | 0 | 0 | 0 | needs real model, covered by loader test (inputs: stitch (SY_STITCH)) |
 | [Int Value SY](SYIntValue.md) | SYIntValue | 3 | 3 | 0 | 0 | ok |
 | [JSON Field Get SY](SYJSONFieldGet.md) | SYJSONFieldGet | 3 | 2 | 1 | 0 | ok |
 | [JSON From Reply SY](SYJSONFromReply.md) | SYJSONFromReply | 4 | 1 | 3 | 0 | ok |
 | [JSON Prompt Builder SY](SYJSONPromptBuilder.md) | SYJSONPromptBuilder | 6 | 5 | 1 | 0 | ok |
+| [Krea2OneClick SY](SYKrea2OneClick.md) | SYKrea2OneClick | 0 | 0 | 0 | 0 | NOT run end to end yet: it needs real model files. Its signature matches the older node exactly and its cho... |
 | [LLM Reply Clean SY](SYLLMReplyClean.md) | SYLLMReplyClean | 7 | 7 | 0 | 0 | ok |
 | [Labelled AB Grid SY](SYLabelledABGrid.md) | SYLabelledABGrid | 13 | 12 | 1 | 0 | ok |
 | [Layout Box SY](SYLayoutBox.md) | SYLayoutBox | 21 | 21 | 0 | 0 | ok |
