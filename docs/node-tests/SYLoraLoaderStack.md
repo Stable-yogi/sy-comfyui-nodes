@@ -23,9 +23,9 @@ Outputs: `MODEL`, `CLIP`, `STRING`
 
 ## How it was tested
 
-This node was not run by the harness. Reason: needs a real model and CLIP. Its text and number rules have unit tests; a run with real LoRA files is still open.
+This node was not run by the harness. Reason: run by hand in a real graph on the processor (2026-10-28): a real 6.5 GB SDXL checkpoint, two real LoRAs (0.6 and 0.4) gave 722 patches on the model and a patched CLIP, the original model stayed untouched, all-zero or None slots changed nothing, and a wrong file name was refused in plain words.
 
 
 ## Verdict
 
-Not run. needs a real model and CLIP. Its text and number rules have unit tests; a run with real LoRA files is still open.
+Not run. run by hand in a real graph on the processor (2026-10-28): a real 6.5 GB SDXL checkpoint, two real LoRAs (0.6 and 0.4) gave 722 patches on the model and a patched CLIP, the original model stayed untouched, all-zero or None slots changed nothing, and a wrong file name was refused in plain words.

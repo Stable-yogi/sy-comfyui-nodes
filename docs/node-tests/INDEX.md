@@ -2,7 +2,7 @@
 
 Every input option of every node is run by `sy_nodetest.py` (kept with the project tools). Each node has its own page with the inputs, how it was tested and every case.
 
-Totals: **165** nodes, **1181** cases, **1034** passed, **147** rejected (expected), **0** failed, **8** nodes skipped.
+Totals: **180** nodes, **1305** cases, **1097** passed, **208** rejected (expected), **0** failed, **8** nodes skipped.
 
 ## Failures
 
@@ -28,6 +28,7 @@ No failing cases.
 | [Caption Prefix Suffix SY](SYCaptionPrefixSuffix.md) | SYCaptionPrefixSuffix | 6 | 6 | 0 | 0 | ok |
 | [Caption Review SY](SYCaptionReview.md) | SYCaptionReview | 12 | 9 | 3 | 0 | ok |
 | [Caption Style Request SY](SYCaptionStyleRequest.md) | SYCaptionStyleRequest | 9 | 9 | 0 | 0 | ok |
+| [CharacterSheetPrompt SY](SYCharacterSheetPrompt.md) | SYCharacterSheetPrompt | 12 | 0 | 12 | 0 | ok |
 | [Chat Prompt Builder SY](SYChatPromptBuilder.md) | SYChatPromptBuilder | 6 | 0 | 6 | 0 | ok |
 | [Checkpoint Loader Info SY](SYCheckpointLoaderInfo.md) | SYCheckpointLoaderInfo | 0 | 0 | 0 | 0 | run by hand with a real 6.5 GB SDXL checkpoint on the processor: 162 s, gave the model, CLIP, VAE and the i... |
 | [Checkpoint Name Filter SY](SYCheckpointNameFilter.md) | SYCheckpointNameFilter | 2 | 2 | 0 | 0 | ok |
@@ -42,7 +43,11 @@ No failing cases.
 | [Dataset Pair Check SY](SYDatasetPairCheck.md) | SYDatasetPairCheck | 5 | 5 | 0 | 0 | ok |
 | [DateParts SY](SYDateParts.md) | SYDateParts | 3 | 3 | 0 | 0 | ok |
 | [Duration Frames SY](SYDurationFrames.md) | SYDurationFrames | 11 | 11 | 0 | 0 | ok |
+| [EditInstruction SY](SYEditInstruction.md) | SYEditInstruction | 11 | 0 | 11 | 0 | ok |
+| [EditPresetPick SY](SYEditPresetPick.md) | SYEditPresetPick | 9 | 9 | 0 | 0 | ok |
+| [EditStepsList SY](SYEditStepsList.md) | SYEditStepsList | 8 | 8 | 0 | 0 | ok |
 | [Empty Latent SY](SYEmptyLatent.md) | SYEmptyLatent | 10 | 10 | 0 | 0 | ok |
+| [Few Shot Block SY](SYFewShotBlock.md) | SYFewShotBlock | 13 | 0 | 13 | 0 | ok |
 | [Filename Builder SY](SYFilenameBuilder.md) | SYFilenameBuilder | 8 | 7 | 1 | 0 | ok |
 | [Film Grain SY](SYFilmGrain.md) | SYFilmGrain | 9 | 9 | 0 | 0 | ok |
 | [Find Replace SY](SYFindReplace.md) | SYFindReplace | 6 | 6 | 0 | 0 | ok |
@@ -69,7 +74,9 @@ No failing cases.
 | [Image Resize SY](SYImageResize.md) | SYImageResize | 22 | 22 | 0 | 0 | ok |
 | [Int Value SY](SYIntValue.md) | SYIntValue | 3 | 3 | 0 | 0 | ok |
 | [JSON Field Get SY](SYJSONFieldGet.md) | SYJSONFieldGet | 3 | 2 | 1 | 0 | ok |
+| [JSON From Reply SY](SYJSONFromReply.md) | SYJSONFromReply | 4 | 1 | 3 | 0 | ok |
 | [JSON Prompt Builder SY](SYJSONPromptBuilder.md) | SYJSONPromptBuilder | 6 | 5 | 1 | 0 | ok |
+| [LLM Reply Clean SY](SYLLMReplyClean.md) | SYLLMReplyClean | 7 | 7 | 0 | 0 | ok |
 | [Labelled AB Grid SY](SYLabelledABGrid.md) | SYLabelledABGrid | 13 | 12 | 1 | 0 | ok |
 | [Layout Box SY](SYLayoutBox.md) | SYLayoutBox | 21 | 21 | 0 | 0 | ok |
 | [Layout Boxes Merge SY](SYLayoutBoxesMerge.md) | SYLayoutBoxesMerge | 5 | 0 | 5 | 0 | ok |
@@ -84,7 +91,7 @@ No failing cases.
 | [Load Text SY](SYLoadText.md) | SYLoadText | 2 | 1 | 1 | 0 | ok |
 | [Loader Name Picker SY](SYLoaderNamePicker.md) | SYLoaderNamePicker | 9 | 1 | 8 | 0 | ok |
 | [Longest Side Scale SY](SYLongestSideScale.md) | SYLongestSideScale | 13 | 13 | 0 | 0 | ok |
-| [Lora Loader Stack SY](SYLoraLoaderStack.md) | SYLoraLoaderStack | 0 | 0 | 0 | 0 | needs a real model and CLIP. Its text and number rules have unit tests; a run with real LoRA files is still... |
+| [Lora Loader Stack SY](SYLoraLoaderStack.md) | SYLoraLoaderStack | 0 | 0 | 0 | 0 | run by hand in a real graph on the processor (2026-10-28): a real 6.5 GB SDXL checkpoint, two real LoRAs (0... |
 | [LoRA Stack Text SY](SYLoraStackText.md) | SYLoraStackText | 17 | 17 | 0 | 0 | ok |
 | [LoRA Trigger Words SY](SYLoraTriggerWords.md) | SYLoraTriggerWords | 2 | 2 | 0 | 0 | ok |
 | [MaskCombine SY](SYMaskCombine.md) | SYMaskCombine | 4 | 4 | 0 | 0 | ok |
@@ -99,6 +106,7 @@ No failing cases.
 | [Megapixel Scale SY](SYMegapixelScale.md) | SYMegapixelScale | 13 | 13 | 0 | 0 | ok |
 | [Min Max SY](SYMinMax.md) | SYMinMax | 5 | 5 | 0 | 0 | ok |
 | [Model Preset Bundle SY](SYModelPresetBundle.md) | SYModelPresetBundle | 14 | 14 | 0 | 0 | ok |
+| [MultiRefLabel SY](SYMultiRefLabel.md) | SYMultiRefLabel | 6 | 5 | 1 | 0 | ok |
 | [Multiline Text SY](SYMultilineText.md) | SYMultilineText | 3 | 3 | 0 | 0 | ok |
 | [Negative Prompt Presets SY](SYNegativePromptPresets.md) | SYNegativePromptPresets | 12 | 11 | 1 | 0 | ok |
 | [Note SY](SYNote.md) | SYNote | 6 | 6 | 0 | 0 | ok |
@@ -114,9 +122,12 @@ No failing cases.
 | [Precision Info SY](SYPrecisionInfo.md) | SYPrecisionInfo | 17 | 17 | 0 | 0 | ok |
 | [Prompt Choice SY](SYPromptChoice.md) | SYPromptChoice | 4 | 4 | 0 | 0 | ok |
 | [Prompt Cleaner SY](SYPromptCleaner.md) | SYPromptCleaner | 3 | 3 | 0 | 0 | ok |
+| [Prompt Diff SY](SYPromptDiff.md) | SYPromptDiff | 4 | 3 | 1 | 0 | ok |
+| [Prompt Emphasis Strip SY](SYPromptEmphasisStrip.md) | SYPromptEmphasisStrip | 4 | 4 | 0 | 0 | ok |
 | [Prompt Enhance Request SY](SYPromptEnhanceRequest.md) | SYPromptEnhanceRequest | 12 | 0 | 12 | 0 | ok |
 | [Prompt Schedule SY](SYPromptSchedule.md) | SYPromptSchedule | 4 | 4 | 0 | 0 | ok |
 | [Prompt Schedule List SY](SYPromptScheduleList.md) | SYPromptScheduleList | 5 | 5 | 0 | 0 | ok |
+| [Prompt Sections SY](SYPromptSections.md) | SYPromptSections | 9 | 9 | 0 | 0 | ok |
 | [Prompt Style Templates SY](SYPromptStyleTemplates.md) | SYPromptStyleTemplates | 15 | 15 | 0 | 0 | ok |
 | [Prompt Weight Wrap SY](SYPromptWeightWrap.md) | SYPromptWeightWrap | 9 | 9 | 0 | 0 | ok |
 | [Random Choice SY](SYRandomChoice.md) | SYRandomChoice | 4 | 0 | 4 | 0 | ok |
@@ -129,7 +140,7 @@ No failing cases.
 | [Run Timer SY](SYRunTimer.md) | SYRunTimer | 2 | 2 | 0 | 0 | ok |
 | [Safetensors Header Info SY](SYSafetensorsHeaderInfo.md) | SYSafetensorsHeaderInfo | 3 | 3 | 0 | 0 | ok |
 | [Sampler Settings SY](SYSamplerSettings.md) | SYSamplerSettings | 23 | 23 | 0 | 0 | ok |
-| [Sampler Settings Unpack SY](SYSamplerSettingsUnpack.md) | SYSamplerSettingsUnpack | 0 | 0 | 0 | 0 | needs the settings object from Sampler Settings SY. Its unit test checks the unpacking; a run inside a full... |
+| [Sampler Settings Unpack SY](SYSamplerSettingsUnpack.md) | SYSamplerSettingsUnpack | 0 | 0 | 0 | 0 | run by hand in a real graph on the processor (2026-10-28): Sampler Settings SY then Unpack gave 3 (int), 6.... |
 | [Save Image To Folder SY](SYSaveImageToFolder.md) | SYSaveImageToFolder | 11 | 10 | 1 | 0 | ok |
 | [Save Text SY](SYSaveText.md) | SYSaveText | 7 | 5 | 2 | 0 | ok |
 | [Save With Caption SY](SYSaveWithCaption.md) | SYSaveWithCaption | 11 | 0 | 11 | 0 | ok |
@@ -138,6 +149,7 @@ No failing cases.
 | [Seed List SY](SYSeedList.md) | SYSeedList | 7 | 7 | 0 | 0 | ok |
 | [Seed Stepper SY](SYSeedStepper.md) | SYSeedStepper | 12 | 12 | 0 | 0 | ok |
 | [Select By Index Text SY](SYSelectByIndexText.md) | SYSelectByIndexText | 12 | 12 | 0 | 0 | ok |
+| [Sentence Pick SY](SYSentencePick.md) | SYSentencePick | 9 | 8 | 1 | 0 | ok |
 | [Sharpen SY](SYSharpen.md) | SYSharpen | 7 | 7 | 0 | 0 | ok |
 | [Short ID SY](SYShortID.md) | SYShortID | 10 | 10 | 0 | 0 | ok |
 | [Show Text SY](SYShowText.md) | SYShowText | 1 | 1 | 0 | 0 | ok |
@@ -149,10 +161,13 @@ No failing cases.
 | [System Info SY](SYSystemInfo.md) | SYSystemInfo | 1 | 1 | 0 | 0 | ok |
 | [System Prompt Presets SY](SYSystemPromptPresets.md) | SYSystemPromptPresets | 13 | 13 | 0 | 0 | ok |
 | [Tag Frequency SY](SYTagFrequency.md) | SYTagFrequency | 8 | 6 | 2 | 0 | ok |
+| [Tag Sort SY](SYTagSort.md) | SYTagSort | 10 | 9 | 1 | 0 | ok |
 | [Text SY](SYText.md) | SYText | 3 | 3 | 0 | 0 | ok |
+| [Text Between SY](SYTextBetween.md) | SYTextBetween | 7 | 0 | 7 | 0 | ok |
 | [Text Case Trim SY](SYTextCaseTrim.md) | SYTextCaseTrim | 9 | 9 | 0 | 0 | ok |
 | [Text Chunker SY](SYTextChunker.md) | SYTextChunker | 10 | 0 | 10 | 0 | ok |
 | [Text Contains SY](SYTextContains.md) | SYTextContains | 4 | 0 | 4 | 0 | ok |
+| [TextInImage SY](SYTextInImage.md) | SYTextInImage | 11 | 0 | 11 | 0 | ok |
 | [Text Join SY](SYTextJoin.md) | SYTextJoin | 7 | 7 | 0 | 0 | ok |
 | [Text Number Format SY](SYTextNumberFormat.md) | SYTextNumberFormat | 10 | 10 | 0 | 0 | ok |
 | [TextRepeat SY](SYTextRepeat.md) | SYTextRepeat | 7 | 7 | 0 | 0 | ok |

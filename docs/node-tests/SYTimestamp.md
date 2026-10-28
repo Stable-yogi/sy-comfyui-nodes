@@ -22,10 +22,10 @@ The harness builds a starting set of inputs from the default of every input (fir
 | # | Input changed | Result | Output / message |
 |---|---|---|---|
 | 1 | baseline (all defaults) | PASS | STRING=str '2026-10-28' |
-| 2 | format = 'time' | PASS | STRING=str '11-40-11' |
-| 3 | format = 'date_time' | PASS | STRING=str '2026-10-28_11-40-11' |
-| 4 | format = 'compact' | PASS | STRING=str '20261028114011' |
-| 5 | format = 'unix' | PASS | STRING=str '1793167811' |
+| 2 | format = 'time' | PASS | STRING=str '11-52-11' |
+| 3 | format = 'date_time' | PASS | STRING=str '2026-10-28_11-52-11' |
+| 4 | format = 'compact' | PASS | STRING=str '20261028115211' |
+| 5 | format = 'unix' | PASS | STRING=str '1793168531' |
 | 6 | use_utc = True | PASS | STRING=str '2026-10-28' |
 
 ## Verdict
