@@ -12,3 +12,4 @@
 - Image Compare slider and Load Image Mini upload/preview buttons (browser side).
 - Batches D1 and D2: LLM text helpers (chat/system prompt builders, chunker, token trim, JSON build/get, negative prompts, caption request) and loaders (checkpoint, VAE, CLIP, Unet, name picker) plus video helpers (frame counter, loop, frame rate convert, split, range info). 137 nodes in total.
 - Batch E: XY Values List, XY Pick, XY Grid Assemble, XY Label Strip; Paint Mask editor; Set SY / Get SY (wireless links); hover help cards (144 nodes).
+- Batch F: 3D Scene SY (no-library 3D scene editor with shaded and depth output); real-file test of the 4 loaders; Paint backdrop and save/reload verified (145 nodes).
