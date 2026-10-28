@@ -13,4 +13,10 @@ for _fn in sorted(os.listdir(_dir)):
         NODE_CLASS_MAPPINGS.update(getattr(_mod, "NODE_CLASS_MAPPINGS", {}))
         NODE_DISPLAY_NAME_MAPPINGS.update(getattr(_mod, "NODE_DISPLAY_NAME_MAPPINGS", {}))
 
+try:  # web helpers for the Save and Load nodes (list folders, open Explorer inside output/input only)
+    from .nodes import _sy_folder_api
+    _sy_folder_api.register_routes()
+except Exception as _err:  # the nodes still work without the buttons
+    print("[SY] folder buttons not available:", _err)
+
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]

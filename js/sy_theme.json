@@ -23,7 +23,10 @@
     "green": "#57f287",
     "yellow": "#fee75c",
     "text": "#f2f3f5",
-    "text_2": "#c2c6ce"
+    "text_2": "#c2c6ce",
+    "white": "#ffffff",
+    "blue": "#2f6fb5",
+    "green_btn": "#2f8f5b"
   },
   "groups": {
     "Image": {
@@ -80,5 +83,73 @@
       "color": "#4e3d80",
       "bgcolor": "#241f38"
     }
+  },
+  "roles": {
+    "loader": {
+      "label": "Loaders",
+      "color": "#1f4e79",
+      "bgcolor": "#16293b"
+    },
+    "work": {
+      "label": "Working nodes",
+      "color": "#2e6b3f",
+      "bgcolor": "#1a2d21"
+    },
+    "text": {
+      "label": "Text and prompts",
+      "color": "#1f6b6b",
+      "bgcolor": "#162b2b"
+    },
+    "logic": {
+      "label": "Numbers and logic",
+      "color": "#4e3d80",
+      "bgcolor": "#241f38"
+    },
+    "save": {
+      "label": "Save and preview",
+      "color": "#7a4a24",
+      "bgcolor": "#2e2218"
+    },
+    "info": {
+      "label": "Notes and headers",
+      "color": "#8b6914",
+      "bgcolor": "#2d2616"
+    }
+  },
+  "group_roles": {
+    "Image": "work",
+    "Resize": "work",
+    "Utility": "work",
+    "Editors": "work",
+    "Text": "text",
+    "Values": "logic",
+    "Logic": "logic",
+    "Notes": "info"
+  },
+  "role_of": {
+    "loader": [
+      "SYUnetLoader",
+      "SYCLIPLoader",
+      "SYVAELoader",
+      "SYLoraLoaderStack",
+      "SYLoadImageFromFolder",
+      "SYLoadImageMini",
+      "SYLoadText",
+      "SYModelPresetBundle",
+      "SYListFolderFiles"
+    ],
+    "save": [
+      "SYSaveImageToFolder",
+      "SYSaveText",
+      "SYSaveWithCaption",
+      "SYImageCompare",
+      "SYShowText",
+      "SYMaskOverlayPreview",
+      "SYLayoutBoxesPreview"
+    ],
+    "info": [
+      "SYWorkflowHeader",
+      "SYNote"
+    ]
   }
 }

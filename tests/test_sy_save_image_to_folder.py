@@ -24,4 +24,8 @@ def run():
     assert raises(sp.write_image, None, "x", "gif", 90); n += 1
     assert sp.workflow_chunks(None, None) == {}; n += 1
     assert sp.workflow_chunks({"a": 1}, {"workflow": {"b": 2}}) == {"prompt": "{\"a\": 1}", "workflow": "{\"b\": 2}"}; n += 1
+    opt = m.SYSaveImageToFolder.INPUT_TYPES()["optional"]
+    assert opt["output_mode"][0] == ["save", "preview"] and "date_folder" in opt and "model_name" in opt and "input_name" in opt; n += 1
+    assert m.saved_summary([{}, {}, {}, {}], 960, 1440) == "960x1440 saved 4 images"; n += 1
+    assert m.saved_summary([{}], 8, 8) == "8x8 saved 1 image"; n += 1
     return n

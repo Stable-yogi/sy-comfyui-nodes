@@ -14,7 +14,7 @@ sys.path.insert(0, NODES)
 
 FORBIDDEN_CALLS = {"eval", "exec", "compile", "__import__"}
 FORBIDDEN_MODULES = {"subprocess", "socket", "requests", "urllib", "http", "ftplib", "ctypes", "pickle", "marshal"}
-ALLOW = {}  # {"sy_xxx.py": {"subprocess"}} -- an audited exception, listed here and in the standard
+ALLOW = {"_sy_folder_api.py": {"startfile"}}  # {"sy_xxx.py": {"subprocess"}} -- an audited exception, listed here and in the standard
 AI_WORDS = re.compile(r"claude|anthropic|codex|openai|generated with|made with ai|co-authored-by", re.I)
 HEX = re.compile(r"#[0-9a-fA-F]{6}\b")
 
@@ -38,7 +38,7 @@ def scan_source(path):
         if isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id in FORBIDDEN_CALLS:
             check(False, "%s:%d forbidden call %s()" % (name, n.lineno, n.func.id))
         if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute):
-            if n.func.attr in ("system", "popen", "startfile") and isinstance(n.func.value, ast.Name) and n.func.value.id == "os":
+            if n.func.attr in ("system", "popen", "startfile") and n.func.attr not in allowed and isinstance(n.func.value, ast.Name) and n.func.value.id == "os":
                 check(False, "%s:%d forbidden os.%s" % (name, n.lineno, n.func.attr))
         mods = []
         if isinstance(n, ast.Import):

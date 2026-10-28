@@ -33,6 +33,7 @@ Older repo `comfyui-stableyogi-prompt` uses `StableYogiPrompt` / category `Stabl
 4. Every file write or open goes through `safe_join()` (path guard).
 5. No code is downloaded or run at start-up.
 6. No `eval`, `exec`, `compile`, `subprocess`, `os.system`, `os.startfile` [auto]. An audited exception goes into `ALLOW` in `tests/run_selftest.py` AND is written here.
+   Audited exception: `nodes/_sy_folder_api.py` may call `os.startfile` (owner OK 2026-10-28). It opens a folder or a picture file that sits inside the ComfyUI output or input folder, nothing else.
 7. Node modules do not import `comfy`, `folder_paths` or `server` at top level [auto]. Import inside the function. This keeps the logic testable without ComfyUI.
 8. Every node has a `DESCRIPTION` [auto] and a test file [auto].
 9. No AI-credit word in any file [auto] (core rule 14).

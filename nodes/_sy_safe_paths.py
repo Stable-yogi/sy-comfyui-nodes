@@ -9,6 +9,7 @@ from datetime import datetime
 
 IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif", ".tif", ".tiff")
 TOKENS = ("date", "time", "seed", "counter")
+EXTRA_TOKENS = ("width", "height", "batch", "model", "input")  # only the Save Image node offers these
 COUNTER_WIDTH = 5
 MAX_NAME_LENGTH = 150
 _BAD_NAME_CHARS = set('<>:"/\\|?*')
@@ -84,11 +85,19 @@ def parse_extensions(text, default=IMAGE_EXTENSIONS):
     return tuple(out)
 
 
-def _tokens_in(pattern):
+def clean_token(value, limit=60):
+    """Make a free text safe inside a file name: no folder, no extension, no forbidden characters."""
+    text = os.path.splitext(os.path.basename(str(value or "").replace("\\", "/")))[0]
+    text = "".join("_" if (c in _BAD_NAME_CHARS or ord(c) < 32) else c for c in text).strip(" .")
+    return text[:limit]
+
+
+def _tokens_in(pattern, extra=False):
+    allowed = TOKENS + EXTRA_TOKENS if extra else TOKENS
     found = re.findall(r"\{([^{}]*)\}", pattern)
     for t in found:
-        if t not in TOKENS:
-            raise ValueError("unknown token {%s} in the file name pattern. Allowed: {date} {time} {seed} {counter}" % t)
+        if t not in allowed:
+            raise ValueError("unknown token {%s} in the file name pattern. Allowed: %s" % (t, " ".join("{%s}" % a for a in allowed)))
     rest = re.sub(r"\{[^{}]*\}", "", pattern)
     if "{" in rest or "}" in rest:
         raise ValueError("file name pattern has a lonely { or }: %r" % pattern)
@@ -97,14 +106,21 @@ def _tokens_in(pattern):
     return found
 
 
-def expand_pattern(pattern, seed=0, now=None, counter=None):
-    """Replace {date} {time} {seed} {counter}. With counter=None the {counter} token is kept for later."""
+def expand_pattern(pattern, seed=0, now=None, counter=None, extra=None):
+    """Replace {date} {time} {seed} {counter}. With counter=None the {counter} token is kept for later.
+
+    `extra` (a dict with width, height, batch, model, input) also turns on those five tokens.
+    """
     pattern = str(pattern)
-    _tokens_in(pattern)
+    _tokens_in(pattern, extra is not None)
     now = now or datetime.now()
     out = pattern.replace("{date}", now.strftime("%Y-%m-%d"))
     out = out.replace("{time}", now.strftime("%H%M%S"))
     out = out.replace("{seed}", str(int(seed)))
+    if extra is not None:
+        for key in EXTRA_TOKENS:
+            val = extra.get(key, "")
+            out = out.replace("{%s}" % key, clean_token(val) if key in ("model", "input") else str(int(val or 0)))
     if counter is not None:
         out = out.replace("{counter}", "%0*d" % (COUNTER_WIDTH, int(counter)))
     return out
@@ -116,7 +132,7 @@ def _counter_regex(expanded, exts):
     return re.compile("^" + re.escape(left) + r"(\d+)" + re.escape(right) + "(?:" + alt + ")$", re.I)
 
 
-def plan_names(existing, pattern, ext, count, seed=0, now=None, companion=None):
+def plan_names(existing, pattern, ext, count, seed=0, now=None, companion=None, extra=None):
     """Pure function. Pick `count` new file names that do not clash with `existing` names.
 
     With {counter} in the pattern the numbers continue after the highest one found.
@@ -133,8 +149,8 @@ def plan_names(existing, pattern, ext, count, seed=0, now=None, companion=None):
     companion = clean_extension(companion) if companion else ""
     exts = [e for e in (ext, companion) if e]
     taken = {str(n).lower() for n in existing}
-    _tokens_in(pattern)
-    expanded = expand_pattern(pattern, seed, now)
+    _tokens_in(pattern, extra is not None)
+    expanded = expand_pattern(pattern, seed, now, extra=extra)
     names = []
     if "{counter}" in expanded:
         rx = _counter_regex(expanded, exts)
@@ -187,6 +203,8 @@ def root_folder(root):
         return folder_paths.get_input_directory()
     if root == "output":
         return folder_paths.get_output_directory()
+    if root == "temp":
+        return folder_paths.get_temp_directory()
     raise ValueError("root must be 'input' or 'output', got %r" % (root,))
 
 
@@ -243,17 +261,28 @@ def workflow_chunks(prompt, extra_pnginfo):
     return chunks
 
 
-def save_images(images, subfolder, pattern, fmt, quality, seed=0, captions=None, prompt=None, extra_pnginfo=None, now=None):
-    """Save an IMAGE batch into output/<subfolder>. Returns (saved_paths, ui_images).
+def date_subfolder(subfolder, now=None):
+    """'SY' -> 'SY/2026-10-28'. Empty subfolder gives just the date."""
+    day = (now or datetime.now()).strftime("%Y-%m-%d")
+    sub = str(subfolder or "").strip().strip("/\\")
+    return sub + "/" + day if sub else day
+
+
+def save_images(images, subfolder, pattern, fmt, quality, seed=0, captions=None, prompt=None, extra_pnginfo=None, now=None,
+                root="output", extra=None):
+    """Save an IMAGE batch into <root>/<subfolder> (root: output, or temp for a preview). Returns (saved_paths, ui_images).
 
     `captions` (a list, one text per picture) also writes a same-name .txt file next to each picture.
+    `extra` (model and input text) turns on the {width} {height} {batch} {model} {input} tokens.
     """
-    out_root = root_folder("output")
+    out_root = root_folder(root)
     folder = safe_join(out_root, subfolder)
     os.makedirs(folder, exist_ok=True)
     count = int(images.shape[0])
+    if extra is not None:
+        extra = dict(extra, width=int(images.shape[2]), height=int(images.shape[1]), batch=count)
     names = plan_names(list_files(folder), pattern, FORMATS[fmt], count, seed, now,
-                       companion=".txt" if captions is not None else None)
+                       companion=".txt" if captions is not None else None, extra=extra)
     chunks = workflow_chunks(prompt, extra_pnginfo) if fmt == "png" else None
     rel = os.path.relpath(folder, os.path.realpath(out_root))
     rel = "" if rel == "." else rel.replace("\\", "/")
@@ -266,5 +295,5 @@ def save_images(images, subfolder, pattern, fmt, quality, seed=0, captions=None,
             with open(txt, "x", encoding="utf-8", newline="\n") as f:
                 f.write(captions[i if i < len(captions) else -1])
         paths.append(path)
-        ui.append({"filename": name, "subfolder": rel, "type": "output"})
+        ui.append({"filename": name, "subfolder": rel, "type": root})
     return paths, ui

@@ -52,6 +52,17 @@ export function pal() {
   return { void: "#fafafa", abyss: "#ffffff", surface: "#eceef1", text: "#1e1f22", gold: "#8b6914", gold_dim: "#b48a1c", muted: "#4a4d55" };
 }
 
+// Job colour of a node class: loaders blue, working nodes green, save and preview brown, and so on.
+// An explicit list (role_of) wins, then the node group (group_roles). Returns {role, color, bgcolor} or null.
+export function roleColors(type, group) {
+  const th = getTheme();
+  let role = null;
+  for (const [r, list] of Object.entries(th.role_of || {})) if (list.includes(type)) role = r;
+  if (!role) role = (th.group_roles || {})[group] || null;
+  const c = role && th.roles ? th.roles[role] : null;
+  return c ? { role, color: c.color, bgcolor: c.bgcolor } : null;
+}
+
 export function store(key, fallback) {
   try {
     const raw = localStorage.getItem("sy." + key);

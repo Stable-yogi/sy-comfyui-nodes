@@ -1,7 +1,7 @@
 // SY Nodes by Stable Yogi: colour coding, SY mark and the SY Nodes side panel.
 // Reads colours from sy_theme.json (the one colour file). No network, no eval, no storage of secrets.
 import { app } from "../../scripts/app.js";
-import { pal } from "./sy_core.js";
+import { pal, roleColors } from "./sy_core.js";
 
 const EXT = "sy.ui";
 const PREFIX = "SY";
@@ -39,8 +39,14 @@ function groupOf(nodeData) {
 }
 
 function paint(node, nodeData) {
-  const mode = setting(SETTING_COLOR, "Group colours");
+  const mode = setting(SETTING_COLOR, "Role colours");
   if (mode === "Off" || !theme) return;
+  const r = mode === "Role colours" ? roleColors(nodeData.name, groupOf(nodeData)) : null;
+  if (r) {
+    node.color = r.color;
+    node.bgcolor = r.bgcolor;
+    return;
+  }
   const g = theme.groups[groupOf(nodeData)];
   if (!g) return;
   if (mode === "Gold only") {
@@ -57,7 +63,7 @@ function paintNote(node) {
   if (!w) return;
   const apply = () => {
     const st = theme?.note_styles?.[w.value];
-    if (!st || setting(SETTING_COLOR, "Group colours") === "Off") return;
+    if (!st || setting(SETTING_COLOR, "Role colours") === "Off") return;
     node.color = st.color;
     node.bgcolor = st.bgcolor;
     node.setDirtyCanvas?.(true, true);
@@ -154,9 +160,9 @@ function renderPanel(el) {
       }
       const row = document.createElement("button");
       row.type = "button";
-      const g = theme?.groups?.[n.group];
+      const g = roleColors(n.type, n.group) || theme?.groups?.[n.group];
       row.style.cssText = "display:block;width:100%;text-align:left;margin-bottom:4px;padding:6px 8px;border-radius:6px;cursor:pointer;" +
-        "border:0;border-left:6px solid " + (g?.color || "#8b6914") + ";background:" + P.surface + ";color:inherit";
+        "border:0;border-left:6px solid " + (g?.color || P.gold_dim) + ";background:" + P.surface + ";color:inherit";
       const nm = document.createElement("div");
       nm.textContent = n.name;
       nm.style.fontWeight = "600";
@@ -239,7 +245,7 @@ function openHelp(focusType) {
       if (needle && !hay.includes(needle)) continue;
       const card = document.createElement("details");
       if (n.type === focusType || (needle && body.children.length < 2)) card.open = true;
-      card.style.cssText = "margin-bottom:6px;padding:6px 8px;border-radius:6px;border-left:6px solid " + (theme?.groups?.[n.group]?.color || "#8b6914") + ";background:" + (t.surface || "#2b2d31");
+      card.style.cssText = "margin-bottom:6px;padding:6px 8px;border-radius:6px;border-left:6px solid " + ((roleColors(n.type, n.group) || theme?.groups?.[n.group])?.color || t.gold_dim) + ";background:" + (t.surface || "#2b2d31");
       const sum = document.createElement("summary");
       sum.textContent = info.name + "  (" + n.group + ")";
       sum.style.cssText = "cursor:pointer;font-weight:600";
@@ -296,9 +302,9 @@ app.registerExtension({
       id: SETTING_COLOR,
       name: "SY nodes: colour coding",
       type: "combo",
-      options: ["Group colours", "Gold only", "Off"],
-      defaultValue: "Group colours",
-      tooltip: "Group colours: each SY group has its own title colour. Gold only: all SY nodes share one. Off: ComfyUI default.",
+      options: ["Role colours", "Group colours", "Gold only", "Off"],
+      defaultValue: "Role colours",
+      tooltip: "Role colours: loaders blue, working nodes green, text teal, numbers purple, save brown. Group colours: one colour per SY group. Gold only: all gold. Off: ComfyUI default.",
     },
     {
       id: "SY.Look",
@@ -354,6 +360,8 @@ app.registerExtension({
   async beforeRegisterNodeDef(nodeType, nodeData) {
     if (!nodeData?.name?.startsWith(PREFIX) || groupOf(nodeData) === "") return;
     await loadTheme();
+    // clear white title text on the coloured title bar (LiteGraph reads title_text_color from the class)
+    if (setting(SETTING_COLOR, "Role colours") !== "Off") nodeType.title_text_color = theme?.tokens?.white || "#ffffff";
     const created = nodeType.prototype.onNodeCreated;
     nodeType.prototype.onNodeCreated = function () {
       if (created) created.apply(this, arguments);
