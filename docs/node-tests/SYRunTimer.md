@@ -21,7 +21,7 @@ The harness builds a starting set of inputs from the default of every input (fir
 
 | # | Input changed | Result | Output / message |
 |---|---|---|---|
-| 1 | baseline (all defaults) | PASS | *=str 'test'; FLOAT=float 0 |
+| 1 | baseline (all defaults) | PASS | *=str 'test'; FLOAT=float 0.016 |
 | 2 | reset = True | PASS | *=str 'test'; FLOAT=float 0 |
 
 ## Verdict

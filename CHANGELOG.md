@@ -17,3 +17,4 @@
 - 3D Scene SY loads .glb model files (up to 3000 triangles, shown as shaded and depth pictures).
 - Status dot in the node title: gold ready, yellow missing link, green ran fine, red stopped (setting SY.StatusBadge).
 - docs/node-tests/: one test page per node plus an index, made by a harness that tries every option.
+- Batches H and I: Frame Count Snap, Duration Frames, Prompt Schedule, Prompt Schedule List, Video Size Fit, Time Code, Number Wrap, Text Repeat, Date Parts, Cycle Pick, Percent Of, Line Pick, Hex Colour Mix, Ratio Split (167 nodes with Set/Get). Node-test docs now cover file nodes in a throw-away folder.

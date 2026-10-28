@@ -2,7 +2,7 @@
 
 Every input option of every node is run by `sy_nodetest.py` (kept with the project tools). Each node has its own page with the inputs, how it was tested and every case.
 
-Totals: **151** nodes, **1081** cases, **949** passed, **132** rejected (expected), **0** failed, **8** nodes skipped.
+Totals: **165** nodes, **1181** cases, **1034** passed, **147** rejected (expected), **0** failed, **8** nodes skipped.
 
 ## Failures
 
@@ -38,7 +38,10 @@ No failing cases.
 | [Counter SY](SYCounter.md) | SYCounter | 12 | 10 | 2 | 0 | ok |
 | [CropByMask SY](SYCropByMask.md) | SYCropByMask | 11 | 11 | 0 | 0 | ok |
 | [Crop To Aspect SY](SYCropToAspect.md) | SYCropToAspect | 11 | 11 | 0 | 0 | ok |
+| [CyclePick SY](SYCyclePick.md) | SYCyclePick | 5 | 0 | 5 | 0 | ok |
 | [Dataset Pair Check SY](SYDatasetPairCheck.md) | SYDatasetPairCheck | 5 | 5 | 0 | 0 | ok |
+| [DateParts SY](SYDateParts.md) | SYDateParts | 3 | 3 | 0 | 0 | ok |
+| [Duration Frames SY](SYDurationFrames.md) | SYDurationFrames | 11 | 11 | 0 | 0 | ok |
 | [Empty Latent SY](SYEmptyLatent.md) | SYEmptyLatent | 10 | 10 | 0 | 0 | ok |
 | [Filename Builder SY](SYFilenameBuilder.md) | SYFilenameBuilder | 8 | 7 | 1 | 0 | ok |
 | [Film Grain SY](SYFilmGrain.md) | SYFilmGrain | 9 | 9 | 0 | 0 | ok |
@@ -46,12 +49,14 @@ No failing cases.
 | [Flip Rotate SY](SYFlipRotate.md) | SYFlipRotate | 6 | 6 | 0 | 0 | ok |
 | [Float Value SY](SYFloatValue.md) | SYFloatValue | 3 | 3 | 0 | 0 | ok |
 | [Folder Image Count SY](SYFolderImageCount.md) | SYFolderImageCount | 3 | 3 | 0 | 0 | ok |
+| [Frame Count Snap SY](SYFrameCountSnap.md) | SYFrameCountSnap | 10 | 10 | 0 | 0 | ok |
 | [Frame Interpolate Blend SY](SYFrameInterpolateBlend.md) | SYFrameInterpolateBlend | 4 | 4 | 0 | 0 | ok |
 | [Frame Range Info SY](SYFrameRangeInfo.md) | SYFrameRangeInfo | 8 | 4 | 4 | 0 | ok |
 | [Frame Rate Convert SY](SYFrameRateConvert.md) | SYFrameRateConvert | 7 | 7 | 0 | 0 | ok |
 | [Frame Select SY](SYFrameSelect.md) | SYFrameSelect | 8 | 4 | 4 | 0 | ok |
 | [Free VRAM SY](SYFreeVRAM.md) | SYFreeVRAM | 2 | 2 | 0 | 0 | ok |
 | [Gaussian Blur SY](SYGaussianBlur.md) | SYGaussianBlur | 4 | 4 | 0 | 0 | ok |
+| [HexColourMix SY](SYHexColourMix.md) | SYHexColourMix | 5 | 3 | 2 | 0 | ok |
 | [If Else Number SY](SYIfElseNumber.md) | SYIfElseNumber | 6 | 6 | 0 | 0 | ok |
 | [If Else Text SY](SYIfElseText.md) | SYIfElseText | 4 | 4 | 0 | 0 | ok |
 | [Image Batch Split Every N SY](SYImageBatchSplitEveryN.md) | SYImageBatchSplitEveryN | 6 | 4 | 2 | 0 | ok |
@@ -71,6 +76,7 @@ No failing cases.
 | [Layout Boxes Preview SY](SYLayoutBoxesPreview.md) | SYLayoutBoxesPreview | 12 | 0 | 12 | 0 | ok |
 | [Layout JSON Check SY](SYLayoutJsonCheck.md) | SYLayoutJsonCheck | 9 | 9 | 0 | 0 | ok |
 | [Levels Adjust SY](SYLevelsAdjust.md) | SYLevelsAdjust | 12 | 12 | 0 | 0 | ok |
+| [LinePick SY](SYLinePick.md) | SYLinePick | 5 | 2 | 3 | 0 | ok |
 | [List Folder Files SY](SYListFolderFiles.md) | SYListFolderFiles | 4 | 4 | 0 | 0 | ok |
 | [List To Batch SY](SYListToBatch.md) | SYListToBatch | 2 | 2 | 0 | 0 | ok |
 | [Load Image From Folder SY](SYLoadImageFromFolder.md) | SYLoadImageFromFolder | 5 | 5 | 0 | 0 | ok |
@@ -97,20 +103,25 @@ No failing cases.
 | [Negative Prompt Presets SY](SYNegativePromptPresets.md) | SYNegativePromptPresets | 12 | 11 | 1 | 0 | ok |
 | [Note SY](SYNote.md) | SYNote | 6 | 6 | 0 | 0 | ok |
 | [Number Compare SY](SYNumberCompare.md) | SYNumberCompare | 10 | 10 | 0 | 0 | ok |
+| [NumberWrap SY](SYNumberWrap.md) | SYNumberWrap | 10 | 7 | 3 | 0 | ok |
 | [Orientation SY](SYOrientation.md) | SYOrientation | 3 | 3 | 0 | 0 | ok |
 | [Pad Image SY](SYPadImage.md) | SYPadImage | 15 | 15 | 0 | 0 | ok |
 | [Paint Mask SY](SYPaintMask.md) | SYPaintMask | 0 | 0 | 0 | 0 | tested in a real ComfyUI page: painted, ran the workflow, saved and reloaded it, and the mask came back unc... |
 | [PasteBack SY](SYPasteBack.md) | SYPasteBack | 5 | 4 | 1 | 0 | ok |
+| [PercentOf SY](SYPercentOf.md) | SYPercentOf | 9 | 9 | 0 | 0 | ok |
 | [Ping Pong SY](SYPingPong.md) | SYPingPong | 2 | 2 | 0 | 0 | ok |
 | [Pixel Count Info SY](SYPixelCountInfo.md) | SYPixelCountInfo | 7 | 7 | 0 | 0 | ok |
 | [Precision Info SY](SYPrecisionInfo.md) | SYPrecisionInfo | 17 | 17 | 0 | 0 | ok |
 | [Prompt Choice SY](SYPromptChoice.md) | SYPromptChoice | 4 | 4 | 0 | 0 | ok |
 | [Prompt Cleaner SY](SYPromptCleaner.md) | SYPromptCleaner | 3 | 3 | 0 | 0 | ok |
 | [Prompt Enhance Request SY](SYPromptEnhanceRequest.md) | SYPromptEnhanceRequest | 12 | 0 | 12 | 0 | ok |
+| [Prompt Schedule SY](SYPromptSchedule.md) | SYPromptSchedule | 4 | 4 | 0 | 0 | ok |
+| [Prompt Schedule List SY](SYPromptScheduleList.md) | SYPromptScheduleList | 5 | 5 | 0 | 0 | ok |
 | [Prompt Style Templates SY](SYPromptStyleTemplates.md) | SYPromptStyleTemplates | 15 | 15 | 0 | 0 | ok |
 | [Prompt Weight Wrap SY](SYPromptWeightWrap.md) | SYPromptWeightWrap | 9 | 9 | 0 | 0 | ok |
 | [Random Choice SY](SYRandomChoice.md) | SYRandomChoice | 4 | 0 | 4 | 0 | ok |
 | [Random In Range SY](SYRandomInRange.md) | SYRandomInRange | 8 | 6 | 2 | 0 | ok |
+| [RatioSplit SY](SYRatioSplit.md) | SYRatioSplit | 5 | 4 | 1 | 0 | ok |
 | [Regex Extract SY](SYRegexExtract.md) | SYRegexExtract | 8 | 5 | 3 | 0 | ok |
 | [Resolution SY](SYResolution.md) | SYResolution | 19 | 19 | 0 | 0 | ok |
 | [Reverse Batch SY](SYReverseBatch.md) | SYReverseBatch | 1 | 1 | 0 | 0 | ok |
@@ -144,11 +155,13 @@ No failing cases.
 | [Text Contains SY](SYTextContains.md) | SYTextContains | 4 | 0 | 4 | 0 | ok |
 | [Text Join SY](SYTextJoin.md) | SYTextJoin | 7 | 7 | 0 | 0 | ok |
 | [Text Number Format SY](SYTextNumberFormat.md) | SYTextNumberFormat | 10 | 10 | 0 | 0 | ok |
+| [TextRepeat SY](SYTextRepeat.md) | SYTextRepeat | 7 | 7 | 0 | 0 | ok |
 | [Text Split Lines SY](SYTextSplitLines.md) | SYTextSplitLines | 6 | 0 | 6 | 0 | ok |
 | [Text Stats SY](SYTextStats.md) | SYTextStats | 2 | 2 | 0 | 0 | ok |
 | [Text Template SY](SYTextTemplate.md) | SYTextTemplate | 10 | 8 | 2 | 0 | ok |
 | [Text Trim To Tokens SY](SYTextTrimToTokens.md) | SYTextTrimToTokens | 7 | 7 | 0 | 0 | ok |
 | [Tile Grid Calc SY](SYTileGridCalc.md) | SYTileGridCalc | 13 | 10 | 3 | 0 | ok |
+| [Time Code SY](SYTimeCode.md) | SYTimeCode | 8 | 8 | 0 | 0 | ok |
 | [Timestamp SY](SYTimestamp.md) | SYTimestamp | 6 | 6 | 0 | 0 | ok |
 | [Token Estimate SY](SYTokenEstimate.md) | SYTokenEstimate | 2 | 2 | 0 | 0 | ok |
 | [Unet Loader SY](SYUnetLoader.md) | SYUnetLoader | 0 | 0 | 0 | 0 | run by hand with a real unet file on the processor: it loaded in 6 s and gave a model |
@@ -156,6 +169,7 @@ No failing cases.
 | [Video Frame Counter SY](SYVideoFrameCounter.md) | SYVideoFrameCounter | 12 | 12 | 0 | 0 | ok |
 | [Video Frames Calc SY](SYVideoFramesCalc.md) | SYVideoFramesCalc | 8 | 7 | 1 | 0 | ok |
 | [Video Loop Frames SY](SYVideoLoopFrames.md) | SYVideoLoopFrames | 5 | 5 | 0 | 0 | ok |
+| [Video Size Fit SY](SYVideoSizeFit.md) | SYVideoSizeFit | 13 | 12 | 1 | 0 | ok |
 | [Video Size Presets SY](SYVideoSizePresets.md) | SYVideoSizePresets | 6 | 6 | 0 | 0 | ok |
 | [Vignette SY](SYVignette.md) | SYVignette | 6 | 6 | 0 | 0 | ok |
 | [VRAM Estimate SY](SYVramEstimate.md) | SYVramEstimate | 7 | 7 | 0 | 0 | ok |

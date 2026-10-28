@@ -24,8 +24,8 @@ The harness builds a starting set of inputs from the default of every input (fir
 | 1 | baseline (all defaults) | PASS | INT=int 0 |
 | 2 | seed = 18446744073709551615 (max) | PASS | INT=int 18446744073709551615 |
 | 3 | seed = 9223372036854775807 (mid) | PASS | INT=int 9223372036854775807 |
-| 4 | mode = 'random' | PASS | INT=int 8460841884322990393 |
-| 5 | mode = 'increment' | PASS | INT=int 8460841884322990394 |
+| 4 | mode = 'random' | PASS | INT=int 7327198928979279320 |
+| 5 | mode = 'increment' | PASS | INT=int 7327198928979279321 |
 
 ## Verdict
 

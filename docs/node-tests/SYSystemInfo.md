@@ -20,7 +20,7 @@ The harness builds a starting set of inputs from the default of every input (fir
 
 | # | Input changed | Result | Output / message |
 |---|---|---|---|
-| 1 | baseline (all defaults) | PASS | STRING=str 'VRAM: 3% used, 95346 of 97886 MB free (ok) RAM: 44% used, 108333 of 194196 MB...'; INT=int 95346; INT=int 108333 |
+| 1 | baseline (all defaults) | PASS | STRING=str 'VRAM: 3% used, 95346 of 97886 MB free (ok) RAM: 36% used, 124293 of 194196 MB...'; INT=int 95346; INT=int 124293 |
 
 ## Verdict
 
