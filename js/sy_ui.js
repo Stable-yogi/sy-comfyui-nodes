@@ -51,6 +51,29 @@ function paint(node, nodeData) {
   }
 }
 
+function paintNote(node) {
+  const w = node.widgets && node.widgets.find((x) => x.name === "style");
+  if (!w) return;
+  const apply = () => {
+    const st = theme?.note_styles?.[w.value];
+    if (!st || setting(SETTING_COLOR, "Group colours") === "Off") return;
+    node.color = st.color;
+    node.bgcolor = st.bgcolor;
+    node.setDirtyCanvas?.(true, true);
+  };
+  const cb = w.callback;
+  w.callback = function () {
+    if (cb) cb.apply(this, arguments);
+    apply();
+  };
+  apply();
+  const cfg = node.onConfigure;
+  node.onConfigure = function () {
+    if (cfg) cfg.apply(this, arguments);
+    apply();
+  };
+}
+
 function addMark(node) {
   const orig = node.onDrawForeground;
   node.onDrawForeground = function (ctx) {
@@ -149,6 +172,121 @@ function renderPanel(el) {
   draw();
 }
 
+
+// ---- help window (Alt+H): search every SY node, full help, add to canvas ---------------------
+let helpEl = null;
+
+function helpFor(type) {
+  const ctor = LiteGraph.registered_node_types?.[type];
+  const d = ctor?.nodeData;
+  const rows = [];
+  for (const kind of ["required", "optional"]) {
+    for (const [name, spec] of Object.entries(d?.input?.[kind] || {})) {
+      const opt = Array.isArray(spec) ? spec[1] || {} : {};
+      rows.push({ name, kind, tip: opt.tooltip || "" });
+    }
+  }
+  return { name: d?.display_name || type, desc: d?.description || "", rows };
+}
+
+function closeHelp() {
+  if (helpEl) {
+    helpEl.remove();
+    helpEl = null;
+  }
+}
+
+function openHelp(focusType) {
+  if (helpEl && !focusType) return closeHelp();
+  closeHelp();
+  const t = theme?.tokens || {};
+  helpEl = document.createElement("div");
+  helpEl.id = "sy-help";
+  helpEl.setAttribute("role", "dialog");
+  helpEl.setAttribute("aria-label", "SY Nodes help");
+  helpEl.style.cssText = "position:fixed;top:70px;right:20px;width:420px;max-height:75vh;overflow:auto;z-index:9999;" +
+    "padding:12px;border-radius:10px;font-family:'DM Sans',sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.5);" +
+    "background:" + (t.void || "#1a1b1e") + ";color:" + (t.text || "#f2f3f5") + ";border:1px solid " + (t.gold_dim || "#8b6914");
+  const bar = document.createElement("div");
+  bar.style.cssText = "display:flex;justify-content:space-between;align-items:center;margin-bottom:8px";
+  const h = document.createElement("b");
+  h.textContent = "SY Nodes help";
+  h.style.color = t.gold || "#d4a537";
+  const x = document.createElement("button");
+  x.textContent = "Close";
+  x.setAttribute("aria-label", "Close help");
+  x.style.cssText = "cursor:pointer;border-radius:6px;border:1px solid " + (t.gold_dim || "#8b6914") + ";background:transparent;color:inherit;padding:2px 8px";
+  x.onclick = closeHelp;
+  bar.append(h, x);
+  const q = document.createElement("input");
+  q.type = "search";
+  q.placeholder = "Search (name, words, group)";
+  q.style.cssText = "width:100%;box-sizing:border-box;margin-bottom:8px;padding:6px;border-radius:6px;border:1px solid " + (t.gold_dim || "#8b6914") + ";background:" + (t.abyss || "#1e1f22") + ";color:inherit";
+  const body = document.createElement("div");
+  helpEl.append(bar, q, body);
+  document.body.append(helpEl);
+  helpEl.addEventListener("keydown", (e) => { if (e.key === "Escape") closeHelp(); });
+
+  const all = listSyNodes();
+  const draw = () => {
+    const needle = q.value.trim().toLowerCase();
+    body.innerHTML = "";
+    for (const n of all) {
+      const info = helpFor(n.type);
+      const hay = (info.name + " " + info.desc + " " + n.group + " " + info.rows.map((r) => r.name + " " + r.tip).join(" ")).toLowerCase();
+      if (needle && !hay.includes(needle)) continue;
+      const card = document.createElement("details");
+      if (n.type === focusType || (needle && body.children.length < 2)) card.open = true;
+      card.style.cssText = "margin-bottom:6px;padding:6px 8px;border-radius:6px;border-left:6px solid " + (theme?.groups?.[n.group]?.color || "#8b6914") + ";background:" + (t.surface || "#2b2d31");
+      const sum = document.createElement("summary");
+      sum.textContent = info.name + "  (" + n.group + ")";
+      sum.style.cssText = "cursor:pointer;font-weight:600";
+      const d = document.createElement("div");
+      d.textContent = info.desc;
+      d.style.cssText = "font-size:12px;opacity:.85;margin:6px 0";
+      card.append(sum, d);
+      for (const r of info.rows) {
+        const li = document.createElement("div");
+        li.style.cssText = "font-size:12px;margin-left:8px";
+        li.textContent = r.name + (r.kind === "optional" ? " (optional)" : "") + (r.tip ? ": " + r.tip : "");
+        card.append(li);
+      }
+      const add = document.createElement("button");
+      add.textContent = "Add to canvas";
+      add.style.cssText = "margin-top:6px;cursor:pointer;border-radius:6px;border:1px solid " + (t.gold_dim || "#8b6914") + ";background:transparent;color:" + (t.gold || "#d4a537") + ";padding:2px 8px";
+      add.onclick = () => addNodeToCanvas(n.type);
+      card.append(add);
+      body.append(card);
+    }
+    if (!body.children.length) body.textContent = "No SY node matches.";
+  };
+  q.addEventListener("input", draw);
+  draw();
+  q.focus();
+  if (focusType) helpEl.querySelector("details[open]")?.scrollIntoView?.({ block: "nearest" });
+}
+
+// ---- group switch: mute / bypass / enable every node inside a group -------------------------
+function setGroupMode(group, mode) {
+  try { group.recomputeInsideNodes?.(); } catch (_) { /* older frontends */ }
+  let nodes = group._children ? [...group._children].filter((c) => c.mode !== undefined) : group._nodes || [];
+  if (!nodes.length) {
+    // fallback: every node whose box sits inside the group box (works when the frontend list is empty)
+    const [gx, gy] = [group.pos[0], group.pos[1]];
+    const [gw, gh] = [group.size[0], group.size[1]];
+    nodes = (app.graph._nodes || []).filter((n) => n.pos[0] >= gx && n.pos[1] >= gy &&
+      n.pos[0] + n.size[0] <= gx + gw && n.pos[1] + n.size[1] <= gy + gh);
+  }
+  for (const n of nodes) n.mode = mode;
+  app.graph.setDirtyCanvas(true, true);
+  return nodes.length;
+}
+
+function groupAt(canvas) {
+  const pos = canvas?.graph_mouse;
+  return pos ? app.graph.getGroupOnPos?.(pos[0], pos[1]) : null;
+}
+
 app.registerExtension({
   name: EXT,
   settings: [
@@ -168,6 +306,26 @@ app.registerExtension({
       tooltip: "A small gold SY in the top right of every SY node, so you can see which nodes are ours.",
     },
   ],
+  commands: [
+    { id: "SY.ToggleHelp", icon: "pi pi-question-circle", label: "SY Nodes: open or close help", function: () => openHelp() },
+  ],
+  keybindings: [
+    { commandId: "SY.ToggleHelp", combo: { key: "h", alt: true } },
+  ],
+  getNodeMenuItems(node) {
+    if (!node?.type?.startsWith(PREFIX) || !LiteGraph.registered_node_types?.[node.type]?.nodeData) return [];
+    return [null, { content: "SY help for this node", callback: () => openHelp(node.type) }];
+  },
+  getCanvasMenuItems(canvas) {
+    const g = groupAt(canvas);
+    if (!g) return [];
+    return [
+      null,
+      { content: "SY: mute group", callback: () => setGroupMode(g, 2) },
+      { content: "SY: bypass group", callback: () => setGroupMode(g, 4) },
+      { content: "SY: enable group", callback: () => setGroupMode(g, 0) },
+    ];
+  },
   async setup() {
     await loadTheme();
     try {
@@ -191,6 +349,7 @@ app.registerExtension({
       if (created) created.apply(this, arguments);
       paint(this, nodeData);
       addMark(this);
+      if (nodeData.name === "SYNote") paintNote(this);
     };
   },
 });

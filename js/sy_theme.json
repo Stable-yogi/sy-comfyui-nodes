@@ -2,20 +2,83 @@
   "_note": "ONE source of truth for SY colours. Values come from the portal theme.css (sy-brand skill). Change a colour here only; python and js both read this file.",
   "version": 1,
   "tokens": {
-    "gold": "#d4a537", "gold_light": "#f0c45a", "gold_pale": "#f5dea0", "gold_dim": "#8b6914", "gold_ember": "#5a4210",
-    "void": "#1a1b1e", "abyss": "#1e1f22", "deep": "#232428", "surface": "#2b2d31", "surface_2": "#313338", "surface_3": "#383a40", "surface_4": "#404249",
-    "purple_deep": "#2c2250", "purple_mid": "#3a2d68", "purple_soft": "#4e3d80", "purple_accent": "#8b6ad0",
-    "cyan": "#3aefcf", "red_soft": "#ed4245", "green": "#57f287", "yellow": "#fee75c",
-    "text": "#f2f3f5", "text_2": "#c2c6ce"
+    "gold": "#d4a537",
+    "gold_light": "#f0c45a",
+    "gold_pale": "#f5dea0",
+    "gold_dim": "#8b6914",
+    "gold_ember": "#5a4210",
+    "void": "#1a1b1e",
+    "abyss": "#1e1f22",
+    "deep": "#232428",
+    "surface": "#2b2d31",
+    "surface_2": "#313338",
+    "surface_3": "#383a40",
+    "surface_4": "#404249",
+    "purple_deep": "#2c2250",
+    "purple_mid": "#3a2d68",
+    "purple_soft": "#4e3d80",
+    "purple_accent": "#8b6ad0",
+    "cyan": "#3aefcf",
+    "red_soft": "#ed4245",
+    "green": "#57f287",
+    "yellow": "#fee75c",
+    "text": "#f2f3f5",
+    "text_2": "#c2c6ce"
   },
   "groups": {
-    "Image":   {"color": "#8b6914", "bgcolor": "#2b2d31"},
-    "Text":    {"color": "#4e3d80", "bgcolor": "#2b2d31"},
-    "Values":  {"color": "#5a4210", "bgcolor": "#2b2d31"},
-    "Logic":   {"color": "#2c2250", "bgcolor": "#2b2d31"},
-    "Resize":  {"color": "#3a2d68", "bgcolor": "#2b2d31"},
-    "Utility": {"color": "#404249", "bgcolor": "#2b2d31"},
-    "Editors": {"color": "#383a40", "bgcolor": "#2b2d31"},
-    "Notes":   {"color": "#313338", "bgcolor": "#232428"}
+    "Image": {
+      "color": "#8b6914",
+      "bgcolor": "#2b2d31"
+    },
+    "Text": {
+      "color": "#4e3d80",
+      "bgcolor": "#2b2d31"
+    },
+    "Values": {
+      "color": "#5a4210",
+      "bgcolor": "#2b2d31"
+    },
+    "Logic": {
+      "color": "#2c2250",
+      "bgcolor": "#2b2d31"
+    },
+    "Resize": {
+      "color": "#3a2d68",
+      "bgcolor": "#2b2d31"
+    },
+    "Utility": {
+      "color": "#404249",
+      "bgcolor": "#2b2d31"
+    },
+    "Editors": {
+      "color": "#383a40",
+      "bgcolor": "#2b2d31"
+    },
+    "Notes": {
+      "color": "#313338",
+      "bgcolor": "#232428"
+    }
+  },
+  "note_styles": {
+    "info": {
+      "color": "#1f4e79",
+      "bgcolor": "#16293b"
+    },
+    "tip": {
+      "color": "#2e6b3f",
+      "bgcolor": "#1a2d21"
+    },
+    "warning": {
+      "color": "#8c2f31",
+      "bgcolor": "#34191a"
+    },
+    "step": {
+      "color": "#8b6914",
+      "bgcolor": "#2d2616"
+    },
+    "model": {
+      "color": "#4e3d80",
+      "bgcolor": "#241f38"
+    }
   }
 }
