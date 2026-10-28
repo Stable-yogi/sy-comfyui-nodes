@@ -51,7 +51,7 @@ def scan_source(path):
             if m in ("comfy", "folder_paths", "server", "nodes", "execution") and n.col_offset == 0:
                 check(False, "%s:%d top-level import of %s (import inside a function)" % (name, n.lineno, m))
     check(not AI_WORDS.search(src), "%s mentions an AI credit word" % name)
-    check(not HEX.search(src), "%s hard-codes a hex colour (use assets/sy_theme.json)" % name)
+    check(not HEX.search(src), "%s hard-codes a hex colour (use js/sy_theme.json)" % name)
 
 
 def load(path):
@@ -62,13 +62,31 @@ def load(path):
 
 
 def check_theme():
-    t = json.load(open(os.path.join(ROOT, "assets", "sy_theme.json"), encoding="utf-8"))
+    t = json.load(open(os.path.join(ROOT, "js", "sy_theme.json"), encoding="utf-8"))
     check("tokens" in t and "groups" in t, "theme file lacks tokens/groups")
     for g, v in t["groups"].items():
         check(HEX.fullmatch(v["color"]) and HEX.fullmatch(v["bgcolor"]), "theme group %s has a bad colour" % g)
     sys.path.insert(0, NODES)
     import _sy_common as c
     check(set(c.GROUPS) == set(t["groups"]), "GROUPS in _sy_common.py and groups in sy_theme.json differ")
+
+
+def check_tooltips(base, cid, cls):
+    """Every required/optional input needs a plain-English tooltip of 1..120 characters."""
+    check(isinstance(getattr(cls, "DESCRIPTION", None), str) and cls.DESCRIPTION.strip() != "",
+          "%s: %s has no DESCRIPTION text" % (base, cid))
+    try:
+        spec = cls.INPUT_TYPES()
+    except Exception as e:
+        check(False, "%s: %s INPUT_TYPES() failed: %s" % (base, cid, e))
+        return
+    for section in ("required", "optional"):
+        for iname, d in (spec.get(section) or {}).items():
+            opts = d[1] if isinstance(d, (tuple, list)) and len(d) > 1 and isinstance(d[1], dict) else {}
+            tip = opts.get("tooltip")
+            ok = isinstance(tip, str) and tip.strip() != "" and len(tip) <= 120
+            check(ok, "%s: %s input '%s' (%s) needs a non-empty tooltip of at most 120 characters"
+                  % (base, cid, iname, section))
 
 
 def check_node_files():
@@ -91,6 +109,7 @@ def check_node_files():
             check(dm.get(cid, "").endswith(" SY"), "%s: display name of %s must end with ' SY'" % (base, cid))
             check(str(getattr(cls, "CATEGORY", "")).startswith("SY/"), "%s: CATEGORY of %s must start with 'SY/'" % (base, cid))
             check(bool(getattr(cls, "DESCRIPTION", "")), "%s: %s needs a DESCRIPTION" % (base, cid))
+            check_tooltips(base, cid, cls)
             check(hasattr(cls, "INPUT_TYPES") and hasattr(cls, "RETURN_TYPES") and hasattr(cls, "FUNCTION"),
                   "%s: %s lacks INPUT_TYPES/RETURN_TYPES/FUNCTION" % (base, cid))
             check(hasattr(cls, getattr(cls, "FUNCTION", "?")), "%s: %s FUNCTION names a missing method" % (base, cid))

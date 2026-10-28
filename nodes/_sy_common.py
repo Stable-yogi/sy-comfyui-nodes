@@ -3,7 +3,7 @@ import json
 import os
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-_THEME_PATH = os.path.join(_ROOT, "assets", "sy_theme.json")
+_THEME_PATH = os.path.join(_ROOT, "js", "sy_theme.json")
 
 PREFIX = "SY"                 # class id prefix: SYSeed
 SUFFIX = " SY"                # display name suffix: "Seed SY"

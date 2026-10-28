@@ -47,8 +47,8 @@ class SYRunTimer:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "value": (ANY,),
-                "reset": ("BOOLEAN", {"default": False}),
+                "value": (ANY, {"tooltip": "Anything you pass through. It comes out unchanged, and the timer measures the time."}),
+                "reset": ("BOOLEAN", {"default": False, "tooltip": "On: restart the timer from zero on this run."}),
             },
             "hidden": {"unique_id": "UNIQUE_ID"},
         }

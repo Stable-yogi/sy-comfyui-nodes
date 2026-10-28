@@ -36,8 +36,8 @@ class SYSeed:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "seed": ("INT", {"default": 0, "min": 0, "max": MAX_SEED}),
-                "mode": (list(MODES), {"default": "fixed"}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": MAX_SEED, "tooltip": "The seed number. Same number gives the same picture."}),
+                "mode": (list(MODES), {"default": "fixed", "tooltip": "Fixed keeps the number. Random picks a new one each run. Increment adds 1 each run."}),
             },
             "hidden": {"unique_id": "UNIQUE_ID"},
         }

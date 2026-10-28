@@ -46,11 +46,11 @@ class SYFindReplace:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "text": ("STRING", {"default": "", "multiline": True}),
-                "find": ("STRING", {"default": ""}),
-                "replace": ("STRING", {"default": ""}),
-                "use_regex": ("BOOLEAN", {"default": False}),
-                "case_sensitive": ("BOOLEAN", {"default": True}),
+                "text": ("STRING", {"default": "", "multiline": True, "tooltip": "The text you want to change."}),
+                "find": ("STRING", {"default": "", "tooltip": "The words to look for in the text."}),
+                "replace": ("STRING", {"default": "", "tooltip": "What to put in place of every match. Empty removes the match."}),
+                "use_regex": ("BOOLEAN", {"default": False, "tooltip": "On: Find is a pattern (regex) for advanced matching. Off: plain words."}),
+                "case_sensitive": ("BOOLEAN", {"default": True, "tooltip": "On: Cat and cat are different. Off: capital letters are ignored."}),
             }
         }
 

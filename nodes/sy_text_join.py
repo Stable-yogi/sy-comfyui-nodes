@@ -24,14 +24,14 @@ class SYTextJoin:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "separator": ("STRING", {"default": ", "}),
-                "skip_empty": ("BOOLEAN", {"default": True}),
+                "separator": ("STRING", {"default": ", ", "tooltip": "What goes between the texts. A comma and space is common."}),
+                "skip_empty": ("BOOLEAN", {"default": True, "tooltip": "On: empty texts are left out so you get no double separators."}),
             },
             "optional": {
-                "text_a": ("STRING", {"default": "", "multiline": True}),
-                "text_b": ("STRING", {"default": "", "multiline": True}),
-                "text_c": ("STRING", {"default": "", "multiline": True}),
-                "text_d": ("STRING", {"default": "", "multiline": True}),
+                "text_a": ("STRING", {"default": "", "multiline": True, "tooltip": "The first text to join. Leave empty to skip it."}),
+                "text_b": ("STRING", {"default": "", "multiline": True, "tooltip": "The second text to join. Leave empty to skip it."}),
+                "text_c": ("STRING", {"default": "", "multiline": True, "tooltip": "The third text to join. Leave empty to skip it."}),
+                "text_d": ("STRING", {"default": "", "multiline": True, "tooltip": "The fourth text to join. Leave empty to skip it."}),
             },
         }
 

@@ -60,7 +60,7 @@ class SYFreeVRAM:
 
     @classmethod
     def INPUT_TYPES(cls):
-        return {"required": {"value": (ANY,), "enabled": ("BOOLEAN", {"default": True})}}
+        return {"required": {"value": (ANY, {"tooltip": "Anything you pass through. It comes out unchanged, after memory is freed."}), "enabled": ("BOOLEAN", {"default": True, "tooltip": "On: free graphics card memory when this runs. Off: do nothing."})}}
 
     @classmethod
     def IS_CHANGED(cls, *args, **kwargs):

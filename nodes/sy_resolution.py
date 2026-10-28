@@ -72,11 +72,11 @@ class SYResolution:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "model_preset": (list(PRESETS), {"default": "Krea 2 (1 MP)"}),
-                "aspect": (list(ASPECTS), {"default": "1:1"}),
-                "orientation": (list(ORIENTATIONS), {"default": "landscape"}),
-                "megapixels": ("FLOAT", {"default": 1.0, "min": 0.1, "max": 16.0, "step": 0.05}),
-                "multiple": ("INT", {"default": 16, "min": 8, "max": 64, "step": 8}),
+                "model_preset": (list(PRESETS), {"default": "Krea 2 (1 MP)", "tooltip": "Picks the size the chosen model works best at."}),
+                "aspect": (list(ASPECTS), {"default": "1:1", "tooltip": "The shape of the picture. 1:1 is square, 16:9 is wide screen."}),
+                "orientation": (list(ORIENTATIONS), {"default": "landscape", "tooltip": "Landscape is wider than tall. Portrait is taller than wide."}),
+                "megapixels": ("FLOAT", {"default": 1.0, "min": 0.1, "max": 16.0, "step": 0.05, "tooltip": "Picture size in millions of pixels. 1.0 is about 1024 by 1024."}),
+                "multiple": ("INT", {"default": 16, "min": 8, "max": 64, "step": 8, "tooltip": "Width and height are rounded to a multiple of this. 16 suits most models."}),
             }
         }
 

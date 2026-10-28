@@ -69,8 +69,8 @@ class SYPromptChoice:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "text": ("STRING", {"default": "", "multiline": True}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": MAX_SEED}),
+                "text": ("STRING", {"default": "", "multiline": True, "tooltip": "Your prompt. Write {red|blue} to pick one option at random."}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": MAX_SEED, "tooltip": "Same number gives the same picks every time. Change it to get other picks."}),
             }
         }
 

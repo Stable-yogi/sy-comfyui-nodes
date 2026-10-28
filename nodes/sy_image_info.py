@@ -30,7 +30,7 @@ class SYImageInfo:
 
     @classmethod
     def INPUT_TYPES(cls):
-        return {"required": {"image": ("IMAGE",)}}
+        return {"required": {"image": ("IMAGE", {"tooltip": "The picture to measure. It passes through unchanged."})}}
 
     def run(self, image):
         width, height, batch, mp = image_dims(tuple(image.shape))

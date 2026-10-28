@@ -37,8 +37,8 @@ class SYAspectFromSize:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "width": ("INT", {"default": 1024, "min": 1, "max": 65536}),
-                "height": ("INT", {"default": 1024, "min": 1, "max": 65536}),
+                "width": ("INT", {"default": 1024, "min": 1, "max": 65536, "tooltip": "Picture width in pixels. Used with height to find the shape, like 16:9."}),
+                "height": ("INT", {"default": 1024, "min": 1, "max": 65536, "tooltip": "Picture height in pixels. Used with width to find the shape, like 16:9."}),
             }
         }
 

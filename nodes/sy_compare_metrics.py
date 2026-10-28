@@ -42,9 +42,9 @@ class SYCompareMetrics:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "image_a": ("IMAGE",),
-                "image_b": ("IMAGE",),
-                "gain": ("FLOAT", {"default": 4.0, "min": 0.0, "max": 1000.0, "step": 0.1}),
+                "image_a": ("IMAGE", {"tooltip": "The first picture to compare, for example the original."}),
+                "image_b": ("IMAGE", {"tooltip": "The second picture to compare. It must be the same size as the first."}),
+                "gain": ("FLOAT", {"default": 4.0, "min": 0.0, "max": 1000.0, "step": 0.1, "tooltip": "Makes small differences easier to see in the output. 1 = true size, 4 = four times brighter."}),
             }
         }
 

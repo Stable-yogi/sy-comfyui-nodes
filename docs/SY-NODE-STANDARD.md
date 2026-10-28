@@ -21,7 +21,7 @@ One rule book for every SY node. `tests/run_selftest.py` enforces the parts mark
 Older repo `comfyui-stableyogi-prompt` uses `StableYogiPrompt` / category `StableYogi`. It stays as is. Its next version moves to `SY` names (ASSUMED, veto anytime).
 
 ## 2. Colours
-- ONE file: `assets/sy_theme.json`. Python reads it through `nodes/_sy_common.py` (`theme()`). JS reads the same file.
+- ONE file: `js/sy_theme.json` (it sits in js/ so the browser can load it). Python reads it through `nodes/_sy_common.py` (`theme()`). JS reads the same file.
 - No hex colour inside a node file [auto]. Change a colour in the theme file only.
 - Values come from the portal palette (skill `sy-brand`): gold `#d4a537` is the brand colour. Font DM Sans.
 - Each group has a node colour and a body colour in `groups`.

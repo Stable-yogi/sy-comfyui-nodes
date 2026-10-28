@@ -26,8 +26,8 @@ class SYText:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "text": ("STRING", {"default": "", "multiline": True}),
-                "strip_lines": ("BOOLEAN", {"default": False}),
+                "text": ("STRING", {"default": "", "multiline": True, "tooltip": "The text to pass on, such as your prompt."}),
+                "strip_lines": ("BOOLEAN", {"default": False, "tooltip": "On: trim spaces at the start and end of every line."}),
             }
         }
 
