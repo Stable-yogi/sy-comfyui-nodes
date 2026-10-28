@@ -18,9 +18,23 @@ Outputs: `STRING`
 
 ## How it was tested
 
-This node was not run by the harness. Reason: skipped: touches disk (the code reads or writes files).
+The harness builds a starting set of inputs from the default of every input (first entry for lists, a small gradient picture for IMAGE and a mask with a filled box for MASK). It runs the node once like that, then changes one input at a time: every entry of every list, the lowest, highest and a middle value of every number, both settings of every on/off switch, and an empty text for every text box. Each run must give the right number of outputs, and pictures and masks must have sane dimensions and no broken (NaN) values. A plain-words refusal to an out-of-range number or empty text counts as REJECTED (expected). Any other error counts as FAIL. The node was run in a temporary folder.
+
+## Cases
+
+| # | Input changed | Result | Output / message |
+|---|---|---|---|
+| 1 | baseline (all defaults) | PASS | STRING=str '[removed]' |
+| 2 | text = '' (empty) | PASS | STRING=str '[removed]' |
+| 3 | subfolder = '' (empty) | PASS | STRING=str '[removed]' |
+| 4 | filename_pattern = '' (empty) | REJECTED | ValueError: file name pattern is empty: type a name such as image_{counter} |
+| 5 | append = True | REJECTED | ValueError: append needs a fixed file name: remove {counter} from the pattern |
+| 6 | seed = 9007199254740992 (max) | PASS | STRING=str '[removed]' |
+| 7 | seed = 4503599627370496 (mid) | PASS | STRING=str '[removed]' |
+
+Note: this node refuses on purpose here (refuses append when the name pattern still has {counter}, with a clear message), so a plain-words refusal in any case is counted as REJECTED.
 
 
 ## Verdict
 
-Not run. skipped: touches disk (the code reads or writes files).
+All 7 cases behaved as expected (5 passed, 2 rejected with a clear message).

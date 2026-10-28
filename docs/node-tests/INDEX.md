@@ -2,7 +2,7 @@
 
 Every input option of every node is run by `sy_nodetest.py` (kept with the project tools). Each node has its own page with the inputs, how it was tested and every case.
 
-Totals: **151** nodes, **1021** cases, **901** passed, **120** rejected (expected), **0** failed, **20** nodes skipped.
+Totals: **151** nodes, **1081** cases, **949** passed, **132** rejected (expected), **0** failed, **8** nodes skipped.
 
 ## Failures
 
@@ -24,13 +24,13 @@ No failing cases.
 | [Batch To List SY](SYBatchToList.md) | SYBatchToList | 1 | 1 | 0 | 0 | ok |
 | [Bool Logic SY](SYBoolLogic.md) | SYBoolLogic | 6 | 6 | 0 | 0 | ok |
 | [Bool Value SY](SYBoolValue.md) | SYBoolValue | 2 | 2 | 0 | 0 | ok |
-| [CLIP Loader SY](SYCLIPLoader.md) | SYCLIPLoader | 0 | 0 | 0 | 0 | skipped: the list for 'clip_name' is filled in by the running app and is empty here |
+| [CLIP Loader SY](SYCLIPLoader.md) | SYCLIPLoader | 0 | 0 | 0 | 0 | run by hand with a real clip_l file on the processor: it loaded in 6 s and gave a CLIP |
 | [Caption Prefix Suffix SY](SYCaptionPrefixSuffix.md) | SYCaptionPrefixSuffix | 6 | 6 | 0 | 0 | ok |
 | [Caption Review SY](SYCaptionReview.md) | SYCaptionReview | 12 | 9 | 3 | 0 | ok |
 | [Caption Style Request SY](SYCaptionStyleRequest.md) | SYCaptionStyleRequest | 9 | 9 | 0 | 0 | ok |
 | [Chat Prompt Builder SY](SYChatPromptBuilder.md) | SYChatPromptBuilder | 6 | 0 | 6 | 0 | ok |
-| [Checkpoint Loader Info SY](SYCheckpointLoaderInfo.md) | SYCheckpointLoaderInfo | 0 | 0 | 0 | 0 | skipped: the list for 'ckpt_name' is filled in by the running app and is empty here |
-| [Checkpoint Name Filter SY](SYCheckpointNameFilter.md) | SYCheckpointNameFilter | 2 | 0 | 2 | 0 | ok |
+| [Checkpoint Loader Info SY](SYCheckpointLoaderInfo.md) | SYCheckpointLoaderInfo | 0 | 0 | 0 | 0 | run by hand with a real 6.5 GB SDXL checkpoint on the processor: 162 s, gave the model, CLIP, VAE and the i... |
+| [Checkpoint Name Filter SY](SYCheckpointNameFilter.md) | SYCheckpointNameFilter | 2 | 2 | 0 | 0 | ok |
 | [Clamp Remap SY](SYClampRemap.md) | SYClampRemap | 15 | 14 | 1 | 0 | ok |
 | [Colour Match SY](SYColourMatch.md) | SYColourMatch | 3 | 3 | 0 | 0 | ok |
 | [Colour Swatch SY](SYColourSwatch.md) | SYColourSwatch | 2 | 1 | 1 | 0 | ok |
@@ -45,7 +45,7 @@ No failing cases.
 | [Find Replace SY](SYFindReplace.md) | SYFindReplace | 6 | 6 | 0 | 0 | ok |
 | [Flip Rotate SY](SYFlipRotate.md) | SYFlipRotate | 6 | 6 | 0 | 0 | ok |
 | [Float Value SY](SYFloatValue.md) | SYFloatValue | 3 | 3 | 0 | 0 | ok |
-| [Folder Image Count SY](SYFolderImageCount.md) | SYFolderImageCount | 0 | 0 | 0 | 0 | skipped: needs the running app's folders (No module named 'folder_paths') |
+| [Folder Image Count SY](SYFolderImageCount.md) | SYFolderImageCount | 3 | 3 | 0 | 0 | ok |
 | [Frame Interpolate Blend SY](SYFrameInterpolateBlend.md) | SYFrameInterpolateBlend | 4 | 4 | 0 | 0 | ok |
 | [Frame Range Info SY](SYFrameRangeInfo.md) | SYFrameRangeInfo | 8 | 4 | 4 | 0 | ok |
 | [Frame Rate Convert SY](SYFrameRateConvert.md) | SYFrameRateConvert | 7 | 7 | 0 | 0 | ok |
@@ -56,11 +56,11 @@ No failing cases.
 | [If Else Text SY](SYIfElseText.md) | SYIfElseText | 4 | 4 | 0 | 0 | ok |
 | [Image Batch Split Every N SY](SYImageBatchSplitEveryN.md) | SYImageBatchSplitEveryN | 6 | 4 | 2 | 0 | ok |
 | [Image Blend SY](SYImageBlend.md) | SYImageBlend | 8 | 8 | 0 | 0 | ok |
-| [Image Compare SY](SYImageCompare.md) | SYImageCompare | 0 | 0 | 0 | 0 | skipped: touches disk (the code reads or writes files) |
+| [Image Compare SY](SYImageCompare.md) | SYImageCompare | 7 | 7 | 0 | 0 | ok |
 | [Image Grid SY](SYImageGrid.md) | SYImageGrid | 12 | 11 | 1 | 0 | ok |
 | [Image Hash Duplicate Check SY](SYImageHashDuplicate.md) | SYImageHashDuplicate | 7 | 7 | 0 | 0 | ok |
 | [Image Info SY](SYImageInfo.md) | SYImageInfo | 1 | 1 | 0 | 0 | ok |
-| [Image Metadata Reader SY](SYImageMetadataReader.md) | SYImageMetadataReader | 0 | 0 | 0 | 0 | skipped: touches disk (the code reads or writes files) |
+| [Image Metadata Reader SY](SYImageMetadataReader.md) | SYImageMetadataReader | 2 | 0 | 2 | 0 | ok |
 | [Image Resize SY](SYImageResize.md) | SYImageResize | 22 | 22 | 0 | 0 | ok |
 | [Int Value SY](SYIntValue.md) | SYIntValue | 3 | 3 | 0 | 0 | ok |
 | [JSON Field Get SY](SYJSONFieldGet.md) | SYJSONFieldGet | 3 | 2 | 1 | 0 | ok |
@@ -71,16 +71,16 @@ No failing cases.
 | [Layout Boxes Preview SY](SYLayoutBoxesPreview.md) | SYLayoutBoxesPreview | 12 | 0 | 12 | 0 | ok |
 | [Layout JSON Check SY](SYLayoutJsonCheck.md) | SYLayoutJsonCheck | 9 | 9 | 0 | 0 | ok |
 | [Levels Adjust SY](SYLevelsAdjust.md) | SYLevelsAdjust | 12 | 12 | 0 | 0 | ok |
-| [List Folder Files SY](SYListFolderFiles.md) | SYListFolderFiles | 0 | 0 | 0 | 0 | skipped: needs the running app's folders (No module named 'folder_paths') |
+| [List Folder Files SY](SYListFolderFiles.md) | SYListFolderFiles | 4 | 4 | 0 | 0 | ok |
 | [List To Batch SY](SYListToBatch.md) | SYListToBatch | 2 | 2 | 0 | 0 | ok |
-| [Load Image From Folder SY](SYLoadImageFromFolder.md) | SYLoadImageFromFolder | 0 | 0 | 0 | 0 | skipped: touches disk (the code reads or writes files) |
-| [Load Image Mini SY](SYLoadImageMini.md) | SYLoadImageMini | 0 | 0 | 0 | 0 | skipped: touches disk (the code reads or writes files) |
-| [Load Text SY](SYLoadText.md) | SYLoadText | 0 | 0 | 0 | 0 | skipped: touches disk (the code reads or writes files) |
-| [Loader Name Picker SY](SYLoaderNamePicker.md) | SYLoaderNamePicker | 0 | 0 | 0 | 0 | skipped: the list for 'name' is filled in by the running app and is empty here |
+| [Load Image From Folder SY](SYLoadImageFromFolder.md) | SYLoadImageFromFolder | 5 | 5 | 0 | 0 | ok |
+| [Load Image Mini SY](SYLoadImageMini.md) | SYLoadImageMini | 1 | 1 | 0 | 0 | ok |
+| [Load Text SY](SYLoadText.md) | SYLoadText | 2 | 1 | 1 | 0 | ok |
+| [Loader Name Picker SY](SYLoaderNamePicker.md) | SYLoaderNamePicker | 9 | 1 | 8 | 0 | ok |
 | [Longest Side Scale SY](SYLongestSideScale.md) | SYLongestSideScale | 13 | 13 | 0 | 0 | ok |
-| [Lora Loader Stack SY](SYLoraLoaderStack.md) | SYLoraLoaderStack | 0 | 0 | 0 | 0 | needs real model, covered by loader test (inputs: model (MODEL), clip (CLIP)) |
-| [LoRA Stack Text SY](SYLoraStackText.md) | SYLoraStackText | 13 | 13 | 0 | 0 | ok |
-| [LoRA Trigger Words SY](SYLoraTriggerWords.md) | SYLoraTriggerWords | 0 | 0 | 0 | 0 | skipped: touches disk (the code reads or writes files) |
+| [Lora Loader Stack SY](SYLoraLoaderStack.md) | SYLoraLoaderStack | 0 | 0 | 0 | 0 | needs a real model and CLIP. Its text and number rules have unit tests; a run with real LoRA files is still... |
+| [LoRA Stack Text SY](SYLoraStackText.md) | SYLoraStackText | 17 | 17 | 0 | 0 | ok |
+| [LoRA Trigger Words SY](SYLoraTriggerWords.md) | SYLoraTriggerWords | 2 | 2 | 0 | 0 | ok |
 | [MaskCombine SY](SYMaskCombine.md) | SYMaskCombine | 4 | 4 | 0 | 0 | ok |
 | [MaskFeather SY](SYMaskFeather.md) | SYMaskFeather | 4 | 4 | 0 | 0 | ok |
 | [MaskFromBox SY](SYMaskFromBox.md) | SYMaskFromBox | 17 | 17 | 0 | 0 | ok |
@@ -99,7 +99,7 @@ No failing cases.
 | [Number Compare SY](SYNumberCompare.md) | SYNumberCompare | 10 | 10 | 0 | 0 | ok |
 | [Orientation SY](SYOrientation.md) | SYOrientation | 3 | 3 | 0 | 0 | ok |
 | [Pad Image SY](SYPadImage.md) | SYPadImage | 15 | 15 | 0 | 0 | ok |
-| [Paint Mask SY](SYPaintMask.md) | SYPaintMask | 0 | 0 | 0 | 0 | skipped: touches disk (the code reads or writes files) |
+| [Paint Mask SY](SYPaintMask.md) | SYPaintMask | 0 | 0 | 0 | 0 | tested in a real ComfyUI page: painted, ran the workflow, saved and reloaded it, and the mask came back unc... |
 | [PasteBack SY](SYPasteBack.md) | SYPasteBack | 5 | 4 | 1 | 0 | ok |
 | [Ping Pong SY](SYPingPong.md) | SYPingPong | 2 | 2 | 0 | 0 | ok |
 | [Pixel Count Info SY](SYPixelCountInfo.md) | SYPixelCountInfo | 7 | 7 | 0 | 0 | ok |
@@ -116,13 +116,13 @@ No failing cases.
 | [Reverse Batch SY](SYReverseBatch.md) | SYReverseBatch | 1 | 1 | 0 | 0 | ok |
 | [Round To Multiple SY](SYRoundToMultiple.md) | SYRoundToMultiple | 9 | 9 | 0 | 0 | ok |
 | [Run Timer SY](SYRunTimer.md) | SYRunTimer | 2 | 2 | 0 | 0 | ok |
-| [Safetensors Header Info SY](SYSafetensorsHeaderInfo.md) | SYSafetensorsHeaderInfo | 0 | 0 | 0 | 0 | skipped: touches disk (the code reads or writes files) |
+| [Safetensors Header Info SY](SYSafetensorsHeaderInfo.md) | SYSafetensorsHeaderInfo | 3 | 3 | 0 | 0 | ok |
 | [Sampler Settings SY](SYSamplerSettings.md) | SYSamplerSettings | 23 | 23 | 0 | 0 | ok |
-| [Sampler Settings Unpack SY](SYSamplerSettingsUnpack.md) | SYSamplerSettingsUnpack | 0 | 0 | 0 | 0 | needs real model, covered by loader test (inputs: settings (SY_SAMPLER_SETTINGS)) |
-| [Save Image To Folder SY](SYSaveImageToFolder.md) | SYSaveImageToFolder | 0 | 0 | 0 | 0 | skipped: needs the running app's folders (No module named 'folder_paths') |
-| [Save Text SY](SYSaveText.md) | SYSaveText | 0 | 0 | 0 | 0 | skipped: touches disk (the code reads or writes files) |
+| [Sampler Settings Unpack SY](SYSamplerSettingsUnpack.md) | SYSamplerSettingsUnpack | 0 | 0 | 0 | 0 | needs the settings object from Sampler Settings SY. Its unit test checks the unpacking; a run inside a full... |
+| [Save Image To Folder SY](SYSaveImageToFolder.md) | SYSaveImageToFolder | 11 | 10 | 1 | 0 | ok |
+| [Save Text SY](SYSaveText.md) | SYSaveText | 7 | 5 | 2 | 0 | ok |
 | [Save With Caption SY](SYSaveWithCaption.md) | SYSaveWithCaption | 11 | 0 | 11 | 0 | ok |
-| [3D Scene SY](SYScene3D.md) | SYScene3D | 0 | 0 | 0 | 0 | skipped: touches disk (the code reads or writes files) |
+| [3D Scene SY](SYScene3D.md) | SYScene3D | 0 | 0 | 0 | 0 | tested in a real ComfyUI page: added shapes, turned the camera, loaded a .glb cube, saved and reloaded the ... |
 | [Seed SY](SYSeed.md) | SYSeed | 5 | 5 | 0 | 0 | ok |
 | [Seed List SY](SYSeedList.md) | SYSeedList | 7 | 7 | 0 | 0 | ok |
 | [Seed Stepper SY](SYSeedStepper.md) | SYSeedStepper | 12 | 12 | 0 | 0 | ok |
@@ -151,8 +151,8 @@ No failing cases.
 | [Tile Grid Calc SY](SYTileGridCalc.md) | SYTileGridCalc | 13 | 10 | 3 | 0 | ok |
 | [Timestamp SY](SYTimestamp.md) | SYTimestamp | 6 | 6 | 0 | 0 | ok |
 | [Token Estimate SY](SYTokenEstimate.md) | SYTokenEstimate | 2 | 2 | 0 | 0 | ok |
-| [Unet Loader SY](SYUnetLoader.md) | SYUnetLoader | 0 | 0 | 0 | 0 | skipped: the list for 'unet_name' is filled in by the running app and is empty here |
-| [VAE Loader SY](SYVAELoader.md) | SYVAELoader | 0 | 0 | 0 | 0 | skipped: the list for 'vae_name' is filled in by the running app and is empty here |
+| [Unet Loader SY](SYUnetLoader.md) | SYUnetLoader | 0 | 0 | 0 | 0 | run by hand with a real unet file on the processor: it loaded in 6 s and gave a model |
+| [VAE Loader SY](SYVAELoader.md) | SYVAELoader | 0 | 0 | 0 | 0 | run by hand with a real 160 MB VAE file on the processor: it loaded in 14 s and gave a VAE |
 | [Video Frame Counter SY](SYVideoFrameCounter.md) | SYVideoFrameCounter | 12 | 12 | 0 | 0 | ok |
 | [Video Frames Calc SY](SYVideoFramesCalc.md) | SYVideoFramesCalc | 8 | 7 | 1 | 0 | ok |
 | [Video Loop Frames SY](SYVideoLoopFrames.md) | SYVideoLoopFrames | 5 | 5 | 0 | 0 | ok |

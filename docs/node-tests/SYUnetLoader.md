@@ -15,9 +15,9 @@ Outputs: `MODEL`
 
 ## How it was tested
 
-This node was not run by the harness. Reason: skipped: the list for 'unet_name' is filled in by the running app and is empty here.
+This node was not run by the harness. Reason: run by hand with a real unet file on the processor: it loaded in 6 s and gave a model.
 
 
 ## Verdict
 
-Not run. skipped: the list for 'unet_name' is filled in by the running app and is empty here.
+Not run. run by hand with a real unet file on the processor: it loaded in 6 s and gave a model.

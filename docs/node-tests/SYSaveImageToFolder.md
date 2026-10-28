@@ -20,9 +20,24 @@ Outputs: `STRING`
 
 ## How it was tested
 
-This node was not run by the harness. Reason: skipped: needs the running app's folders (No module named 'folder_paths').
+The harness builds a starting set of inputs from the default of every input (first entry for lists, a small gradient picture for IMAGE and a mask with a filled box for MASK). It runs the node once like that, then changes one input at a time: every entry of every list, the lowest, highest and a middle value of every number, both settings of every on/off switch, and an empty text for every text box. Each run must give the right number of outputs, and pictures and masks must have sane dimensions and no broken (NaN) values. A plain-words refusal to an out-of-range number or empty text counts as REJECTED (expected). Any other error counts as FAIL. The node was run in a temporary folder.
 
+## Cases
+
+| # | Input changed | Result | Output / message |
+|---|---|---|---|
+| 1 | baseline (all defaults) | PASS | STRING=str '[removed]' |
+| 2 | subfolder = '' (empty) | PASS | STRING=str '[removed]' |
+| 3 | filename_pattern = '' (empty) | REJECTED | ValueError: file name pattern is empty: type a name such as image_{counter} |
+| 4 | format = 'jpg' | PASS | STRING=str '[removed]' |
+| 5 | format = 'webp' | PASS | STRING=str '[removed]' |
+| 6 | quality = 1 (min) | PASS | STRING=str '[removed]' |
+| 7 | quality = 100 (max) | PASS | STRING=str '[removed]' |
+| 8 | quality = 50 (mid) | PASS | STRING=str '[removed]' |
+| 9 | seed = 9007199254740992 (max) | PASS | STRING=str '[removed]' |
+| 10 | seed = 4503599627370496 (mid) | PASS | STRING=str '[removed]' |
+| 11 | embed_workflow = False | PASS | STRING=str '[removed]' |
 
 ## Verdict
 
-Not run. skipped: needs the running app's folders (No module named 'folder_paths').
+All 11 cases behaved as expected (10 passed, 1 rejected with a clear message).

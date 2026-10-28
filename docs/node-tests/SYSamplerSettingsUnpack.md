@@ -14,9 +14,9 @@ Outputs: `INT`, `FLOAT`, `STRING`, `STRING`
 
 ## How it was tested
 
-This node was not run by the harness. Reason: needs real model, covered by loader test (inputs: settings (SY_SAMPLER_SETTINGS)).
+This node was not run by the harness. Reason: needs the settings object from Sampler Settings SY. Its unit test checks the unpacking; a run inside a full workflow is still open.
 
 
 ## Verdict
 
-Not run. needs real model, covered by loader test (inputs: settings (SY_SAMPLER_SETTINGS)).
+Not run. needs the settings object from Sampler Settings SY. Its unit test checks the unpacking; a run inside a full workflow is still open.

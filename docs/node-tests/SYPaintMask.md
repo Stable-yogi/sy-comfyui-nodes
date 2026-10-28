@@ -18,9 +18,9 @@ Outputs: `MASK`, `IMAGE`, `FLOAT`
 
 ## How it was tested
 
-This node was not run by the harness. Reason: skipped: touches disk (the code reads or writes files).
+This node was not run by the harness. Reason: tested in a real ComfyUI page: painted, ran the workflow, saved and reloaded it, and the mask came back unchanged.
 
 
 ## Verdict
 
-Not run. skipped: touches disk (the code reads or writes files).
+Not run. tested in a real ComfyUI page: painted, ran the workflow, saved and reloaded it, and the mask came back unchanged.

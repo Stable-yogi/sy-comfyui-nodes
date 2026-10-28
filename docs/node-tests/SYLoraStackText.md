@@ -8,13 +8,13 @@ Source: `nodes/sy_lora_stack_text.py`
 
 | Input | Type | Required | What it does | Range / options |
 |---|---|---|---|---|
-| lora_1 | COMBO | yes | LoRA for slot 1. Leave on None to skip it. | one of: None |
+| lora_1 | COMBO | yes | LoRA for slot 1. Leave on None to skip it. | one of: None, test_lora.safetensors |
 | strength_1 | FLOAT | yes | Strength for slot 1. | -20.0 to 20.0, step 0.05, default 1.0 |
-| lora_2 | COMBO | yes | LoRA for slot 2. Leave on None to skip it. | one of: None |
+| lora_2 | COMBO | yes | LoRA for slot 2. Leave on None to skip it. | one of: None, test_lora.safetensors |
 | strength_2 | FLOAT | yes | Strength for slot 2. | -20.0 to 20.0, step 0.05, default 1.0 |
-| lora_3 | COMBO | yes | LoRA for slot 3. Leave on None to skip it. | one of: None |
+| lora_3 | COMBO | yes | LoRA for slot 3. Leave on None to skip it. | one of: None, test_lora.safetensors |
 | strength_3 | FLOAT | yes | Strength for slot 3. | -20.0 to 20.0, step 0.05, default 1.0 |
-| lora_4 | COMBO | yes | LoRA for slot 4. Leave on None to skip it. | one of: None |
+| lora_4 | COMBO | yes | LoRA for slot 4. Leave on None to skip it. | one of: None, test_lora.safetensors |
 | strength_4 | FLOAT | yes | Strength for slot 4. | -20.0 to 20.0, step 0.05, default 1.0 |
 
 Outputs: `STRING`, `STRING`
@@ -28,19 +28,23 @@ The harness builds a starting set of inputs from the default of every input (fir
 | # | Input changed | Result | Output / message |
 |---|---|---|---|
 | 1 | baseline (all defaults) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
-| 2 | strength_1 = -20.0 (min) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
-| 3 | strength_1 = 20.0 (max) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
-| 4 | strength_1 = 0.0 (mid) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
-| 5 | strength_2 = -20.0 (min) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
-| 6 | strength_2 = 20.0 (max) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
-| 7 | strength_2 = 0.0 (mid) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
-| 8 | strength_3 = -20.0 (min) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
-| 9 | strength_3 = 20.0 (max) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
-| 10 | strength_3 = 0.0 (mid) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
-| 11 | strength_4 = -20.0 (min) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
-| 12 | strength_4 = 20.0 (max) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
-| 13 | strength_4 = 0.0 (mid) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
+| 2 | lora_1 = 'test_lora.safetensors' | PASS | STRING=str '1. test_lora.safetensors (strength 1)'; STRING=str '<lora:test_lora:1>' |
+| 3 | strength_1 = -20.0 (min) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
+| 4 | strength_1 = 20.0 (max) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
+| 5 | strength_1 = 0.0 (mid) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
+| 6 | lora_2 = 'test_lora.safetensors' | PASS | STRING=str '1. test_lora.safetensors (strength 1)'; STRING=str '<lora:test_lora:1>' |
+| 7 | strength_2 = -20.0 (min) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
+| 8 | strength_2 = 20.0 (max) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
+| 9 | strength_2 = 0.0 (mid) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
+| 10 | lora_3 = 'test_lora.safetensors' | PASS | STRING=str '1. test_lora.safetensors (strength 1)'; STRING=str '<lora:test_lora:1>' |
+| 11 | strength_3 = -20.0 (min) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
+| 12 | strength_3 = 20.0 (max) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
+| 13 | strength_3 = 0.0 (mid) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
+| 14 | lora_4 = 'test_lora.safetensors' | PASS | STRING=str '1. test_lora.safetensors (strength 1)'; STRING=str '<lora:test_lora:1>' |
+| 15 | strength_4 = -20.0 (min) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
+| 16 | strength_4 = 20.0 (max) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
+| 17 | strength_4 = 0.0 (mid) | PASS | STRING=str 'No LoRAs selected.'; STRING=str '' |
 
 ## Verdict
 
-All 13 cases behaved as expected (13 passed, 0 rejected with a clear message).
+All 17 cases behaved as expected (17 passed, 0 rejected with a clear message).

@@ -18,9 +18,9 @@ Outputs: `IMAGE`, `IMAGE`, `STRING`
 
 ## How it was tested
 
-This node was not run by the harness. Reason: skipped: touches disk (the code reads or writes files).
+This node was not run by the harness. Reason: tested in a real ComfyUI page: added shapes, turned the camera, loaded a .glb cube, saved and reloaded the scene. The picture code has script tests.
 
 
 ## Verdict
 
-Not run. skipped: touches disk (the code reads or writes files).
+Not run. tested in a real ComfyUI page: added shapes, turned the camera, loaded a .glb cube, saved and reloaded the scene. The picture code has script tests.

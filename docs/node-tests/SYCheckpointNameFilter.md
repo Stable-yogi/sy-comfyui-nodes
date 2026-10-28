@@ -20,12 +20,12 @@ The harness builds a starting set of inputs from the default of every input (fir
 
 | # | Input changed | Result | Output / message |
 |---|---|---|---|
-| 1 | baseline (all defaults) | REJECTED | ValueError: no checkpoints were found. Put a checkpoint in the ComfyUI checkpoints folder. |
-| 2 | contains = '' (empty) | REJECTED | ValueError: no checkpoints were found. Put a checkpoint in the ComfyUI checkpoints folder. |
+| 1 | baseline (all defaults) | PASS | STRING=str 'test_model.safetensors'; INT=int 1 |
+| 2 | contains = '' (empty) | PASS | STRING=str 'test_model.safetensors'; INT=int 1 |
 
 Note: this node refuses on purpose here (needs model files in the app's checkpoints folder, none are present here), so a plain-words refusal in any case is counted as REJECTED.
 
 
 ## Verdict
 
-All 2 cases behaved as expected (0 passed, 2 rejected with a clear message).
+All 2 cases behaved as expected (2 passed, 0 rejected with a clear message).

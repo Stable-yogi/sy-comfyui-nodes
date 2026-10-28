@@ -16,9 +16,17 @@ Outputs: `STRING`, `INT`
 
 ## How it was tested
 
-This node was not run by the harness. Reason: skipped: needs the running app's folders (No module named 'folder_paths').
+The harness builds a starting set of inputs from the default of every input (first entry for lists, a small gradient picture for IMAGE and a mask with a filled box for MASK). It runs the node once like that, then changes one input at a time: every entry of every list, the lowest, highest and a middle value of every number, both settings of every on/off switch, and an empty text for every text box. Each run must give the right number of outputs, and pictures and masks must have sane dimensions and no broken (NaN) values. A plain-words refusal to an out-of-range number or empty text counts as REJECTED (expected). Any other error counts as FAIL. The node was run in a temporary folder.
 
+## Cases
+
+| # | Input changed | Result | Output / message |
+|---|---|---|---|
+| 1 | baseline (all defaults) | PASS | STRING=str 'example.png notes.txt'; INT=int 2 |
+| 2 | root = 'output' | PASS | STRING=str ''; INT=int 0 |
+| 3 | subfolder = '' (empty) | PASS | STRING=str 'example.png notes.txt'; INT=int 2 |
+| 4 | extensions = '' (empty) | PASS | STRING=str 'example.png notes.txt'; INT=int 2 |
 
 ## Verdict
 
-Not run. skipped: needs the running app's folders (No module named 'folder_paths').
+All 4 cases behaved as expected (4 passed, 0 rejected with a clear message).
