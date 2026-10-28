@@ -3,8 +3,21 @@ import os
 
 CLIP_TYPES = ["stable_diffusion", "stable_cascade", "sd3", "stable_audio", "mochi", "ltxv", "pixart", "cosmos",
               "lumina2", "wan", "hidream", "chroma", "ace", "omnigen2", "qwen_image", "hunyuan_image", "flux2",
-              "ovis", "longcat_image", "cogvideox", "krea2", "flux3", "moss_image"]
+              "ovis", "longcat_image", "cogvideox", "lens", "pixeldit", "ideogram4", "boogu", "krea2", "joyimage",
+              "mage", "minimax", "yue2", "flux3", "moss_image", "fibo2"]
 CLIP_DEVICES = ["default", "cpu"]
+
+
+def clip_types():
+    """The clip type list of THIS ComfyUI (so a new model family works without an update here).
+    Falls back to the fixed list above when ComfyUI is not loaded (selftest)."""
+    try:
+        import nodes
+        live = list(nodes.CLIPLoader.INPUT_TYPES()["required"]["type"][0])
+    except Exception:
+        return list(CLIP_TYPES)
+    return live + [t for t in CLIP_TYPES if t not in live] if live else list(CLIP_TYPES)
+
 UNET_DTYPES = ["default", "fp8_e4m3fn", "fp8_e4m3fn_fast", "fp8_e5m2"]
 # Folder choice for Loader Name Picker: friendly name -> ComfyUI folder key
 MODEL_FOLDERS = {

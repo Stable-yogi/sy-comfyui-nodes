@@ -34,5 +34,7 @@ def run():
     raises(node.run, "../a.safetensors", "wan", "default")
     spec = m.SYCLIPLoader.INPUT_TYPES()["required"]
     ok(spec["type"][0] == L)
+    ok("minimax" in L and "ideogram4" in L)
+    ok(m.clip_types() == L)
     ok(m.NODE_DISPLAY_NAME_MAPPINGS["SYCLIPLoader"] == "CLIP Loader SY")
     return N[0]
