@@ -26,13 +26,13 @@ def run():
     assert r("the cat and the dog and the bird and the fox", 1, 75, 3, "")[0]   # small words may repeat
     ok, rep = r("a very very tall tree", 1, 75, 3, "")
     assert not ok and 'doubled word: "very very"' in rep
-    ok, rep = r("a dog with a nsfw tag on grass", 1, 75, 3, "nsfw, watermark")
-    assert not ok and 'banned word: "nsfw"' in rep
-    assert r("a dog with a nsfwtag on grass", 1, 75, 3, "nsfw")[0]     # whole words only
+    ok, rep = r("a dog with a blurry tag on grass", 1, 75, 3, "blurry, watermark")
+    assert not ok and 'banned word: "blurry"' in rep
+    assert r("a dog with a blurrytag on grass", 1, 75, 3, "blurry")[0]     # whole words only
     assert not r("A Dog, WATERMARK!", 1, 75, 3, "watermark")[0]        # case and punctuation ignored
     assert not r("a photo of low quality stuff", 1, 75, 3, "low quality")[0]   # phrases
     assert r("a photo of low stuff quality", 1, 75, 3, "low quality")[0]
-    assert not r("one two nsfw", 1, 75, 3, "gore\nnsfw")[0]            # new line list
+    assert not r("one two blurry", 1, 75, 3, "gore\nblurry")[0]            # new line list
     ok, rep = r("fox fox fox fox", 5, 75, 3, "fox")
     assert not ok and "4 problems" in rep and rep.count("\n- ") == 4
     assert m.parse_banned(" a, b\n\n c ,,") == ["a", "b", "c"]
