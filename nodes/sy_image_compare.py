@@ -78,7 +78,27 @@ def compare_tensors(a, b, mode, amount):
     return torch.where(pick_a, a, b)
 
 
+def save_previews(image_a, image_b):
+    """Saves the first picture of A and B as small temp files so the browser can show a slider. Returns the file list."""
+    import os
+    import numpy as np
+    import folder_paths
+    from PIL import Image
+    import uuid
+    folder = folder_paths.get_temp_directory()
+    tag = uuid.uuid4().hex[:10]
+    files = []
+    for name, batch in (("a", image_a), ("b", image_b)):
+        arr = (batch[0].clamp(0, 1) * 255).byte().cpu().numpy()
+        fn = "sycompare_%s_%s.png" % (tag, name)
+        Image.fromarray(arr[:, :, :3] if arr.shape[2] >= 3 else np.repeat(arr[:, :, :1], 3, axis=2)).save(
+            os.path.join(folder, fn), compress_level=1)
+        files.append({"filename": fn, "subfolder": "", "type": "temp"})
+    return files
+
+
 class SYImageCompare:
+    OUTPUT_NODE = True
     DESCRIPTION = "Compares two pictures: side by side, difference, blend, checker or wipe. B is resized to match A."
     CATEGORY = category("Image")
     FUNCTION = "run"
@@ -97,7 +117,8 @@ class SYImageCompare:
         }
 
     def run(self, image_a, image_b, mode, amount):
-        return (compare_tensors(image_a, image_b, mode, amount),)
+        out = compare_tensors(image_a, image_b, mode, amount)
+        return {"ui": {"sy_compare": save_previews(image_a, image_b)}, "result": (out,)}
 
 
 NODE_CLASS_MAPPINGS = {}
