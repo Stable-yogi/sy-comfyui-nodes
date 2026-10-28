@@ -95,7 +95,7 @@ def list_bundles(output_dir):
 def bundle_folder(output_dir, name):
     """The full folder path of a bundle under output/sy_bundles (not created)."""
     if str(name) == NO_BUNDLES:
-        raise ValueError("no bundle chosen: save a bundle first, then pick it in the list")
+        raise ValueError("no bundles were found: save a bundle first, then pick it in the list")
     return safe_join(bundles_root(output_dir), clean_bundle_name(name))
 
 
