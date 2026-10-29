@@ -99,12 +99,48 @@ def bundle_folder(output_dir, name):
     return safe_join(bundles_root(output_dir), clean_bundle_name(name))
 
 
+NESTED_MARK = ".nested."
+
+
+def flatten_latent(latent):
+    """Pure function. Tensors of a latent by name. A nested tensor (video + audio together) is saved as name.nested.0, name.nested.1, ..."""
+    out = {}
+    for k, v in latent.items():
+        parts = getattr(v, "tensors", None) if getattr(v, "is_nested", False) else None
+        if parts is not None:
+            for i, t in enumerate(parts):
+                if hasattr(t, "detach"):
+                    out["%s%s%d" % (k, NESTED_MARK, i)] = t.detach().cpu().contiguous()
+        elif hasattr(v, "detach"):
+            out[str(k)] = v.detach().cpu().contiguous()
+    return out
+
+
+def restore_latent(tensors, make_nested):
+    """Pure function. The reverse of flatten_latent. `make_nested` turns a list of tensors into a nested tensor."""
+    plain, nested = {}, {}
+    for key, t in tensors.items():
+        if NESTED_MARK in key:
+            base, idx = key.rsplit(NESTED_MARK, 1)
+            nested.setdefault(base, {})[int(idx)] = t
+        else:
+            plain[key] = t
+    for base, parts in nested.items():
+        plain[base] = make_nested([parts[i] for i in sorted(parts)])
+    return plain
+
+
+def _make_nested(parts):
+    from comfy.nested_tensor import NestedTensor
+    return NestedTensor(parts)
+
+
 def write_bundle(output_dir, name, latent, prompt, seed, refs, now=None):
     """Write the bundle folder. `refs` maps slot number to a PIL picture. Returns (folder_name, folder_path)."""
     from safetensors.torch import save_file
     if not isinstance(latent, dict):
         raise ValueError("latent input is not a latent: connect a LATENT output")
-    tensors = {str(k): v.detach().cpu().contiguous() for k, v in latent.items() if hasattr(v, "detach")}
+    tensors = flatten_latent(latent)
     if not tensors:
         raise ValueError("latent holds no tensor to save: connect a LATENT output")
     clean = clean_bundle_name(name)
@@ -131,7 +167,7 @@ def read_bundle(output_dir, name):
         seed, refs = parse_meta(f.read())
     from safetensors.torch import load as load_bytes
     with open(os.path.join(folder, LATENT_FILE), "rb") as f:  # read into memory so the file is not locked on Windows
-        latent = load_bytes(f.read())
+        latent = restore_latent(load_bytes(f.read()), _make_nested)
     prompt = ""
     pp = os.path.join(folder, PROMPT_FILE)
     if os.path.isfile(pp):

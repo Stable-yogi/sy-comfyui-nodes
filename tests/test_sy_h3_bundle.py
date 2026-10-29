@@ -56,6 +56,31 @@ def run():
         with open(os.path.join(root, "one", m.META_FILE), "w", encoding="utf-8") as f:
             f.write("{}")
         assert raises(m.read_bundle, tmp, "one"); n += 1  # bad meta
+    # nested latent (video + audio together): saved as numbered parts, rebuilt in the same order
+    class Part:
+        def __init__(self, tag):
+            self.tag = tag
+
+        def detach(self):
+            return self
+
+        def cpu(self):
+            return self
+
+        def contiguous(self):
+            return self
+
+    class Nested:
+        is_nested = True
+
+        def __init__(self, tensors):
+            self.tensors = list(tensors)
+
+    flat = m.flatten_latent({"samples": Nested([Part("v"), Part("a")]), "noise_mask": Part("m"), "batch_index": [0]})
+    assert sorted(flat) == ["noise_mask", "samples.nested.0", "samples.nested.1"]; n += 1
+    back = m.restore_latent(flat, Nested)
+    assert [p.tag for p in back["samples"].tensors] == ["v", "a"] and back["noise_mask"].tag == "m"; n += 1
+    assert m.flatten_latent({"batch_index": [0]}) == {}; n += 1
     assert m.SYH3SaveBundle.OUTPUT_NODE is True; n += 1
     assert m.SYH3LoadBundle.RETURN_NAMES == ("latent", "prompt", "seed", "bundle_folder", "reference_1"); n += 1
     return n
