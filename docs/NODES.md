@@ -1,10 +1,10 @@
 # SY Nodes: full node list
 
-All 223 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 234 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 
-## SY/Text (52)
+## SY/Text (55)
 
 - Caption Prefix Suffix SY
 - Caption Review SY
@@ -41,6 +41,8 @@ All 223 nodes, by group. Every node is in the **SY** folder of the node library 
 - Regex Extract SY
 - Sentence Pick SY
 - Show Text SY
+- Slugify SY
+- Sort Dedupe Lines SY
 - System Prompt Presets SY
 - Tag Frequency SY
 - Tag Sort SY
@@ -55,11 +57,12 @@ All 223 nodes, by group. Every node is in the **SY** folder of the node library 
 - Text SY
 - Text Template SY
 - Text Trim To Tokens SY
+- Text Wrap SY
 - TextInImage SY
 - TextRepeat SY
 - Token Estimate SY
 
-## SY/Image (61)
+## SY/Image (67)
 
 - Add Border SY
 - ApplyMaskToImage SY
@@ -69,8 +72,11 @@ All 223 nodes, by group. Every node is in the **SY** folder of the node library 
 - Batch Pick SY
 - Batch Repeat SY
 - Batch To List SY
+- Brightness Contrast SY
 - Channel Split SY
+- Checkerboard SY
 - Colour Match SY
+- Colour Overlay SY
 - Colour Temperature SY
 - Compare Metrics SY
 - Crop Square Centre For Training SY
@@ -94,6 +100,7 @@ All 223 nodes, by group. Every node is in the **SY** folder of the node library 
 - Image Hash Duplicate Check SY
 - Image Info SY
 - Image Resize SY
+- Image Stats SY
 - Invert Image SY
 - Labelled AB Grid SY
 - Levels Adjust SY
@@ -108,6 +115,7 @@ All 223 nodes, by group. Every node is in the **SY** folder of the node library 
 - MaskInvertThreshold SY
 - MaskOverlayPreview SY
 - MaskToBox SY
+- Mirror Image SY
 - Orientation SY
 - Pad Image SY
 - PasteBack SY
@@ -117,6 +125,7 @@ All 223 nodes, by group. Every node is in the **SY** folder of the node library 
 - Reverse Batch SY
 - Roll Image SY
 - Rounded Corners SY
+- Saturation SY
 - Sharpen SY
 - Threshold SY
 - Tile Merge SY
@@ -136,12 +145,13 @@ All 223 nodes, by group. Every node is in the **SY** folder of the node library 
 - Video Size Fit SY
 - Video Size Presets SY
 
-## SY/Values (21)
+## SY/Values (23)
 
 - Bool Value SY
 - Clamp Remap SY
 - Colour Swatch SY
 - Duration Frames SY
+- Ease Curve SY
 - Float Value SY
 - Frame Count Snap SY
 - HexColourMix SY
@@ -149,6 +159,7 @@ All 223 nodes, by group. Every node is in the **SY** folder of the node library 
 - Math Expression SY
 - Min Max SY
 - Number Compare SY
+- Number Series SY
 - NumberWrap SY
 - PercentOf SY
 - Random In Range SY

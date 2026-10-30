@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- Eleven more everyday nodes: Saturation SY (saturation or vibrance), Brightness Contrast SY, Mirror Image SY (left, right, top, bottom or four-way symmetry), Image Stats SY (mean, contrast, dark and bright share), Checkerboard SY, Colour Overlay SY (normal, multiply, screen, overlay, optional mask), Slugify SY, Text Wrap SY, Sort Dedupe Lines SY, Ease Curve SY (nine easing curves between two numbers) and Number Series SY (evenly spaced numbers as text).
+
 ## 1.4.0
 - Tile Split SY and Tile Merge SY: cut a big picture into equal overlapping tiles, do any work on the tiles, and join them back with a soft blend. Works with tiles that were made bigger by a whole number (2x, 4x). Sizes and positions travel in a text line between the two nodes.
 
