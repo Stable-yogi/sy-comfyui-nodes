@@ -26,7 +26,7 @@ import uuid
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SOFT_WORDS = ("were found", "found in the input folder", "no checkpoints", "could not auto-find",
-              "needs an H3 video latent")  # "needs a file", not a fault (the H3 upscaler needs a real H3 latent, which only a model run makes)
+              "needs an H3 video latent", "there is no saved session")  # "needs a file", not a fault (the H3 upscaler needs a real H3 latent, which only a model run makes; Load Session needs a session an earlier H3 run saved)
 
 
 def call(port, path, data=None, timeout=120):
