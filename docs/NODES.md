@@ -1,6 +1,6 @@
 # SY Nodes: full node list
 
-All 197 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 198 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 ## SY/Text (52)
@@ -139,7 +139,7 @@ All 197 nodes, by group. Every node is in the **SY** folder of the node library 
 - Seed Stepper SY
 - Time Code SY
 
-## SY/Logic (8)
+## SY/Logic (9)
 
 - Assert SY
 - Bool Logic SY
@@ -147,6 +147,7 @@ All 197 nodes, by group. Every node is in the **SY** folder of the node library 
 - CyclePick SY
 - If Else Number SY
 - If Else Text SY
+- IndexSwitch SY
 - Select By Index Text SY
 - Switch SY
 

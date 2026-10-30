@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.0
+- IndexSwitch SY: pick one of up to four inputs by number. Only the chosen branch runs.
+
 ## 1.1.0
 - GGUF loaders: Unet, CLIP and Dual CLIP (SY versions, same file names and results as the outside loader). Needs the `gguf` pip package.
 - H3 Speed Optimizer SY and H3 Low VRAM SY (speed-up and memory helpers for the H3 video model; the sparse kernel is not bundled).
