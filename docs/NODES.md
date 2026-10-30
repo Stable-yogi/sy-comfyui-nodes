@@ -1,6 +1,6 @@
 # SY Nodes: full node list
 
-All 192 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The page for each node (inputs, what it does, what was checked) is in `docs/node-tests/`.
+All 192 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 ## SY/Text (52)

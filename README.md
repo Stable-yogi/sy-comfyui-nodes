@@ -43,8 +43,8 @@ Replace the folder with the new one and restart ComfyUI. Saved workflows keep wo
 | SY/Editors | 10 | Mask editor, 3D scene, XY grids, paint |
 | SY/Notes | 2 | Workflow header and notes |
 
-The full list: [`docs/NODES.md`](docs/NODES.md). Every node has its own page in [`docs/node-tests/`](docs/node-tests/INDEX.md)
-with its inputs, what it does and what was checked.
+The full list: [`docs/NODES.md`](docs/NODES.md). Every node has its own help page in [`docs/nodes/`](docs/nodes/)
+with its inputs and what it does.
 
 ## Workflows that use the pack
 

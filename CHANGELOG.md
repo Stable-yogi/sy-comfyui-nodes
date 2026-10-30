@@ -16,7 +16,7 @@
 - Batch G: Timestamp, Seed Stepper, Seed List, Random Choice, Short ID, Text Stats, Orientation, Colour Swatch (everyday helpers, 153 nodes).
 - 3D Scene SY loads .glb model files (up to 3000 triangles, shown as shaded and depth pictures).
 - Status dot in the node title: gold ready, yellow missing link, green ran fine, red stopped (setting SY.StatusBadge).
-- docs/node-tests/: one test page per node plus an index, made by a harness that tries every option.
+- docs/nodes/: one help page per node (inputs and what it does).
 - Batches H and I: Frame Count Snap, Duration Frames, Prompt Schedule, Prompt Schedule List, Video Size Fit, Time Code, Number Wrap, Text Repeat, Date Parts, Cycle Pick, Percent Of, Line Pick, Hex Colour Mix, Ratio Split (167 nodes with Set/Get). Node-test docs now cover file nodes in a throw-away folder.
 - Batches J and K: LLM Reply Clean, JSON From Reply, Prompt Emphasis Strip, Prompt Diff, Tag Sort, Prompt Sections, Few Shot Block, Text Between, Sentence Pick, Edit Instruction, Multi Ref Label, Character Sheet Prompt, Text In Image, Edit Preset Pick, Edit Steps List (182 nodes with Set/Get). Lora Loader Stack and Sampler Settings Unpack were run in a real graph with a real checkpoint and LoRAs.
 - Look update: nodes are coloured by job (loaders blue, working nodes green, text teal, numbers and logic purple, save brown, notes gold) with white titles; setting "SY.ColorMode" (Role colours, Group colours, Gold only, Off).
