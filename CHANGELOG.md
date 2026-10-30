@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.6.0
 - Result preview on every node. After a run, each SY node shows what it made right on the node: a small picture (up to four frames), a red tint for a mask, and the text and number results with a Copy text button. Picture nodes also get a Hold: before button that shows the picture before the node changed it. Switch it off in Settings (SY nodes: show the result on the node) or with the environment variable SY_NO_PREVIEW=1. A node can opt out with SY_NO_PREVIEW = True on its class. Nothing is added to a saved workflow, and a preview error never stops a node.
 - Own buttons on 16 nodes. Seed SY: New random seed, Use last seed, and the seed of the last run. Resolution SY, Size Presets SY, Video Size Presets SY: a live shape and the exact size (width x height, megapixels), plus aspect, flip and resolution buttons. Switch SY: one big A/B button. Number Compare SY: a YES/NO lamp. Counter SY: -1, +1, Reset and the next eight values. Multiline Text SY and Prompt Cleaner SY: characters, words and lines. Load Text SY: pick a .txt file from a list. XY Grid Assemble SY: how many pictures it needs. Lora Loader Stack SY, Colour Match SY, Levels Adjust SY, Face Detect SY, XY Values List SY, Prompt Cleaner SY: save, load and delete your own setting presets.
 
