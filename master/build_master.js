@@ -46,6 +46,10 @@
   yes.widgets[0].value = true;
   const two = mk("ImageBatch", "Two pictures as one batch (for frame nodes)");
   load.connect(0, two, 0); load.connect(0, two, 1);
+  const ksel = mk("KSamplerSelect", "Sampler (for the H3 chain)");
+  const sched = mk("BasicScheduler", "Sigmas (for the H3 chain)");
+  sched.widgets.find((w) => w.name === "steps").value = 4;
+  unet.connect(0, sched, 0);
 
   const byType = {};
   const nodes = [];
@@ -70,6 +74,12 @@
     SYAssert: { condition: [yes, 0] }, SYFrameInterpolateBlend: { images: [two, 0] },
     SYInpaintStitch: { stitch: [byType.SYInpaintCrop, 0] },
     SYKrea2ConditioningRebalance: { conditioning: [byType.SYKrea2EditGroundedEncode, 0] },
+    SYTileMerge: { tiles: [byType.SYTileSplit, 0], tile_info: [byType.SYTileSplit, 1] },
+    SYIndexSwitch: { input1: [load, 0] },
+    SYH3ChainSettings: { sampler: [ksel, 0], sigmas: [sched, 0] },
+    SYH3RenderSegment: { settings: [byType.SYH3ChainSettings, 0], chain_state: null },
+    SYH3RepairSegment: { settings: [byType.SYH3ChainSettings, 0], chain_state: null },
+    SYH3ChainToVideo: { chain: [byType.SYH3RenderSegment, 1] },
   };
   for (const { n, t } of nodes) {
     const ins = (n.inputs || []).filter((i) => !i.widget);
@@ -77,6 +87,7 @@
       if (inp.link != null) continue;
       const k = n.inputs.indexOf(inp);
       let from = over[t]?.[inp.name];
+      if (from === null) continue;
       if (!from) {
         if (inp.type === "IMAGE") from = [load, 0];
         else if (inp.type === "MASK") from = [toMask, 0];
@@ -97,6 +108,10 @@
     SYEditInstruction: { target: "the sky", to_value: "a sunset sky" },
     SYEditStepsList: { step_1: "remove the lamp", step_2: "add a tree" },
     SYFewShotBlock: { task: "Translate to French", new_input: "hello" },
+    SYH3RenderSegment: { resume: false, prompt: "a calm beach", seconds: 1, handoff_seconds: 0 },
+    SYH3RepairSegment: { prompt: "a calm beach", seconds: 1, handoff_seconds: 0 },
+    SYH3PromptBuilder: { style: "soft daylight, calm film look", action: "a knight walks along a quiet beach" },
+    SYVoiceLengthEstimate: { text: "Hello there, this is a short test line." },
     SYImageMetadataReader: { file: load.widgets[0].value },
     SYJSONFieldGet: { json_text: '{"a": {"b": 2}}', path: "a.b" },
     SYJSONFromReply: { text: 'Here you go: {"a": 1}' },
