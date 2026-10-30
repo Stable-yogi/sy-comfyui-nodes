@@ -1,6 +1,6 @@
 # SY Nodes for ComfyUI
 
-245 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
+250 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
 They load models, set sizes and seeds, switch parts of a graph on and off, edit masks and pictures, work with text,
 and save results. Our workflows use them, so one install of this pack gives you the nodes the workflows need.
 
@@ -36,12 +36,12 @@ Replace the folder with the new one and restart ComfyUI. Saved workflows keep wo
 
 | Group | Nodes | What is in it |
 |---|---|---|
-| SY/Text | 52 | Prompt and caption helpers, text join, find and replace, JSON, chat prompt builders |
-| SY/Image | 43 | Picture tools, masks, crop and paste, compare, grids, loaders and save steps |
-| SY/Resize | 10 | Sizes, aspect ratios, video sizes, H3 latent upscaler |
-| SY/Values | 20 | Seed, numbers, switches, lists |
-| SY/Logic | 9 | Switch, pick by number, compare, gate |
-| SY/Utility | 53 | Model and LoRA loaders, batch and video helpers, timers, memory tools, H3 bundle save and load |
+| SY/Text | 60 | Prompt and caption helpers, text join, find and replace, JSON, chat prompt builders |
+| SY/Image | 71 | Picture tools, masks, crop and paste, compare, grids, loaders and save steps |
+| SY/Resize | 11 | Sizes, aspect ratios, video sizes, H3 latent upscaler |
+| SY/Values | 27 | Seed, numbers, switches, lists |
+| SY/Logic | 10 | Switch, pick by number, compare, gate |
+| SY/Utility | 59 | Model and LoRA loaders, batch and video helpers, timers, memory tools, H3 bundle save and load |
 | SY/Editors | 10 | Mask editor, 3D scene, XY grids, paint |
 | SY/Notes | 2 | Workflow header and notes |
 
@@ -51,6 +51,7 @@ with its inputs and what it does.
 ## Workflows that use the pack
 
 Our workflows put an install box at the top. It names this pack, the model files the workflow needs, and the folder each file goes in.
+The seven H3 video workflows are in [`workflows/h3/`](workflows/h3/README.md). Load one in ComfyUI.
 Some workflows also use free packs from other authors. The banner of each workflow lists the ones it uses.
 Face Detect SY uses the `opencv-python-headless` package for its built-in detector. If it is missing, the node tells you how to add it.
 Face Detect SY also works with a small optional face-finder file. It is not part of this pack. Download it from https://github.com/Stable-yogi/sy-face-model and put it in `ComfyUI/models/sy_face_detect/`.

@@ -1,10 +1,10 @@
 # SY Nodes: full node list
 
-All 245 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 250 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 
-## SY/Text (59)
+## SY/Text (60)
 
 - Base64 Text SY
 - Caption Prefix Suffix SY
@@ -18,6 +18,7 @@ All 245 nodes, by group. Every node is in the **SY** folder of the node library 
 - EditStepsList SY
 - Few Shot Block SY
 - Find Replace SY
+- H3PromptBuilder SY
 - Hash Text SY
 - JSON Field Get SY
 - JSON From Reply SY
@@ -154,7 +155,7 @@ All 245 nodes, by group. Every node is in the **SY** folder of the node library 
 - Video Size Fit SY
 - Video Size Presets SY
 
-## SY/Values (25)
+## SY/Values (27)
 
 - Bool Value SY
 - Clamp Remap SY
@@ -163,6 +164,7 @@ All 245 nodes, by group. Every node is in the **SY** folder of the node library 
 - Ease Curve SY
 - Float Value SY
 - Frame Count Snap SY
+- H3 Length SY
 - HexColourMix SY
 - Int Value SY
 - List Stats SY
@@ -181,20 +183,22 @@ All 245 nodes, by group. Every node is in the **SY** folder of the node library 
 - Seed SY
 - Size Text SY
 - Time Code SY
+- VoiceLengthEstimate SY
 
-## SY/Logic (9)
+## SY/Logic (10)
 
 - Assert SY
 - Bool Logic SY
 - Counter SY
 - CyclePick SY
+- GroupSwitch SY
 - If Else Number SY
 - If Else Text SY
 - IndexSwitch SY
 - Select By Index Text SY
 - Switch SY
 
-## SY/Utility (58)
+## SY/Utility (59)
 
 - Batch Size Calc SY
 - Checkpoint Loader Info SY
@@ -220,6 +224,7 @@ All 245 nodes, by group. Every node is in the **SY** folder of the node library 
 - H3SpeedOptimizer SY
 - Image Batch Split Every N SY
 - Image Metadata Reader SY
+- ImageExists SY
 - Krea2ConditioningRebalance SY
 - Krea2OneClick SY
 - Krea2TEnhancer SY
