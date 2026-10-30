@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0
+- GGUF loaders: Unet, CLIP and Dual CLIP (SY versions, same file names and results as the outside loader). Needs the `gguf` pip package.
+- H3 Speed Optimizer SY and H3 Low VRAM SY (speed-up and memory helpers for the H3 video model; the sparse kernel is not bundled).
+
 ## 1.0.0
 - Repo skeleton, theme file, naming checker, standard.
 - Seed SY (fixed / random / increment, up to 2^64-1).

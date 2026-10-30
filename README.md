@@ -1,17 +1,19 @@
 # SY Nodes for ComfyUI
 
-192 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
+197 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
 They load models, set sizes and seeds, switch parts of a graph on and off, edit masks and pictures, work with text,
-and save results. Our workflows use them, so you install this one pack and the workflows open complete.
+and save results. Our workflows use them, so one install of this pack gives you the nodes the workflows need.
 
 License: MIT. See `LICENSE` and `NOTICE.md`.
+
+Missing a node? Tell me.
 
 ## What you need
 
 | | |
 |---|---|
 | ComfyUI | **v0.42.1 or newer.** Tested on v0.42.1 and v0.43.0. Older versions are not tested. |
-| Python packages | None to add. The nodes use what ComfyUI already has. |
+| Python packages | Most nodes use only what ComfyUI already has. A few need one extra package (the node page says which). If it is missing, the node tells you so and how to add it. |
 | Models | The nodes hold none. A workflow tells you which model files it needs (see its banner). |
 
 The H3 video workflows need a ComfyUI that knows the H3 model type (it is in v0.42.1 and newer).

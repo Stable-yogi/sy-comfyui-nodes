@@ -1,6 +1,6 @@
 # SY Nodes: full node list
 
-All 192 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 197 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 ## SY/Text (52)
@@ -150,13 +150,15 @@ All 192 nodes, by group. Every node is in the **SY** folder of the node library 
 - Select By Index Text SY
 - Switch SY
 
-## SY/Utility (48)
+## SY/Utility (53)
 
 - Batch Size Calc SY
-- CLIP Loader SY
 - Checkpoint Loader Info SY
 - Checkpoint Name Filter SY
+- CLIP Loader SY
+- CLIPLoaderGGUF SY
 - DateParts SY
+- DualCLIPLoaderGGUF SY
 - Empty Latent SY
 - Filename Builder SY
 - Folder Image Count SY
@@ -164,7 +166,9 @@ All 192 nodes, by group. Every node is in the **SY** folder of the node library 
 - Frame Rate Convert SY
 - Free VRAM SY
 - H3LoadBundle SY
+- H3LowVRAM SY
 - H3SaveBundle SY
+- H3SpeedOptimizer SY
 - Image Batch Split Every N SY
 - Image Metadata Reader SY
 - Krea2ConditioningRebalance SY
@@ -191,11 +195,12 @@ All 192 nodes, by group. Every node is in the **SY** folder of the node library 
 - Tile Grid Calc SY
 - Timestamp SY
 - Unet Loader SY
+- UnetLoaderGGUF SY
 - VAE Loader SY
-- VRAM Estimate SY
 - Video Frame Counter SY
 - Video Frames Calc SY
 - Video Loop Frames SY
+- VRAM Estimate SY
 - XY Grid Assemble SY
 - XY Label Strip SY
 - XY Pick SY
