@@ -5,6 +5,7 @@
 
 - H3 Chain SY: five nodes that join MiniMax H3 renders into one unbroken take (Settings, Render Segment, Chain To Video, Repair Segment, Load Session). Same on-disk session format as the original, so an old session can be resumed. Needs the H3 model files and a ComfyUI with the V3 node schema; on an older ComfyUI the five nodes stay out and the rest of the pack loads as usual.
 - Eight small picture nodes: Edge Detect SY (Sobel or Laplacian, picture and mask), Pixelate SY, Duotone SY, Dominant Colors SY (hex list plus a swatch strip), Posterize SY, Luminance Mask SY, Hue Shift SY and Rounded Corners SY (picture plus mask). Alpha is never touched.
+- Nine everyday nodes: Grayscale SY, Invert Image SY, Threshold SY (picture and mask), Gradient Image SY (linear or radial, picture and mask), Colour Temperature SY (warmth and tint), Add Border SY (outside or inside), Roll Image SY (shift with wrap, for seamless textures), Channel Split SY (red, green, blue, alpha as masks) and Seed From Text SY (same text and salt always give the same seed).
 
 ## 1.3.1
 - Face Detect SY: the tooltip, docs and README now link to the optional face-finder file (https://github.com/Stable-yogi/sy-face-model). It is a separate download, not bundled.
