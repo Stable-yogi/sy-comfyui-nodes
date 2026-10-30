@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.6.1
 - Colour chips. Add Border SY, Checkerboard SY, Colour Overlay SY, Colour Swatch SY, Gradient Image SY and Hex Colour Mix SY now show a live colour chip under each colour text field, and a colour picker that fills in the hex text. Bad text shows "not a colour". The text field still works as before and a saved workflow is not changed.
 - Index Switch SY: when you pick an input that has no link, it now stops with the clear message "input2 is not connected. Connect it or change select." Before, ComfyUI could show a cryptic "needs input" error.
 
