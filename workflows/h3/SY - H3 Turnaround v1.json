@@ -557,7 +557,7 @@
     "Node name for S&R": "SYNote"
    },
    "widgets_values": [
-    "Put these files in your ComfyUI models folder:\n- minimax_h3_ref2va_pruned_int8_convrot.safetensors  (diffusion_models)\n- qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors  (text_encoders)\n- minimax_h3_video_vae_int8_convrot.safetensors  and  minimax_h3_audio_vae_fp32.safetensors  (vae)\n- minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors  (loras): the fast mode\nAll files come from the Comfy-Org MiniMax-H3 page on Hugging Face. Fast mode uses 4 steps. Fast mode off uses 20 steps.",
+    "Put these files in your ComfyUI models folder:\n- minimax_h3_ref2va_pruned_int8_convrot.safetensors  (diffusion_models)\n- qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors  (text_encoders)\n- minimax_h3_video_vae_int8_convrot.safetensors  and  minimax_h3_audio_vae_fp32.safetensors  (vae)\n- minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors  (loras): the fast mode\nFast mode uses 4 steps. Fast mode off uses 20 steps.",
     "model"
    ],
    "title": "Model files"
