@@ -284,7 +284,7 @@ class SYFaceDetect:
         return {
             "required": {
                 "image": ("IMAGE", {"tooltip": "The picture or batch of pictures to search for faces."}),
-                "detector": ([BUILTIN] + _model_files(), {"tooltip": "Built-in needs no file. Or pick a YuNet .onnx file from models/sy_face_detect."}),
+                "detector": ([BUILTIN] + _model_files(), {"tooltip": "Built-in needs no file. Or pick a YuNet .onnx from models/sy_face_detect (download link in the README)."}),
                 "threshold": ("FLOAT", {"default": 0.5, "min": 0.05, "max": 0.99, "step": 0.01, "tooltip": "Higher = stricter, fewer faces."}),
                 "min_face": ("INT", {"default": 32, "min": 8, "max": 1024, "tooltip": "Faces whose shorter side is smaller than this many pixels are ignored."}),
                 "pick": (list(PICK_MODES), {"tooltip": "Which faces to keep: the one nearest the middle, the biggest one, or all of them."}),
