@@ -44,6 +44,21 @@ def run():
     assert not (m.ANY != "IMAGE")
     assert m.SYIndexSwitch.RETURN_NAMES == ("selected_value", "selected_index")
     n += 5
+    # an input with no link is not asked for, so run() gives the clear message
+    assert m.wanted_inputs(2, {"input1", "input2"}) == ["input2"]
+    assert m.wanted_inputs(3, {"input1", "input2"}) == []
+    assert m.wanted_inputs(3, None) == ["input3"]
+    assert _raises(m.wanted_inputs, 0, None)
+
+    class _Prompt:
+        def get_node(self, uid):
+            return {"inputs": {"select": 1, "input1": ["5", 0]}}
+
+    assert node.check_lazy_status(1, dynprompt=_Prompt(), unique_id="9") == ["input1"]
+    assert node.check_lazy_status(2, dynprompt=_Prompt(), unique_id="9") == []
+    assert node.check_lazy_status(2, dynprompt=object(), unique_id="9") == ["input2"]
+    assert it["hidden"] == {"dynprompt": "DYNPROMPT", "unique_id": "UNIQUE_ID"}
+    n += 8
     assert m.NODE_CLASS_MAPPINGS["SYIndexSwitch"] is m.SYIndexSwitch
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYIndexSwitch"] == "IndexSwitch SY"
     n += 2
