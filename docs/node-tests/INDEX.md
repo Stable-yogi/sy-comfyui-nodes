@@ -2,7 +2,7 @@
 
 Every input option of every node is run by `sy_nodetest.py` (kept with the project tools). Each node has its own page with the inputs, how it was tested and every case.
 
-Totals: **191** nodes, **1321** cases, **1112** passed, **209** rejected (expected), **0** failed, **16** nodes skipped.
+Totals: **192** nodes, **1321** cases, **1112** passed, **209** rejected (expected), **0** failed, **17** nodes skipped.
 
 ## Failures
 
@@ -61,6 +61,7 @@ No failing cases.
 | [Frame Select SY](SYFrameSelect.md) | SYFrameSelect | 8 | 4 | 4 | 0 | ok |
 | [Free VRAM SY](SYFreeVRAM.md) | SYFreeVRAM | 2 | 2 | 0 | 0 | ok |
 | [Gaussian Blur SY](SYGaussianBlur.md) | SYGaussianBlur | 4 | 4 | 0 | 0 | ok |
+| [H3LatentUpscaler SY](SYH3LatentUpscaler.md) | SYH3LatentUpscaler | 0 | 0 | 0 | 0 | run by hand: same output as the original on the real model file; full H3 workflow run OK |
 | [H3LoadBundle SY](SYH3LoadBundle.md) | SYH3LoadBundle | 1 | 0 | 1 | 0 | ok |
 | [H3SaveBundle SY](SYH3SaveBundle.md) | SYH3SaveBundle | 0 | 0 | 0 | 0 | needs real model, covered by loader test (inputs: latent (LATENT)) |
 | [HexColourMix SY](SYHexColourMix.md) | SYHexColourMix | 5 | 3 | 2 | 0 | ok |

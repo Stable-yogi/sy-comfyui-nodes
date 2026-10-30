@@ -25,7 +25,8 @@ import urllib.request
 import uuid
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SOFT_WORDS = ("were found", "found in the input folder", "no checkpoints", "could not auto-find")  # "needs a file", not a fault
+SOFT_WORDS = ("were found", "found in the input folder", "no checkpoints", "could not auto-find",
+              "needs an H3 video latent")  # "needs a file", not a fault (the H3 upscaler needs a real H3 latent, which only a model run makes)
 
 
 def call(port, path, data=None, timeout=120):
