@@ -1,6 +1,6 @@
 # SY Nodes: full node list
 
-All 198 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 199 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 ## SY/Text (52)
@@ -58,7 +58,7 @@ All 198 nodes, by group. Every node is in the **SY** folder of the node library 
 - TextRepeat SY
 - Token Estimate SY
 
-## SY/Image (42)
+## SY/Image (43)
 
 - ApplyMaskToImage SY
 - Aspect Bucket SY
@@ -72,6 +72,7 @@ All 198 nodes, by group. Every node is in the **SY** folder of the node library 
 - Crop Square Centre For Training SY
 - Crop To Aspect SY
 - CropByMask SY
+- Face Detect SY
 - Film Grain SY
 - Flip Rotate SY
 - Frame Interpolate Blend SY

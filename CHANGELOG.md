@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.3.0
+- Face Detect SY: finds faces and makes a mask (box or oval) for Inpaint Crop SY. Built-in detector needs only the opencv package; an optional YuNet .onnx file in models/sy_face_detect gives better results. No face found gives an empty mask and no error.
+
 ## 1.2.0
 - IndexSwitch SY: pick one of up to four inputs by number. Only the chosen branch runs.
 

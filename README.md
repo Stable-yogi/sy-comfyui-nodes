@@ -1,6 +1,6 @@
 # SY Nodes for ComfyUI
 
-198 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
+199 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
 They load models, set sizes and seeds, switch parts of a graph on and off, edit masks and pictures, work with text,
 and save results. Our workflows use them, so one install of this pack gives you the nodes the workflows need.
 
@@ -37,7 +37,7 @@ Replace the folder with the new one and restart ComfyUI. Saved workflows keep wo
 | Group | Nodes | What is in it |
 |---|---|---|
 | SY/Text | 52 | Prompt and caption helpers, text join, find and replace, JSON, chat prompt builders |
-| SY/Image | 42 | Picture tools, masks, crop and paste, compare, grids, loaders and save steps |
+| SY/Image | 43 | Picture tools, masks, crop and paste, compare, grids, loaders and save steps |
 | SY/Resize | 10 | Sizes, aspect ratios, video sizes, H3 latent upscaler |
 | SY/Values | 20 | Seed, numbers, switches, lists |
 | SY/Logic | 9 | Switch, pick by number, compare, gate |
@@ -51,8 +51,8 @@ with its inputs and what it does.
 ## Workflows that use the pack
 
 Our workflows put an install box at the top. It names this pack, the model files the workflow needs, and the folder each file goes in.
-Some workflows also use these free packs from other authors: TeaCache, Impact Pack, GGUF loaders, Ultralytics detectors.
-The banner of each workflow lists the ones it uses.
+Some workflows also use free packs from other authors. The banner of each workflow lists the ones it uses.
+Face Detect SY uses the `opencv-python-headless` package for its built-in detector. If it is missing, the node tells you how to add it.
 
 ## If something does not work
 

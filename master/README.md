@@ -5,7 +5,7 @@ Four workflows that together hold every SY node. Use them to check that all node
 | Workflow file | Groups | Nodes |
 |---|---|---|
 | `StableYogi-SY-Test-1-Text.json` | Text | 52 |
-| `StableYogi-SY-Test-2-Picture.json` | Image, Resize | 51 |
+| `StableYogi-SY-Test-2-Picture.json` | Image, Resize | 52 |
 | `StableYogi-SY-Test-3-Tools.json` | Utility, Editors | 48 |
 | `StableYogi-SY-Test-4-Numbers-Logic.json` | Values, Logic, Notes | 29 |
 
