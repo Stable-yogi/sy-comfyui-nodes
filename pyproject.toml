@@ -1,7 +1,7 @@
 [project]
 name = "sy-comfyui-nodes"
 description = "SY helper nodes for ComfyUI by Stable Yogi"
-version = "1.3.1"
+version = "1.4.0"
 license = { file = "LICENSE" }
 dependencies = []
 

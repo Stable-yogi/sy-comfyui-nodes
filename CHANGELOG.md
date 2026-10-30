@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.4.0
 - Tile Split SY and Tile Merge SY: cut a big picture into equal overlapping tiles, do any work on the tiles, and join them back with a soft blend. Works with tiles that were made bigger by a whole number (2x, 4x). Sizes and positions travel in a text line between the two nodes.
 
 - H3 Chain SY: five nodes that join MiniMax H3 renders into one unbroken take (Settings, Render Segment, Chain To Video, Repair Segment, Load Session). Same on-disk session format as the original, so an old session can be resumed. Needs the H3 model files and a ComfyUI with the V3 node schema; on an older ComfyUI the five nodes stay out and the rest of the pack loads as usual.
