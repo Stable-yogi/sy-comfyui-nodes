@@ -1,6 +1,6 @@
 # SY Nodes for ComfyUI
 
-234 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
+245 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
 They load models, set sizes and seeds, switch parts of a graph on and off, edit masks and pictures, work with text,
 and save results. Our workflows use them, so one install of this pack gives you the nodes the workflows need.
 

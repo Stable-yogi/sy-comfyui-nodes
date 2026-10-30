@@ -1,11 +1,12 @@
 # SY Nodes: full node list
 
-All 234 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 245 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 
-## SY/Text (55)
+## SY/Text (59)
 
+- Base64 Text SY
 - Caption Prefix Suffix SY
 - Caption Review SY
 - Caption Style Request SY
@@ -17,9 +18,11 @@ All 234 nodes, by group. Every node is in the **SY** folder of the node library 
 - EditStepsList SY
 - Few Shot Block SY
 - Find Replace SY
+- Hash Text SY
 - JSON Field Get SY
 - JSON From Reply SY
 - JSON Prompt Builder SY
+- Line Numbers SY
 - LinePick SY
 - LLM Reply Clean SY
 - LoRA Stack Text SY
@@ -57,16 +60,18 @@ All 234 nodes, by group. Every node is in the **SY** folder of the node library 
 - Text SY
 - Text Template SY
 - Text Trim To Tokens SY
+- Text Truncate SY
 - Text Wrap SY
 - TextInImage SY
 - TextRepeat SY
 - Token Estimate SY
 
-## SY/Image (67)
+## SY/Image (71)
 
 - Add Border SY
 - ApplyMaskToImage SY
 - Aspect Bucket SY
+- Auto Contrast SY
 - Batch Concat SY
 - Batch Info SY
 - Batch Pick SY
@@ -85,6 +90,7 @@ All 234 nodes, by group. Every node is in the **SY** folder of the node library 
 - Dominant Colors SY
 - Duotone SY
 - Edge Detect SY
+- Emboss SY
 - Face Detect SY
 - Film Grain SY
 - Flip Rotate SY
@@ -126,15 +132,18 @@ All 234 nodes, by group. Every node is in the **SY** folder of the node library 
 - Roll Image SY
 - Rounded Corners SY
 - Saturation SY
+- Sepia SY
 - Sharpen SY
+- Solarize SY
 - Threshold SY
 - Tile Merge SY
 - Tile Split SY
 - Vignette SY
 
-## SY/Resize (10)
+## SY/Resize (11)
 
 - Aspect From Size SY
+- Crop Percent SY
 - H3LatentUpscaler SY
 - Longest Side Scale SY
 - Megapixel Scale SY
@@ -145,7 +154,7 @@ All 234 nodes, by group. Every node is in the **SY** folder of the node library 
 - Video Size Fit SY
 - Video Size Presets SY
 
-## SY/Values (23)
+## SY/Values (25)
 
 - Bool Value SY
 - Clamp Remap SY
@@ -156,6 +165,7 @@ All 234 nodes, by group. Every node is in the **SY** folder of the node library 
 - Frame Count Snap SY
 - HexColourMix SY
 - Int Value SY
+- List Stats SY
 - Math Expression SY
 - Min Max SY
 - Number Compare SY
@@ -169,6 +179,7 @@ All 234 nodes, by group. Every node is in the **SY** folder of the node library 
 - Seed List SY
 - Seed Stepper SY
 - Seed SY
+- Size Text SY
 - Time Code SY
 
 ## SY/Logic (9)
