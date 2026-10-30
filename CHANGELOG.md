@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.5.0
 - Eleven more nodes: Solarize SY, Sepia SY, Emboss SY (eight directions), Auto Contrast SY, Crop Percent SY, Text Truncate SY, Hash Text SY (sha256, sha1, md5, sha512), Base64 Text SY, Line Numbers SY, List Stats SY and Size Text SY (bytes as KB, MB, GB).
 - The four browser test workflows in master/ were rebuilt. They now hold every node (245), including the newer H3, GGUF, tile and batch nodes that the old files lacked.
 - Eleven more everyday nodes: Saturation SY (saturation or vibrance), Brightness Contrast SY, Mirror Image SY (left, right, top, bottom or four-way symmetry), Image Stats SY (mean, contrast, dark and bright share), Checkerboard SY, Colour Overlay SY (normal, multiply, screen, overlay, optional mask), Slugify SY, Text Wrap SY, Sort Dedupe Lines SY, Ease Curve SY (nine easing curves between two numbers) and Number Series SY (evenly spaced numbers as text).
