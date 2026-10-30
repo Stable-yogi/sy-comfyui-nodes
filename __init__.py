@@ -16,6 +16,18 @@ for _fn in sorted(os.listdir(_dir)):
         NODE_CLASS_MAPPINGS.update(getattr(_mod, "NODE_CLASS_MAPPINGS", {}))
         NODE_DISPLAY_NAME_MAPPINGS.update(getattr(_mod, "NODE_DISPLAY_NAME_MAPPINGS", {}))
 
+try:  # result preview: a small picture or text on the node after each run (SY_NO_PREVIEW=1 switches it off)
+    from .nodes import _sy_preview
+    _sy_preview.wrap_all(NODE_CLASS_MAPPINGS)
+except Exception as _err:  # the nodes still work without the preview
+    print("[SY] result preview not available:", _err)
+
+try:  # web helpers for the node buttons (live size, .txt file list)
+    from .nodes import _sy_flagship_api
+    _sy_flagship_api.register_routes()
+except Exception as _err:
+    print("[SY] node button helpers not available:", _err)
+
 try:  # web helpers for the Save and Load nodes (list folders, open Explorer inside output/input only)
     from .nodes import _sy_folder_api
     _sy_folder_api.register_routes()

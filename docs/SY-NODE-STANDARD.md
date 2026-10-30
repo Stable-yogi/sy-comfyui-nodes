@@ -44,6 +44,13 @@ Older repo `comfyui-stableyogi-prompt` uses `StableYogiPrompt` / category `Stabl
 - Inputs get a safe `min`/`max`. Bad input raises a clear `ValueError`.
 - Add `IS_CHANGED` when the output must change on every run.
 
+## 4b. Result preview (automatic) and node buttons
+- Every node gets a result preview for free: `__init__.py` calls `_sy_preview.wrap_all(NODE_CLASS_MAPPINGS)`. A node does nothing extra. The preview shows STRING, INT, FLOAT and BOOLEAN outputs as text, and IMAGE and MASK outputs as small JPEG thumbnails (the picture before the node is kept for the Hold: before button).
+- Skipped by design: nodes with `INPUT_IS_LIST` or `OUTPUT_IS_LIST`, async or generator functions, nodes that already return their own `ui` dict, and the three info nodes. A node opts out with `SY_NO_PREVIEW = True` on its class. The whole feature stops with the environment variable `SY_NO_PREVIEW=1`.
+- A preview error must never break a node: the wrapper catches it, prints one console line, and returns the plain result.
+- Node buttons live in `js/sy_flagship.js` (one `SETUP[className]` function per node). They only change widget values or show information. Never add a button that runs a model, writes a file or opens a network connection.
+- The two small web routes `/sy/flagship/size` and `/sy/flagship/textfiles` only read. The size comes from the same pure functions the nodes use.
+
 ## 5. Add a node (steps)
 1. Write the behaviour list in plain words (clean-room: from the spec, never from GPL code).
 2. Copy `docs/NODE-TEMPLATE.md` to `nodes/sy_<snake>.py`. Fill it.
