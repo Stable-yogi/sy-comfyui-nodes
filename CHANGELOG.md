@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- Tile Split SY and Tile Merge SY: cut a big picture into equal overlapping tiles, do any work on the tiles, and join them back with a soft blend. Works with tiles that were made bigger by a whole number (2x, 4x). Sizes and positions travel in a text line between the two nodes.
+
 ## 1.3.1
 - Face Detect SY: the tooltip, docs and README now link to the optional face-finder file (https://github.com/Stable-yogi/sy-face-model). It is a separate download, not bundled.
 
