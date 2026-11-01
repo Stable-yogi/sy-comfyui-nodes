@@ -25,7 +25,8 @@ import urllib.request
 import uuid
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SOFT_WORDS = ("were found", "found in the input folder", "no checkpoints", "could not auto-find",
+WAITS_FOR_PERSON = {"SYReviewPause"}  # stops the run until a person answers: left out of the test prompts, covered by a browser test
+SOFT_WORDS = ("model is installed", "were found", "found in the input folder", "no checkpoints", "could not auto-find",
               "needs an H3 video latent", "there is no saved session",
               "no model is picked", "no GGUF model is picked", "No text encoder is picked", "pick a video or a sound file first",
               "RTX upscaler is not installed")  # "needs a file", not a fault (the H3 upscaler needs a real H3 latent, which only a model run makes; Load Session needs a session an earlier H3 run saved)
@@ -218,7 +219,7 @@ def check_parts(port, paths, report_path, max_rounds=250):
             body += ["Wait behind a node that needs a file (not a fault): " + ", ".join(waits_for_file), ""]
         if not_run:
             body += ["Not reached (a node in front of them was broken): " + ", ".join(not_run), ""]
-    missing = sorted(set(sy_types) - sy_seen)
+    missing = sorted(set(sy_types) - sy_seen - WAITS_FOR_PERSON)
     if missing:
         if verdict == "PASS":
             verdict = "NOT CLEAN"
