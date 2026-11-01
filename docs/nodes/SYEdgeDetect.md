@@ -16,3 +16,10 @@ Source: `nodes/sy_edge_detect.py`
 | threshold | FLOAT | no | Edges weaker than this are dropped. 0.1 cleans faint lines. | 0.0 to 1.0, step 0.01, default 0.0 |
 
 Outputs: `IMAGE`, `MASK`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Pick method: sobel or laplacian. Set strength. Turn on invert to flip bright and dark.
+3. blur_first filters noise before. threshold drops faint edges.
+4. Outputs: image (a grey edge map), mask and info.

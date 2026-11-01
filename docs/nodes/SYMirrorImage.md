@@ -12,3 +12,10 @@ Source: `nodes/sy_mirror_image.py`
 | mode | COMBO | yes | Which side is kept and copied over the other. four_way copies the top-left quarter. | one of: left_to_right, right_to_left, top_to_bottom, bottom_to_top, four_way |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Choose mode. It names the side that is kept and copied, flipped, onto the other side: left_to_right, right_to_left, top_to_bottom, bottom_to_top or four_way.
+3. four_way copies the top-left quarter to all four corners.
+The info output says which side was copied and what happens with an odd-sized picture.

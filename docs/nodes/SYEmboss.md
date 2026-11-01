@@ -16,3 +16,10 @@ Source: `nodes/sy_emboss.py`
 | enabled | BOOLEAN | no | Turn off to pass the picture through untouched (handy to compare before and after). | default True |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set strength and angle (where the light comes from).
+3. Lower mix to blend the relief into the original. Optional: connect a mask or turn enabled off.
+4. The result comes out as image. Transparency is kept.

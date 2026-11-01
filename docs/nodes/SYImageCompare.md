@@ -15,3 +15,10 @@ Source: `nodes/sy_image_compare.py`
 | resize_b | COMBO | no | How B is resized when its size differs: nearest keeps hard pixels, smooth looks cleaner. | one of: nearest, smooth |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect the two pictures to image_a and image_b. Picture B is resized to match A.
+2. Pick mode: side_by_side, difference, blend, checker or wipe.
+3. Set amount for the blend mix or the wipe position. 0 shows A, 1 shows B. resize_b picks nearest or smooth.
+4. The comparison picture comes out, plus an info line that says if the pictures are identical or how much they differ.

@@ -17,3 +17,10 @@ Source: `nodes/sy_done_alert.py`
 | only_when_idle | BOOLEAN | yes | Only alert when this is the last node of the run: waits until the queue is empty. | default True |
 
 Outputs: `*`
+
+## How to use
+
+1. Put this node at the end of the workflow and connect any value to anything.
+2. Set message, sound (beep, two beeps, chime, none) and volume.
+3. show_message shows a note. desktop_notice shows a desktop notice. only_when_idle is on by default.
+4. The value passes through unchanged.

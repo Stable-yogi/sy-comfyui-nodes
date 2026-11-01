@@ -16,3 +16,9 @@ Source: `nodes/sy_line_numbers.py`
 | mode | COMBO | no | add numbers: number the lines. remove numbers: take the numbers off a list like 1. a / 2. b. | one of: add numbers, remove numbers |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Connect the text. Pick mode: add numbers or remove numbers (takes numbers off a list like 1. a / 2. b).
+2. In add mode, set start, separator, and turn on pad_zeros for equal width numbers. skip_empty gives empty lines no number.
+3. The changed text, a line count and an info line come out.

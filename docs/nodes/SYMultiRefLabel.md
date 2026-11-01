@@ -18,3 +18,10 @@ Source: `nodes/sy_multi_ref_label.py`
 | renumber | BOOLEAN | no | On: number the filled slots 1, 2, 3 with no gaps. | default False |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. In ref_1 to ref_4, write a short description of each reference picture. Leave unused slots empty.
+2. In task, say what the model should do, using the names Image 1, Image 2 and so on.
+3. Optional: change label (the word before each number), turn task_first on to put the task before the list, and renumber on to number the filled slots without gaps.
+Outputs: the finished prompt, the count of pictures and an info line. It warns when the task names a picture you did not describe.

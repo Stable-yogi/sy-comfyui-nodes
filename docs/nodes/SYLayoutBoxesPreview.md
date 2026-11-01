@@ -18,3 +18,10 @@ Source: `nodes/sy_layout_boxes_preview.py`
 | show_numbers | BOOLEAN | no | Put the box number (1, 2, 3 ...) before its label, to match the numbers in check reports. | default False |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect the box list to layout_boxes, or paste it as JSON text.
+2. Connect a picture to image to draw on it. Without one, a blank canvas of blank_width and blank_height is used.
+3. Set line_width and show_labels. Optional: fill_opacity tints the inside of each box, and show_numbers adds the box number to match the check reports.
+4. The picture with the boxes comes out, plus an info line that lists boxes that fell outside the picture.

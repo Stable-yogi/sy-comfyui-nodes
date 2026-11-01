@@ -13,3 +13,9 @@ Source: `nodes/sy_bool_logic.py`
 | operation | COMBO | yes | and: both yes. or: one or more. xor: exactly one. not: flip a. nand/nor/xnor: the opposite of and/or/xor. | one of: and, or, xor, not, nand, nor, xnor |
 
 Outputs: `BOOLEAN`, `STRING`
+
+## How to use
+
+1. Connect or set two yes/no values in a and b.
+2. Pick operation: and, or, xor, nand, nor, xnor. The choice not flips a and ignores b.
+3. The answer comes out as result, with an info line that shows what went in.

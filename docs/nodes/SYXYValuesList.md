@@ -21,3 +21,10 @@ Source: `nodes/sy_xy_values_list.py`
 | remove_duplicates | BOOLEAN | no | Drop values that appear twice, so no picture is rendered twice. | default False |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Pick mode: numbers (a range with start, stop and steps), text list (type values) or seeds (seed_first, seed_count, seed_step).
+2. In numbers mode pick scale linear or log, and turn on whole_numbers to round.
+3. Turn on remove_duplicates so no picture is rendered twice.
+4. Outputs: the values list, the count and an info line.

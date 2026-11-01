@@ -16,3 +16,9 @@ Source: `nodes/sy_caption_style_request.py`
 | avoid_words | STRING | no | Words the caption must not use, separated by commas, for example: beautiful, stunning. | default '' |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Pick style: short, detailed, tags or training caption.
+2. Optionally set max_words (0 uses a sensible limit), trigger_word, subject_hint, notes and avoid_words.
+3. The text comes out as request. Send it to an LLM node. This node only builds the text.

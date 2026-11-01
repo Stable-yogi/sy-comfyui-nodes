@@ -20,3 +20,11 @@ Source: `nodes/sy_before_after.py`
 | batch_mode | COMBO | no | Use only the first picture of each batch, or compare every picture. | one of: first picture only, all pictures |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect the picture before the change to before and the changed one to after.
+2. Pick mode: split vertical, split horizontal, side by side, top and bottom, difference, checkerboard or blend.
+3. Use position to place the split (in blend, how much of after is mixed in). line_width and line_colour style the dividing line.
+4. If sizes differ, match_size decides what happens. In difference mode, difference_gain brightens small differences.
+5. The comparison picture comes out with an info line that gives the mean difference. The node also has a draggable before / after slider in the browser.

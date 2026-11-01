@@ -16,3 +16,10 @@ Source: `nodes/sy_text_case_trim.py`
 | tidy_commas | BOOLEAN | no | On: fix stray commas and spaces in a tag list, like 'a ,b,, c,' to 'a, b, c'. | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Connect the text.
+2. Pick case: keep, upper, lower, title or sentence.
+3. Switch trim, collapse_spaces and strip_empty_lines as needed.
+4. Turn on tidy_commas to fix a tag list like "a ,b,, c," into "a, b, c". The info line says what changed.

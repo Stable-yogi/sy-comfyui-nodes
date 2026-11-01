@@ -17,3 +17,10 @@ Source: `nodes/sy_image_blend.py`
 | mask | MASK | no | Optional. The top picture shows only where this mask is white. A different size is stretched to fit. | mask [B,H,W] |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect the bottom picture to base and the picture to lay over it to top. The result has the size of base.
+2. Pick mode (normal, multiply, screen, overlay, add or difference) and set opacity. 0 shows only the base.
+3. If top has another size, top_fit either stretches it or fills and crops it. Turn on use_top_alpha to let the base show through transparent parts of top.
+4. Optional: connect a mask. The top picture shows only where it is white. The result and an info line come out.

@@ -19,3 +19,10 @@ Source: `nodes/sy_list_folder_files.py`
 | if_too_many | COMBO | no | error refuses more than 5000 files. truncate keeps the first 5000. | one of: error, truncate |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Pick root (input or output) and type subfolder. Empty means the folder itself.
+2. Type extensions like png, jpg or txt to keep only those. Empty lists every file.
+3. Optional: sort_by, include_subfolders, a contains filter, and with_subfolder to put the folder before each name. if_missing sets whether a wrong folder gives an empty list or an error.
+4. The list comes out one name per line, with a count and an info line. More than 5000 files is refused unless if_too_many is truncate.

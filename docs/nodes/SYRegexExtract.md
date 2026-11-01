@@ -17,3 +17,11 @@ Source: `nodes/sy_regex_extract.py`
 | join_with | STRING | no | Put between matches when find_all is on, for example a comma or a new line. | default ', ' |
 
 Outputs: `STRING`, `BOOLEAN`, `STRING`
+
+## How to use
+
+1. Put the text to search in text (up to 100000 characters) and the regular expression in pattern (up to 200 characters).
+2. group picks which bracket group to return. 0 is the whole match. default is returned when nothing matches.
+3. Optional: ignore_case, and find_all to collect every match and join them with join_with.
+Outputs: the result, a matched yes/no and an info line saying where it matched or why not.
+Example: pattern (\d+) on abc 42 gives 42.

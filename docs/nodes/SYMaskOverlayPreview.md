@@ -17,3 +17,10 @@ Source: `nodes/sy_mask_overlay_preview.py`
 | invert_mask | BOOLEAN | no | On: tint everything outside the mask instead. Handy to check what a mask protects. | default False |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your picture to image and your mask to mask. A mask of another size is stretched to fit.
+2. Set the tint with red, green and blue (0 to 255) and opacity (0 shows no tint, 1 covers the picture).
+3. Turn invert_mask on to tint everything outside the mask, which shows what the mask protects.
+The image output is the picture with the tint. Look at it to check what the mask covers.

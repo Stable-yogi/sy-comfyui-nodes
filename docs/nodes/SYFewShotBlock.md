@@ -22,3 +22,10 @@ Source: `nodes/sy_few_shot_block.py`
 | example_out_4 | STRING | no | Example 4: the answer you want. Empty skips the pair. | default '', multiline |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Write the job in task and the new item in new_input.
+2. Fill example_in_1 and example_out_1 and so on, up to 4 pairs. A half-filled pair is skipped.
+3. input_label and output_label name the lines (default Input and Output).
+4. The text ends with an empty output line. info counts the examples and gives a rough token count.

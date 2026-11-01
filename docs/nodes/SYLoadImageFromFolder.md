@@ -14,3 +14,10 @@ Source: `nodes/sy_load_image_from_folder.py`
 | index_mode | COMBO | no | wrap goes round at the end. clamp stays on the last picture. error stops. | one of: wrap, clamp, error |
 
 Outputs: `IMAGE`, `MASK`, `STRING`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Type subfolder, a folder inside the input folder. Empty means the input folder itself.
+2. Pick sort_by (name, date, newest, largest or smallest) and set index, the picture number counting from 0.
+3. index_mode: wrap goes round at the end, clamp stays on the last picture, error stops.
+4. You get the picture, its mask, its file name, the index really used, the number of pictures and an info line. A counter on index steps through the folder.

@@ -13,3 +13,9 @@ Source: `nodes/sy_loader_name_picker.py`
 | name_filter | STRING | no | Optional. Words like 'flux dev': uses the first matching file of the folder and ignores the list. | default '' |
 
 Outputs: `STRING`, `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Pick folder (checkpoints, loras, vae, clip, unet or upscale_models), then pick a file name from the list.
+2. Optional: type words in name_filter, for example flux dev. The first matching file of that folder is used and the list is ignored.
+3. Only the name comes out as text. Nothing is loaded. You also get a plain message when the file is in another folder than the one picked.

@@ -15,3 +15,11 @@ Source: `nodes/sy_number_series.py`
 | include_stop | BOOLEAN | no | On ends exactly at stop. Off leaves stop out, like 0, 0.25, 0.5, 0.75 for a loop. | default True |
 
 Outputs: `STRING`, `INT`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Set start, stop and count (how many numbers, including the first and last).
+2. Set decimals for the digits kept after the point.
+3. Turn include_stop off to leave stop out. For a looping animation this stops the end repeating the start.
+Outputs: the numbers as text, the count, the step size and an info line.
+Example: 0 to 1 with count 5 and include_stop off gives 0, 0.2, 0.4, 0.6, 0.8.

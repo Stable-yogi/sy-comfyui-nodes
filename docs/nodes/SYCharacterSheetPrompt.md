@@ -21,3 +21,10 @@ Source: `nodes/sy_character_sheet_prompt.py`
 | style_notes | STRING | no | Extra wishes, for example: flat colours, clean line art. | default '', multiline |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Describe the character in character.
+2. Tick the views you want: front, side, back, three_quarter, face_close_up, full_body.
+3. Pick background, layout (grid or row), and optionally pose and style_notes.
+4. The prompt comes out as text. The info line suggests a canvas shape.

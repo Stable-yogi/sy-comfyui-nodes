@@ -12,3 +12,9 @@ Source: `nodes/sy_list_stats.py`
 | ignore_bad | BOOLEAN | no | On skips pieces that are not numbers (like 5px) and says so in info. Off refuses them. | default False |
 
 Outputs: `INT`, `FLOAT`, `FLOAT`, `FLOAT`, `FLOAT`, `FLOAT`, `STRING`, `FLOAT`, `STRING`, `STRING`
+
+## How to use
+
+1. Type or connect numbers separated by commas, spaces or new lines.
+2. Turn on ignore_bad to skip pieces like 5px. They are listed in the info line. Off refuses them.
+3. You get the count, sum, average, middle value, smallest, largest, the spread (stdev) and the sorted list.

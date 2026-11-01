@@ -21,3 +21,10 @@ Source: `nodes/sy_select_by_index_text.py`
 | text_8 | STRING | no | Text number 8. Leave it unconnected to skip it. | default '' |
 
 Outputs: `STRING`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Connect up to 8 texts to text_1 to text_8. Unconnected slots are skipped.
+2. Set index. 0 is the first connected text.
+3. Set out_of_range: wrap goes round, clamp stays on the first or last, error stops with a message.
+4. Turn on skip_empty to ignore empty texts. Outputs: the picked text, its slot, the count and an info line.

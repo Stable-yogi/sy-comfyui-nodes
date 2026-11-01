@@ -28,3 +28,11 @@ Source: `nodes/sy_h3_prompt.py`
 | ref_note_4 | STRING | no | What reference picture 4 shows, for example the hero in a red coat. | default '' |
 
 Outputs: `STRING`, `INT`, `IMAGE`, `STRING`
+
+## How to use
+
+1. Fill in style, world and action. In action, write Picture 1, Picture 2 to point at the reference pictures.
+2. Connect reference pictures to ref_image_1 to ref_image_4 (only the first frame is used) and describe them in ref_note_1 to ref_note_4. The node checks that the Picture numbers match what you connected.
+3. Add dialogue (one spoken line per line), dialogue_language, and time_codes (one line per moment, like 0-4s: she turns round). Connect an acting_video to take the clip length from it and check the time codes.
+4. Set seconds and fps. seconds 0 takes the length from the acting video, or 5 seconds if there is none.
+5. The prompt text, the frame count, the reference picture and an info line come out.

@@ -15,3 +15,10 @@ Source: `nodes/sy_add_border.py`
 | multiple_of | INT | no | Outside mode: round the new width and height up to this multiple, for example 8 or 64. 1 = off. | 1 to 512, step 1, default 1 |
 
 Outputs: `IMAGE`, `MASK`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set size (thickness in pixels) and colour (a hex code such as #000000).
+3. Pick mode: outside makes the picture bigger, inside keeps the size and paints over the edge.
+4. Use multiple_of (8 or 64) if the next node needs a size that fits. The result comes out as image, with a mask of the border.

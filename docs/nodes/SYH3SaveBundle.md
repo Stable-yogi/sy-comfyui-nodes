@@ -17,3 +17,10 @@ Source: `nodes/sy_h3_bundle.py`
 | reference_3 | IMAGE | no | Optional picture saved as ref_3.png (first picture of the batch). | picture batch [B,H,W,3] |
 
 Outputs: `STRING`
+
+## How to use
+
+1. Connect the latent to keep and its prompt, and set the seed that made it.
+2. Type bundle_name. It becomes a folder in output/sy_bundles, and the same name overwrites that bundle.
+3. Optional: connect up to three reference pictures. Each is saved as ref_1.png and so on (first picture of the batch).
+4. An info line comes out. Load the bundle again with H3 Load Bundle.

@@ -16,3 +16,10 @@ Source: `nodes/sy_remove_background.py`
 | background | COMBO | yes | What goes behind the subject in the image output. | one of: transparent, white, black, grey, green screen |
 
 Outputs: `IMAGE`, `MASK`, `IMAGE`
+
+## How to use
+
+1. Connect your picture (or batch) to image and pick a model file in model. If none is listed, get one with Model Downloader SY.
+2. Choose background: transparent, white, black, grey or green screen.
+3. Clean the edge with threshold (0 keeps the soft edge), feather and grow.
+Outputs: the picture with the new background, the cut-out mask (1 = subject) and a flat-colour cut-out.

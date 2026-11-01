@@ -13,3 +13,10 @@ Source: `nodes/sy_gaussian_blur.py`
 | mask | MASK | no | Optional. Blur only where this mask is white. A different size is stretched to fit. | mask [B,H,W] |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect a picture or batch to image.
+2. Set radius in pixels. 0 leaves the picture as it is.
+3. Optional: connect a mask to blur only the white area. A mask of another size is stretched to fit.
+4. The blurred picture comes out, plus an info line that says what was done.

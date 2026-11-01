@@ -16,3 +16,10 @@ Source: `nodes/sy_caption_prefix_suffix.py`
 | tidy | BOOLEAN | no | On: first squeeze double spaces, spaces before commas and doubled commas. | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Put your caption in caption. Turn on per_line to treat every line as its own caption.
+2. Fill prefix and/or suffix with the trigger word. separator goes between it and the caption.
+3. It skips a trigger word the caption already starts or ends with.
+4. Turn on tidy to squeeze double spaces and stray commas first. The new caption comes out, and info says how many were changed.

@@ -20,3 +20,11 @@ Source: `nodes/sy_mask_from_box.py`
 | invert | BOOLEAN | no | Swap white and black: everything except the box is selected. | default False |
 
 Outputs: `MASK`, `STRING`
+
+## How to use
+
+1. Set x, y, box_width and box_height for the rectangle. The inside is white, the rest is black.
+2. Set canvas_width and canvas_height, or connect a picture to size_from to copy its size.
+3. Set anchor to centre if x and y mean the middle of the box instead of its top-left corner.
+4. Optional: feather softens the edge, invert swaps white and black.
+The info output says if the box was cut off or missed the canvas.

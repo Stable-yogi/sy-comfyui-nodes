@@ -15,3 +15,10 @@ Source: `nodes/sy_scene3d.py`
 | height | INT | yes | Height in pixels of both output pictures. | 64 to 2048, step 8, default 768 |
 
 Outputs: `IMAGE`, `IMAGE`, `STRING`
+
+## How to use
+
+1. Open the editor on the node and add cubes, spheres, cylinders, planes or .glb models. Place them and set the camera.
+2. Leave scene_json, render_data and depth_data alone, the editor fills them.
+3. Set width and height for the output pictures.
+4. Outputs: image (shaded picture), depth (near is white) and summary (text list of the objects).

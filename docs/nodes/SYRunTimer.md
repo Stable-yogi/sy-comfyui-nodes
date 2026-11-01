@@ -12,3 +12,9 @@ Source: `nodes/sy_run_timer.py`
 | reset | BOOLEAN | yes | On: restart the timer from zero on this run. | default False |
 
 Outputs: `*`, `FLOAT`
+
+## How to use
+
+1. Place the node in the line of any connection and connect the value to value.
+2. The value comes out unchanged. elapsed_seconds tells how long it has been since this node first ran.
+3. Turn reset on to restart the clock from zero on this run.

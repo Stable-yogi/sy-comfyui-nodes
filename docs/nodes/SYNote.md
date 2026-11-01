@@ -14,3 +14,9 @@ Source: `nodes/sy_note.py`
 | trim | BOOLEAN | no | On cuts spaces and blank lines from the start and end of the sent text. | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Type your note in text and pick a style. The card colour follows it: info blue, tip green, warning red, step gold, model purple.
+2. The text can also be sent on as a prompt. Turn add_style_label on to put the style word in front, for example WARNING: check the seed. Turn trim on to cut spaces and blank lines at the ends.
+3. Outputs: the text and an info line with the word count.

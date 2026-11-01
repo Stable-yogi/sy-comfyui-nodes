@@ -15,3 +15,10 @@ Source: `nodes/sy_layout_json_check.py`
 | warn_multiple_of | INT | no | Warn for numbers that are not a multiple of this, for example 8 or 64. 1 turns it off. | 1 to 512, default 1 |
 
 Outputs: `BOOLEAN`, `STRING`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect the box list to layout_boxes, or paste it as JSON text.
+2. Set canvas_width and canvas_height, the size of the picture the boxes must fit in.
+3. Optional: warn_overlap warns when two boxes cover the same area (a warning does not make it invalid). warn_multiple_of warns for numbers that are not a multiple of 8 or 64.
+4. You get true or false, a report, a fixed list cut to fit the picture, and a warnings text.

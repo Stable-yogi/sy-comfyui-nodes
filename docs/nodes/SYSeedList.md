@@ -13,3 +13,9 @@ Source: `nodes/sy_seed_list.py`
 | mode | COMBO | yes | Sequential: base, base+1... Random fixed: scattered numbers, repeatable. | one of: sequential, random_fixed |
 
 Outputs: `STRING`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Set base_seed and count (1 to 64).
+2. Pick mode: sequential counts up from the base, random_fixed gives scattered but repeatable numbers.
+3. Outputs: the comma list, the first seed, the last seed and an info line. Use last_seed + 1 to start the next list.

@@ -16,3 +16,10 @@ Source: `nodes/sy_image_hash_duplicate.py`
 | index_b | INT | no | Which picture of batch B to use. 0 is the first, -1 the last. | -1000000 to 1000000, default 0 |
 
 Outputs: `INT`, `BOOLEAN`, `STRING`, `FLOAT`
+
+## How to use
+
+1. Connect two pictures to image_a and image_b. For a batch, the first picture is used unless you set index_a or index_b (-1 is the last).
+2. hash_size sets the fingerprint grid. Bigger notices smaller differences.
+3. threshold is the largest number of differing bits that still counts as a near duplicate.
+4. You get the difference, a true or false for near duplicate, an info line and a match percentage.

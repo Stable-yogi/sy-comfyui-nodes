@@ -14,3 +14,11 @@ Source: `nodes/sy_mask_feather.py`
 | edge | COMBO | no | centred: soft edge on both sides. inside only: no halo outside. outside only: no shrinking. | one of: centred, inside only, outside only |
 
 Outputs: `MASK`, `STRING`
+
+## How to use
+
+1. Connect your mask.
+2. Set radius, the width of the soft edge in pixels. 0 changes nothing.
+3. Optional: grow makes the white area bigger before the blur (negative shrinks it).
+4. edge picks where the softness goes: centred, inside only (no halo outside the subject) or outside only.
+Example: radius 16 with edge set to inside only.

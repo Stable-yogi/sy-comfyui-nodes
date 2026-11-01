@@ -15,3 +15,10 @@ Source: `nodes/sy_xy_pick.py`
 | clamp_to_last | BOOLEAN | no | On: an index past the end stays on the last cell. Ignored when wrap is on. | default False |
 
 Outputs: `STRING`, `STRING`, `INT`, `INT`, `INT`, `STRING`, `BOOLEAN`
+
+## How to use
+
+1. Type x_values and y_values, one per line.
+2. Feed index from a counter and use auto-queue to render the whole grid. Index counts across each row first.
+3. Turn on wrap to start again after the end, or clamp_to_last to stay on the last cell. Otherwise it stops with an error.
+4. Outputs: x_value, y_value, both indexes, the total, a label and is_last.

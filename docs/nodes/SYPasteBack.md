@@ -17,3 +17,11 @@ Source: `nodes/sy_crop_paste.py`
 | enabled | BOOLEAN | no | Turn off to pass the original picture through untouched. | default True |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect the original picture to image, the processed crop to crop, and the crop_info output of Crop By Mask SY to crop_info.
+2. Set feather for the width of the soft seam. 0 gives a hard edge.
+3. Optional: crop_mask limits the paste to where it is white, and strength sets how much the crop replaces the original (0.5 is half).
+4. Turn enabled off to pass the original through untouched.
+The crop is resized to the box if its size differs.

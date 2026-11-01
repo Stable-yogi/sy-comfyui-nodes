@@ -14,3 +14,10 @@ Source: `nodes/sy_prompt_emphasis_strip.py`
 | remove_embeddings | BOOLEAN | no | On: also remove names like embedding:easynegative. | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Paste the prompt into text.
+2. Emphasis marks are removed: (word:1.2), ((word)) and [word] become word.
+3. Optional switches: remove_lora_tags (like <lora:name:0.8>), remove_break (the word BREAK on its own) and remove_embeddings (like embedding:easynegative).
+The info output counts what was removed.

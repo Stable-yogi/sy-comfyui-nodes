@@ -18,3 +18,10 @@ Source: `nodes/sy_levels_adjust.py`
 | mask | MASK | no | Optional. Adjust only where this mask is white. A different size is stretched to fit. | mask [B,H,W] |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect a picture or batch to image. The default values change nothing.
+2. Set black_point and white_point to fix washed-out shadows and dull highlights, for example 0.05 and 0.95.
+3. Then use gamma, contrast, brightness and saturation as needed.
+4. Optional: connect a mask to adjust only the white area. The picture and an info line that lists what was changed come out.

@@ -13,3 +13,10 @@ Source: `nodes/sy_base64_text.py`
 | url_safe | BOOLEAN | yes | On: use the web-address-safe letters (- and _ instead of + and /). | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Put the text in text.
+2. Set mode to encode to make base64 code, or decode to turn base64 code back into text.
+3. Turn on url_safe to use web-address-safe letters.
+4. Decoding forgives missing padding, line breaks and a pasted data:...;base64, start. A bad code gives one plain sentence.

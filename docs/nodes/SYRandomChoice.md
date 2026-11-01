@@ -14,3 +14,10 @@ Source: `nodes/sy_random_choice.py`
 | skip_comments | BOOLEAN | no | On: lines that start with # are ignored. | default False |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Write one choice per line in lines. Empty lines are skipped.
+2. Set seed. The same seed always picks the same line. Change it for another line.
+3. mode in order walks the list: seed 0 gives line 1, seed 1 gives line 2, and it starts over at the end. Turn skip_comments on to ignore lines that start with #.
+Outputs: the chosen line, its index and an info line.

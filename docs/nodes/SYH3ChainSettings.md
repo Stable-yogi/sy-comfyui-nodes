@@ -33,3 +33,11 @@ drift_arrest: a long chain slowly drifts in colour and brightness because each s
 | drift_arrest | FLOAT | yes | 0 is off. 0.4 to 0.6 pulls each handoff's colour back toward segment 1. Needs the latent handoff. | 0.0 to 1.0, step 0.05, default 0.0 |
 
 Outputs: `SY_H3_SETTINGS`
+
+## How to use
+
+1. Connect the H3 model, clip, vae, audio_vae, sampler and sigmas, and set width and height (steps of 32).
+2. Set chain_seed. Each segment gets its own seed from it. Changing it re-renders the whole chain.
+3. Set session_name (the folder name under output/h3_continuous/), ref_image_size and handoff_mode. Keep latent unless the picture size must change part way through; pixel is slower and lossy.
+4. drift_arrest (0 is off, 0.4 to 0.6 is the useful range) pulls colour back toward segment 1. It needs the latent handoff.
+5. Wire the single settings output into H3 Render Segment and into H3 Repair Segment.

@@ -15,3 +15,10 @@ Source: `nodes/sy_line_pick.py`
 | strip | BOOLEAN | no | On: remove spaces around the picked line. | default False |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Connect a text with several lines to text.
+2. Set index to the line you want. 0 is the first, -1 is the last. skip_blank ignores empty lines when counting.
+3. out_of_range decides what happens when index is past the end: error, wrap around to the start (handy with a counter), or clamp to ends. strip trims spaces around the line.
+4. The line comes out, plus the index really used and an info line.

@@ -15,3 +15,10 @@ Source: `nodes/sy_text_contains.py`
 | match | COMBO | no | Use the lines of needle as separate words: true if any, or only if all, are in the text. | one of: the whole phrase, any of the lines, all of the lines |
 
 Outputs: `BOOLEAN`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect the text and type the needle (word or phrase).
+2. Turn on case_sensitive or whole_word if needed.
+3. To check several words, put one per line in needle and set match to any of the lines or all of the lines.
+4. Outputs: true or false, the text unchanged and an info line listing found and missing words.

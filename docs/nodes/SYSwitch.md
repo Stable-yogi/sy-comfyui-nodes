@@ -13,3 +13,9 @@ Source: `nodes/sy_switch.py`
 | b | * | no | Sent when the switch is off. |  |
 
 Outputs: `*`
+
+## How to use
+
+1. Connect one thing to a and another to b. They can be any type.
+2. Turn use_a on to send a, off to send b.
+3. The branch you do not pick is not run.

@@ -12,3 +12,9 @@ Source: `nodes/sy_solarize.py`
 | threshold | FLOAT | yes | Colour values at or above this limit are flipped. 0.5 is the classic look. | 0.0 to 1.0, step 0.01, default 0.5 |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect a picture or a batch to image.
+2. Set threshold. Colour values at or above it are flipped. 0.5 is the classic look.
+3. The picture comes out on image. Alpha is left alone. The info line says which values were flipped.

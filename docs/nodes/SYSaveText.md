@@ -18,3 +18,10 @@ Source: `nodes/sy_save_text.py`
 | time_stamp | BOOLEAN | no | Put [date time] in front of the text. Handy with append for a running log. | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Connect the text to text and set subfolder, filename_pattern and extension.
+2. Turn on append to add to the end of one file. Add time_stamp for a dated running log.
+3. Set on_empty to choose what happens with empty text: save anyway, skip or stop with a message.
+4. A taken name gets the next number. The saved path and an info line come out.

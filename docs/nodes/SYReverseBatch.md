@@ -11,3 +11,9 @@ Source: `nodes/sy_reverse_batch.py`
 | images | IMAGE | yes | The batch of pictures or video frames to reverse. | picture batch [B,H,W,3] |
 
 Outputs: `IMAGE`, `INT`, `STRING`
+
+## How to use
+
+1. Connect a batch of pictures or video frames to images.
+2. The output has them in reverse order, the last one first. Handy for playing a video backwards.
+Outputs: the reversed images, the count and an info sentence.

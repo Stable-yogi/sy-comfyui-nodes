@@ -15,3 +15,9 @@ Source: `nodes/sy_index_switch.py`
 | input4 | * | no | Sent when select is 4. |  |
 
 Outputs: `*`, `INT`
+
+## How to use
+
+1. Connect up to four things to input1 to input4. They can be any type.
+2. Set select from 1 to 4. Select 2 sends input2, and so on.
+3. The chosen input comes out with its number. The inputs you do not pick are not run.

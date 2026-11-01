@@ -13,3 +13,9 @@ Source: `nodes/sy_seed.py`
 | seed_range | COMBO | no | Biggest seed allowed. Pick 53-bit if a seed loses digits in the browser, 32-bit for older nodes. | one of: 64-bit, 53-bit (browser safe), 32-bit |
 
 Outputs: `INT`, `STRING`, `STRING`
+
+## How to use
+
+1. Type a seed and pick mode: fixed keeps it, random picks a new one each run, increment adds 1 each run.
+2. Set seed_range to 53-bit if a seed loses digits in the browser, or 32-bit for older nodes.
+3. Connect the seed output to a sampler. The text output is the same seed as text, for file names.

@@ -11,3 +11,8 @@ Source: `nodes/sy_image_info.py`
 | image | IMAGE | yes | The picture to measure. It passes through unchanged. | picture batch [B,H,W,3] |
 
 Outputs: `IMAGE`, `INT`, `INT`, `INT`, `FLOAT`, `INT`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect a picture to image. It passes through unchanged.
+2. You get its width, height, batch size and megapixels, then the shape (like 4:3 or 16:9), the colour channels, and an info line that warns about sizes most models dislike.

@@ -14,3 +14,10 @@ Source: `nodes/sy_prompt_schedule.py`
 | before_first | COMBO | no | What to give for frames before the first key: an empty prompt or the first prompt. | one of: empty, use first prompt |
 
 Outputs: `STRING`, `INT`, `INT`, `STRING`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Write one line per key in text, as frame: prompt. For example 0: a cat and 24: a dog. Blank lines and # lines are skipped.
+2. Set frame to the frame to look up. The prompt output is the one active there.
+3. Optional: loop_length repeats the schedule every that many frames (0 is off). before_first decides what frames before the first key get.
+Other outputs: the next key frame, key count, next prompt, blend (how far toward the next prompt) and an info line.

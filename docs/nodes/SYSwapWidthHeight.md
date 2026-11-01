@@ -14,3 +14,10 @@ Source: `nodes/sy_swap_width_height.py`
 | force | COMBO | no | landscape or portrait puts the longer side where it belongs, whatever the switch says. | one of: use_swap_switch, landscape, portrait |
 
 Outputs: `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Type or connect width and height.
+2. With swap on, the two values are swapped. With swap off they pass through unchanged.
+3. Set force to landscape or portrait to always get that shape, whatever the switch says.
+4. The info line says what happened.

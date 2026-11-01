@@ -13,3 +13,10 @@ Source: `nodes/sy_checkpoint_name_filter.py`
 | index | INT | no | Which match to use, from 0. A too big number wraps to the start. | 0 to 2147483647, default 0 |
 
 Outputs: `STRING`, `INT`, `STRING`, `STRING`
+
+## How to use
+
+1. Type words in contains, for example flux dev. Several words work at once.
+2. Add words to leave out in exclude.
+3. Use index to step through the matches. It wraps around.
+4. Outputs: name, match_count, all_matches and info.

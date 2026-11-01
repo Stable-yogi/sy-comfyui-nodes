@@ -11,3 +11,10 @@ Source: `nodes/sy_workflow_header.py`
 | (none) | | | | |
 
 Outputs: none
+
+## How to use
+
+1. Add the node to the top of a workflow. It has no inputs or outputs.
+2. Use the Edit button in the browser to fill the workflow number, the title and the three help texts.
+3. In the subtitle and the three help texts you can start a line with `#`, `##` or `###` for a header, `- ` for a list item, and use `**bold**`, `*italic*` and `` `code` ``. Anything else is shown as typed.
+4. It does nothing when the workflow runs. Viewers use its help and link buttons.

@@ -15,3 +15,10 @@ Source: `nodes/sy_hash_text.py`
 | normalize | BOOLEAN | no | On: ignore capital letters and extra spaces, so 'A Cat' and 'a cat' give the same code. | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Type or connect the text. Pick algorithm (sha256 is a good default).
+2. Set length to keep only that many characters of the code. 0 keeps all.
+3. Turn on strip to remove spaces and new lines around the text, and normalize to ignore capitals and extra spaces.
+4. The same text always gives the same code, which suits file names. An info line comes out too.

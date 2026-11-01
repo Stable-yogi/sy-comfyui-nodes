@@ -19,3 +19,10 @@ Source: `nodes/sy_layout_box.py`
 | snap_to | INT | no | Round x, y, w and h to a multiple of this, for example 8 or 64. 1 keeps your numbers. | 1 to 512, default 1 |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Set x and y (the top left corner in pixels), w and h (width and height).
+2. Type a short label and pick a colour for the preview.
+3. Optional: set canvas_width and canvas_height so a box that runs past the picture edge is refused (0 skips the check). snap_to rounds the numbers to a multiple such as 8 or 64.
+4. The box text comes out. Join several with Layout Boxes Merge, then check or preview them.

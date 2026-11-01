@@ -22,3 +22,11 @@ Source: `nodes/sy_image_resize.py`
 | pad_area_in_mask | COMBO | no | In pad mode: should the new bars count as masked (1) or not (0) in the mask output. | one of: not masked (0), masked (1) |
 
 Outputs: `IMAGE`, `INT`, `INT`, `MASK`, `STRING`
+
+## How to use
+
+1. Connect a picture or batch to image and set the wanted width and height.
+2. Pick mode: stretch, fit inside (keeps the shape and may end smaller), fill and crop, or pad (bars of pad_color or a custom_color).
+3. multiple_of makes the result a multiple of that number (1 is off). scale_limit can refuse to enlarge or to shrink. max_megapixels lowers the size to a cap.
+4. Optional: connect a mask so it is resized together with the picture.
+5. The picture, the final width and height, the mask and an info line with the scale come out.

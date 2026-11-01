@@ -18,3 +18,10 @@ Source: `nodes/sy_image_grid.py`
 | auto_number | BOOLEAN | no | On: when the labels box is empty, caption the pictures 1, 2, 3 ... | default False |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect a batch to images and set columns, the number of pictures per row. All pictures are sized like the first.
+2. Set gap and background (a name like black or white, or six hex digits).
+3. Optional: type labels, one caption per line in picture order, or turn on auto_number to caption 1, 2, 3 when the box is empty. fit keeps the shape of pictures of other sizes.
+4. One contact sheet comes out, plus an info line with its size.

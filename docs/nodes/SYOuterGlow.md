@@ -19,3 +19,11 @@ Source: `nodes/sy_layer_styles.py`
 | custom_b | INT | no | Blue part of the custom colour, 0 to 255. | 0 to 255, default 0 |
 
 Outputs: `IMAGE`, `MASK`
+
+## How to use
+
+1. Connect your picture to image. Give the shape with mask, or leave it empty to use the picture's transparent background.
+2. Set size (how far the glow reaches), spread and opacity.
+3. Pick a color, or choose custom and set custom_r, custom_g, custom_b.
+Note: with a mask connected, everything outside the mask becomes transparent.
+Outputs: the picture with transparency and the effect as a mask.

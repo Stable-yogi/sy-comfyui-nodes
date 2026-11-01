@@ -14,3 +14,10 @@ Source: `nodes/sy_square_crop_train.py`
 | anchor | COMBO | no | Which part is kept: top for portraits (heads), left/right for wide pictures, top_left for both. | one of: centre, top_left, top, bottom, left, right |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect the pictures to images.
+2. Set size (the side of the finished square) and method: area is best for shrinking, bicubic for enlarging.
+3. Pick anchor: centre by default, top keeps heads on portraits, left or right for wide pictures.
+4. Every picture is cropped the same way. The info output warns when a small picture is enlarged.

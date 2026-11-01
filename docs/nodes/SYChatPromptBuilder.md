@@ -14,3 +14,9 @@ Source: `nodes/sy_chat_prompt_builder.py`
 | assistant | STRING | no | Optional start of the answer, to steer the model. | default '', multiline |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Fill system and user, and optionally assistant.
+2. Pick style: plain, chat tags, json messages or chatml.
+3. The joined text comes out as prompt, with an info line giving size and a rough token count. It does not call an LLM.

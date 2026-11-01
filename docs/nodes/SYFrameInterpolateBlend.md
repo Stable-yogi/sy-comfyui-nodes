@@ -14,3 +14,10 @@ Source: `nodes/sy_frame_interpolate_blend.py`
 | fps | FLOAT | no | Frame rate of the original clip, for example 16. 0 means unknown. | 0.0 to 1000.0, step 0.1, default 0.0 |
 
 Outputs: `IMAGE`, `INT`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Connect your frames to images.
+2. Set between, the number of cross-fade frames to insert between neighbours. Turn on loop to blend the last frame back to the first.
+3. Enter fps to get the new frame rate that keeps the same speed.
+4. This is a plain blend, not motion interpolation, so fast motion looks ghosted. Outputs: images, count, new_fps and info.

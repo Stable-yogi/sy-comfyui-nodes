@@ -12,3 +12,9 @@ Source: `nodes/sy_token_estimate.py`
 | token_limit | INT | no | Your limit in tokens, for example 77 or 225. 0 means no limit. | 0 to 10000000, default 0 |
 
 Outputs: `INT`, `INT`, `INT`, `BOOLEAN`, `STRING`
+
+## How to use
+
+1. Connect the text.
+2. Optional: set token_limit, for example 77 or 225. 0 means no limit.
+3. Outputs: words, characters, an estimated token count, true or false for over the limit, and an info line. The token number is only an estimate.

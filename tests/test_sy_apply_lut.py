@@ -104,6 +104,9 @@ def run():
         assert os.path.isfile(found); n += 1
         assert "not found" in refuses(m.resolve_lut_path, "nope.cube", [d]); n += 1
         assert refuses(m.resolve_lut_path, "../sub/x.cube", [d]) is not None; n += 1
+    # the luts folder of the node pack is always searched, even when ComfyUI cannot be asked for its folders
+    assert m.PACK_LUT_DIR in m.lut_folders() and os.path.basename(m.PACK_LUT_DIR) == "luts"; n += 1
+    assert os.path.isdir(os.path.dirname(m.PACK_LUT_DIR)) and os.path.isdir(os.path.join(os.path.dirname(m.PACK_LUT_DIR), "nodes")); n += 1
     # ---- pick_cube
     assert m.pick_cube("none", "") is None and m.pick_cube("none", "   ") is None; n += 1
     assert m.pick_cube("warm", "")["size"] == 17; n += 1

@@ -14,3 +14,10 @@ Source: `nodes/sy_hue_shift.py`
 | mask | MASK | no | Optional. Change only where this mask is white. A different size is stretched to fit. | mask [B,H,W] |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect a picture or batch to image.
+2. Set degrees to turn the colours round the colour wheel. 180 swaps each colour for roughly its opposite. Greys stay grey.
+3. Set strength. 0 keeps the original.
+4. Optional: connect a mask to recolour only the white area, for example a dress. The picture and an info line come out.

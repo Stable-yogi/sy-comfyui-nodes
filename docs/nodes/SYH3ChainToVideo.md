@@ -17,3 +17,10 @@ stabilize flattens the slow drift of the finished cut away from its own opening 
 | stabilize | FLOAT | yes | 0 is off. 0.7 to 1.0 flattens the slow colour drift of the finished cut. Colour only. | 0.0 to 1.0, step 0.05, default 0.0 |
 
 Outputs: `VIDEO`, `STRING`
+
+## How to use
+
+1. Connect chain: from the chain_state of an H3 Render Segment, or from H3 Load Session.
+2. Set crf, the quality of the joined file. Lower is better and bigger, 0 is lossless.
+3. Set stabilize (0 is off, 0.7 to 1.0 is the useful range) to flatten slow colour drift. It fixes colour only and adds one extra pass with no GPU use.
+4. The joined video comes out, without the replayed opening of each segment, plus an info line.

@@ -16,3 +16,10 @@ Source: `nodes/sy_crop_to_aspect.py`
 | multiple_of | INT | no | Trim the crop so width and height are multiples of this, for example 8 or 64. 1 = off. | 1 to 512, step 1, default 1 |
 
 Outputs: `IMAGE`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set aspect_w and aspect_h, for example 16 and 9.
+3. The biggest area of that shape is taken, centred. Move it with offset_x and offset_y.
+4. Set multiple_of to snap the size. Outputs: image, width, height and info.

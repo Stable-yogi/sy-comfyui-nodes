@@ -17,3 +17,10 @@ Source: `nodes/sy_caption_review.py`
 | must_include | STRING | no | Words that must appear, separated by commas or new lines. | default '', multiline |
 
 Outputs: `BOOLEAN`, `STRING`, `INT`
+
+## How to use
+
+1. Put the caption in caption.
+2. Set min_words, max_words and max_repeat (how often one word may appear; small words are ignored).
+3. List banned_words, and optionally must_start_with (a trigger word) and must_include.
+4. Outputs: ok (true or false), a report, and word_count.

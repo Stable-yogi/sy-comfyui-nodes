@@ -20,3 +20,11 @@ Source: `nodes/sy_h3_tiled_upscale.py`
 | chunk_frames | INT | no | Frames sent through the model at once. Lower = less memory. | 1 to 64, default 4 |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect the picture or video frames to image and pick the upscale_model.
+2. Set tile_size (smaller uses less memory) and overlap (32 to 64 hides seams). blend feather mixes the overlaps softly.
+3. Use target and amount to reach an exact size, or leave Keep the model's size. method sets the final resize.
+4. Keep auto_retry on: if memory runs out, the tile size is halved (down to 128) and the run goes on. Lower chunk_frames to use less memory.
+5. The enlarged picture and an info line come out.

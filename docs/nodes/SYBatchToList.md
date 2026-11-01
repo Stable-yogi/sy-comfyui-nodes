@@ -11,3 +11,9 @@ Source: `nodes/sy_batch_list.py`
 | images | IMAGE | yes | The batch to split into single pictures. | picture batch [B,H,W,3] |
 
 Outputs: `IMAGE`
+
+## How to use
+
+1. Connect a batch to images.
+2. It is split into single pictures.
+3. The nodes after it then run once per picture.

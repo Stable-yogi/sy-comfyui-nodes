@@ -19,3 +19,10 @@ Source: `nodes/sy_lora_stack_text.py`
 | skip_zero | BOOLEAN | no | On: a slot with strength 0 is left out of the text. | default False |
 
 Outputs: `STRING`, `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Pick up to 4 LoRAs and give each a strength.
+2. Turn skip_zero on to leave out slots with strength 0.
+3. Read the text outputs: a short summary, the same list as <lora:name:0.8> tags, and a warning text. The number output is the count of LoRAs listed.
+Note: this node only writes text. It does not apply any LoRA to a model.

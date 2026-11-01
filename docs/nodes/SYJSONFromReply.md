@@ -16,3 +16,10 @@ Source: `nodes/sy_json_from_reply.py`
 | python_style | BOOLEAN | no | On: also accept replies written Python style, like {'a': True, 'b': None}. | default False |
 
 Outputs: `STRING`, `BOOLEAN`, `STRING`
+
+## How to use
+
+1. Connect a chatty text reply that holds JSON somewhere inside it to text.
+2. Pick which block to take when there are several: first, last or largest. Trailing commas are fixed.
+3. Optional: pretty spreads the result over several lines, sorted_keys sorts the keys, python_style also accepts single quotes, True and None.
+4. raise_if_missing on stops with an error when no JSON is found; off gives empty text and found = false. The clean JSON, the found flag and an info line come out.

@@ -14,3 +14,9 @@ Source: `nodes/sy_text.py`
 | strip_ends | BOOLEAN | no | On: remove empty lines and spaces at the very start and end of the text. | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Type or paste the text in the box. It goes out as typed.
+2. Optional clean-up: strip_lines trims every line, strip_ends removes empty lines at the start and end, clean_invisible removes hidden characters from web pages.
+3. The text and an info line with the size come out.

@@ -15,3 +15,9 @@ Source: `nodes/sy_krea2t_enhancer.py`
 | debug | BOOLEAN | yes | Print a few numbers to the console while sampling. | default False |
 
 Outputs: `MODEL`
+
+## How to use
+
+1. Connect the Krea 2 model to model. A copy is patched; the original is not changed.
+2. Set strength (0 does nothing, 1 is normal, 2 is the maximum) and text_scale. Above 1 makes the whole prompt louder, below 1 quieter.
+3. enabled turns the effect off without removing the node. The patched model comes out.

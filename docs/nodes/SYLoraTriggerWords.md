@@ -13,3 +13,9 @@ Source: `nodes/sy_lora_trigger_words.py`
 | prompt | STRING | no | Optional prompt. The prompt output is this text with the trigger words in front. | default '', multiline |
 
 Outputs: `STRING`, `STRING`, `STRING`
+
+## How to use
+
+1. Pick the LoRA in lora_name. The node looks for a .json, .txt or .civitai.info file with the same name next to it.
+2. Optional: change separator (default is a comma and a space) and type your own text in prompt.
+3. Use the outputs: the trigger words, your prompt with the trigger words put in front (words already there are skipped), and an info line that says where the words came from or which file to create.

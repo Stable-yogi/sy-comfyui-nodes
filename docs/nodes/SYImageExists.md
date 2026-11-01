@@ -14,3 +14,9 @@ Source: `nodes/sy_image_exists.py`
 | try_extensions | BOOLEAN | no | On: also try picture endings (png, jpg, webp ...) when the name has none. | default False |
 
 Outputs: `BOOLEAN`, `STRING`, `STRING`, `STRING`
+
+## How to use
+
+1. Pick folder (input, output or temp) and type filename inside it, for example refs/hero.png.
+2. Turn on ignore_case to match different capitals, and try_extensions to also try picture endings when the name has none.
+3. It looks only inside that folder. You get true or false, the real file name found, and an info line with the size, or close names when the file is missing.

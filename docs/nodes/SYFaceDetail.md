@@ -28,3 +28,10 @@ Source: `nodes/sy_face_detail.py`
 | mask | MASK | no | Optional. Only change the white area of this mask. | mask [B,H,W] |
 
 Outputs: `IMAGE`, `IMAGE`, `MASK`, `INT`, `STRING`
+
+## How to use
+
+1. Connect image, model, vae, positive and negative.
+2. Pick pick: centre 1, largest 1 or all. Faces smaller than min_face are ignored.
+3. crop_size, padding, denoise, steps, cfg, sampler_name, scheduler and seed control the redraw. feather softens the blend back.
+4. Outputs: image, face_crops, mask, count and info. If no face is found the picture stays as it is.

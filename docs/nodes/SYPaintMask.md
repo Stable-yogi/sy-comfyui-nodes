@@ -15,3 +15,10 @@ Source: `nodes/sy_paint_mask.py`
 | invert | BOOLEAN | yes | Swap painted and unpainted areas (done last). | default False |
 
 Outputs: `MASK`, `IMAGE`, `FLOAT`
+
+## How to use
+
+1. Connect your picture to image and run once. The picture shows on the node.
+2. Paint on it with the brush on the node. mask_data is filled in for you, so leave it alone.
+3. Set grow (bigger or smaller), feather (soft edge) and invert (swap, done last).
+Outputs: the mask, a cut-out preview where the mask becomes transparency, and the percent covered.

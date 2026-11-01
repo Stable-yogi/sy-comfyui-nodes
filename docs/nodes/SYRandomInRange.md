@@ -14,3 +14,10 @@ Source: `nodes/sy_random_in_range.py`
 | step | FLOAT | no | 0 is off. 0.5 makes the decimal land on 0.5 steps, like a CFG of 6.5. | 0.0 to 1000000000000000.0, step 0.01, default 0.0 |
 
 Outputs: `INT`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Set min_value and max_value (max must not be below min).
+2. Set seed. The same seed always gives the same numbers.
+3. Optional: step puts the decimal on a grid. 0.5 gives values like 6.5. 0 is off.
+Outputs: a whole number, a decimal and an info line.

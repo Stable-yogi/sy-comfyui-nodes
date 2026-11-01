@@ -15,3 +15,10 @@ Source: `nodes/sy_system_prompt_presets.py`
 | extra_rules | STRING | no | Your own extra lines, added after the preset, for example 'Keep it under 50 words.' | default '', multiline |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Pick a preset, for example prompt enhancer or caption writer.
+2. Or type your own text in custom. If it is not empty it replaces the preset.
+3. Optional: turn on no_chatter, set reply_language (for example German) and add extra_rules.
+4. Connect system_prompt to the system prompt input of your LLM node.

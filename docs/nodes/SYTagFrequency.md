@@ -17,3 +17,10 @@ Source: `nodes/sy_tag_frequency.py`
 | banned_words | STRING | no | Words that must not appear in any caption, separated by commas, for example 'watermark, text'. | default '', multiline |
 
 Outputs: `STRING`, `INT`, `STRING`, `INT`
+
+## How to use
+
+1. Paste all captions into captions, one caption per line.
+2. Set separator (usually a comma), lowercase, min_count and top_n (0 shows all tags).
+3. Optional: type your trigger_word to check it is first in every caption, and list banned_words.
+4. Outputs: the tag list from most to least common, the number of unique tags, a list of problems and the problem count.

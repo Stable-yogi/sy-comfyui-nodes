@@ -12,3 +12,9 @@ Source: `nodes/sy_orientation.py`
 | tolerance_percent | FLOAT | yes | Sides this close (in percent of the longer side) count as square. | 0.0 to 100.0, step 0.5, default 0.0 |
 
 Outputs: `STRING`, `BOOLEAN`, `INT`, `INT`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Connect your picture to image. For a batch, the first size is used.
+2. Optional: set tolerance_percent. Sides this close, in percent of the longer side, count as square.
+3. Outputs: landscape, portrait or square as text, an is_landscape switch, width, height, the width/height ratio and a sentence such as the ratio (16:9) and megapixels.

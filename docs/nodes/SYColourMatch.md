@@ -15,3 +15,10 @@ Source: `nodes/sy_colour_match.py`
 | enabled | BOOLEAN | no | Turn off to pass the picture through untouched (handy to compare before and after). | default True |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect the picture to change to image and a picture with the look you want to reference.
+2. Set strength: 0 keeps the original, 1 matches fully.
+3. Optional: connect a mask (match only the white part) or turn enabled off.
+4. The result comes out as image. Transparency is kept.

@@ -15,3 +15,10 @@ Source: `nodes/sy_batch_concat.py`
 | image_4 | IMAGE | no | Optional fourth batch. | picture batch [B,H,W,3] |
 
 Outputs: `IMAGE`, `INT`, `STRING`
+
+## How to use
+
+1. Connect two batches to image_1 and image_2. Add image_3 and image_4 if needed.
+2. They are joined in order. The size of image_1 sets the size of the result.
+3. With resize_to_first on, other batches are resized to match. Off, the node stops with an error when sizes differ.
+4. Outputs: the joined images, the total count, and an info line with the count of each part.

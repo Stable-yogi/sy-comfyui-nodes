@@ -18,3 +18,10 @@ Source: `nodes/sy_review_pause.py`
 | mask | MASK | no | A mask to start from. You can change it if drawing is on. | mask [B,H,W] |
 
 Outputs: `IMAGE`, `STRING`, `MASK`, `STRING`, `STRING`
+
+## How to use
+
+1. Place the node in the middle of the workflow and connect image, and optionally text and mask.
+2. When the run reaches it, a window opens. Untick bad pictures, change the text, paint a mask if allow_mask_draw is on, then press Continue or Stop.
+3. Only ticked pictures go on, in their old order. The window shows at most 16 pictures. Any further ones are always kept.
+4. Set wait_limit_minutes (0 waits until you answer) and on_timeout. Turn enabled off to run without stopping.

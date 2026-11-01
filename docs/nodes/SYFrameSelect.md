@@ -15,3 +15,10 @@ Source: `nodes/sy_frame_select.py`
 | clamp | BOOLEAN | no | On: a start or end past the batch is moved to the first or last frame instead of an error. | default False |
 
 Outputs: `IMAGE`, `INT`, `STRING`
+
+## How to use
+
+1. Connect your frames to images.
+2. Set start and end (both included) and step. Negative numbers count from the end.
+3. Turn on clamp to cope with a start or end past the batch instead of an error.
+4. Outputs: images, count and info.

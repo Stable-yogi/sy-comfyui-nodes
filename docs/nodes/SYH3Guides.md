@@ -21,3 +21,10 @@ Source: `nodes/sy_h3_guides.py`
 | layout_video | IMAGE | no | Frames of a depth, line or 3D layout video the new clip follows. | picture batch [B,H,W,3] |
 
 Outputs: `MODEL`, `CONDITIONING`, `STRING`
+
+## How to use
+
+1. Connect model, positive, latent and the video vae. Connect audio_vae too if you use a voice file.
+2. Connect any guides you want: start_image, end_image, voice, layout_video. A guide you leave empty is skipped, so no bypassing is needed.
+3. With a layout video, pick layout_model and set layout_strength.
+4. The model, the conditioning with the pins added, and an info line come out.

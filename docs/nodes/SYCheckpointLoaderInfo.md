@@ -12,3 +12,9 @@ Source: `nodes/sy_checkpoint_loader_info.py`
 | name_filter | STRING | no | Optional. Words like 'flux dev': loads the first matching file and ignores the list. | default '' |
 
 Outputs: `MODEL`, `CLIP`, `VAE`, `STRING`, `STRING`
+
+## How to use
+
+1. Pick the file in ckpt_name, or type part of a name in name_filter instead of scrolling.
+2. The checkpoint loads like the plain loader.
+3. You get model, clip and vae, an info text (size, format), warnings for a wrong or empty file, and ckpt_name, the file that was really loaded.

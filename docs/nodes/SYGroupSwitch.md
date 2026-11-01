@@ -14,3 +14,10 @@ Source: `nodes/sy_group_switch.py`
 | one_at_a_time | BOOLEAN | yes | When on, switching one group on switches all others off. | default False |
 
 Outputs: none
+
+## How to use
+
+1. Add the node to the workflow. It lists the groups of the workflow, each with an on/off switch. It runs nothing itself and has no outputs.
+2. Use title_filter to list only groups whose title has some text. Choose sort: by position on the canvas or alphabetical.
+3. Switching a group off turns all nodes in it off. off_mode picks bypass (data passes through) or mute (the node stops).
+4. Turn on one_at_a_time so that switching one group on switches all the others off.

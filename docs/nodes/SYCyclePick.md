@@ -14,3 +14,10 @@ Source: `nodes/sy_cycle_pick.py`
 | skip_comments | BOOLEAN | no | On skips lines that start with #, so you can switch items off. | default False |
 
 Outputs: `STRING`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Write the list in items, one line each.
+2. Feed a number to counter.
+3. Pick mode: loop starts again at the first line, ping-pong bounces back, stop at last stays on the last.
+4. Turn on skip_comments to ignore lines that start with #. Outputs: item, index, count and info.

@@ -12,3 +12,9 @@ Source: `nodes/sy_batch_size_calc.py`
 | max_per_pass | INT | yes | The most pictures one run can hold, such as what fits in memory. | 1 to 100000, default 4 |
 
 Outputs: `INT`, `INT`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Set total (how many pictures you want) and max_per_pass (the most one run can hold).
+2. You get passes (number of runs), pass_size, last_pass_size and remainder.
+3. The info line reads like: 10 pictures, at most 4 per run -> 3 runs: 4 + 4 + 2.

@@ -14,3 +14,10 @@ Source: `nodes/sy_grayscale.py`
 | mask | MASK | no | Optional. Change only where this mask is white. A different size is stretched to fit. | mask [B,H,W] |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect a picture or batch to image.
+2. Pick method for how brightness is measured, and set strength. 0 keeps the colours, 1 is fully grey.
+3. Optional: connect a mask to turn only the white area grey, so the rest keeps its colour. Transparency is kept.
+4. The grey picture comes out, plus an info line.

@@ -19,3 +19,10 @@ Source: `nodes/sy_lora.py`
 | prompt | STRING | no | Your prompt text. The trigger words are added to it. | default '' |
 
 Outputs: `MODEL`, `CLIP`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect your model to model. If your model uses a text encoder, connect clip too.
+2. Pick the LoRA file in lora and set strength_model (picture) and strength_clip (text). Turn enabled off to pass everything through unchanged.
+3. To get trigger words, keep add_trigger_words on, connect your prompt text to the prompt input (it is a socket, you cannot type in it), and choose Before the prompt or After the prompt in position. The words come from a .json or .txt file next to the LoRA.
+4. Chain several LoRA SY nodes for a stack. Use the new model, clip and prompt from the outputs.

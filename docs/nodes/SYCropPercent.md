@@ -16,3 +16,10 @@ Source: `nodes/sy_crop_percent.py`
 | snap_multiple | INT | no | 1 is off. 8 trims the result so width and height are multiples of 8 (many models need it). | 1 to 256, default 1 |
 
 Outputs: `IMAGE`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set left, right, top and bottom, the percent to cut from each edge.
+3. Set snap_multiple (8 or 64) to trim the result so the next model node accepts it.
+4. Outputs: the cropped image, its width and height, and info.

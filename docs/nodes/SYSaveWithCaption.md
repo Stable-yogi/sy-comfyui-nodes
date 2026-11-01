@@ -20,3 +20,10 @@ Source: `nodes/sy_save_with_caption.py`
 | clean_tags | BOOLEAN | no | Tidy a comma caption: one line, no double spaces or stray commas, repeated tags removed. | default False |
 
 Outputs: `STRING`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect the pictures to images and type the caption.
+2. Use caption_mode one line per picture to give each picture its own line, or same for all for one caption.
+3. Optional: set trigger_word (put first, once) and turn on clean_tags to tidy a comma caption.
+4. Set subfolder, filename_pattern and format. Each picture is saved with a .txt of the same name. Taken names get the next number.

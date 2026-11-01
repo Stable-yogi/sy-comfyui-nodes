@@ -15,3 +15,10 @@ Source: `nodes/sy_duration_frames.py`
 | frame_rule | COMBO | no | 4n+1 snaps the frame count to 5, 9, 13... as many video models need. | one of: none, 4n+1, 8n+1, 16n+1 |
 
 Outputs: `INT`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Pick mode: seconds_to_frames or frames_to_seconds.
+2. Fill seconds or frames, and fps.
+3. Optional: frame_rule (4n+1, 8n+1, 16n+1) snaps the count to what video models accept. info says so.
+4. Outputs: frames, seconds and info.

@@ -15,3 +15,10 @@ Source: `nodes/sy_gguf_loaders.py`
 | name_filter2 | STRING | no | Optional. Words for the second file, like 't5xxl Q8'. Ignores the second list. | default '' |
 
 Outputs: `CLIP`, `STRING`
+
+## How to use
+
+1. Pick two files in clip_name1 and clip_name2 (each .gguf or normal), or use name_filter1 and name_filter2.
+2. Set type to the model family.
+3. A .gguf file needs the gguf Python package. The node tells you how to add it.
+4. The model comes out with an info text and a warning if both slots hold the same file or a name does not fit the family.

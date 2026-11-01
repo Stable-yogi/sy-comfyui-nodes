@@ -16,3 +16,10 @@ Source: `nodes/sy_auto_contrast.py`
 | per_colour | BOOLEAN | no | On: stretch red, green and blue on their own. Also removes a colour cast. | default False |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set clip_percent: the share of darkest and brightest pixels to ignore when finding the range.
+3. Turn on per_colour to stretch red, green and blue on their own, which also removes a colour cast.
+4. Optional: connect a mask (white = apply), lower mix to blend with the original, or turn enabled off to pass the picture through.

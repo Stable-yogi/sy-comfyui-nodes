@@ -16,3 +16,9 @@ Source: `nodes/sy_multiline_text.py`
 | inline_comments | BOOLEAN | no | On: cut the end of a line from ' #' onward, so 'a cat # old' becomes 'a cat'. | default False |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Type your text. Lines that start with # are notes to yourself and are left out. Start a line with \# to keep a #.
+2. Optional tidying: trim_lines, collapse_spaces, drop_duplicate_lines, inline_comments (cuts a line from ' #' onward). Turn keep_empty_lines off to remove empty lines too.
+3. Outputs: the text, the line count and an info line.

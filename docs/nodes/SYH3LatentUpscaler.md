@@ -22,3 +22,10 @@ Source: `nodes/sy_h3_latent_upscaler.py`
 | precision | COMBO | yes | fp16 matches the model file. | one of: fp16, bf16, fp32 |
 
 Outputs: `LATENT`
+
+## How to use
+
+1. Connect the video latent only (24 channels). Split the sound latent off first.
+2. Pick model_name. A model file must be in models/latent_upscale_models, or the list shows none.
+3. Pick mode and set only the matching number: scale by multiplier uses scale, target dimensions uses width and height, megapixels uses megapixels. align rounds the size to a grid (32 is best).
+4. The bigger latent comes out. It saves time, not memory. force_unload moves the model to the CPU afterwards.

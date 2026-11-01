@@ -14,3 +14,9 @@ Source: `nodes/sy_if_else_number.py`
 | rounding | COMBO | no | How the whole number is made: 2.5 gives 3 (nearest), 2 (floor), 3 (ceil) or 2 (toward zero). | one of: nearest, floor, ceil, toward zero |
 
 Outputs: `FLOAT`, `INT`, `STRING`
+
+## How to use
+
+1. Connect or set condition (yes or no) and the two numbers if_true and if_false.
+2. Yes sends if_true. No sends if_false.
+3. The number comes out as a decimal and as a whole number. rounding picks how the whole number is made: nearest, floor, ceil or toward zero. An info line comes out too.

@@ -16,3 +16,10 @@ Source: `nodes/sy_duotone.py`
 | enabled | BOOLEAN | no | Turn off to pass the picture through untouched (handy to compare before and after). | default True |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set shadow_colour (dark parts) and highlight_colour (bright parts) as hex codes.
+3. Set strength. Optional: connect a mask (recolour only the white part) or turn enabled off.
+4. The result comes out as image. Transparency is kept.

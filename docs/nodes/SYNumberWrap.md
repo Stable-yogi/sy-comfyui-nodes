@@ -14,3 +14,9 @@ Source: `nodes/sy_number_wrap.py`
 | mode | COMBO | yes | wrap loops round, ping_pong bounces back, clamp stops at the edge. | one of: wrap, ping_pong, clamp |
 
 Outputs: `FLOAT`, `STRING`
+
+## How to use
+
+1. Enter the value and the allowed range with low and high (high must be bigger than low).
+2. Choose mode: wrap loops round, ping_pong bounces back and forth, clamp stops at the edge.
+3. Use the result output. The info line explains what happened.

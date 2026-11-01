@@ -13,3 +13,9 @@ Source: `nodes/sy_image_stats.py`
 | bright_level | FLOAT | yes | Pixels brighter than this count as bright. Must be higher than dark_level. | 0.0 to 1.0, step 0.01, default 0.9 |
 
 Outputs: `FLOAT`, `FLOAT`, `FLOAT`, `FLOAT`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect a picture or batch to image. A batch is measured as one.
+2. Set dark_level and bright_level. Pixels darker or brighter than these count as dark or bright. dark_level must be lower than bright_level.
+3. You get average brightness, contrast, and the share of very dark and very bright pixels, plus a verdict in plain words (dark, bright, flat or clipped).

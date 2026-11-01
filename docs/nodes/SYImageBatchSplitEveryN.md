@@ -15,3 +15,10 @@ Source: `nodes/sy_image_batch_split_every_n.py`
 | last_slice | COMBO | no | keep leaves a short last slice short. pad fills it up. drop removes it. | one of: keep, pad, drop |
 
 Outputs: `IMAGE`, `INT`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Connect a batch to images and set part_size, how many pictures go in each slice.
+2. Set part, the slice to output, counting from 0.
+3. Turn on wrap to go round to slice 0 when part is too big. last_slice: keep leaves a short last slice short, pad fills it by repeating its last picture, drop removes it.
+4. The slice comes out, with counts and an info line that says which pictures you got.

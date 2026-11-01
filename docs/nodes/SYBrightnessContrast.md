@@ -16,3 +16,10 @@ Source: `nodes/sy_brightness_contrast.py`
 | enabled | BOOLEAN | no | Turn off to pass the picture through untouched (handy to compare before and after). | default True |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set brightness (below 0 darkens, above 0 lightens) and contrast (below 0 flattens, above 0 pushes lights and darks apart). Both at 0 changes nothing.
+3. Optional: connect a mask (white = change, black = keep), lower mix to blend with the original, or turn enabled off.
+4. The result comes out as image. Transparency is kept.

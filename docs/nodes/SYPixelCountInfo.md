@@ -15,3 +15,10 @@ Source: `nodes/sy_pixel_count_info.py`
 | target_mp | FLOAT | no | 0 = off. 1.0 scales the size to about 1 megapixel, same shape. | 0.0 to 1000.0, step 0.05, default 0.0 |
 
 Outputs: `FLOAT`, `INT`, `STRING`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Enter width and height.
+2. Read the megapixels, the total pixels and the report text.
+3. Optional fit: set target_mp to scale to about that many megapixels (0 is off), and snap_to with snap_direction to round to a multiple of 8, 16, 32 or 64.
+4. Use out_width and out_height for the new size. fit_note explains size problems in plain words.

@@ -15,3 +15,10 @@ Source: `nodes/sy_dominant_colors.py`
 | picture_number | INT | no | Which picture of a batch to read, counting from 0. The default is the first. | 0 to 4095, default 0 |
 
 Outputs: `STRING`, `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set count (how many colours) and sample_size.
+3. Optional: connect a mask to ignore the area outside it. For a batch, set picture_number.
+4. Outputs: hex_list (text), swatches (a colour strip) and shares (how much each colour covers).

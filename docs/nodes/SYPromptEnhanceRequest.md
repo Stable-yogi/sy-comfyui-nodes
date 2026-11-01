@@ -17,3 +17,10 @@ Source: `nodes/sy_prompt_enhance_request.py`
 | also_negative | BOOLEAN | no | On: ask for a second line that starts with Negative: and lists what to avoid. | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Type a short idea in idea, for example a fox in the snow.
+2. Choose length, style and output_format. Add extra wishes in notes and things to avoid in avoid. Turn also_negative on to ask for a second line that starts with Negative:.
+3. The request output is a clear text you send to a text-writing helper of your choice. This node only builds the text and does not call anything.
+The info output sums up the request.

@@ -15,3 +15,9 @@ Source: `nodes/sy_load_clip.py`
 | max_frames | INT | yes | Frame limit after trimming. 0 = no limit. | 0 to 100000, default 0 |
 
 Outputs: `IMAGE`, `AUDIO`, `FLOAT`, `INT`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Pick a video from the input folder, or upload one. Set video to (none) and pick sound to load only a sound file.
+2. Set start_seconds, length_seconds (0 keeps to the end) and max_frames (0 is no limit).
+3. The frames and the sound come out, with the frame count, fps and length shown. The sound is cut to match the frames.

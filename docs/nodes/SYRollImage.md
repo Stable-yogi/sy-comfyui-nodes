@@ -15,3 +15,11 @@ Source: `nodes/sy_roll_image.py`
 | half_offset | BOOLEAN | no | On: also move by half the width and height, to show the seams of a tileable texture in the middle. | default False |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set shift_x (positive moves right) and shift_y (positive moves down). unit chooses pixels or percent.
+3. Whatever leaves one edge comes back on the opposite edge.
+4. Turn half_offset on to also move by half the size, which puts the seams of a tileable texture in the middle.
+The info output tells the real move.

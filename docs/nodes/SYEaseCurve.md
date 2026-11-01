@@ -15,3 +15,10 @@ Source: `nodes/sy_ease_curve.py`
 | outside_range | COMBO | no | What to do when t comes in below 0 or above 1. clamp holds it at the edge. | one of: error, clamp |
 
 Outputs: `FLOAT`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Feed t, a position from 0 to 1.
+2. Pick curve, and set start and end.
+3. If t may run past 0 to 1, set outside_range to clamp. error stops instead.
+4. Outputs: value (the curve value), eased (scaled between start and end) and info.

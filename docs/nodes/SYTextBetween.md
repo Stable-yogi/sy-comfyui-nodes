@@ -18,3 +18,10 @@ Source: `nodes/sy_text_between.py`
 | trim_result | BOOLEAN | no | On: remove spaces and empty lines around the result. | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Connect the text and type start_marker and end_marker.
+2. Set which (first or last match) and whether the markers stay in the result (include_markers).
+3. Set if_missing: stop with an error, give empty text, or give the whole text.
+4. Turn on trim_result to remove spaces around the result.

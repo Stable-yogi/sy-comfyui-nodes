@@ -19,3 +19,10 @@ Source: `nodes/sy_save_result.py`
 | settings | STRING | no | Settings text (for example from Sampler SY). Saved as a .txt beside each file. | default '' |
 
 Outputs: `STRING`
+
+## How to use
+
+1. Connect an image, a video or an audio to the matching input. Any of the three can be used.
+2. Set project (the folder name) and name (the start of the file name). A counter is added. Turn folder_by_date on for a folder per day.
+3. Pick image_format and quality. Pictures save as png, jpg or webp, video as mp4, sound as flac.
+4. Connect settings text to get a .txt beside each file. The saved path comes out on saved_path.

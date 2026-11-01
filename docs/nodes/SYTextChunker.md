@@ -15,3 +15,10 @@ Source: `nodes/sy_text_chunker.py`
 | index_mode | COMBO | no | If index is past the last piece: stop with an error, start again at 0, or stay on the last piece. | one of: stop with an error, wrap around, stay on the last |
 
 Outputs: `STRING`, `INT`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect the long text.
+2. Set max_chars (longest piece) and overlap (characters repeated at the start of the next piece).
+3. Set index to pick one piece (from 0). Set index_mode for an index past the end: stop with an error, wrap around, or stay on the last.
+4. Outputs: the chosen piece, the piece count, all pieces as a list and an info line.

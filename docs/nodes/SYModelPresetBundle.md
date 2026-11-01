@@ -12,3 +12,10 @@ Source: `nodes/sy_model_preset_bundle.py`
 | aspect | COMBO | no | preset = the preset's own size. Or a shape like 16:9: same pixel budget, new shape. | one of: preset, 1:1, 5:4, 4:3, 3:2, 16:9, 21:9, 4:5, 3:4, 2:3, 9:16 |
 
 Outputs: `INT`, `FLOAT`, `STRING`, `STRING`, `INT`, `INT`, `STRING`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Pick a preset in preset. These are starting points.
+2. Optional: set aspect to a shape such as 16:9 or 9:16. The preset's pixel budget is kept and the size is snapped to one the model likes. preset keeps the preset's own size.
+3. Connect the outputs to your sampler: steps, cfg, sampler_name, scheduler, width, height.
+note, megapixels and info give extra text and numbers.

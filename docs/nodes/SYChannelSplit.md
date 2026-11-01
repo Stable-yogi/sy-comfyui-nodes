@@ -11,3 +11,9 @@ Source: `nodes/sy_channel_split.py`
 | image | IMAGE | yes | The picture or batch of pictures to split. Outputs are red, green, blue and alpha masks. | picture batch [B,H,W,3] |
 
 Outputs: `MASK`, `MASK`, `MASK`, `MASK`, `MASK`
+
+## How to use
+
+1. Connect your picture to image.
+2. You get four masks: red, green, blue and alpha (all ones if the picture has no transparency).
+3. A brightness (luma) mask also comes out.

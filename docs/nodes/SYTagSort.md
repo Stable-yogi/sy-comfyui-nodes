@@ -17,3 +17,10 @@ Source: `nodes/sy_tag_sort.py`
 | remove_tags | STRING | no | Tags to delete, separated by commas, for example 'watermark, text'. Capital letters are ignored. | default '' |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Connect the prompt or caption to text and set separator.
+2. Pick order: keep, alphabetical, shortest_first, longest_first or shuffle_seeded (same seed, same order).
+3. Leave dedupe on to remove repeated tags.
+4. Optional: set trigger_first (added if missing, placed first) and remove_tags to delete unwanted tags.

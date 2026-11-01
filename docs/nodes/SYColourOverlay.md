@@ -16,3 +16,10 @@ Source: `nodes/sy_colour_overlay.py`
 | enabled | BOOLEAN | no | Turn off to pass the picture through untouched (handy to compare before and after). | default True |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set colour (hex code), opacity and mode: normal, multiply, screen or overlay.
+3. Optional: connect a mask to limit where it shows, or turn enabled off.
+4. The result comes out as image. Transparency is kept.

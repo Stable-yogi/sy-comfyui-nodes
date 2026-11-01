@@ -12,3 +12,9 @@ Source: `nodes/sy_gguf_loaders.py`
 | name_filter | STRING | no | Optional. Words like 'flux Q4': loads the first matching .gguf and ignores the list. | default '' |
 
 Outputs: `MODEL`, `STRING`
+
+## How to use
+
+1. Pick the .gguf file in unet_name, or type part of a name such as "flux Q4" in name_filter. A filled name_filter loads the first matching file and ignores the list.
+2. Connect model to your sampler. LoRA files still work on it.
+3. The info output describes what was loaded.

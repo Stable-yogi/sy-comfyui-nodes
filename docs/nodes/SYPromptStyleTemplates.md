@@ -14,3 +14,10 @@ Source: `nodes/sy_prompt_style_templates.py`
 | remove_repeats | BOOLEAN | no | On: preset tags you already wrote (like 'blurry') are not added twice. | default False |
 
 Outputs: `STRING`, `STRING`, `STRING`
+
+## How to use
+
+1. Type your prompt in text and pick a style. none leaves the prompt as it is.
+2. The style adds words before and after your prompt and gives a matching negative prompt.
+3. Optional: extra_negative adds your own negative words, and remove_repeats avoids adding preset tags you already wrote.
+Outputs: positive, negative and an info line.

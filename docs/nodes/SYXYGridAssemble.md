@@ -18,3 +18,10 @@ Source: `nodes/sy_xy_grid_assemble.py`
 | mismatch | COMBO | no | If the picture count is not X times Y: error stops, the other choice fills blanks or trims. | one of: error, fill blanks or trim |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect the batch of pictures to images, row by row (X changes fastest).
+2. Type x_labels and y_labels, one per line. The picture count must be X count times Y count.
+3. Set gap, padding, background colour and label_size.
+4. Set mismatch to fill blanks or trim if the count does not fit. The grid and an info line come out.

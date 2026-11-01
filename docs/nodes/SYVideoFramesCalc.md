@@ -15,3 +15,10 @@ Source: `nodes/sy_video_frames_calc.py`
 | rounding | COMBO | no | nearest: closest valid count. up: never shorter than asked. down: never longer. | one of: nearest, up, down |
 
 Outputs: `INT`, `FLOAT`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Set seconds and fps.
+2. Leave four_n_plus_one on to get a count such as 81. Set frame_step (4 for most models, 8 for LTX).
+3. Pick rounding: nearest, up (never shorter) or down (never longer).
+4. Outputs: frames, fps, seconds and an info line.

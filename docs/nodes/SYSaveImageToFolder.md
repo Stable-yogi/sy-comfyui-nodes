@@ -23,3 +23,10 @@ Source: `nodes/sy_save_image_to_folder.py`
 | sidecar_text | STRING | no | Text for the .txt files when sidecar is custom text, for example the prompt. | default '', multiline |
 
 Outputs: `STRING`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect the pictures to images and type a subfolder. It is made inside the output folder.
+2. Set filename_pattern with tokens such as {date}, {seed}, {counter}, pick the format, and set quality for jpg or webp.
+3. Optional: turn on date_folder, or set sidecar to write a .txt next to each picture. Set output_mode to preview to look without saving.
+4. An existing name is never overwritten, the next number is used. The outputs give the saved paths, an info line and the folder.

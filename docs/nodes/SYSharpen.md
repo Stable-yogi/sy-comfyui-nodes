@@ -14,3 +14,10 @@ Source: `nodes/sy_sharpen.py`
 | threshold | FLOAT | no | Ignore brightness changes smaller than this, so noise is not sharpened. 0 sharpens everything; try 0.02. | 0.0 to 1.0, step 0.005, default 0.0 |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect a picture or a batch to image.
+2. Set radius (width of the edges to sharpen, small for fine detail) and amount (strength, above 2 is harsh).
+3. Optional: set threshold, for example 0.02, so smooth areas and noise are not sharpened.
+4. The sharpened picture comes out on image with an info line.

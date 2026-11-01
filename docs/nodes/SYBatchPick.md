@@ -14,3 +14,10 @@ Source: `nodes/sy_batch_pick.py`
 | wrap | BOOLEAN | no | On: go round to the first picture at the end. Off: stop with an error if the slice does not fit. | default True |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect a batch to images.
+2. Set index (first picture to take, counting from 0) and count (how many).
+3. Turn wrap on to go round to the first picture at the end. Off, the node stops with a message if the slice does not fit.
+4. The chosen pictures come out as images, with info on which positions were taken.

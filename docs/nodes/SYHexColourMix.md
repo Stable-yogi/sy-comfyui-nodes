@@ -13,3 +13,9 @@ Source: `nodes/sy_hex_colour_mix.py`
 | amount | FLOAT | yes | 0 gives the first colour, 1 gives the second, 0.5 the middle. | 0.0 to 1.0, step 0.01, default 0.5 |
 
 Outputs: `STRING`, `INT`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Type colour_a and colour_b as 3 or 6 hex digits. The # sign is optional.
+2. Set amount. 0 gives the first colour, 1 the second, 0.5 the middle.
+3. The mixed colour comes out as text, then as red, green and blue numbers, plus an info line with the clean codes used.

@@ -20,3 +20,10 @@ Source: `nodes/sy_model_loader.py`
 | weight_dtype | COMBO | no | Safetensors only. fp8 stores the model smaller. GGUF ignores this. | one of: default, fp8_e4m3fn, fp8_e4m3fn_fast, fp8_e5m2 |
 
 Outputs: `MODEL`, `CLIP`, `VAE`, `VAE`, `STRING`
+
+## How to use
+
+1. Choose format: Safetensors or GGUF. This one switch changes the whole set.
+2. Pick the diffusion model in model_safetensors or model_gguf, the text_encoder (and text_encoder_gguf for GGUF), the family it belongs to, and the vae.
+3. Optional: text_encoder_2 for models that use two, audio_vae for video with sound, weight_dtype (fp8 is smaller, Safetensors only).
+Outputs: model, clip, vae, audio_vae and an info line.

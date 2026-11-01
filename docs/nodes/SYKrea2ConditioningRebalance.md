@@ -15,3 +15,10 @@ Source: `nodes/sy_krea2_conditioning.py`
 | renormalize | BOOLEAN | yes | Keep the overall strength the same, so only the balance between layers changes. | default True |
 
 Outputs: `CONDITIONING`
+
+## How to use
+
+1. Connect an encoded prompt (positive or negative) to conditioning.
+2. Pick a preset: balanced, detail, subtle or uniform. Pick custom to type your own gains in per_layer_weights, one per text layer (12 for Krea 2).
+3. multiplier is a global gain after the per-layer gains. Keep it near 1.0, since higher values can oversaturate. renormalize keeps the overall strength, so only the balance between layers changes.
+4. The rebalanced conditioning comes out.

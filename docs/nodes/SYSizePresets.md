@@ -12,3 +12,9 @@ Source: `nodes/sy_size_presets.py`
 | swap | BOOLEAN | no | On turns the chosen size on its side: 1216x832 becomes 832x1216. | default False |
 
 Outputs: `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Pick a preset, for example 1024x1024 square or a wide size.
+2. Turn on swap to turn the size on its side (1216x832 becomes 832x1216).
+3. Connect width and height to your empty image node. The info line shows megapixels and shape.

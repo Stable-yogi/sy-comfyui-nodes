@@ -16,3 +16,10 @@ Source: `nodes/sy_paste_back.py`
 | feather | INT | no | Soft edge of the pasted box, pixels inward. Example: 16 | 0 to 256, default 0 |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your picture to image and connect the crop_box output of Outpaint Pad SY to crop_box (it is a socket).
+2. Choose mode. Cut out returns the part of the picture inside the box. Paste copies that box part of the image into target at the same x,y (connect target for this).
+3. Optional: mask (1 = take from the edited picture) or feather (edge softness in pixels) make a soft join. With neither, the paste is hard.
+Pictures keep their alpha.

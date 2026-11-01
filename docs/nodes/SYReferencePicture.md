@@ -15,3 +15,11 @@ Source: `nodes/sy_reference_picture.py`
 | max_side | INT | yes | Longest side in pixels. 0 keeps the original size. | 0 to 16384, default 0 |
 
 Outputs: `IMAGE`, `MASK`, `INT`, `INT`, `BOOLEAN`, `STRING`
+
+## How to use
+
+1. Pick a picture in image (or upload one) and set slot to its number: Image 1, Image 2 and so on.
+2. Write a few words in description. They go into the label.
+3. Set max_side to limit the longest side and save memory. 0 keeps the original size.
+4. Turn enabled off to switch the slot off without bypassing. It then gives a blank picture and active = false.
+Outputs: image, mask, width, height, active and label.

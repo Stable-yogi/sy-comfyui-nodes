@@ -14,3 +14,9 @@ Source: `nodes/sy_time_code.py`
 | timecode | STRING | yes | Time code as HH:MM:SS:FF. Used when mode is timecode_to_frame. | default '00:00:00:00' |
 
 Outputs: `STRING`, `FLOAT`, `INT`, `STRING`
+
+## How to use
+
+1. Pick mode: frame_to_timecode or timecode_to_frame.
+2. Set fps. For the first mode set frame, for the second type the timecode as HH:MM:SS:FF.
+3. Outputs: timecode, seconds, frame and an info sentence. There is no drop frame: every second has the same number of frames.

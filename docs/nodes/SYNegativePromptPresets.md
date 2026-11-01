@@ -16,3 +16,10 @@ Source: `nodes/sy_negative_prompt_presets.py`
 | weight | FLOAT | no | 0 = off. Otherwise the list is written as (terms:weight), for example 1.2. | 0.0 to 2.0, step 0.05, default 0.0 |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Pick a ready-made negative prompt in preset.
+2. Type your own words in custom. mode decides if they go after the preset or replace it.
+3. Optional: remove_terms takes out terms, remove_duplicates keeps the first of repeated terms, and weight above 0 writes the list as (terms:weight).
+Outputs: the negative prompt, the term count and an info line.

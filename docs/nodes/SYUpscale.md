@@ -16,3 +16,10 @@ Source: `nodes/sy_upscale.py`
 | chunk_frames | INT | yes | Frames sent through the model at once. Lower = less memory. | 1 to 512, default 8 |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect the picture or the video frames to image.
+2. Pick an upscale_model. None means a plain resize only.
+3. Set target (keep the model's size, longest side, width, height or megapixels) and amount, then method for the last resize.
+4. For video, chunk_frames sets how many frames go through the model at once. Lower uses less memory.

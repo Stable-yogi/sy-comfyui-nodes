@@ -23,3 +23,11 @@ Source: `nodes/sy_tone_curve.py`
 | histogram_size | INT | no | Width of the histogram picture in pixels (height is half). | 64 to 512, step 1, default 256 |
 
 Outputs: `IMAGE`, `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect a picture or a batch to image.
+2. For a flat picture set auto_levels (per picture or whole batch). per_channel also removes a colour cast.
+3. Or set black_point, white_point and midtone, or a curve (curve_points as x,y pairs or a curve_preset).
+4. Use mix for part of the effect, and a mask (white applies, black keeps the original). Turn enabled off to compare.
+5. Outputs: the picture, a histogram picture and an info line.

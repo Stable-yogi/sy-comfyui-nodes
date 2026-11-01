@@ -15,3 +15,10 @@ Source: `nodes/sy_text_repeat.py`
 | start_at | INT | no | First number when numbered is on. Use 0 to count from zero. | 0 to 1000000, default 1 |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Connect the text and set count (1 to 200).
+2. Set separator between copies. The default is a new line.
+3. Turn on numbered to start each copy with its number, and set start_at.
+4. Results over 200000 characters are refused. The info line shows the result size.

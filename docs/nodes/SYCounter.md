@@ -15,3 +15,10 @@ Source: `nodes/sy_counter.py`
 | wrap | BOOLEAN | yes | On starts over at start after max_value. Off keeps counting. | default True |
 
 Outputs: `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Feed the run number into run_index. The same number always gives the same answer.
+2. Set start, step and max_value.
+3. Turn wrap on to start again after max_value.
+4. Outputs: value, lap (which round you are on) and info.

@@ -16,3 +16,10 @@ Source: `nodes/sy_wildcard_prompt.py`
 | enabled | BOOLEAN | no | Off passes the text through unchanged, braces and all. | default True |
 
 Outputs: `STRING`, `STRING`, `STRING`
+
+## How to use
+
+1. Write the prompt in text. {red|blue} picks one, {2$$a|b|c} picks two, {3::a|1::b} is weighted, __name__ takes a line from a list.
+2. Define lists in wildcards, one per line, like "hair: red | blonde".
+3. Set seed. The same seed gives the same prompt. Or set mode to step through (index) and raise index by 1 each run to walk every combination.
+4. Turn enabled off to pass the text through unchanged. Outputs: the prompt, the picks and an info line.

@@ -1,6 +1,6 @@
 # SY Nodes: full node list
 
-All 287 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 288 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 ## SY/Text (63)
@@ -223,7 +223,7 @@ All 287 nodes, by group. Every node is in the **SY** folder of the node library 
 - Select By Index Text SY
 - Switch SY
 
-## SY/Utility (69)
+## SY/Utility (70)
 
 - Batch Size Calc SY
 - Bundle SY
@@ -279,6 +279,7 @@ All 287 nodes, by group. Every node is in the **SY** folder of the node library 
 - Save With Caption SY
 - Short ID SY
 - Show SY
+- Stacking Keeper SY
 - System Info SY
 - Tile Grid Calc SY
 - Timestamp SY

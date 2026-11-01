@@ -20,3 +20,10 @@ Source: `nodes/sy_krea2_edit.py`
 | source_image_b | IMAGE | no | Second reference as an image (needs vae). | picture batch [B,H,W,3] |
 
 Outputs: `MODEL`
+
+## How to use
+
+1. Connect the Krea 2 model, with the edit LoRA already applied, to model.
+2. Connect the source picture encoded by a VAE Encode node to source_latent. Or connect vae and source_image instead, which avoids blur from a size mismatch.
+3. Optional: source_latent_b or source_image_b is the second reference. ref_boost pulls the result toward the last reference (1 is off), and ref_boost_mask limits it to an area such as the face.
+4. A patched copy of the model comes out, so the edit keeps the look of the source. Use fit in fit_mode unless the weights are old.

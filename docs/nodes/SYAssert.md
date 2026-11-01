@@ -13,3 +13,10 @@ Source: `nodes/sy_assert.py`
 | enabled | BOOLEAN | no | Off skips the check and lets the run go on. Handy to test without deleting the node. | default True |
 
 Outputs: `BOOLEAN`, `STRING`
+
+## How to use
+
+1. Connect a yes/no value to condition.
+2. Write in message what is wrong and how to fix it.
+3. If condition is no, the whole run stops and shows the message. If yes, the run goes on.
+4. Turn enabled off to skip the check without removing the node. Outputs: passed and info.

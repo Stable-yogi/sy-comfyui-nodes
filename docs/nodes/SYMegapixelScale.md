@@ -15,3 +15,11 @@ Source: `nodes/sy_megapixel_scale.py`
 | no_upscale | BOOLEAN | no | On never gives more pixels than the picture has now. Small pictures are not blown up. | default False |
 
 Outputs: `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Enter the current width and height. Only their shape matters.
+2. Set megapixels, the target size in millions of pixels (1.0 is about 1024 by 1024).
+3. Set multiple. Width and height are rounded to a multiple of it (16 suits most models).
+4. Turn no_upscale on so a small picture is never made bigger.
+Outputs: new width, new height and an info line.

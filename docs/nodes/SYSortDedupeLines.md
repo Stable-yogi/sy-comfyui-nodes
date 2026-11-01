@@ -16,3 +16,10 @@ Source: `nodes/sy_sort_dedupe_lines.py`
 | trim_lines | BOOLEAN | no | On: remove spaces at the start and end of each line first, so repeats with stray spaces are found. | default False |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Connect a list with one item per line.
+2. Pick sort: none keeps the order, a-z, z-a, shortest first or longest first.
+3. Switch remove_duplicates, drop_empty and ignore_case as needed. Turn on trim_lines so "cat " and "cat" match.
+4. Outputs: the cleaned list, the line count and an info line.

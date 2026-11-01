@@ -17,3 +17,10 @@ Source: `nodes/sy_text_number_format.py`
 | number_in | * | no | Connect an INT or FLOAT here to use it instead of the number box. |  |
 
 Outputs: `STRING`
+
+## How to use
+
+1. Type a number, or connect an INT or FLOAT to number_in to use it instead.
+2. Set decimals, pad_width (7 becomes 007) and thousands (commas).
+3. Add a prefix and suffix if you like.
+4. The text comes out on the output.

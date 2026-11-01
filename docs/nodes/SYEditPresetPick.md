@@ -13,3 +13,10 @@ Source: `nodes/sy_edit_preset_pick.py`
 | extra | STRING | no | A closing sentence added to the text, for example: Keep the dog unchanged. | default '' |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Pick a ready-made wording in preset.
+2. Type your own text in custom_override to replace it.
+3. extra adds one more sentence to either.
+4. The text comes out, and info says which was used.

@@ -13,3 +13,9 @@ Source: `nodes/sy_load_image_mini.py`
 | max_megapixels | FLOAT | no | Shrink a picture bigger than this many megapixels, keeping its shape. 0 is off. | 0.0 to 268.0, step 0.1, default 0.0 |
 
 Outputs: `IMAGE`, `MASK`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Pick the picture file from the input folder.
+2. Optional: crop_to_multiple trims the edges so width and height are multiples of 8 or 64 (1 is off). max_megapixels shrinks a bigger picture and keeps its shape (0 is off).
+3. The picture, its mask, its width and height, and an info line come out. The file is found even if the capital letters differ.

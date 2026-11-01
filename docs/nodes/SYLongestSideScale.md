@@ -16,3 +16,10 @@ Source: `nodes/sy_longest_side_scale.py`
 | max_megapixels | FLOAT | no | 0 is off. Example: 2.0 keeps the result under 2 million pixels so it fits your card. | 0.0 to 4096.0, step 0.1, default 0.0 |
 
 Outputs: `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Type the current width and height and the longest_side you want.
+2. The shape stays the same. Both sides are rounded to a multiple of multiple (use 1 for exact).
+3. Optional: no_upscale keeps small pictures at their size, and max_megapixels (for example 2.0) caps the result so it fits your card. 0 is off.
+4. The new width, the new height and an info line come out. Feed them to a resize node.

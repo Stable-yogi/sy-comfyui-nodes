@@ -15,3 +15,10 @@ Source: `nodes/sy_short_id.py`
 | new_each_run | BOOLEAN | no | On: a different code on every run, whatever the seed. Off: the seed decides. | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Set length (4 to 16) and charset: hex, letters, digits, mixed or readable (no look-alike characters).
+2. Optional: type a prefix, for example run_.
+3. The same seed gives the same code. Turn on new_each_run for a different code every run.
+4. The code comes out on short_id. The info line says how many codes are possible.

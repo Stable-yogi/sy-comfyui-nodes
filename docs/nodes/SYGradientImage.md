@@ -19,3 +19,10 @@ Source: `nodes/sy_gradient_image.py`
 | ease | COMBO | no | linear: even fade. smooth: slow start and end, which hides the line where the fade begins. | one of: linear, smooth |
 
 Outputs: `IMAGE`, `MASK`, `STRING`
+
+## How to use
+
+1. Pick shape: linear (a straight fade) or radial (from the centre out). Set colour_a and colour_b as hex colours.
+2. Set width and height, or connect a picture to size_from to copy its size (width and height are then ignored).
+3. For linear, angle sets the direction. 0 goes left to right, 90 goes top to bottom. Choose smooth in ease for a softer start and end.
+4. The new picture comes out, plus a mask that shows the fade position. batch_size makes identical copies.

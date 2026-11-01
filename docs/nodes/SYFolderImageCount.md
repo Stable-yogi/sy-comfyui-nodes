@@ -15,3 +15,10 @@ Source: `nodes/sy_folder_image_count.py`
 | if_missing | COMBO | no | empty answers 0 for a missing folder. error stops with a clear message. | one of: empty, error |
 
 Outputs: `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Pick root: input or output, and type subfolder.
+2. Optional: extensions to count other file types, include_subfolders to look deeper.
+3. if_missing: empty or error (stop with a clear message).
+4. Outputs: count, last_index (the last valid index) and info.

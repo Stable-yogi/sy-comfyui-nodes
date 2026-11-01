@@ -35,3 +35,11 @@ chain_state: leave unconnected on the first segment. It also accepts the chain o
 | audios | COMFY_AUTOGROW_V3 | no | Separate reference audio. It becomes <Audio 1> to <Audio 3>. |  |
 
 Outputs: `VIDEO`, `SY_H3_CHAIN`, `STRING`
+
+## How to use
+
+1. Connect settings from H3 Chain Settings and write the prompt for this shot. Set seconds (about 5 to 15 s works best).
+2. Leave chain_state empty on the first shot. For the next shot, wire the chain_state output of this node into the next H3 Render Segment.
+3. Set handoff_seconds (the ending replayed at the start of the next shot) and use 0 on the last shot. Keep resume on so finished segments are reused after a crash or edit.
+4. Optional: connect reference images, videos and audios (they become Picture, Video and Audio numbers in the prompt), a per-shot model, or a seed_override to re-roll only this shot.
+5. The video of this shot comes out as soon as it finishes, plus the chain and an info line.

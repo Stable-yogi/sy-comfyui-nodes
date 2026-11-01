@@ -11,3 +11,9 @@ Source: `nodes/sy_colour_swatch.py`
 | colour | STRING | yes | A hex colour: 3 or 6 digits, with or without the # sign. | default 'd4a537' |
 
 Outputs: `INT`, `INT`, `INT`, `STRING`, `IMAGE`, `STRING`
+
+## How to use
+
+1. Type a colour code such as d4a537 in colour.
+2. Outputs: r, g and b numbers, a clean hex code, a small swatch picture.
+3. The info line says if black or white text reads best on it.

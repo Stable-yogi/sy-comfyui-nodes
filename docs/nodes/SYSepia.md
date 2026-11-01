@@ -12,3 +12,9 @@ Source: `nodes/sy_sepia.py`
 | strength | FLOAT | yes | 0 keeps the original, 1 is full sepia. | 0.0 to 1.0, step 0.01, default 1.0 |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect a picture or a batch to image.
+2. Set strength: 0 keeps the original, 1 is full sepia.
+3. The warm brown picture comes out on image. The info output says how much was mixed in.

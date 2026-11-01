@@ -16,3 +16,10 @@ Source: `nodes/sy_decode.py`
 | overlap | INT | yes | How much neighbouring tiles share, so no seams show. | 0 to 1024, step 8, default 64 |
 
 Outputs: `IMAGE`, `AUDIO`, `STRING`
+
+## How to use
+
+1. Connect the latent to samples and the vae to vae.
+2. Set mode: Picture or video, or Sound.
+3. tiles: Auto retries in smaller tiles if the graphics card runs out of memory. Always tiles and Never tiles force it. Set tile_size and overlap.
+4. Outputs: image, audio and info, which says what was used.

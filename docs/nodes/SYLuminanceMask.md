@@ -17,3 +17,11 @@ Source: `nodes/sy_luminance_mask.py`
 | feather | INT | no | Soften the finished mask by this many pixels, so it blends without a hard edge. 0 is off. | 0 to 512, step 1, default 0 |
 
 Outputs: `MASK`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set low and high. Pixels with a brightness between the two turn white in the mask, the rest turn black.
+3. Use softness for a fade at the band edges and feather to soften the finished mask. Turn invert on to swap the result.
+4. In source, choose luminance or one colour channel. Red suits skin and blue suits sky.
+The info output says how much of the picture is selected.

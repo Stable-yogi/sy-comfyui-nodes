@@ -15,3 +15,11 @@ Source: `nodes/sy_mask_to_box.py`
 | multiple_of | INT | no | Grow the box so width and height are multiples of this, for example 8 or 64. 1 keeps the exact box. | 1 to 512, step 1, default 1 |
 
 Outputs: `INT`, `INT`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Connect a mask. A batch gives one box around all of them.
+2. Set threshold: mask values at or above it count as white.
+3. Optional: padding adds pixels around the box, and multiple_of grows width and height to a multiple of 8, 64 and so on.
+4. on_empty decides what happens when nothing is white: use the whole image, or stop with an error.
+Outputs: x, y, width, height and an info line.

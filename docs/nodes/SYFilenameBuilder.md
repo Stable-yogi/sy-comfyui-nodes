@@ -18,3 +18,10 @@ Source: `nodes/sy_filename_builder.py`
 | auto_clean | BOOLEAN | no | On: spaces become _ and forbidden characters are replaced instead of an error. | default False |
 
 Outputs: `STRING`, `STRING`, `STRING`
+
+## How to use
+
+1. Write a pattern. Tokens: {date} {time} {seed} {counter}, and {model} {width} {height} when you fill those boxes.
+2. Set seed, counter and extension.
+3. Turn on auto_clean to tidy spaces and forbidden characters instead of failing.
+4. Outputs: filename, stem (without the ending) and info. It only makes text and saves nothing.

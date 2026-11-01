@@ -13,3 +13,9 @@ Source: `nodes/sy_video_size_presets.py`
 | multiple | COMBO | yes | Round both sides to this multiple. LTX style models like 32. | one of: 16, 32 |
 
 Outputs: `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Pick resolution: 480p, 720p or 1080p (the short side).
+2. Pick aspect: 16:9 wide, 9:16 tall or 1:1 square.
+3. Pick multiple (16 or 32) to round both sides. Width and height come out with an info line.

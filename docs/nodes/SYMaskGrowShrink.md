@@ -13,3 +13,10 @@ Source: `nodes/sy_mask_grow_shrink.py`
 | shape | COMBO | yes | Round keeps corners smooth. Square grows corners out. | one of: round, square |
 
 Outputs: `MASK`, `STRING`
+
+## How to use
+
+1. Connect your mask.
+2. Set pixels. A positive number makes the white area bigger, a negative number makes it smaller.
+3. Choose shape: round keeps corners smooth, square grows corners outward.
+The info output shows how much white there was before and after, and warns if the mask became empty or full.

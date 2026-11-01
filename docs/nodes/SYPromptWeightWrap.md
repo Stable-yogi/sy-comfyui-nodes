@@ -15,3 +15,11 @@ Source: `nodes/sy_prompt_weight_wrap.py`
 | already_weighted | COMBO | no | What to do with a tag already written like (cat:1.3): wrap again, change its weight, or skip it. | one of: wrap again, replace the weight, leave as it is |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Put the prompt part in text.
+2. Choose style: a weight like (text:1.2), or round, square or curly brackets. Set weight for the weight style.
+3. Turn each_tag on to wrap every comma tag on its own.
+4. already_weighted decides what happens to a tag like (cat:1.3): wrap again, replace the weight, or leave it.
+The info output warns about unmatched brackets.

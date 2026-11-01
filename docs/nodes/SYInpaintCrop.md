@@ -15,3 +15,10 @@ Source: `nodes/sy_inpaint_crop_stitch.py`
 | min_box | INT | yes | Smallest crop box on the original picture, so a tiny mark still gets some scene around it. | 64 to 2048, step 16, default 256 |
 
 Outputs: `SY_STITCH`, `IMAGE`, `MASK`
+
+## How to use
+
+1. Connect the whole picture to image and the painted part to mask (grown and softened is best).
+2. Set context, the room around the painted part. More room matches the scene better. Set size, the long side of the crop in pixels, and min_box so a tiny mark still gets some scene around it.
+3. Draw the crop with your sampler, then decode it.
+4. Connect the stitch output to Inpaint Stitch to put the result back. The crop picture and crop mask come out too.

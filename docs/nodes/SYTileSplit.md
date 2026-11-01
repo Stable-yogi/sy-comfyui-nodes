@@ -14,3 +14,10 @@ Source: `nodes/sy_tiles.py`
 | batch_mode | COMBO | no | first picture only keeps the old behaviour. all pictures cuts every picture of a batch, one after the other. | one of: first picture only, all pictures |
 
 Outputs: `IMAGE`, `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Connect the big picture to image and set tile_size and overlap (smaller than the tile size).
+2. Pick batch_mode: first picture only, or all pictures to cut every picture of a batch.
+3. Process the tiles, then send tiles and tile_info to Tile Merge SY.
+4. Outputs: the tiles, tile_info, the tile count and an info sentence.

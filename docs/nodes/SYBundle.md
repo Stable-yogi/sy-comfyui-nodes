@@ -31,3 +31,10 @@ Source: `nodes/sy_bundle.py`
 | extra | * | no | One free item of any kind, stored under extra_name. |  |
 
 Outputs: `SY_BUNDLE`, `STRING`
+
+## How to use
+
+1. Plug in only what you have: model, clip, vae, prompts, latent, picture, mask, seed, steps and so on. An unplugged input is left out.
+2. Seed, steps, cfg, denoise, width, height and the text fields are included only when a wire is connected to them.
+3. To add to an earlier bundle, connect it to bundle. Same-named items are replaced.
+4. The bundle comes out as one wire, and keys lists what is inside. Open it again with Unbundle SY.

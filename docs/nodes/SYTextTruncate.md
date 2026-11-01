@@ -15,3 +15,10 @@ Source: `nodes/sy_text_truncate.py`
 | cut_from | COMBO | no | End keeps the start. Middle keeps both ends and puts the ending in the middle. at_word is ignored for middle. | one of: end (keep the start), middle (keep both ends) |
 
 Outputs: `STRING`, `BOOLEAN`, `STRING`
+
+## How to use
+
+1. Connect the text and set max_chars (the ending counts too).
+2. Set suffix, for example three dots. Leave it empty for none.
+3. Turn on at_word to cut at the end of a whole word.
+4. Set cut_from to middle to keep both ends and cut the centre, good for long file names. Outputs: the text, truncated true or false, and an info line.

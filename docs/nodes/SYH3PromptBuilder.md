@@ -17,3 +17,9 @@ Source: `nodes/sy_h3_prompt_builder.py`
 | time_codes | STRING | no | One line per moment, like 0-4s: she turns round. | default '', multiline |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Fill in style, world and action. In action, write Picture 1, Picture 2 to point at input pictures, and set picture_count to how many you give the video model.
+2. Add dialogue (one line each), dialogue_language, and time_codes (one line per moment, like 0-4s: she turns round).
+3. The node builds one tidy prompt and an info line that warns about mistakes.

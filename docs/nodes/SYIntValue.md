@@ -11,3 +11,8 @@ Source: `nodes/sy_int_value.py`
 | value | INT | yes | The whole number to send out. | -9007199254740991 to 9007199254740991, default 0 |
 
 Outputs: `INT`, `FLOAT`, `STRING`, `STRING`
+
+## How to use
+
+1. Type a whole number in value once, then plug it into as many nodes as you like.
+2. It comes out as a whole number, a decimal and text, plus an info line that tells if it is a multiple of 8 or 64 and fits the video frame rule (4n+1).

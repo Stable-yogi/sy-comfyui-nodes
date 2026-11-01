@@ -14,3 +14,10 @@ Source: `nodes/sy_date_parts.py`
 | date_format | COMBO | no | How the date_text output is written. | one of: YYYY-MM-DD, YYYYMMDD, YYYY/MM/DD, DD.MM.YYYY, DD-MM-YYYY, Month D, YYYY |
 
 Outputs: `INT`, `INT`, `INT`, `STRING`, `INT`, `INT`, `STRING`, `STRING`, `BOOLEAN`, `STRING`
+
+## How to use
+
+1. Set mode: now uses today, from_text uses date_text (2026-10-28, 20261028 and 2026/10/28 all work).
+2. Use offset_days to move the date (-1 is yesterday).
+3. Pick date_format for the date_text output.
+4. Outputs: year, month, day, weekday, day_of_year, week_number, date_text, month_name, is_weekend and info.

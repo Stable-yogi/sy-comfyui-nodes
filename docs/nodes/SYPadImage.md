@@ -18,3 +18,10 @@ Source: `nodes/sy_pad_image.py`
 | multiple_of | INT | no | Round the new width and height up to a multiple of this, for example 8. Extra goes right and bottom. | 1 to 512, step 1, default 1 |
 
 Outputs: `IMAGE`, `MASK`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set left, right, top and bottom in pixels and pick the fill color (or type your own as red,green,blue in custom_color).
+3. Optional: multiple_of rounds the new size up (extra goes right and bottom).
+Outputs: the padded picture, a mask that is white on the new space (ready for outpainting), width, height and an info line with the old and new size.

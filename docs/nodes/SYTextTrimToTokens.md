@@ -14,3 +14,10 @@ Source: `nodes/sy_text_trim_to_tokens.py`
 | cut_at | COMBO | no | Where the cut may fall: anywhere, between words, or between comma tags. | one of: exact characters, whole words, whole tags (commas) |
 
 Outputs: `STRING`, `INT`, `BOOLEAN`, `STRING`
+
+## How to use
+
+1. Connect the text and set max_tokens. One token is counted as 4 characters.
+2. Pick keep: start, end or middle.
+3. Set cut_at: exact characters, whole words or whole tags (commas), so nothing is chopped in half.
+4. Outputs: the text, estimated tokens, was_trimmed and an info line.

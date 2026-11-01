@@ -15,3 +15,10 @@ Source: `nodes/sy_compare_metrics.py`
 | resize_b | BOOLEAN | no | On: resize image_b to image_a's size first. Off: stop with a message when the sizes differ. | default False |
 
 Outputs: `FLOAT`, `IMAGE`, `FLOAT`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Connect two pictures of the same size to image_a and image_b. Turn on resize_b to fit image_b to image_a.
+2. Optional: connect a mask to compare only inside it.
+3. gain brightens the difference picture.
+4. Outputs: diff_score (0 = identical, 1 = opposite), diff_image, max_diff, psnr and a plain verdict in info.

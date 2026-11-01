@@ -14,3 +14,10 @@ Source: `nodes/sy_rtx_upscale.py`
 | strength | FLOAT | yes | How strong the effect is. 1 is the default. | 0.0 to 1.0, step 0.01, default 1.0 |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your picture or video frames to image.
+2. Choose target: a factor such as 2x bigger, or a height such as 4K (2160 pixels high, the width follows).
+3. Choose quality (ULTRA keeps the most detail and is the slowest) and strength (1 is the default).
+If the RTX pack or card is missing you get a plain message in the info output instead of a red error.

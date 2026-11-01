@@ -15,3 +15,10 @@ Source: `nodes/sy_vignette.py`
 | centre_y | FLOAT | no | Where the bright centre sits down the picture. 0 is top, 0.5 the middle, 1 bottom. | 0.0 to 1.0, step 0.01, default 0.5 |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect a picture or a batch to image.
+2. Set strength (0 changes nothing, 1 is black corners) and softness (small is a tight rim, 1 fades from the centre).
+3. Optional: move the bright centre with centre_x and centre_y onto your subject.
+4. The picture comes out on image with an info line.

@@ -16,3 +16,10 @@ Source: `nodes/sy_empty_latent.py`
 | snap_direction | COMBO | no | How snap_to rounds: to the nearest multiple, always down, or always up. | one of: nearest, down, up |
 
 Outputs: `LATENT`, `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Set width, height and batch.
+2. Pick latent_type: standard 4ch /8 (SD 1.5, SDXL) or flux 16ch /8 (Flux, SD3 style).
+3. Use snap_to (8, 16, 32 or 64) and snap_direction to round the size instead of silently cutting it.
+4. Outputs: latent, the real width and height, and info with warnings for odd or very large sizes.

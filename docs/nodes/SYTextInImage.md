@@ -15,3 +15,10 @@ Source: `nodes/sy_text_in_image.py`
 | fix_quotes | BOOLEAN | no | On: double quote marks inside the text become single quotes instead of an error. | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Type the exact words in text. Do not type double quote marks.
+2. Pick placement (top, centre, bottom, left, right, on_sign, on_shirt, on_poster) and optionally style_words and language_hint.
+3. Turn on fix_quotes to change double quotes inside the text to single quotes.
+4. Connect phrase to your prompt. The words are placed in double quotes. The info line warns when the text is too long to spell well.

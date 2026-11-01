@@ -15,3 +15,10 @@ Source: `nodes/sy_threshold.py`
 | channel | COMBO | no | What to cut on: normal brightness, one colour channel, or the highest of red, green and blue. | one of: brightness, red, green, blue, highest |
 
 Outputs: `IMAGE`, `MASK`, `STRING`
+
+## How to use
+
+1. Connect a picture or a batch to image.
+2. Set level. Brighter than the level becomes white, darker becomes black.
+3. Set softness for a smooth grey ramp (0 is a hard edge), turn on invert to swap black and white, and pick channel to cut on one colour instead of brightness.
+4. Outputs: the black and white picture, a mask and an info line.

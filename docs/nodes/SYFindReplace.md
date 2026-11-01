@@ -18,3 +18,10 @@ Source: `nodes/sy_find_replace.py`
 | rules | STRING | no | More changes, one per line: old => new. Run after the find above. Lines starting with # are skipped. | default '', multiline |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Put the text in text, then fill find and replace.
+2. Options: use_regex, case_sensitive, whole_word, max_count (0 = no limit).
+3. rules applies a list of old => new changes in one go.
+4. Outputs: text, count and info, which also says when a capital-letter difference was the reason nothing matched.

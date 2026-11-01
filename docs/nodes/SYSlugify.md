@@ -16,3 +16,10 @@ Source: `nodes/sy_slugify.py`
 | windows_safe | BOOLEAN | no | On: names Windows cannot use (con, nul, com1) get '-file' added. | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Connect the text, for example a title.
+2. Pick the separator (- or _), turn lowercase on or off, and set max_length (0 means no limit).
+3. Set a fallback name such as untitled for texts that leave nothing. Turn on windows_safe to avoid names such as con or nul.
+4. The simple name comes out on slug. The info line says what was dropped.

@@ -18,3 +18,10 @@ Source: `nodes/sy_film_grain.py`
 | mask | MASK | no | Optional. Add grain only where this mask is white. A different size is stretched to fit. | mask [B,H,W] |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set strength and size (how coarse). Turn on color_grain for colour grain.
+3. The same seed gives the same grain. response midtones keeps pure black and white clean. animated is on by default.
+4. Optional: connect a mask to grain only one area. The result comes out as image.

@@ -20,3 +20,10 @@ Source: `nodes/sy_edit_steps_list.py`
 | skip_duplicates | BOOLEAN | no | On: a step written twice is used once (capitals ignored). | default False |
 
 Outputs: `STRING`, `INT`
+
+## How to use
+
+1. Fill step_1 to step_8 (empty steps are skipped, the order is kept).
+2. Pick style: numbered, bullets, then_words or one_line.
+3. Turn on skip_duplicates to drop repeats.
+4. Outputs: steps (the list as text) and count.

@@ -15,3 +15,10 @@ Source: `nodes/sy_video_loop_frames.py`
 | frame_step | INT | no | The n in the Kn+1 rule: 4 for Wan and most models, 8 for LTX. Used with snap_to_rule. | 1 to 64, default 4 |
 
 Outputs: `IMAGE`, `INT`, `STRING`
+
+## How to use
+
+1. Connect the frames to images and set target_frames.
+2. Pick mode: repeat starts over at the end, ping_pong plays forward and back.
+3. Turn on snap_to_rule to move the target to the nearest Kn+1 count (80 becomes 81). Set frame_step.
+4. Outputs: the looped frames, the count and an info line.

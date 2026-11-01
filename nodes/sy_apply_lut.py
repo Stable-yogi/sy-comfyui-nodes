@@ -43,11 +43,14 @@ def resolve_lut_path(name, folders):
             continue
         if os.path.isfile(p):
             return p
-    raise ValueError("The LUT file %r was not found in the LUT folders (models/luts or input/luts)." % name)
+    raise ValueError("The LUT file %r was not found in the LUT folders (models/luts, input/luts or the luts folder of this pack)." % name)
+
+
+PACK_LUT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "luts")
 
 
 def lut_folders():
-    """The two folders searched for .cube files. ComfyUI is imported only here, and a failure just gives an empty list."""
+    """The folders searched for .cube files: models/luts, input/luts and the luts folder of this pack. ComfyUI is imported only here, and a failure still gives the pack folder."""
     out = []
     try:
         import folder_paths
@@ -59,6 +62,7 @@ def lut_folders():
                 pass
     except Exception:
         pass
+    out.append(PACK_LUT_DIR)
     return out
 
 
@@ -139,7 +143,7 @@ def apply_cube_tensor(rgb, cube, strength):
 
 class SYApplyLUT:
     DESCRIPTION = ("Changes the colours of a picture with a colour look. Pick a built-in look, or a .cube file from the "
-                   "models/luts or input/luts folder, or paste the text of a .cube file into lut_text (the text wins). "
+                   "models/luts or input/luts folder or the luts folder of the node pack, or paste the text of a .cube file into lut_text (the text wins). "
                    "Strength 0 keeps the picture, 1 gives the full look. A transparent background (alpha) stays as it was.")
     CATEGORY = category("Image")
     FUNCTION = "run"

@@ -18,3 +18,10 @@ Source: `nodes/sy_voice_length_estimate.py`
 | snap_offset | INT | yes | Frames are step times a whole number, plus this offset. Use 5 with step 17 for the video model. | 0 to 64, default 1 |
 
 Outputs: `FLOAT`, `INT`, `STRING`
+
+## How to use
+
+1. Connect the spoken line to text. Speech tags like <d> are ignored.
+2. Pick mode (words or characters) and set speed to match. Set pause_per_sentence and extra_seconds.
+3. Set fps, snap_step and snap_offset to get a frame count the video model accepts.
+4. Outputs: seconds, frames and an info line. The result is an estimate, not a measurement.

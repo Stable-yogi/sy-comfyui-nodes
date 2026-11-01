@@ -17,3 +17,11 @@ Source: `nodes/sy_mask_from_colour.py`
 | invert | BOOLEAN | no | On: white becomes everything that does NOT match the colour. | default False |
 
 Outputs: `MASK`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Give the wanted colour as red, green and blue (0 to 255), or type a web colour such as ff8800 in hex_colour. A filled hex_colour replaces the three numbers.
+3. Set tolerance. 0 matches the exact colour only. Higher values accept near colours.
+4. Turn invert on to select everything that does not match.
+The info output says how much matched and warns when nothing did.

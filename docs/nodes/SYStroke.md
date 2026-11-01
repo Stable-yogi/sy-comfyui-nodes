@@ -19,3 +19,10 @@ Source: `nodes/sy_layer_styles.py`
 | custom_b | INT | no | Blue part of the custom colour, 0 to 255. | 0 to 255, default 0 |
 
 Outputs: `IMAGE`, `MASK`
+
+## How to use
+
+1. Connect the picture to image. Optionally connect a mask as the shape. Without a mask, the transparent background of the picture is the shape.
+2. Set width, position (outside, inside or centre) and opacity.
+3. Pick a colour, or choose custom and set custom_r, custom_g and custom_b.
+4. Outputs: the picture with the outline and the effect_mask.

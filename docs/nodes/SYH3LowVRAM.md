@@ -16,3 +16,11 @@ Source: `nodes/sy_h3_speed.py`
 | min_tokens | INT | no | Split only when the sequence is longer than this. Short ones gain nothing. | 256 to 1048576, step 256, default 4096 |
 
 Outputs: `MODEL`
+
+## How to use
+
+1. Connect an H3 model to model.
+2. Turn on enable_low_vram. It is off by default, and off passes the model through unchanged.
+3. Keep exact_output on to get the same result as normal. MAX SAVING also splits attention into head groups and the video may differ.
+4. feedforward_chunks splits a step into parts to use less memory (1 turns it off). Use it when a size or length ran out of memory.
+5. The patched model comes out.

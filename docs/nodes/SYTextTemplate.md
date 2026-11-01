@@ -20,3 +20,10 @@ Source: `nodes/sy_text_template.py`
 | missing_mode | COMBO | no | A {name} with no value: stop with an error, keep it as written, or fill it with nothing. | one of: stop with an error, keep the {name} as it is, use empty text |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Write the template with {name} placeholders, for example "a photo of {name}, {style}".
+2. In name_1 to name_4 type the placeholder names and in value_1 to value_4 the text to put in.
+3. Set missing_mode for a placeholder without a value: stop with an error, keep it as written, or use empty text.
+4. The filled text and an info line listing what was filled come out.

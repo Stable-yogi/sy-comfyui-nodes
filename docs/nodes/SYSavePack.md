@@ -22,3 +22,11 @@ Source: `nodes/sy_save_pack.py`
 | on_exists | COMBO | no | When the exact name is taken: use the next number, or skip that picture. | one of: next number, skip |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Connect the pictures to images.
+2. Set filename_pattern with tokens such as {date}, {name}, {seed}, {counter}, and set name, subfolder and format.
+3. Fill seed, steps and cfg if you want them in the file name or settings file. Add the prompt in settings_text.
+4. Keep write_settings_file on for a .txt beside each picture. Set on_exists to next number or skip.
+5. The outputs give the saved paths and an info line.

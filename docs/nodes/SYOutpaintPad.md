@@ -20,3 +20,11 @@ Source: `nodes/sy_outpaint_pad.py`
 | mask_grow | INT | no | Hard mask pixels into the picture before the soft part. Example: 8 | 0 to 256, default 0 |
 
 Outputs: `IMAGE`, `MASK`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set left, top, right and bottom in pixels, or choose to_aspect (for example 16:9) to pad to a shape. to_aspect replaces the four numbers.
+3. Choose fill for the new area: edge stretch, mirror, blur of picture, grey or black.
+4. Set seam_feather and mask_grow to shape the mask edge, which reaches into the picture.
+Outputs: image, mask, info and crop_box. Send crop_box to Paste Back Box SY to put the result back.

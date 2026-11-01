@@ -16,3 +16,9 @@ handoff_mode is which form of the last segment's ending to load. Match the chain
 | handoff_mode | COMBO | yes | Which form of the last ending to load. 'latent' falls back to 'pixel' if the session has none. | one of: latent, pixel |
 
 Outputs: `SY_H3_CHAIN`, `STRING`
+
+## How to use
+
+1. Type the session_name of a session already on disk (a folder under output/h3_continuous/).
+2. Pick handoff_mode to match the chain that will use it. latent falls back to pixel if the session has no latent ending.
+3. Nothing is re-rendered. Wire the chain output into H3 Chain To Video, H3 Repair Segment, or the chain_state of another H3 Render Segment to add shots to the end.

@@ -13,3 +13,10 @@ Source: `nodes/sy_round_to_multiple.py`
 | mode | COMBO | yes | nearest goes to the closest step. up goes higher. down goes lower. | one of: nearest, up, down |
 
 Outputs: `FLOAT`, `INT`, `STRING`
+
+## How to use
+
+1. Enter the value and the multiple (above 0), for example 64.
+2. Choose mode: nearest, up or down.
+3. Use the float and int outputs. The info line says how far the number moved.
+Example: 1000 with multiple 64 and mode nearest gives 1024.

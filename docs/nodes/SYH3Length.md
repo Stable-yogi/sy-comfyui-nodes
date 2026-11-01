@@ -13,3 +13,10 @@ Source: `nodes/sy_h3_length.py`
 | rounding | COMBO | yes | up keeps the whole time you asked for. nearest and down can make the clip a little shorter. | one of: up, nearest, down |
 
 Outputs: `INT`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Set seconds and fps (the video model makes 24).
+2. Pick rounding. up keeps the whole time you asked for; nearest and down can make the clip a little shorter.
+3. The node gives a frame count the model accepts (5, 22, 39, 56 and so on), plus a decimal value and an info line.
+4. Example: 5 seconds at 24 fps gives 124 frames.

@@ -15,3 +15,9 @@ Source: `nodes/sy_frame_range_info.py`
 | frame_rule | COMBO | no | off keeps the end. 4n+1 trim/extend moves the end so the count is 4n+1. | one of: off, 4n+1 trim, 4n+1 extend |
 
 Outputs: `STRING`, `INT`, `INT`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Set start, end and step.
+2. Optional: fps gives the length in seconds. frame_rule (4n+1 trim or extend) fits the end for Wan and LTX style video models.
+3. Outputs: list of frame numbers, count, last, seconds and info.

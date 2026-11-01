@@ -2,6 +2,7 @@
 // The texts are kept in node.properties, so they travel inside the workflow file. Text is always set with textContent.
 import { app } from "../../scripts/app.js";
 import { tk, button, row, overlay } from "./sy_ui_kit.js";
+import { parseMarkdown } from "./sy_markdown_logic.js";
 
 const PANELS = [
   ["sy_install", "Nodes to Install", "gold", "Which custom nodes this workflow needs"],
@@ -25,11 +26,50 @@ function numberText(node) {
   return n ? "Workflow " + n : "";
 }
 
+
+// Builds the marked text (headers, lists, bold, italic, code) into a box. Only textContent is used, so no HTML is ever read.
+const HEAD_SIZE = { h1: "22px", h2: "17px", h3: "14px" };
+function renderMarked(box, text, fallback) {
+  box.textContent = "";
+  const blocks = parseMarkdown(text);
+  if (!blocks.length) {
+    box.textContent = fallback || "";
+    return;
+  }
+  let list = null;
+  for (const b of blocks) {
+    let el;
+    if (b.type === "li") {
+      if (!list) {
+        list = document.createElement("ul");
+        list.style.cssText = "margin:2px 0 2px 18px;padding:0";
+        box.append(list);
+      }
+      el = document.createElement("li");
+      list.append(el);
+    } else {
+      list = null;
+      el = document.createElement("div");
+      if (HEAD_SIZE[b.type]) el.style.cssText = "font-weight:700;font-size:" + HEAD_SIZE[b.type] + ";margin:4px 0 2px;color:" + tk("white");
+      box.append(el);
+    }
+    for (const p of b.inline) {
+      if (p.k === "text") el.append(document.createTextNode(p.s));
+      else {
+        const span = document.createElement(p.k === "code" ? "code" : p.k === "b" ? "strong" : "em");
+        if (p.k === "code") span.style.cssText = "font-family:'JetBrains Mono',monospace;font-size:0.9em;padding:0 3px;border-radius:3px;background:" + tk("abyss");
+        span.textContent = p.s;
+        el.append(span);
+      }
+    }
+  }
+}
+
 function showText(title, text) {
   const ov = overlay(title, 620);
   const body = document.createElement("div");
-  body.style.cssText = "white-space:pre-wrap;line-height:1.5;font-size:14px";
-  body.textContent = text || "Nothing written here yet. Click the pencil on the banner to add text.";
+  body.style.cssText = "line-height:1.5;font-size:14px";
+  renderMarked(body, text, "Nothing written here yet. Click the pencil on the banner to add text.");
   ov.body.append(body);
 }
 
@@ -50,8 +90,8 @@ function editTexts(node, refresh) {
   };
   make("sy_number", "WORKFLOW NUMBER (for example 3, shown as Workflow 3)", false);
   make("sy_title", "TITLE", false);
-  make("sy_subtitle", "SUBTITLE", false);
-  make("sy_install", "NODES TO INSTALL (one line per node pack)", true);
+  make("sy_subtitle", "SUBTITLE (lines may start with #, ## or ### for headers; **bold**, *italic*, - list)", true);
+  make("sy_install", "NODES TO INSTALL (one line per node pack; # headers, **bold** and - lists work)", true);
   make("sy_howto", "HOW TO USE (one step per line)", true);
   make("sy_info", "NODES INFO", true);
   const save = button("Save", "gold");
@@ -100,7 +140,7 @@ function addBanner(node) {
     num.textContent = numberText(node);
     num.style.display = num.textContent ? "block" : "none";
     title.textContent = prop(node, "sy_title");
-    sub.textContent = prop(node, "sy_subtitle");
+    renderMarked(sub, prop(node, "sy_subtitle"));
   };
   edit.onclick = () => editTexts(node, refresh);
   const widget = node.addDOMWidget("sy_banner", "custom", box, { serialize: false });

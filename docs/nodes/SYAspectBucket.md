@@ -16,3 +16,10 @@ Source: `nodes/sy_aspect_bucket.py`
 | multiple_of | INT | yes | Bucket width and height are rounded to a multiple of this number. | 1 to 512, default 64 |
 
 Outputs: `INT`, `INT`, `STRING`, `STRING`
+
+## How to use
+
+1. Type the width and height of your picture.
+2. In buckets, list the allowed shapes as ratios, for example 1:1, 4:3, 16:9. Turn on include_flips to allow the upright version of each too.
+3. Set target_resolution (1024 is about one megapixel) and multiple_of (sizes round to this).
+4. You get bucket_width and bucket_height of the closest shape, the ratio, and an info line.

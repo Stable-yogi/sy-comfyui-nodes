@@ -11,3 +11,10 @@ Source: `nodes/sy_batch_info.py`
 | images | IMAGE | yes | The batch to measure. It is passed on unchanged. | picture batch [B,H,W,3] |
 
 Outputs: `IMAGE`, `INT`, `INT`, `INT`, `INT`, `STRING`, `FLOAT`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect a batch of pictures to images.
+2. They pass through unchanged on the images output.
+3. Read the count, width, height and channels, plus megapixels and orientation.
+4. The warnings output tells you when the size is not a multiple of 8 or is very large.

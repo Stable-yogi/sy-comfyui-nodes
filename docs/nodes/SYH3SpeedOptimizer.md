@@ -24,3 +24,11 @@ Source: `nodes/sy_h3_speed.py`
 | enable_speedup | BOOLEAN | no | Master switch. Off passes the model through unchanged and returns False on speedup_enabled. | default True |
 
 Outputs: `MODEL`, `BOOLEAN`
+
+## How to use
+
+1. Connect an H3 model to model.
+2. Keep first_block_cache on. It skips most blocks on steps where block 0 barely changed. fbc_threshold 0.08 is near lossless; 0.15 to 0.20 is faster but softer.
+3. sparse_attention auto checks the speed on your GPU and keeps the faster way.
+4. The enable_speedup switch turns everything off and passes the model through unchanged.
+5. The faster model comes out, plus a true or false for whether the speed-up is on.

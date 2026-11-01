@@ -33,3 +33,10 @@ Source: `nodes/sy_image_adjust.py`
 | enabled | BOOLEAN | no | Turn off to pass the picture through untouched (handy to compare before and after). | default True |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect a picture or batch to image. Every setting starts neutral, so nothing changes until you move one.
+2. Change the groups you want: tone (brightness, contrast, gamma), colour (saturation, hue, warmth, tint), sharpen, vignette, grain. Each group has its own use_ switch.
+3. mix sets how much of the effect is used (0 is the original). Optional: connect a mask, where white means apply. enabled off passes the picture through untouched.
+4. The finished picture and an info line that lists what was changed come out.

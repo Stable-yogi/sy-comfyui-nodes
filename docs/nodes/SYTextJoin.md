@@ -20,3 +20,10 @@ Source: `nodes/sy_text_join.py`
 | remove_repeats | BOOLEAN | no | On: a text that is the same as an earlier one (capitals ignored) is left out. | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Connect up to six texts to text_a to text_f.
+2. Set separator (a comma and space is common). Leave skip_empty on to avoid double separators.
+3. Optional: turn on trim_parts and remove_repeats.
+4. The joined text and an info line come out.

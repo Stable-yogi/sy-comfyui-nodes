@@ -19,3 +19,10 @@ Source: `nodes/sy_prompt_sections.py`
 | remove_repeats | BOOLEAN | no | On: a comma tag already used in an earlier part is dropped. Not with label_colon. | default False |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Fill in the parts you need: subject, setting, lighting, camera, style, extra. Empty parts are skipped.
+2. Set join_with (the text between parts) and label_mode (label_colon puts a name before each part, like Lighting: soft).
+3. Turn remove_repeats on to drop a comma tag already used in an earlier part. It does not work with label_colon.
+Outputs: the joined prompt, how many parts were used and an info line.

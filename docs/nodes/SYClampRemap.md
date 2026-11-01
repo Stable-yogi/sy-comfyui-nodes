@@ -16,3 +16,10 @@ Source: `nodes/sy_clamp_remap.py`
 | clamp | BOOLEAN | yes | On keeps the result inside the output range. Off lets it run past. | default True |
 
 Outputs: `FLOAT`, `FLOAT`, `BOOLEAN`, `STRING`
+
+## How to use
+
+1. Set value.
+2. Set in_min and in_max (the range it is in) and out_min and out_max (the range you want).
+3. Turn clamp on to keep the number inside the range.
+4. Outputs: remapped, clamped, was_outside and info. Example: 0 to 1 becomes 0 to 255.

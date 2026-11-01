@@ -16,3 +16,10 @@ Source: `nodes/sy_krea2_edit.py`
 | system_prompt | STRING | no | Advanced: replaces the built-in system prompt. Empty uses the training default. | default '', multiline |
 
 Outputs: `CONDITIONING`
+
+## How to use
+
+1. Connect the Krea 2 text encoder to clip and type the edit instruction in prompt, so words like 'the man on the left' work.
+2. Connect the source picture to image. Without it, only the text is encoded. For the negative side, leave prompt empty and use the same image.
+3. Optional: image_b is a second reference (the subject) for two-reference edit LoRAs. Scene first, subject second. grounding_px sets the longest side fed to the vision encoder (0 keeps the native size).
+4. The conditioning comes out.

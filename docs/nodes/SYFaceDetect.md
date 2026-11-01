@@ -17,3 +17,10 @@ Source: `nodes/sy_face_detect.py`
 | shape | COMBO | yes | Mask shape: a rectangle, or an oval that fits inside the grown box. | one of: box, ellipse |
 
 Outputs: `MASK`, `INT`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Pick pick: centre 1, largest 1 or all. Set threshold and min_face.
+3. Use grow to enlarge the area and shape (box or ellipse).
+4. Outputs: mask, found and boxes. Feed the mask to Inpaint Crop SY. No face gives an empty mask and no error.

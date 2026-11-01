@@ -15,3 +15,10 @@ Source: `nodes/sy_video_frame_counter.py`
 | frame_step | INT | no | The n in the Kn+1 rule: 4 for Wan and most models, 8 for LTX. | 1 to 64, default 4 |
 
 Outputs: `INT`, `FLOAT`, `FLOAT`, `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Pick mode: frames_to_seconds, seconds_to_frames or fps_from_frames_and_seconds. The other two values are used.
+2. Fill frames, seconds and fps.
+3. Set frame_step for the Kn+1 rule: 4 for Wan and most models, 8 for LTX.
+4. Outputs: frames, seconds, fps, an info line, frames_valid (fits the rule or not) and a rule note.

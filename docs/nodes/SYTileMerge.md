@@ -13,3 +13,10 @@ Source: `nodes/sy_tiles.py`
 | blend | COMBO | yes | linear fades the shared edges softly. none lets later tiles cover earlier ones. | one of: linear, none |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect the processed tiles to tiles, in the same count and order as Tile Split SY gave them.
+2. Connect tile_info from Tile Split SY.
+3. Pick blend: linear fades shared edges softly, none lets later tiles cover earlier ones.
+4. It works after an upscale by a whole-number factor. A batch cut with all pictures gives a batch back.

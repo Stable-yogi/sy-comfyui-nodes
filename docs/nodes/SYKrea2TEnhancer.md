@@ -14,3 +14,9 @@ Source: `nodes/sy_krea2t_enhancer.py`
 | debug | BOOLEAN | yes | Print a few numbers to the console while sampling. | default False |
 
 Outputs: `MODEL`
+
+## How to use
+
+1. Connect the Krea 2 model to model. A copy is patched; the original is not changed.
+2. Set strength. 0 does nothing, 1 is normal and 2 is the maximum. enabled turns the effect off without removing the node.
+3. The patched model comes out. It makes Krea 2 Turbo follow the prompt more closely. debug prints a few numbers to the console.

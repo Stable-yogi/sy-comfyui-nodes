@@ -13,3 +13,10 @@ Source: `nodes/sy_gguf_loaders.py`
 | name_filter | STRING | no | Optional. Words like 'umt5 Q8': loads the first matching file and ignores the list. | default '' |
 
 Outputs: `CLIP`, `STRING`
+
+## How to use
+
+1. Pick the text encoder in clip_name (a .gguf file or a normal one), or type words such as umt5 Q8 in name_filter.
+2. Set type to the model family.
+3. A .gguf file needs the gguf Python package. The node tells you how to add it.
+4. The model comes out with an info text and a warning if the file name and family do not fit.

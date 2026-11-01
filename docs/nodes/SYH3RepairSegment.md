@@ -27,3 +27,10 @@ segment_number is 1-based and matches seg_NN.mp4 in the session folder. The old 
 | audios | COMFY_AUTOGROW_V3 | no | Separate reference audio. It becomes <Audio 1> to <Audio 3>. |  |
 
 Outputs: `VIDEO`, `SY_H3_CHAIN`, `STRING`
+
+## How to use
+
+1. Connect settings from H3 Chain Settings, type the session_name, and set segment_number (1 is the first, matching seg_01.mp4).
+2. Write the new prompt and set seconds, handoff_seconds and seed_override like in H3 Render Segment.
+3. Keep pin_ending on so the ending that the next segment continues from does not change and nothing after it moves. Turn it off only for the last segment.
+4. The old file is kept as seg_NN.replaced.mp4. The new video, the chain and an info line come out.

@@ -16,3 +16,10 @@ Source: `nodes/sy_edit_instruction.py`
 | keep_detail | STRING | no | Name what must not change, for example: the face and the pose. | default '' |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Pick action: replace, remove, add, recolour, restyle, change_background or fix_lighting.
+2. Type the thing in target, and the new value in to_value where it applies.
+3. keep_rest adds a line to keep the rest unchanged. keep_detail names one thing to keep. extra adds more words.
+4. The sentence comes out as instruction. notes warns about ignored or too long input.

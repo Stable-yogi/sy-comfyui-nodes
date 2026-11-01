@@ -13,3 +13,11 @@ Source: `nodes/sy_ratio_split.py`
 | whole_numbers | BOOLEAN | no | On gives whole parts that add up exactly (100 split 1:1:1 = 34, 33, 33). Good for frames. | default False |
 
 Outputs: `FLOAT`, `FLOAT`, `FLOAT`, `FLOAT`, `STRING`, `STRING`
+
+## How to use
+
+1. Enter total, the number to share out.
+2. Write ratios with up to four numbers split by colons, like 1:2:1. No negatives.
+3. Turn whole_numbers on to get whole parts that add up exactly.
+Outputs: part_1 to part_4, the list as text and an info line.
+Example: 100 split 1:3 gives 25 and 75. 100 split 1:1:1 with whole_numbers gives 34, 33, 33.

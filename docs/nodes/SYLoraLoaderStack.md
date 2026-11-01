@@ -22,3 +22,10 @@ Source: `nodes/sy_lora_loader_stack.py`
 | clip_scale | FLOAT | no | Clip strength = strength x this. 1 = same as before, 0 = model only. | 0.0 to 4.0, step 0.05, default 1.0 |
 
 Outputs: `MODEL`, `CLIP`, `STRING`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect model and clip.
+2. Pick up to 4 LoRAs in lora_1 to lora_4 and set a strength for each. A slot on None or with strength 0 is skipped.
+3. Turn bypass on to compare the result with no LoRAs, without rewiring. Set clip_scale to 0 if the LoRAs should change only the model.
+4. Use the model and clip outputs further on. The text outputs give trigger words or tags and any warning, for example when a LoRA is used twice.

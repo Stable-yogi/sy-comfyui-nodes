@@ -14,3 +14,10 @@ Source: `nodes/sy_timestamp.py`
 | filename_safe | BOOLEAN | no | For the custom pattern: turn characters that cannot be in a file name (: / and so on) into dashes. | default True |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Pick format: date, time, date_time, compact or unix (seconds).
+2. Turn on use_utc for world time, or leave it off for this computer's clock.
+3. Optional: type a custom_format such as %Y%m%d_%H%M. filename_safe turns characters that cannot be in a file name into dashes.
+4. Outputs: the text, the unix seconds and an info line.

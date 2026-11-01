@@ -15,3 +15,10 @@ Source: `nodes/sy_load_text.py`
 | if_missing | COMBO | no | error stops with a clear message. empty gives empty text. | one of: error, empty |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Type file, a .txt path inside the input folder, like notes.txt or a/b.txt. Other file types are refused.
+2. line 0 gives the whole text; 1 gives only the first line, 2 the second, and so on.
+3. Optional: strip trims spaces, skip_comments ignores lines starting with #, if_missing set to empty gives empty text for a file that is not there.
+4. The text, a line count and an info line come out.

@@ -14,3 +14,10 @@ Source: `nodes/sy_text_wrap.py`
 | keep_line_breaks | BOOLEAN | no | On: every line you typed stays its own line and is only wrapped if too long. Overrides keep_paragraphs. | default False |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Connect the text and set width (most characters on one line).
+2. Leave keep_paragraphs on to keep blank lines between paragraphs.
+3. Turn on keep_line_breaks to wrap each typed line on its own, good for poems, lyrics and subtitles.
+4. Outputs: the wrapped text, the line count and an info line.

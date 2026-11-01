@@ -13,3 +13,10 @@ Source: `nodes/sy_batch_repeat.py`
 | mode | COMBO | yes | each_picture gives 1,1,2,2. whole_batch gives 1,2,1,2. | one of: each_picture, whole_batch |
 
 Outputs: `IMAGE`, `INT`, `STRING`
+
+## How to use
+
+1. Connect a batch to images.
+2. Set times, the number of copies.
+3. Pick mode: each_picture gives 1,1,2,2. whole_batch gives 1,2,1,2.
+4. Outputs: the repeated images, the new count and info. It refuses plainly when the result would be too big.

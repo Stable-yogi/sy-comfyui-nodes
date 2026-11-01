@@ -13,3 +13,10 @@ Source: `nodes/sy_precision_info.py`
 | card_vram_gb | FLOAT | no | Your graphics card memory in GB, for example 24. 0 turns the fit check off. | 0.0 to 1000.0, step 1.0, default 0.0 |
 
 Outputs: `STRING`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Enter the model size in billions in parameters_billion, for example 12.
+2. Pick one precision, or all (show table) to see every format. With the table, size_gb is the fp16 size.
+3. Optional: type your card memory in card_vram_gb. The fit output then counts 20 percent extra for work memory. With all, it lists the formats that fit and the best one. With one format, it says whether that format fits. 0 turns the check off.
+Outputs: text, size_gb and fit.

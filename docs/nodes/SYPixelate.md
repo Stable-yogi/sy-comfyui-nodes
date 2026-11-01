@@ -14,3 +14,10 @@ Source: `nodes/sy_pixelate.py`
 | blocks_across | INT | no | Wanted number of blocks across the width, for example 64. 0 uses block_size instead. | 0 to 4096, step 1, default 0 |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set block_size (pixels per block, 1 changes nothing) or set blocks_across to say how many blocks you want across the picture. 0 uses block_size.
+3. Choose mode: average uses the mean colour of a block, nearest uses its top-left pixel.
+The info output counts the blocks.

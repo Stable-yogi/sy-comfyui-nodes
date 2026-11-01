@@ -23,3 +23,10 @@ Source: `nodes/sy_image_grid.py`
 | fit | COMBO | no | If a picture has another size than the first: stretch it, or keep its shape inside the cell. | one of: stretch, keep shape |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect two to four pictures to image_a, image_b and optionally image_c and image_d. The first picture sets the cell size.
+2. Type the captions in label_a to label_d. Leave one empty for no caption.
+3. direction row puts the pictures side by side; column stacks them. Set gap, background and label_size. fit keeps the shape of pictures of other sizes.
+4. One strip comes out, plus an info line with its size. It suits comparing checkpoints on the same prompt.

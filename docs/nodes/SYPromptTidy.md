@@ -22,3 +22,10 @@ Source: `nodes/sy_prompt_tidy.py`
 | enabled | BOOLEAN | no | Off: the text passes through unchanged. | default True |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Put your prompt in text. Add more in extra_text and pick how they are joined in separator.
+2. Switch on the steps you need: clean, remove_duplicates, lowercase, weights (keep, strip all or round to 1 decimal), trigger_words (put first), remove_words, and max_tokens (0 is no limit).
+3. They run in a fixed order. Token counts are only about right. Turn enabled off to pass the text through unchanged.
+Outputs: the text, a token estimate and an info line.

@@ -17,3 +17,11 @@ Source: `nodes/sy_mask_from_words.py`
 | feather | INT | yes | Soft edge in pixels. 0 = off. | 0 to 64, default 0 |
 
 Outputs: `MASK`, `IMAGE`, `INT`, `STRING`
+
+## How to use
+
+1. Connect your picture to image and pick a model file in model. If none is listed, get one with Model Downloader SY.
+2. Type what to select in words, for example person or the red dress. Commas look for several things.
+3. Raise threshold (try 0.8) if it finds things that are not there. Lower it to find more.
+4. In which, choose to join all finds, keep the biggest one, or get one mask per find.
+5. Outputs: the mask, a cut-out picture with a see-through background, the number of finds and a note. Nothing found gives an empty mask, not an error.

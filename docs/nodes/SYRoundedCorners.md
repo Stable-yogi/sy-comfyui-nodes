@@ -14,3 +14,11 @@ Source: `nodes/sy_rounded_corners.py`
 | transparent_corners | BOOLEAN | no | On: keep the corners see-through (adds an alpha channel) instead of painting the background colour. | default False |
 
 Outputs: `IMAGE`, `MASK`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Set radius_percent, the corner size as a percent of the shorter side. 50 makes a circle or pill.
+3. The cut-off corners are painted with background (3 or 6 hex digits) and also given as a mask.
+4. Turn transparent_corners on to get an alpha channel instead of painted corners.
+Outputs: image, mask and an info line.

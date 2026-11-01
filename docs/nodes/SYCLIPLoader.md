@@ -14,3 +14,10 @@ Source: `nodes/sy_clip_loader.py`
 | name_filter | STRING | no | Optional. Words like 'umt5 fp8': loads the first matching file and ignores the list. | default '' |
 
 Outputs: `CLIP`, `STRING`
+
+## How to use
+
+1. Pick the text encoder file in clip_name, or type words such as umt5 fp8 in name_filter. A filter match is loaded and the list is ignored.
+2. Set type to the model family it is used with.
+3. Set device: default uses the GPU, cpu keeps the encoder on the CPU.
+4. The loaded clip comes out with an info text (size, format) and a warning if the file name and family do not fit.

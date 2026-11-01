@@ -12,3 +12,9 @@ Source: `nodes/sy_aspect_from_image.py`
 | height | INT | yes | Picture height in pixels. Used with width to find the shape, like 16:9. | 1 to 65536, default 1024 |
 
 Outputs: `STRING`, `FLOAT`, `STRING`, `STRING`
+
+## How to use
+
+1. Type the width and height of a picture.
+2. Read the ratio as text (such as 16:9) and as a number. An odd ratio is matched to the nearest common one.
+3. The orientation output says landscape, portrait or square, and info gives the megapixels.

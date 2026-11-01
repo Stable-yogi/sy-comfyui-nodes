@@ -16,3 +16,10 @@ Source: `nodes/sy_resolution.py`
 | max_megapixels | FLOAT | no | 0 is off. Example: 1.5 lowers the size so it never goes over 1.5 million pixels. | 0.0 to 64.0, step 0.1, default 0.0 |
 
 Outputs: `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Pick model_preset for the size that model works best at.
+2. Choose aspect and orientation (landscape or portrait).
+3. Custom uses the megapixels and multiple you set. Optional max_megapixels keeps the size under a limit (0 is off).
+Outputs: width, height and an info line with the final size, shape and multiple.

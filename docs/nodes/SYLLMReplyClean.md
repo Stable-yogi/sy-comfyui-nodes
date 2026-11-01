@@ -18,3 +18,10 @@ Source: `nodes/sy_llm_reply_clean.py`
 | strip_closing_note | BOOLEAN | no | On: drop a last line like 'Let me know if you want changes.' | default False |
 
 Outputs: `STRING`, `STRING`
+
+## How to use
+
+1. Connect the reply text to text.
+2. The switches remove things you do not want: think notes, code fences, an intro line like Here is...:, wrapping quotes, and extra blank lines. Most are on by default.
+3. Turn on strip_closing_note to drop a last line like Let me know if you want changes, and first_paragraph_only to keep only the first paragraph.
+4. The clean text and an info line that says what was removed come out.

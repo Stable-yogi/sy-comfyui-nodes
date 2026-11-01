@@ -11,3 +11,9 @@ Source: `nodes/sy_safetensors_header_info.py`
 | model_file | COMBO | yes | A model file, for example loras/my_style.safetensors. Only its small header is read, so it is fast. | one of: checkpoints/test_model.safetensors, loras/test_lora.safetensors, vae/test_vae.safetensors |
 
 Outputs: `STRING`, `STRING`, `STRING`
+
+## How to use
+
+1. Pick a file in model_file. Checkpoints, loras, vae, diffusion models and text encoders are listed.
+2. Only the small header is read, so it is fast and the model is not loaded.
+3. Outputs: a report (tensor count, data types, parameter estimate, metadata keys), a one-line summary (what kind of file it looks like, main data type, size) and the metadata values, such as what a LoRA was trained on.

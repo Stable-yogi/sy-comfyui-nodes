@@ -14,3 +14,9 @@ Source: `nodes/sy_xy_label_strip.py`
 | y_name | STRING | yes | Name of the Y axis, shown in the table corner. | default 'Y' |
 
 Outputs: `STRING`, `INT`, `STRING`, `STRING`
+
+## How to use
+
+1. Type x_values and y_values, one per line. An empty Y list gives a single row.
+2. Set x_name and y_name for the table corner.
+3. Outputs: a Markdown table with the picture number in every cell, the picture count, a numbered cell list and an info line.

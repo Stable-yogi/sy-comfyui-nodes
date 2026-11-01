@@ -13,3 +13,10 @@ Source: `nodes/sy_saturation.py`
 | mode | COMBO | yes | saturation changes every colour the same; vibrance moves dull colours more than strong ones. | one of: saturation, vibrance |
 
 Outputs: `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect a picture or a batch to image.
+2. Set amount. Below 0 fades the colour (-100 is grey), above 0 makes colours stronger.
+3. Pick mode: saturation changes every colour the same, vibrance lifts dull colours more than strong ones.
+4. The changed picture comes out on image. The info output says what was done.

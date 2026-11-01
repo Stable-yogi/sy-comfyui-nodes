@@ -17,3 +17,10 @@ Source: `nodes/sy_crop_paste.py`
 | resize_mask | BOOLEAN | no | On: stretch a mask of another size to the picture. Off: stop with a message when sizes differ. | default False |
 
 Outputs: `IMAGE`, `MASK`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect the picture to image and a mask to mask.
+2. The crop is made around the white part. Use padding to add room and multiple_of to snap the size. threshold sets what counts as white.
+3. on_empty decides what happens with an empty mask: whole_image or error. Turn on resize_mask to stretch a mask of the wrong size.
+4. Outputs: crop, crop_mask, crop_info (for Paste Back SY) and info.

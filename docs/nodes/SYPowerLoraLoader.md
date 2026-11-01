@@ -15,3 +15,10 @@ Source: `nodes/sy_power_lora.py`
 | clip | CLIP | no | The text encoder. Without it only the model part of each LoRA is applied. |  |
 
 Outputs: `MODEL`, `CLIP`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect model, and clip if you have one. Without clip only the model part of each LoRA is applied.
+2. Use the row editor on the node to add LoRAs. Each row has its own switch, strength, optional clip strength and trigger words. Do not type into lora_rows.
+3. all_on is the master switch. Off passes model and clip on unchanged.
+4. trigger_join sets how trigger_words are joined (comma, newline or space). The output holds the words of every applied LoRA, without repeats.

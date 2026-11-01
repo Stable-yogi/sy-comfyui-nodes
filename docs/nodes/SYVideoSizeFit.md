@@ -15,3 +15,10 @@ Source: `nodes/sy_video_size_fit.py`
 | max_side | INT | no | 0 is off. Example: 1280 also keeps the longer side at or under 1280 pixels. | 0 to 16384, default 0 |
 
 Outputs: `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Type or connect the current width and height.
+2. Set max_pixels (in megapixels) and multiple_of. The result keeps the shape and never goes above the budget.
+3. Optional: set max_side to also limit the longer side. 0 is off.
+4. The new width and height come out with an info line.

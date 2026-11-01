@@ -13,3 +13,10 @@ Source: `nodes/sy_seed_from_text.py`
 | ignore_case_spaces | BOOLEAN | no | On makes Cat and cat give the same seed. Off keeps the text exactly as typed. | default False |
 
 Outputs: `INT`, `STRING`
+
+## How to use
+
+1. Type any text, such as a name or prompt, in text.
+2. Change salt to get a different seed from the same text.
+3. Turn on ignore_case_spaces so capital letters and extra spaces do not change the seed.
+4. The seed comes out on seed. The same text and salt always give the same seed.

@@ -15,3 +15,10 @@ Source: `nodes/sy_sentence_pick.py`
 | skip_chatter | BOOLEAN | no | On: first drop helper lines like 'Sure! Here is the caption:' and 'Let me know if...'. | default False |
 
 Outputs: `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Connect the text.
+2. Pick mode: first_n or last_n take n sentences, index takes one sentence (counting from 0), all_numbered lists every sentence with a number.
+3. Turn on skip_chatter to drop helper lines such as "Sure! Here is..." first.
+4. Outputs: the picked text, the sentence total and an info line.

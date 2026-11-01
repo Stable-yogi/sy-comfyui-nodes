@@ -12,3 +12,10 @@ Source: `nodes/sy_min_max.py`
 | b | FLOAT | yes | The second number. | -1000000000000000.0 to 1000000000000000.0, step 0.01, default 0.0 |
 
 Outputs: `FLOAT`, `FLOAT`, `BOOLEAN`, `STRING`
+
+## How to use
+
+1. Enter two numbers in a and b.
+2. The min output is the smaller one and the max output is the bigger one.
+3. swapped is true when a was bigger than b. The info line explains it.
+Use it to make sure a start value never ends up after an end value.

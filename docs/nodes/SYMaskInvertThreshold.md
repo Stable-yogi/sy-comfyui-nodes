@@ -14,3 +14,10 @@ Source: `nodes/sy_mask_invert_threshold.py`
 | threshold | FLOAT | yes | Values at or above this become white. Only used when use_threshold is on. | 0.0 to 1.0, step 0.01, default 0.5 |
 
 Outputs: `MASK`, `STRING`
+
+## How to use
+
+1. Connect your mask.
+2. Keep invert on to swap white and black.
+3. Turn use_threshold on to make soft grays hard first. Values at or above threshold become white, the rest black.
+The info output says what was done and warns about an all-black or all-white result.

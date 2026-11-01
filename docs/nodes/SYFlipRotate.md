@@ -15,3 +15,10 @@ Source: `nodes/sy_flip_rotate.py`
 | mask | MASK | no | Optional. Flipped and turned exactly like the picture. Must have the same size as the picture. | mask [B,H,W] |
 
 Outputs: `IMAGE`, `MASK`, `STRING`
+
+## How to use
+
+1. Connect your picture to image.
+2. Turn on flip_horizontal and/or flip_vertical, and pick rotate (none, 90 clockwise, 180, 270 clockwise). The mirror is done first, then the turn.
+3. Connect a mask to change it the same way.
+4. Outputs: image, mask and info.

@@ -14,3 +14,9 @@ Source: `nodes/sy_vram_estimate.py`
 | card_vram_gb | FLOAT | no | Your graphics card memory in GB, for example 24. 0 turns the fit check off. | 0.0 to 1000.0, step 1.0, default 0.0 |
 
 Outputs: `STRING`, `FLOAT`, `BOOLEAN`, `STRING`
+
+## How to use
+
+1. Type the model file size in file_size_gb and an overhead_factor (1.2 to 1.5 is common).
+2. Add extra_models_gb for other models loaded together, and card_vram_gb for your card (0 turns the fit check off).
+3. Outputs: a text line, the estimated VRAM in GB, fits true or false and a verdict. It is only a guide.

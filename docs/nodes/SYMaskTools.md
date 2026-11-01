@@ -20,3 +20,11 @@ Source: `nodes/sy_mask_tools.py`
 | overlay_opacity | FLOAT | no | How strong the tint is in the preview. 0.5 is half. | 0.0 to 1.0, step 0.05, default 0.5 |
 
 Outputs: `MASK`, `IMAGE`, `STRING`
+
+## How to use
+
+1. Connect your mask.
+2. All settings start neutral. Change only what you need: threshold (hard black and white, 0.5 is typical), grow (try 8), feather (try 12), edge, invert.
+3. They run in a fixed order. Turn invert_first on to flip the mask before the other steps instead of after.
+4. Connect a picture to image to get a tinted preview. Pick the tint with overlay_colour and overlay_opacity.
+Outputs: the mask, the preview and an info line.

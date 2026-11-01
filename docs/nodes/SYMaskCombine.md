@@ -16,3 +16,10 @@ Source: `nodes/sy_mask_combine.py`
 | invert_result | BOOLEAN | no | Swap white and black in the finished mask. | default False |
 
 Outputs: `MASK`, `STRING`
+
+## How to use
+
+1. Connect two masks to mask_a and mask_b. Mask B is stretched to the size of mask A.
+2. Choose the operation: union (either), intersect (both), subtract (A without B) or xor (only one of them).
+3. Optional: grow the result (negative shrinks), then feather it, then turn invert_result on. They run in that order.
+The info output warns about empty masks and size differences.

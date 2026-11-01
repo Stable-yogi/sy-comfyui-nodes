@@ -16,3 +16,9 @@ Source: `nodes/sy_checkerboard.py`
 | batch_size | INT | yes | How many identical pictures to make. | 1 to 64, step 1, default 1 |
 
 Outputs: `IMAGE`, `MASK`, `STRING`
+
+## How to use
+
+1. Set width, height and the cell size in pixels.
+2. Set colour_a and colour_b as hex codes, and batch_size for how many copies.
+3. Outputs: the picture, a mask of the first-colour squares, and an info line.

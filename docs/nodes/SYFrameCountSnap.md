@@ -16,3 +16,10 @@ Source: `nodes/sy_frame_count_snap.py`
 | fps | FLOAT | no | Only used for the seconds output: frames divided by fps. | 0.01 to 1000.0, step 0.01, default 24.0 |
 
 Outputs: `INT`, `STRING`, `FLOAT`
+
+## How to use
+
+1. Set wanted_frames and step, for example 80 and 4.
+2. Pick mode: nearest, down or up. plus_one adds one frame (80 with step 4 gives 81).
+3. max_frames caps the clip (0 = no cap). Set fps to see the real length.
+4. Outputs: frames, info and seconds.

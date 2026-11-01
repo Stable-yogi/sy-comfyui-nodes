@@ -13,3 +13,10 @@ Source: `nodes/sy_frame_rate_convert.py`
 | target_fps | FLOAT | yes | The frame rate you want. | 0.1 to 1000.0, step 1.0, default 16.0 |
 
 Outputs: `IMAGE`, `INT`, `FLOAT`, `FLOAT`, `STRING`
+
+## How to use
+
+1. Connect your frames to images.
+2. Set source_fps and target_fps.
+3. It drops or repeats the nearest frames, with no blending. The length stays the same.
+4. Outputs: images, count, fps, seconds and info.

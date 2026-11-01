@@ -14,3 +14,11 @@ Source: `nodes/sy_number_compare.py`
 | tolerance | FLOAT | no | Numbers this close count as equal. Fixes 0.1+0.2 vs 0.3. Example: 0.0001. | 0.0 to 1000000000000000.0, step 0.0001, default 0.0 |
 
 Outputs: `BOOLEAN`, `STRING`, `FLOAT`
+
+## How to use
+
+1. Enter the numbers a and b and choose the operator (==, !=, <, <=, >, >=).
+2. The result output is true or false. Connect it to a switch.
+3. Optional: set tolerance so nearly equal decimals count as equal.
+Example: tolerance 0.0001 makes 0.1 + 0.2 equal 0.3.
+The difference output is a minus b.

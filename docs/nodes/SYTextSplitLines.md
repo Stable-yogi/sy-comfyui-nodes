@@ -15,3 +15,10 @@ Source: `nodes/sy_text_split_lines.py`
 | skip_comments | BOOLEAN | no | On: lines that start with # are left out. | default False |
 
 Outputs: `STRING`, `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Connect the text. Each line becomes one item.
+2. Set index to pick one line (from 0). A number that is too big wraps to the start.
+3. Switch skip_empty, trim_lines and skip_comments (lines starting with #).
+4. Outputs: the full list, the picked line, the line count and an info line.

@@ -13,3 +13,10 @@ Source: `nodes/sy_percent_of.py`
 | b | FLOAT | yes | The second number. See the mode for how it is used. | -1000000000.0 to 1000000000.0, step 0.01, default 200.0 |
 
 Outputs: `FLOAT`, `STRING`
+
+## How to use
+
+1. Choose mode: percent_of (a% of b), what_percent (a is what % of b) or change_by_percent (a changed by b%).
+2. Enter a and b.
+3. Use result. The info line writes the sum in words.
+Example: percent_of with a = 10 and b = 200 gives 20.

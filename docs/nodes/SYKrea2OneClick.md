@@ -34,3 +34,10 @@ Source: `nodes/sy_krea2_oneclick.py`
 | weight_dtype | COMBO | no | Loader dtype for safetensors. Default respects the file; GGUF ignores it. | one of: default, fp8_e4m3fn, fp8_e4m3fn_fast, fp8_e5m2 |
 
 Outputs: `IMAGE`, `MODEL`, `CLIP`, `VAE`, `CONDITIONING`, `CONDITIONING`, `LATENT`
+
+## How to use
+
+1. Pick the model, type prompt and negative, and set seed. Text encoder and VAE are chosen automatically unless you pick a file.
+2. Pick quality (Fast, Best, Max or Custom) and size. Choose Custom to use the custom_steps, custom_cfg, custom_width and custom_height values.
+3. Optional: set up to three LoRAs with a strength each (strength 0 skips the slot). detail_pass runs a second pass: Light or Full.
+4. The image comes out, with the model, clip, vae, both conditionings and the latent for reuse.

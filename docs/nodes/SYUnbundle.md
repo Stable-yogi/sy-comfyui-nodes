@@ -11,3 +11,10 @@ Source: `nodes/sy_bundle.py`
 | bundle | SY_BUNDLE | yes | The bundle to open. It comes from Bundle SY. |  |
 
 Outputs: `SY_BUNDLE`, `MODEL`, `CLIP`, `VAE`, `CONDITIONING`, `CONDITIONING`, `LATENT`, `IMAGE`, `MASK`, `INT`, `INT`, `FLOAT`, `FLOAT`, `INT`, `INT`, `STRING`, `STRING`, `STRING`, `STRING`, `*`, `STRING`, `STRING`
+
+## How to use
+
+1. Connect the bundle from Bundle SY to bundle.
+2. Every item in the bundle comes out on its own output.
+3. An item that is not in the bundle gives None for pictures and models, 0 for numbers and empty text for texts.
+4. The missing output lists the names that were not in the bundle.

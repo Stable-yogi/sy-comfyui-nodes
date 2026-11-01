@@ -15,3 +15,10 @@ Source: `nodes/sy_seed_stepper.py`
 | wrap | BOOLEAN | yes | On: an index past the end starts over at the front. Off: that is an error. | default True |
 
 Outputs: `INT`, `STRING`, `INT`, `STRING`
+
+## How to use
+
+1. Set base_seed, step and count. The list is base, base+step, base+2*step and so on.
+2. Set index to pick one place of the list (0 is the first).
+3. With wrap on, an index past the end starts over at the front. With wrap off, it stops with an error.
+4. Outputs: the seed, the whole list, the index really used and an info line.

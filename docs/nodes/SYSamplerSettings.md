@@ -15,3 +15,9 @@ Source: `nodes/sy_sampler_settings.py`
 | denoise | FLOAT | no | 1 makes a new picture. Lower keeps part of the input picture, for example 0.6. | 0.0 to 1.0, step 0.01, default 1.0 |
 
 Outputs: `SY_SAMPLER_SETTINGS`, `STRING`
+
+## How to use
+
+1. Set steps, cfg, sampler_name and scheduler. Set denoise to 1 for a new picture, or lower (for example 0.6) to keep part of an input picture.
+2. Connect the settings output to a node that takes sampler settings, or to Sampler Settings Unpack SY.
+3. Read the info output. It shows all values in one line and warns about mistakes such as cfg 0 or too many steps.

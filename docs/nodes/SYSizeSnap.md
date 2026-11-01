@@ -15,3 +15,10 @@ Source: `nodes/sy_size_snap.py`
 | max_megapixels | FLOAT | no | 0 is off. Example: 2.0 makes sure the snapped size stays under 2 million pixels. | 0.0 to 4096.0, step 0.1, default 0.0 |
 
 Outputs: `INT`, `INT`, `STRING`
+
+## How to use
+
+1. Type the width and height, or connect them.
+2. Set multiple (for example 8 or 64) and mode: nearest, up (never shrinks) or down (never grows).
+3. Optional: set max_megapixels (0 is off) so a round-up stays under your limit.
+4. The snapped width and height come out. The info line shows what changed.

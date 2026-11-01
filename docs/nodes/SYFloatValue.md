@@ -11,3 +11,9 @@ Source: `nodes/sy_float_value.py`
 | value | FLOAT | yes | The decimal number to send out. | -1000000000000000.0 to 1000000000000000.0, step 0.01, default 0.0 |
 
 Outputs: `FLOAT`, `INT`, `STRING`, `STRING`
+
+## How to use
+
+1. Type a number in value.
+2. Plug it into as many nodes as you like.
+3. Outputs: the number, the nearest whole number, the number as clean text, and info with the round-down and round-up choices.

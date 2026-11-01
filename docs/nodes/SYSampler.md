@@ -22,3 +22,10 @@ Source: `nodes/sy_sampler.py`
 | negative | CONDITIONING | no | What you do not want. Used only when cfg is not 1. |  |
 
 Outputs: `LATENT`, `LATENT`, `STRING`, `INT`
+
+## How to use
+
+1. Connect model, positive (your encoded prompt) and latent (an empty one, or one made from a picture or clip). Connect negative only if cfg is not 1.
+2. Set seed, steps, cfg, sampler, scheduler and denoise (1 makes a new result, lower keeps part of the start latent).
+3. Turn fast_mode on to use fast_steps instead of steps.
+Outputs: latent, denoised, the settings used as text and the seed.

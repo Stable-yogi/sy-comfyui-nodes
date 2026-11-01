@@ -15,3 +15,10 @@ Source: `nodes/sy_dataset_pair_check.py`
 | warn_duplicates | BOOLEAN | no | On: also warn when two captions are the same (capitals and spaces ignored). | default False |
 
 Outputs: `BOOLEAN`, `STRING`, `INT`
+
+## How to use
+
+1. Paste the captions in captions, one per line.
+2. Set image_count, or connect the pictures to images.
+3. Turn on skip_blank_lines to ignore empty lines, and warn_duplicates to flag repeated captions.
+4. Outputs: match (true or false), a report of leftover pictures or lines, and caption_count.
