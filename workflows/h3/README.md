@@ -6,6 +6,8 @@ Groups marked **(optional)** are switched off at the start. Use the Group Switch
 
 ## Model files
 
+Six of the workflows carry a Model Downloader SY box at the top, next to the header. It lists the files below, shows which ones you already have, and downloads the missing ones from Hugging Face when you press a button (it shows the size and your free disk space and asks first). The two files that are not in the box: `RealESRGAN_x2.pth` and `minimax_h3_flf2v_lora_v1.safetensors` (get them by hand).
+
 The same files are used by all seven workflows. Put each file in the folder shown.
 
 | File | Folder |

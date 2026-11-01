@@ -40,4 +40,16 @@ try:  # web helpers for the Model Downloader node (run only when a button is pre
 except Exception as _err:  # the nodes still work without the download buttons
     print("[SY] model download buttons not available:", _err)
 
+try:  # LoRA picture and tag helpers for the Power Lora Loader node (read-only, inside the LoRA folders)
+    from .nodes import _sy_lora_preview_api
+    _sy_lora_preview_api.register_routes()
+except Exception as _err:  # the node still works without the hover picture
+    print("[SY] LoRA preview helpers not available:", _err)
+
+try:  # web helpers for the Review Pause node (the answer buttons)
+    from .nodes import _sy_pause_api
+    _sy_pause_api.register_routes()
+except Exception as _err:  # the node then passes through without stopping
+    print("[SY] review pause buttons not available:", _err)
+
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]

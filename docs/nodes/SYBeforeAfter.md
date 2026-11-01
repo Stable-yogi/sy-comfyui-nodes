@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_before_after.py`
 
-**What it does:** Makes one comparison picture from a before and an after picture: split (line you place), side by side, top and bottom, difference, checkerboard or blend. Small before/after labels. The info line gives the mean difference.
+**What it does:** Makes one comparison picture from a before and an after picture: split (line you place), side by side, top and bottom, difference, checkerboard or blend. Small before/after labels. The info line gives the mean difference. On the node you also get a draggable before / after slider in the browser.
 
 ## Inputs
 

@@ -1,7 +1,7 @@
 {
  "id": "sy-sy---h3-turnaround-v1",
  "revision": 0,
- "last_node_id": 31,
+ "last_node_id": 32,
  "last_link_id": 31,
  "nodes": [
   {
@@ -1754,6 +1754,32 @@
     "Frames 0, 16, 32 ... 112 of a 5 second clip. For another clip length, change the Pick 8 views numbers.",
     "info"
    ]
+  },
+  {
+   "id": 32,
+   "type": "SYModelDownloader",
+   "pos": [
+    1360,
+    -430
+   ],
+   "size": [
+    620,
+    330
+   ],
+   "flags": {},
+   "order": 31,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "properties": {
+    "Node name for S&R": "SYModelDownloader",
+    "sy_models": "[{\"folder\": \"diffusion_models\", \"file\": \"minimax_h3_ref2va_pruned_int8_convrot.safetensors\", \"url\": \"https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors\", \"note\": \"The H3 model\"}, {\"folder\": \"text_encoders\", \"file\": \"qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors\", \"url\": \"https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors\", \"note\": \"Text encoder\"}, {\"folder\": \"vae\", \"file\": \"minimax_h3_video_vae_int8_convrot.safetensors\", \"url\": \"https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_int8_convrot.safetensors\", \"note\": \"Video VAE\"}, {\"folder\": \"vae\", \"file\": \"minimax_h3_audio_vae_fp32.safetensors\", \"url\": \"https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors\", \"note\": \"Audio VAE\"}, {\"folder\": \"loras\", \"file\": \"minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors\", \"url\": \"https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/loras/minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors\", \"note\": \"Fast mode LoRA\"}]"
+   },
+   "widgets_values": [
+    ""
+   ],
+   "color": "#8b6914",
+   "bgcolor": "#2d2616"
   }
  ],
  "links": [

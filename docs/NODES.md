@@ -1,6 +1,6 @@
 # SY Nodes: full node list
 
-All 273 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 285 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 ## SY/Text (63)
@@ -69,9 +69,10 @@ All 273 nodes, by group. Every node is in the **SY** folder of the node library 
 - Token Estimate SY
 - Wildcard Prompt SY
 
-## SY/Image (85)
+## SY/Image (92)
 
 - Add Border SY
+- Apply LUT SY
 - ApplyMaskToImage SY
 - Aspect Bucket SY
 - Auto Contrast SY
@@ -93,10 +94,12 @@ All 273 nodes, by group. Every node is in the **SY** folder of the node library 
 - CropByMask SY
 - Decode SY
 - Dominant Colors SY
+- Drop Shadow SY
 - Duotone SY
 - Edge Detect SY
 - Emboss SY
 - Face Detect SY
+- FaceDetail SY
 - Film Grain SY
 - Flip Rotate SY
 - Frame Interpolate Blend SY
@@ -121,6 +124,7 @@ All 273 nodes, by group. Every node is in the **SY** folder of the node library 
 - Load Clip SY
 - Load Image Mini SY
 - Luminance Mask SY
+- Mask From Words SY
 - Mask Tools SY
 - MaskCombine SY
 - MaskFeather SY
@@ -132,6 +136,7 @@ All 273 nodes, by group. Every node is in the **SY** folder of the node library 
 - MaskToBox SY
 - Mirror Image SY
 - Orientation SY
+- Outer Glow SY
 - Outpaint Pad SY
 - Pad Image SY
 - Paste Back Box SY
@@ -140,6 +145,7 @@ All 273 nodes, by group. Every node is in the **SY** folder of the node library 
 - Pixelate SY
 - Posterize SY
 - Reference Picture SY
+- Remove Background SY
 - Reverse Batch SY
 - Roll Image SY
 - Rounded Corners SY
@@ -150,6 +156,7 @@ All 273 nodes, by group. Every node is in the **SY** folder of the node library 
 - Sepia SY
 - Sharpen SY
 - Solarize SY
+- Stroke SY
 - Threshold SY
 - Tile Merge SY
 - Tile Split SY
@@ -214,14 +221,16 @@ All 273 nodes, by group. Every node is in the **SY** folder of the node library 
 - Select By Index Text SY
 - Switch SY
 
-## SY/Utility (64)
+## SY/Utility (69)
 
 - Batch Size Calc SY
+- Bundle SY
 - Checkpoint Loader Info SY
 - Checkpoint Name Filter SY
 - CLIP Loader SY
 - CLIPLoaderGGUF SY
 - Date Parts SY
+- Done Alert SY
 - DualCLIPLoaderGGUF SY
 - Empty Latent SY
 - Filename Builder SY
@@ -255,7 +264,9 @@ All 273 nodes, by group. Every node is in the **SY** folder of the node library 
 - Model Loader SY
 - Model Preset Bundle SY
 - Pixel Count Info SY
+- Power Lora Loader SY
 - Precision Info SY
+- Review Pause SY
 - Run Timer SY
 - Safetensors Header Info SY
 - Sampler Settings SY
@@ -269,6 +280,7 @@ All 273 nodes, by group. Every node is in the **SY** folder of the node library 
 - System Info SY
 - Tile Grid Calc SY
 - Timestamp SY
+- Unbundle SY
 - Unet Loader SY
 - UnetLoaderGGUF SY
 - VAE Loader SY
