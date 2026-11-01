@@ -1,6 +1,6 @@
 # SY Nodes: full node list
 
-All 285 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 287 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 ## SY/Text (63)
@@ -178,11 +178,12 @@ All 285 nodes, by group. Every node is in the **SY** folder of the node library 
 - Video Size Fit SY
 - Video Size Presets SY
 
-## SY/Values (27)
+## SY/Values (28)
 
 - Bool Value SY
 - Clamp Remap SY
 - Colour Swatch SY
+- Control Panel SY
 - Duration Frames SY
 - Ease Curve SY
 - Float Value SY
@@ -208,13 +209,14 @@ All 285 nodes, by group. Every node is in the **SY** folder of the node library 
 - Time Code SY
 - VoiceLengthEstimate SY
 
-## SY/Logic (10)
+## SY/Logic (11)
 
 - Assert SY
 - Bool Logic SY
 - Counter SY
 - CyclePick SY
 - GroupSwitch SY
+- Group Picker SY
 - If Else Number SY
 - If Else Text SY
 - IndexSwitch SY
