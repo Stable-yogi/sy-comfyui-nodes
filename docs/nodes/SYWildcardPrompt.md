@@ -2,13 +2,13 @@
 
 Source: `nodes/sy_wildcard_prompt.py`
 
-**What it does:** One prompt with random variety. Write {red|blue|green} to pick one, {2$$a|b|c} to pick two different, __name__ to take a line from a wildcard list. Same seed gives the same prompt. Step through walks every combination with one number. Shows what was picked. Lists come from the wildcards box or from wildcards/<name>.txt in the input folder. Replaces a prompt-random node plus a list loader plus a text note.
+**What it does:** One prompt with random variety. Write {red|blue|green} to pick one, {2$$a|b|c} to pick two different, __name__ to take a line from a wildcard list. Same seed gives the same prompt. Step through walks every combination with one number. Shows what was picked. Give an option a weight with  number::  at its start, like {3::red|1::blue|green} (red is 3 times as likely as green; no number means 1; only in {...} groups, not in wildcard list lines; step through ignores weights). Lists come from the wildcards box or from wildcards/<name>.txt in the input folder. Replaces a prompt-random node plus a list loader plus a text note.
 
 ## Inputs
 
 | Input | Type | Required | What it does | Range / options |
 |---|---|---|---|---|
-| text | STRING | yes | Template. {a\|b} picks one, {2$$a\|b\|c} two, __name__ a list line. Example: a {red\|blue} coat | default 'a {red\|blue\|green} coat at {sunrise\|sunset}', multiline |
+| text | STRING | yes | Template. {a\|b} picks one, {2$$a\|b\|c} two, __name__ a list line, {3::a\|1::b} weighted. Example: a {3::red\|1::blue} coat | default 'a {red\|blue\|green} coat at {sunrise\|sunset}', multiline |
 | seed | INT | yes | Same seed gives the same prompt. Example: 12345 | 0 to 18446744073709551615, default 0 |
 | mode | COMBO | yes | random from seed, or step through the combinations with index. | one of: random from seed, step through (index) |
 | wildcards | STRING | no | Lists, one per line: name: first \| second \| third. Example: hair: red \| blonde | default '', multiline |

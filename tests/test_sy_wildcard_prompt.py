@@ -130,6 +130,63 @@ def run():
     assert off == ("{a|b} {", "", "Wildcard Prompt: off, the text was passed through unchanged"); n += 1
     assert "mode must be" in refuses(m.run_template, "a", 1, "bogus", 0, "", None); n += 1
     assert "1 wildcard list used (hair)" in m.run_template("__hair__", 1, m.MODES[0], 0, "hair: a | b", None)[2]; n += 1
+    # ---- weights: {3::red|1::blue|green}
+    wt = "{3::a|1::b}"
+    assert m.expand(wt, 5) == m.expand(wt, 5); n += 1                       # same seed, same result
+    res = [m.expand(wt, s)[0] for s in range(2000)]
+    share = res.count("a") / 2000.0
+    assert set(res) == {"a", "b"} and 0.65 <= share <= 0.85; n += 1         # about 75 percent
+    share3 = [m.expand("{6::x|2::y|2::z}", s)[0] for s in range(2000)]
+    assert 0.5 <= share3.count("x") / 2000.0 <= 0.7 and share3.count("y") > 200 and share3.count("z") > 200; n += 1
+    assert m.expand("{3::red|1::blue|green}", 1)[0] in ("red", "blue", "green"); n += 1
+    assert set(m.expand("{3::red|1::blue|green}", s)[0] for s in range(200)) == {"red", "blue", "green"}; n += 1
+    assert "::" not in m.expand(wt, 3)[0] and "::" not in m.expand(wt, 3)[1][0].split(" -> ")[1]; n += 1   # weight is stripped
+    assert m.expand("{ 2.5 :: big | small }", 0)[0] in ("big", "small"); n += 1
+    assert m.expand("{2:: spaced out|1::x}", 0)[0] in ("spaced out", "x"); n += 1
+    pk = m.expand("{9::only|1::other}", 0)[1][0]
+    assert pk.split(" -> ")[1] in ("only", "other"); n += 1
+    # N$$ with weights: different options, weighted, deterministic
+    for s in range(40):
+        r = m.expand("{2$$5::a|1::b|1::c}", s)[0].split(", ")
+        assert len(r) == 2 and r[0] != r[1] and set(r) <= {"a", "b", "c"}
+    n += 1
+    assert m.expand("{2$$5::a|1::b|1::c}", 9) == m.expand("{2$$5::a|1::b|1::c}", 9); n += 1
+    with_a = sum(1 for s in range(1000) if "a" in m.expand("{2$$8::a|1::b|1::c}", s)[0].split(", "))
+    assert with_a > 800; n += 1
+    assert m.expand("{3$$1::a|2::b|3::c}", 4)[0] == "a, b, c"; n += 1
+    # weights are inside nesting and with wildcards
+    assert set(m.expand("{3::{p|q}|1::r}", s)[0] for s in range(100)) == {"p", "q", "r"}; n += 1
+    assert m.expand("{5::__hair__|1::none}", 2, wl)[0] in ("red hair", "blonde hair", "none"); n += 1
+    # step through ignores weights and walks every option once
+    walk_w = [m.expand("{3::a|1::b|c}", 0, None, i)[0] for i in range(3)]
+    assert sorted(walk_w) == ["a", "b", "c"]; n += 1
+    assert m.possible_count("{3::a|1::b|c}") == 3 and m.possible_count("{3::a|1::b} {c|d}") == 4; n += 1
+    assert m.possible_count("{2$$3::a|1::b|c}") == 3; n += 1
+    # old texts behave exactly as before: only a leading number:: is a weight
+    assert m.expand("a::b", 0)[0] == "a::b"; n += 1
+    assert m.expand("{a::b|c::d}", 0)[0] in ("a::b", "c::d"); n += 1
+    assert m.expand("{x 3::y}", 0)[0] == "x 3::y"; n += 1
+    assert m.expand("{1::a}", 0)[0] == "a" and m.expand("time 12::30", 0)[0] == "time 12::30"; n += 1
+    assert m.expand("{\3::a|b}", 0)[0] in ("3::a", "b"); n += 1
+    assert m.has_weights("{3::a|b}") and not m.has_weights("{a::b|c} 3::x"); n += 1
+    assert m.describe("{3::a|1::b} __hair__") == (1, ["hair"]); n += 1
+    old = [m.expand("{red|blue|green} and {2$$a|b|c}", s) for s in range(30)]
+    assert old == [m.expand("{red|blue|green} and {2$$a|b|c}", s) for s in range(30)]; n += 1
+    import random as _r
+    assert m.expand("{a|b|c|d}", 11)[0] == "abcd"[sorted(_r.Random(11).sample(range(4), 1))[0]]; n += 1  # same rng path as before
+    # weight refusals name the group
+    for bad in ("{0::a|b}", "{-1::a|b}", "{1001::a|b}", "{0.0::a|b}"):
+        msg = refuses(m.expand, bad, 0)
+        assert msg and "weight" in msg and bad in msg, bad
+        n += 1
+    assert "option 2" in refuses(m.expand, "x {1::a|0::b}", 0) and "character 3" in refuses(m.expand, "x {1::a|0::b}", 0); n += 1
+    assert refuses(m.expand, "{1000::a|0.001::b}", 0) is None; n += 1
+    # info mentions weights
+    assert "weights used" in m.run_template(wt, 3, m.MODES[0], 0, "", None)[2]; n += 1
+    assert "weights used" not in m.run_template("{a|b}", 3, m.MODES[0], 0, "", None)[2]; n += 1
+    assert "weights ignored" in m.run_template(wt, 3, m.MODES[1], 1, "", None)[2]; n += 1
+    assert "weights" in m.SYWildcardPrompt.DESCRIPTION and "3::" in m.SYWildcardPrompt.INPUT_TYPES()["required"]["text"][1]["tooltip"]; n += 1
+    assert len(m.SYWildcardPrompt.INPUT_TYPES()["required"]["text"][1]["tooltip"]) <= 120; n += 1
     # node class
     c = m.SYWildcardPrompt
     assert c.RETURN_NAMES == ("prompt", "picks", "info") and len(c.RETURN_TYPES) == 3; n += 1

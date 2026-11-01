@@ -34,6 +34,7 @@ Older repo `comfyui-stableyogi-prompt` uses `StableYogiPrompt` / category `Stabl
 5. No code is downloaded or run at start-up.
 6. No `eval`, `exec`, `compile`, `subprocess`, `os.system`, `os.startfile` [auto]. An audited exception goes into `ALLOW` in `tests/run_selftest.py` AND is written here.
    Audited exception: `nodes/_sy_folder_api.py` may call `os.startfile` (owner OK 2026-10-28). It opens a folder or a picture file that sits inside the ComfyUI output or input folder, nothing else.
+   Audited exception: `nodes/_sy_download.py` may use `urllib` (Model Downloader SY, owner order 2026-11): only when the user presses a button, only https to Hugging Face, Civitai and GitHub (and their storage hosts), only .safetensors and .gguf files, never overwriting a file, with size and free disk space confirmed first.
 7. Node modules do not import `comfy`, `folder_paths` or `server` at top level [auto]. Import inside the function. This keeps the logic testable without ComfyUI.
 8. Every node has a `DESCRIPTION` [auto] and a test file [auto].
 9. No AI-credit word in any file [auto] (core rule 14).

@@ -1,6 +1,6 @@
 # SY Nodes: full node list
 
-All 271 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 273 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 ## SY/Text (63)
@@ -69,7 +69,7 @@ All 271 nodes, by group. Every node is in the **SY** folder of the node library 
 - Token Estimate SY
 - Wildcard Prompt SY
 
-## SY/Image (84)
+## SY/Image (85)
 
 - Add Border SY
 - ApplyMaskToImage SY
@@ -134,6 +134,7 @@ All 271 nodes, by group. Every node is in the **SY** folder of the node library 
 - Orientation SY
 - Outpaint Pad SY
 - Pad Image SY
+- Paste Back Box SY
 - PasteBack SY
 - Ping Pong SY
 - Pixelate SY
@@ -293,7 +294,8 @@ All 271 nodes, by group. Every node is in the **SY** folder of the node library 
 - Layout JSON Check SY
 - Paint Mask SY
 
-## SY/Notes (2)
+## SY/Notes (3)
 
+- Model Downloader SY
 - Note SY
 - Workflow Header SY

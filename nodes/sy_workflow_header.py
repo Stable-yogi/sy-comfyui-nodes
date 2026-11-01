@@ -1,4 +1,4 @@
-"""Workflow Header SY: a big title banner with three help buttons for the top of a workflow.
+"""Workflow Header SY: a big title banner with a workflow number, three help buttons and three link buttons for the top of a workflow.
 
 The texts live in the node properties (set in the browser panel). The node does nothing when a workflow runs.
 """
@@ -14,14 +14,14 @@ PANEL_BUTTONS = {"sy_install": "Nodes to Install", "sy_howto": "How to Use", "sy
 def clean_panels(props):
     """Pure function. Keeps only the known keys of a properties dict and turns every value into text."""
     props = props or {}
-    out = {"sy_title": str(props.get("sy_title", "")), "sy_subtitle": str(props.get("sy_subtitle", ""))}
+    out = {"sy_number": str(props.get("sy_number", "")), "sy_title": str(props.get("sy_title", "")), "sy_subtitle": str(props.get("sy_subtitle", ""))}
     for key in PANELS:
         out[key] = str(props.get(key, ""))
     return out
 
 
 class SYWorkflowHeader:
-    DESCRIPTION = "A title banner for the top of a workflow with three help buttons: Nodes to Install, How to Use and Nodes Info. Fill the title and the three texts in the node panel in the browser. It has no inputs or outputs and does nothing when the workflow runs, so you can leave it in for people you share the workflow with."
+    DESCRIPTION = "A title banner for the top of a workflow with a workflow number (Workflow 1, 2, 3), three help buttons (Nodes to Install, How to Use, Nodes Info) and three link buttons (GitHub, Website, YouTube). Fill the number, the title and the three texts with the Edit button in the browser. It has no inputs or outputs and does nothing when the workflow runs, so you can leave it in for people you share the workflow with."
     CATEGORY = category("Notes")
     FUNCTION = "run"
     RETURN_TYPES = ()

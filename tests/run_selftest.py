@@ -14,7 +14,8 @@ sys.path.insert(0, NODES)
 
 FORBIDDEN_CALLS = {"eval", "exec", "compile", "__import__"}
 FORBIDDEN_MODULES = {"subprocess", "socket", "requests", "urllib", "http", "ftplib", "ctypes", "pickle", "marshal"}
-ALLOW = {"_sy_folder_api.py": {"startfile"}}  # {"sy_xxx.py": {"subprocess"}} -- an audited exception, listed here and in the standard
+# _sy_download.py is the one audited file that may use the internet (urllib, http): Model Downloader SY, button press only
+ALLOW = {"_sy_folder_api.py": {"startfile"}, "_sy_download.py": {"urllib", "http"}}  # {"sy_xxx.py": {"subprocess"}} -- an audited exception, listed here and in the standard
 AI_WORDS = re.compile(r"claude|anthropic|codex|openai|generated with|made with ai|co-authored-by", re.I)
 HEX = re.compile(r"#[0-9a-fA-F]{6}\b")
 

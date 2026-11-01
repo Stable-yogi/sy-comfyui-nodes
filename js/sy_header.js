@@ -1,4 +1,4 @@
-// SY Nodes by Stable Yogi: the banner of Workflow Header SY. A title, a subtitle and three buttons that open a help window.
+// SY Nodes by Stable Yogi: the banner of Workflow Header SY. A workflow number, a title, a subtitle, three buttons that open a help window and three link buttons (GitHub, website, YouTube).
 // The texts are kept in node.properties, so they travel inside the workflow file. Text is always set with textContent.
 import { app } from "../../scripts/app.js";
 import { tk, button, row, overlay } from "./sy_ui_kit.js";
@@ -8,11 +8,21 @@ const PANELS = [
   ["sy_howto", "How to Use", "green", "Steps to run this workflow"],
   ["sy_info", "Nodes Info", "blue", "What the main nodes do"],
 ];
-const DEFAULTS = { sy_title: "Workflow title", sy_subtitle: "Made with SY Nodes by Stable Yogi", sy_install: "", sy_howto: "", sy_info: "" };
+const LINKS = [
+  ["GitHub", "https://github.com/Stable-yogi/sy-comfyui-nodes", "The Stable Yogi Nodes (S Y Nodes) page on GitHub"],
+  ["Website", "https://stableyogi.com", "stableyogi.com"],
+  ["YouTube", "https://www.youtube.com/channel/UCt6qODfTcDy4eEPXLDlGizA", "The Stable Yogi YouTube channel"],
+];
+const DEFAULTS = { sy_number: "", sy_title: "Workflow title", sy_subtitle: "Made with SY Nodes by Stable Yogi", sy_install: "", sy_howto: "", sy_info: "" };
 
 function prop(node, key) {
   const v = node.properties?.[key];
   return typeof v === "string" ? v : DEFAULTS[key];
+}
+
+function numberText(node) {
+  const n = String(prop(node, "sy_number") || "").trim();
+  return n ? "Workflow " + n : "";
 }
 
 function showText(title, text) {
@@ -38,6 +48,7 @@ function editTexts(node, refresh) {
     ov.body.append(wrap);
     fields[key] = input;
   };
+  make("sy_number", "WORKFLOW NUMBER (for example 3, shown as Workflow 3)", false);
   make("sy_title", "TITLE", false);
   make("sy_subtitle", "SUBTITLE", false);
   make("sy_install", "NODES TO INSTALL (one line per node pack)", true);
@@ -63,6 +74,8 @@ function addBanner(node) {
   const title = document.createElement("div");
   title.style.cssText = "display:inline-block;align-self:flex-start;padding:6px 16px;border-radius:4px;font:700 22px 'DM Sans',sans-serif;background:" +
     tk("gold") + ";color:" + tk("void");
+  const num = document.createElement("div");
+  num.style.cssText = "align-self:flex-start;font:700 12px 'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:" + tk("gold");
   const sub = document.createElement("div");
   sub.style.cssText = "font:13px 'DM Sans',sans-serif;color:" + tk("text_2");
   const buttons = row();
@@ -75,18 +88,26 @@ function addBanner(node) {
     buttons.append(b);
   }
   buttons.append(edit);
-  box.append(title, sub, buttons);
+  const links = row();
+  for (const [text, url, tip] of LINKS) {
+    const b = button(text, "ghost", tip);
+    b.onclick = () => window.open(url, "_blank", "noopener,noreferrer");
+    links.append(b);
+  }
+  box.append(num, title, sub, buttons, links);
 
   const refresh = () => {
+    num.textContent = numberText(node);
+    num.style.display = num.textContent ? "block" : "none";
     title.textContent = prop(node, "sy_title");
     sub.textContent = prop(node, "sy_subtitle");
   };
   edit.onclick = () => editTexts(node, refresh);
   const widget = node.addDOMWidget("sy_banner", "custom", box, { serialize: false });
-  widget.computeSize = (w) => [w, 120];
+  widget.computeSize = (w) => [w, 160];
   refresh();
   node._syBannerRefresh = refresh;
-  node.setSize([Math.max(node.size[0], 460), Math.max(node.size[1], 150)]);
+  node.setSize([Math.max(node.size[0], 460), Math.max(node.size[1], 190)]);
 }
 
 app.registerExtension({

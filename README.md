@@ -1,6 +1,6 @@
 # SY Nodes for ComfyUI
 
-271 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
+273 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
 They load models, set sizes and seeds, switch parts of a graph on and off, edit masks and pictures, work with text,
 and save results. Our workflows use them, so one install of this pack gives you the nodes the workflows need.
 
@@ -17,6 +17,13 @@ Missing a node? Tell me.
 | Models | The nodes hold none. A workflow tells you which model files it needs (see its banner). |
 
 The H3 video workflows need a ComfyUI that knows the H3 model type (it is in v0.42.1 and newer).
+
+## The internet
+
+The nodes work offline. The only exception is **Model Downloader SY**, and it uses the internet only when you press its Download button.
+It never runs when a workflow runs or loads. It accepts https links to Hugging Face, Civitai and GitHub only, only `.safetensors` and `.gguf` files,
+shows the size and your free disk space and asks before each download, and never replaces a file you already have.
+Its code is in `nodes/_sy_download.py`, the one file in the pack that is allowed to talk to the internet.
 
 ## Install
 
@@ -36,14 +43,14 @@ Replace the folder with the new one and restart ComfyUI. Saved workflows keep wo
 
 | Group | Nodes | What is in it |
 |---|---|---|
-| SY/Text | 62 | Prompt and caption helpers, text join, find and replace, JSON, chat prompt builders |
-| SY/Image | 83 | Picture tools, masks, crop and paste, compare, grids, loaders and save steps |
+| SY/Text | 63 | Prompt and caption helpers, text join, find and replace, JSON, chat prompt builders |
+| SY/Image | 85 | Picture tools, masks, crop and paste, compare, grids, loaders and save steps |
 | SY/Resize | 11 | Sizes, aspect ratios, video sizes, H3 latent upscaler |
 | SY/Values | 27 | Seed, numbers, switches, lists |
 | SY/Logic | 10 | Switch, pick by number, compare, gate |
 | SY/Utility | 64 | Model and LoRA loaders, batch and video helpers, timers, memory tools, H3 bundle save and load |
 | SY/Editors | 10 | Mask editor, 3D scene, XY grids, paint |
-| SY/Notes | 2 | Workflow header and notes |
+| SY/Notes | 3 | Workflow header, model downloader and notes |
 
 The full list: [`docs/NODES.md`](docs/NODES.md). Every node has its own help page in [`docs/nodes/`](docs/nodes/)
 with its inputs and what it does.

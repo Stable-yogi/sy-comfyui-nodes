@@ -34,4 +34,10 @@ try:  # web helpers for the Save and Load nodes (list folders, open Explorer ins
 except Exception as _err:  # the nodes still work without the buttons
     print("[SY] folder buttons not available:", _err)
 
+try:  # web helpers for the Model Downloader node (run only when a button is pressed)
+    from .nodes import _sy_download
+    _sy_download.register_routes()
+except Exception as _err:  # the nodes still work without the download buttons
+    print("[SY] model download buttons not available:", _err)
+
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]

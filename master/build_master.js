@@ -44,6 +44,8 @@
   load.connect(0, toMask, 0);
   const yes = mk("PrimitiveBoolean", "A yes value (for Assert)");
   yes.widgets[0].value = true;
+  const boxSrc = mk("PrimitiveString", "A box x,y,width,height (for Paste Back Box)");
+  boxSrc.widgets[0].value = "0,0,64,64";
   const two = mk("ImageBatch", "Two pictures as one batch (for frame nodes)");
   load.connect(0, two, 0); load.connect(0, two, 1);
   const ksel = mk("KSamplerSelect", "Sampler (for the H3 chain)");
@@ -71,7 +73,7 @@
     SYShowText: { value: [seedSrc, 0] }, SYTextNumberFormat: { number_in: [seedSrc, 0] },
     SYSwitch: { a: [load, 0], b: [byType.SYColourSwatch, 0] },
     SYLayoutBoxesMerge: { boxes_3: [byType.SYLayoutBox, 0], boxes_4: [byType.SYLayoutBox, 0], boxes_5: [byType.SYLayoutBox, 0], boxes_6: [byType.SYLayoutBox, 0], boxes_7: [byType.SYLayoutBox, 0], boxes_8: [byType.SYLayoutBox, 0] },
-    SYAssert: { condition: [yes, 0] }, SYFrameInterpolateBlend: { images: [two, 0] },
+    SYPasteBackBox: { crop_box: [boxSrc, 0] }, SYAssert: { condition: [yes, 0] }, SYFrameInterpolateBlend: { images: [two, 0] },
     SYInpaintStitch: { stitch: [byType.SYInpaintCrop, 0] },
     SYKrea2ConditioningRebalance: { conditioning: [byType.SYKrea2EditGroundedEncode, 0] },
     SYTileMerge: { tiles: [byType.SYTileSplit, 0], tile_info: [byType.SYTileSplit, 1] },
@@ -207,7 +209,7 @@
   head.pos = [20, 40]; head.size = [1800, 170];
   let y = 280;
   // sources group
-  const srcList = [{ n: load, sinks: [] }, { n: toMask, sinks: [] }, { n: two, sinks: [] }, { n: yes, sinks: [] }, { n: seedSrc, sinks: [] }, { n: unet, sinks: [] }, { n: clip, sinks: [] }]
+  const srcList = [{ n: load, sinks: [] }, { n: toMask, sinks: [] }, { n: two, sinks: [] }, { n: yes, sinks: [] }, { n: boxSrc, sinks: [] }, { n: seedSrc, sinks: [] }, { n: unet, sinks: [] }, { n: clip, sinks: [] }]
     .filter((s) => !PART || graph._nodes.includes(s.n));
   for (const c of srcList) size(c.n);
   y = placeGroup("SOURCES: picture, mask, seed, two model files", srcList, 0, y, 5, "#1f4e79");

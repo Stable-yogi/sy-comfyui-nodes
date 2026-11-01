@@ -17,6 +17,8 @@ MAX_SEED = 2 ** 64 - 1
 ESCAPABLE = "{}|_\\"
 _WILD = re.compile(r"__([A-Za-z0-9][A-Za-z0-9_\-./]*?)__")
 _HEAD = re.compile(r"\s*(\d+)\s*\$\$")
+_WEIGHT = re.compile(r"(-?(?:\d+(?:\.\d+)?|\.\d+))\s*::")
+MAX_WEIGHT = 1000.0
 
 
 # ---------------------------------------------------------------- wildcard lists
@@ -123,8 +125,11 @@ class _Parser:
             k = int(m.group(1))
             self.i = m.end()
         options = []
+        weights = []
         while True:
-            options.append(_strip(self.seq(depth)))
+            opt, wt = _take_weight(_strip(self.seq(depth)))
+            options.append(opt)
+            weights.append(wt)
             if self.i >= len(t):
                 raise ValueError("the opening brace at %s is never closed. Add a closing brace, or write \\{ for a plain brace" % _where(t, start))
             if t[self.i] == "}":
@@ -137,7 +142,30 @@ class _Parser:
             raise ValueError("the choice list at %s asks to pick %d options. Use 1 or more" % (_where(t, start), k))
         if k > len(options):
             raise ValueError("the choice list at %s asks to pick %d different options but has only %d" % (_where(t, start), k, len(options)))
-        return ("group", k, options, t[start:self.i])
+        src = t[start:self.i]
+        shown = src if len(src) <= 60 else src[:57] + "..."
+        for no, wt in enumerate(weights, 1):
+            if wt is not None and not 0 < wt <= MAX_WEIGHT:
+                raise ValueError("the choice list %s at %s has a weight of %s on option %d. A weight must be above 0 and at most %d. "
+                                 "Write it like {3::red|1::blue}" % (shown, _where(t, start), _num(wt), no, int(MAX_WEIGHT)))
+        if all(wt is None for wt in weights):
+            weights = None
+        else:
+            weights = [1.0 if wt is None else wt for wt in weights]
+        return ("group", k, options, src, weights)
+
+
+def _take_weight(nodes):
+    """Pure function. An option that starts with  number::  carries a weight. Returns (nodes without it, weight or None).
+    Only the very start of the option counts: a::b inside the text stays plain text."""
+    if nodes and nodes[0][0] == "lit":
+        m = _WEIGHT.match(nodes[0][1])
+        if m:
+            rest = nodes[0][1][m.end():].lstrip()
+            nodes = list(nodes)
+            nodes[0:1] = [("lit", rest)] if rest else []
+            return nodes, float(m.group(1))
+    return nodes, None
 
 
 def _strip(nodes):
@@ -165,6 +193,34 @@ def _walk(nodes):
             for o in n[2]:
                 for x in _walk(o):
                     yield x
+
+
+def _num(x):
+    return str(int(x)) if x == int(x) else repr(x)
+
+
+def has_weights(text):
+    """Pure function. True when any {...} group of the text has a  number::  weight."""
+    return any(n[0] == "group" and n[4] is not None for n in _walk(_parse(text)))
+
+
+def weighted_sample(rng, weights, k):
+    """Pure function. k different indexes picked by weight, without putting back. Same rng state, same answer."""
+    left = list(range(len(weights)))
+    out = []
+    for _ in range(k):
+        total = sum(weights[i] for i in left)
+        r = rng.random() * total
+        pick = left[-1]
+        acc = 0.0
+        for i in left:
+            acc += weights[i]
+            if r < acc:
+                pick = i
+                break
+        out.append(pick)
+        left.remove(pick)
+    return out
 
 
 def describe(text):
@@ -249,11 +305,14 @@ class _Ctx:
             line = items[sub if sub is not None else self.rng.randrange(len(items))]
             self.picks.append("%s -> %s" % (n[2], line))
             return line
-        _, k, options, src = n
+        _, k, options, src, weights = n
         slot = len(self.picks)
         self.picks.append("")
         if sub is None:
-            chosen = sorted(self.rng.sample(range(len(options)), k))
+            if weights is None:
+                chosen = sorted(self.rng.sample(range(len(options)), k))
+            else:
+                chosen = sorted(weighted_sample(self.rng, weights, k))
             subs = [None] * k
         else:
             chosen, subs = self._unrank(options, k, sub)
@@ -309,7 +368,7 @@ def expand(text, seed, wildcards=None, index=None):
     return out, ctx.picks
 
 
-def info_text(text, groups, names, seed, mode, index, total, picks):
+def info_text(text, groups, names, seed, mode, index, total, picks, weighted=False):
     """Pure function. One plain line of counts."""
     bits = ["%d choice group%s" % (groups, "" if groups == 1 else "s"),
             "%d wildcard list%s used%s" % (len(names), "" if len(names) == 1 else "s", (" (" + ", ".join(names) + ")") if names else "")]
@@ -318,6 +377,8 @@ def info_text(text, groups, names, seed, mode, index, total, picks):
     else:
         bits.append("seed %d" % seed)
     bits.append("%s possible result%s" % (count_text(total), "" if total == 1 else "s"))
+    if weighted:
+        bits.append("weights used" if mode != MODES[1] else "weights ignored while stepping")
     return "Wildcard Prompt: " + ", ".join(bits)
 
 
@@ -336,13 +397,15 @@ def run_template(text, seed, mode, index, inline_text, load_file, enabled=True):
     idx = int(index or 0) if step else None
     prompt, picks = expand(text, seed, wl, idx)
     total = possible_count(text, wl)
-    return prompt, "\n".join(picks), info_text(text, groups, names, int(seed), mode, idx or 0, total, picks)
+    return prompt, "\n".join(picks), info_text(text, groups, names, int(seed), mode, idx or 0, total, picks, has_weights(text))
 
 
 class SYWildcardPrompt:
     DESCRIPTION = ("One prompt with random variety. Write {red|blue|green} to pick one, {2$$a|b|c} to pick two different, "
                    "__name__ to take a line from a wildcard list. Same seed gives the same prompt. Step through walks every "
-                   "combination with one number. Shows what was picked. Lists come from the wildcards box or from "
+                   "combination with one number. Shows what was picked. Give an option a weight with  number::  at its start, like "
+                   "{3::red|1::blue|green} (red is 3 times as likely as green; no number means 1; only in {...} groups, not in "
+                   "wildcard list lines; step through ignores weights). Lists come from the wildcards box or from "
                    "wildcards/<name>.txt in the input folder. Replaces a prompt-random node plus a list loader plus a text note.")
     CATEGORY = category("Text")
     FUNCTION = "run"
@@ -354,7 +417,7 @@ class SYWildcardPrompt:
         return {
             "required": {
                 "text": ("STRING", {"multiline": True, "default": "a {red|blue|green} coat at {sunrise|sunset}",
-                                    "tooltip": "Template. {a|b} picks one, {2$$a|b|c} two, __name__ a list line. Example: a {red|blue} coat"}),
+                                    "tooltip": "Template. {a|b} picks one, {2$$a|b|c} two, __name__ a list line, {3::a|1::b} weighted. Example: a {3::red|1::blue} coat"}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": MAX_SEED, "control_after_generate": True,
                                  "tooltip": "Same seed gives the same prompt. Example: 12345"}),
                 "mode": (list(MODES), {"default": MODES[0], "tooltip": "random from seed, or step through the combinations with index."}),
