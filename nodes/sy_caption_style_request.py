@@ -14,14 +14,14 @@ STYLE_NAMES = tuple(STYLES)
 DEFAULT_WORDS = {"short": 20, "detailed": 120, "tags": 40, "training caption": 60}
 
 
-def caption_request(style="short", max_words=0, trigger_word="", subject_hint="", notes=""):
+def caption_request(style="short", max_words=0, trigger_word="", subject_hint="", notes="", avoid=""):
     """Pure function. max_words 0 means use the default for the style. It only builds text, it never calls an LLM."""
     if style not in STYLES:
         raise ValueError("style must be one of: %s (got %r)" % (", ".join(STYLE_NAMES), style))
     max_words = int(max_words)
     if max_words < 0:
         raise ValueError("max_words must be 0 (automatic) or more, got %d" % max_words)
-    for label, value in (("trigger_word", trigger_word), ("subject_hint", subject_hint), ("notes", notes)):
+    for label, value in (("trigger_word", trigger_word), ("subject_hint", subject_hint), ("notes", notes), ("avoid", avoid)):
         if not isinstance(value, str):
             raise ValueError("%s must be text, got %s" % (label, type(value).__name__))
     words = max_words or DEFAULT_WORDS[style]
@@ -32,16 +32,31 @@ def caption_request(style="short", max_words=0, trigger_word="", subject_hint=""
         lines.append("Begin the caption with the exact word or phrase: " + trigger_word.strip())
     if notes.strip():
         lines.append("Also: " + notes.strip())
+    banned = [w.strip() for w in avoid.replace("\n", ",").split(",") if w.strip()]
+    if banned:
+        lines.append("Never use these words: " + ", ".join(banned) + ".")
     lines.append("Do not guess names or ages. Reply with the caption only.")
     return "\n".join(lines)
 
 
+def request_info(style, max_words=0, trigger_word="", avoid=""):
+    """Pure function. One plain line about the request: style, word limit, rough token size, trigger word."""
+    words = int(max_words) or DEFAULT_WORDS[style]
+    bits = ["Style %s, up to %d words (about %d tokens of answer)" % (style, words, int(words * 1.4) + 1)]
+    bits.append("starts with %s" % trigger_word.strip() if trigger_word.strip() else "no trigger word")
+    n = len([w for w in avoid.replace("\n", ",").split(",") if w.strip()])
+    if n:
+        bits.append("%d word%s banned" % (n, "" if n == 1 else "s"))
+    return ", ".join(bits) + "."
+
+
 class SYCaptionStyleRequest:
-    DESCRIPTION = "Builds a request that asks an LLM to caption an image: short, detailed, tags or training caption. It only builds the text."
+    DESCRIPTION = ("Builds a request that asks an LLM to caption an image: short, detailed, tags or training caption, with an optional "
+                   "trigger word and a list of words it must not use. An info line gives the word limit. It only builds the text.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("request",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("request", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -54,11 +69,13 @@ class SYCaptionStyleRequest:
                 "trigger_word": ("STRING", {"default": "", "tooltip": "A word the caption must start with, often used in training."}),
                 "subject_hint": ("STRING", {"default": "", "tooltip": "What the image shows, if you know it. Helps the model."}),
                 "notes": ("STRING", {"multiline": True, "default": "", "tooltip": "Extra wishes, for example: mention the background."}),
+                "avoid_words": ("STRING", {"default": "", "tooltip": "Words the caption must not use, separated by commas, for example: beautiful, stunning."}),
             },
         }
 
-    def run(self, style, max_words, trigger_word="", subject_hint="", notes=""):
-        return (caption_request(style, max_words, trigger_word, subject_hint, notes),)
+    def run(self, style, max_words, trigger_word="", subject_hint="", notes="", avoid_words=""):
+        return (caption_request(style, max_words, trigger_word, subject_hint, notes, avoid_words),
+                request_info(style, max_words, trigger_word, avoid_words))
 
 
 NODE_CLASS_MAPPINGS = {}

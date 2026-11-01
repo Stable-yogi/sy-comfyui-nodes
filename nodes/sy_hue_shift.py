@@ -4,9 +4,11 @@ import math
 try:
     from ._sy_common import category, register
     from ._sy_image_ops import need_image
+    from . import _sy_d2_common as d2
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
     from _sy_image_ops import need_image
+    import _sy_d2_common as d2
 
 YIQ = [[0.299, 0.587, 0.114], [0.596, -0.274, -0.322], [0.211, -0.523, 0.312]]
 
@@ -57,12 +59,21 @@ def shift_pixel(rgb, degrees, strength):
     return tuple(out)
 
 
+def hue_info(degrees, strength, note=""):
+    """Pure function. One plain line about what was done."""
+    if degrees == 0.0 or strength <= 0.0:
+        return "Nothing to change (0 degrees or strength 0): the colours were kept."
+    word = "" if strength >= 1.0 else " at %d%% strength" % round(strength * 100)
+    return d2.join_info(["Turned the colours %+g degrees around the colour wheel%s" % (degrees, word), note]) + "."
+
+
 class SYHueShift:
-    DESCRIPTION = "Rotates all colours around the colour wheel. Greys stay grey."
+    DESCRIPTION = ("Rotates all colours around the colour wheel. Greys stay grey and transparency is kept. "
+                   "Add a mask to recolour only one area, for example a dress.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -71,20 +82,25 @@ class SYHueShift:
                 "image": ("IMAGE", {"tooltip": "The picture or batch of pictures to recolour."}),
                 "degrees": ("FLOAT", {"default": 0.0, "min": -180.0, "max": 180.0, "step": 1.0, "tooltip": "How far to turn the colours. 180 swaps each colour for roughly its opposite."}),
                 "strength": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01, "tooltip": "How much of the shifted colour to use. 0 keeps the original."}),
-            }
+            },
+            "optional": {
+                "mask": ("MASK", {"tooltip": "Optional. Change only where this mask is white. A different size is stretched to fit."}),
+            },
         }
 
-    def run(self, image, degrees, strength):
+    def run(self, image, degrees, strength, mask=None):
         import torch
 
         need_image(image)
+        d2.need_rgb(image, "Hue Shift")
         check_settings(degrees, strength)
         out = image.clone()
         rgb = image[..., :3].to(torch.float32)
         m = torch.tensor(hue_matrix(degrees), dtype=torch.float32, device=image.device)
         shifted = torch.einsum("ij,bhwj->bhwi", m, rgb).clamp(0.0, 1.0)
         out[..., :3] = (rgb + (shifted - rgb) * float(strength)).to(image.dtype)
-        return (out,)
+        out, note = d2.t_apply_with_mask(image, out, mask)
+        return (out, hue_info(degrees, strength, note))
 
 
 NODE_CLASS_MAPPINGS = {}

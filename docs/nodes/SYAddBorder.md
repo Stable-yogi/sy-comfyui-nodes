@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_add_border.py`
 
-**What it does:** Adds a coloured border around a picture. Outside makes the picture bigger; inside paints over the edge. Also gives a mask of the border.
+**What it does:** Adds a coloured border around a picture. Outside makes the picture bigger; inside paints over the edge. Also gives a mask of the border, and can round the new size up to a multiple of 8 or 64. Says what it did.
 
 ## Inputs
 
@@ -12,5 +12,6 @@ Source: `nodes/sy_add_border.py`
 | size | INT | yes | Border thickness in pixels. 0 changes nothing. | 0 to 1024, step 1, default 16 |
 | colour | STRING | yes | Border colour, as 3 or 6 hex digits like a web colour. | default '#000000' |
 | mode | COMBO | yes | outside grows the picture; inside keeps the size and paints the edge. | one of: outside, inside |
+| multiple_of | INT | no | Outside mode: round the new width and height up to this multiple, for example 8 or 64. 1 = off. | 1 to 512, step 1, default 1 |
 
-Outputs: `IMAGE`, `MASK`
+Outputs: `IMAGE`, `MASK`, `STRING`

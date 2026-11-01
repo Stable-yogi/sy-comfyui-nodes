@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_aspect_bucket.py`
 
-**What it does:** Picks the training size whose shape is closest to your picture, for example 1344x768 for a wide picture.
+**What it does:** Picks the training size whose shape is closest to your picture, for example 1344x768 for a wide picture. Also tells you the megapixels and how much the shape had to bend, in plain words.
 
 ## Inputs
 
@@ -15,4 +15,4 @@ Source: `nodes/sy_aspect_bucket.py`
 | target_resolution | INT | yes | Side of the square the bucket area is based on. 1024 gives about one megapixel. | 64 to 8192, default 1024 |
 | multiple_of | INT | yes | Bucket width and height are rounded to a multiple of this number. | 1 to 512, default 64 |
 
-Outputs: `INT`, `INT`, `STRING`
+Outputs: `INT`, `INT`, `STRING`, `STRING`

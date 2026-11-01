@@ -33,5 +33,24 @@ def run():
     for bad in (("4k", "16:9", 16), ("720p", "4:3", 16), ("720p", "16:9", 8), ("720p", "16:9", 0), (None, "1:1", 16)):
         assert _raises(*bad), bad
         n += 1
-    assert m.SYVideoSizePresets().run("720p", "16:9", "16") == (1280, 720); n += 1
+    assert m.SYVideoSizePresets().run("720p", "16:9", "16")[:2] == (1280, 720); n += 1
+    return n + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.video_report('720p', '16:9', 16)[:2] == (1280, 720))
+    n += ok(m.video_report('720p', '16:9', 16)[2] == '720p 16:9, multiple of 16: 1280x720 (0.92 MP, ratio 16:9, multiple of 16)')
+    n += ok(m.video_report('1080p', '9:16', 32)[:2] == m.video_size('1080p', '9:16', 32))
+    n += ok(rs(m.video_report, '4k', '16:9', 16) is not None)
+    n += ok(len(m.SYVideoSizePresets().run('720p', '1:1', '32')) == 3)
     return n

@@ -38,12 +38,35 @@ def interp_plan(total, between, loop=False):
     return plan
 
 
+def new_fps(fps, between):
+    """Pure function. Frame rate that keeps the same speed after `between` frames were inserted. 0 stays 0 (unknown)."""
+    if fps < 0:
+        raise ValueError("fps cannot be negative, got %s" % fps)
+    return float(fps) * (int(between) + 1)
+
+
+def blend_info(total, between, loop, count, fps, width, height):
+    """Pure function. One plain line: frames before and after, new frame rate, memory."""
+    mb = count * width * height * 3 * 4 / 1048576.0
+    text = "%d frames -> %d frames (%d blend frame(s) between each pair%s), %dx%d" % (
+        total, count, between, ", last blends into first" if loop else "", width, height)
+    if fps > 0:
+        text += "; set the video frame rate to %g (was %g) to keep the same speed" % (new_fps(fps, between), fps)
+    else:
+        text += "; enter your frame rate in fps to get the matching new rate"
+    text += "; about %.0f MB in memory" % mb
+    if mb > 4096:
+        text += " - that is a lot, lower between if the card runs out of memory"
+    return text + "."
+
+
 class SYFrameInterpolateBlend:
-    DESCRIPTION = "Inserts cross-fade frames between neighbouring frames. This is a plain blend, not motion interpolation, so fast motion looks ghosted."
+    DESCRIPTION = ("Inserts cross-fade frames between neighbouring frames. This is a plain blend, not motion interpolation, so fast "
+                   "motion looks ghosted. Enter your fps to get the new frame rate that keeps the same speed.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE", "INT")
-    RETURN_NAMES = ("images", "count")
+    RETURN_TYPES = ("IMAGE", "INT", "FLOAT", "STRING")
+    RETURN_NAMES = ("images", "count", "new_fps", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -52,10 +75,13 @@ class SYFrameInterpolateBlend:
                 "images": ("IMAGE", {"tooltip": "The frames to add blend frames to. Needs at least 2."}),
                 "between": ("INT", {"default": 1, "min": 1, "max": 32, "tooltip": "How many blend frames to insert between each pair of frames."}),
                 "loop": ("BOOLEAN", {"default": False, "tooltip": "Also blend from the last frame back to the first, for a looping clip."}),
-            }
+            },
+            "optional": {
+                "fps": ("FLOAT", {"default": 0.0, "min": 0.0, "max": 1000.0, "step": 0.1, "tooltip": "Frame rate of the original clip, for example 16. 0 means unknown."}),
+            },
         }
 
-    def run(self, images, between, loop):
+    def run(self, images, between, loop, fps=0.0):
         import torch
 
         check_shape(images.shape)
@@ -64,7 +90,8 @@ class SYFrameInterpolateBlend:
         ib = torch.tensor([p[1] for p in plan], dtype=torch.long, device=images.device)
         w = torch.tensor([p[2] for p in plan], dtype=images.dtype, device=images.device).view(-1, 1, 1, 1)
         out = images[ia] * (1.0 - w) + images[ib] * w
-        return (out, int(out.shape[0]))
+        info = blend_info(images.shape[0], int(between), bool(loop), int(out.shape[0]), float(fps), images.shape[2], images.shape[1])
+        return (out, int(out.shape[0]), new_fps(float(fps), between), info)
 
 
 NODE_CLASS_MAPPINGS = {}

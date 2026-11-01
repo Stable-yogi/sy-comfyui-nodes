@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_video_size_fit.py`
 
-**What it does:** Gives a new width and height with the same shape that stays inside a pixel budget and is a multiple of a number.
+**What it does:** Gives a new width and height with the same shape that stays inside a pixel budget and is a multiple of a number. An optional max_side also limits the longer side. The info line says what was done, or that the size already fits.
 
 ## Inputs
 
@@ -12,5 +12,6 @@ Source: `nodes/sy_video_size_fit.py`
 | height | INT | yes | Current height in pixels. | 1 to 16384, default 720 |
 | max_pixels | FLOAT | yes | Pixel budget in megapixels. The result never goes above it. | 0.001 to 1000.0, step 0.01, default 0.9 |
 | multiple_of | INT | yes | Width and height are rounded to a multiple of this number. | 1 to 256, default 32 |
+| max_side | INT | no | 0 is off. Example: 1280 also keeps the longer side at or under 1280 pixels. | 0 to 16384, default 0 |
 
-Outputs: `INT`, `INT`
+Outputs: `INT`, `INT`, `STRING`

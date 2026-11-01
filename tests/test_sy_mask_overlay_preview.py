@@ -33,4 +33,24 @@ def run():
     n += 1
     assert raises(m.overlay, img, mask, 255, 0, 0, 2.0) and raises(m.overlay, img, mask, 300, 0, 0, 0.5)
     n += 1
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    i1 = m.overlay_info(64, 32, 64, 32, 1, 1, 512, 2048)
+    _c("25.0%" in i1 and "stretched" not in i1 and "batch" not in i1)
+    _c("stretched to the picture size 64x32" in m.overlay_info(64, 32, 8, 8, 1, 1, 10, 2048))
+    _c("repeated or cut" in m.overlay_info(64, 32, 64, 32, 4, 2, 10, 2048))
+    _c("empty" in m.overlay_info(64, 32, 64, 32, 1, 1, 0, 2048))
+    _c("flipped" in m.overlay_info(64, 32, 64, 32, 1, 1, 5, 2048, True))
+    _c(m.SYMaskOverlayPreview.RETURN_NAMES == ("image", "info"))
+    _c(list(m.SYMaskOverlayPreview.INPUT_TYPES()["required"])[:2] == ["image", "mask"] and "invert_mask" in m.SYMaskOverlayPreview.INPUT_TYPES()["optional"])
+    return (n) + _k[0]

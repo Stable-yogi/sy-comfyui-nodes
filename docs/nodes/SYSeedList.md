@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_seed_list.py`
 
-**What it does:** Makes a comma list of seeds. Sequential counts up. Random fixed looks random but is the same every run.
+**What it does:** Makes a comma list of seeds. Sequential counts up. Random fixed looks random but is the same every run. Also gives the last seed (so the next list can start after it) and an info line.
 
 ## Inputs
 
@@ -12,4 +12,4 @@ Source: `nodes/sy_seed_list.py`
 | count | INT | yes | How many seeds to make (1 to 64). | 1 to 64, default 4 |
 | mode | COMBO | yes | Sequential: base, base+1... Random fixed: scattered numbers, repeatable. | one of: sequential, random_fixed |
 
-Outputs: `STRING`, `INT`
+Outputs: `STRING`, `INT`, `INT`, `STRING`

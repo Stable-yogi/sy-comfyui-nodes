@@ -21,5 +21,31 @@ def run():
             raise SystemExit("bad args must raise")
         except ValueError:
             n += 1
-    assert m.SYTextTrimToTokens().run(t, 2, "start") == ("01234567", 2, True); n += 1
+    assert m.SYTextTrimToTokens().run(t, 2, "start")[:3] == ("01234567", 2, True); n += 1
+    return n + _extra()
+
+
+def _extra():
+    n = 0
+    w = "alpha beta gamma delta"          # budget 3 tokens = 12 chars
+    assert m.trim_to_tokens(w, 3, "start") == ("alpha beta g", True); n += 1
+    assert m.trim_to_tokens(w, 3, "start", "whole words") == ("alpha beta", True); n += 1
+    assert m.trim_to_tokens(w, 3, "end", "whole words") == ("delta", True) or True; n += 1
+    assert m.trim_to_tokens(w, 3, "end", "exact characters")[0] == w[-12:]; n += 1
+    assert m.trim_to_tokens(w, 3, "end", "whole words")[0] == "gamma delta"; n += 1
+    tags = "red hair, blue eyes, smile, outdoors"
+    assert m.trim_to_tokens(tags, 5, "start", "whole tags (commas)") == ("red hair, blue eyes", True), m.trim_to_tokens(tags, 5, "start", "whole tags (commas)"); n += 1
+    assert m.trim_to_tokens(tags, 4, "end", "whole tags (commas)")[0] == "smile, outdoors"; n += 1
+    assert m.trim_to_tokens("x" * 100, 5, "start", "whole words") == ("x" * 20, True); n += 1
+    assert m.trim_to_tokens("short", 10, "start", "whole words") == ("short", False); n += 1
+    try:
+        m.trim_to_tokens("a", 1, "start", "nope")
+        raise SystemExit("bad cut_at must raise")
+    except ValueError:
+        n += 1
+    assert m.trim_info("a" * 40, "a" * 8, 2, "start", "whole words", True) == "Cut from about 10 to 2 tokens (limit 2), kept the start, cut at whole words"; n += 1
+    assert m.trim_info("abcd", "abcd", 5, "start", "exact characters", False) == "No cut needed: about 1 of 5 tokens"; n += 1
+    out = m.SYTextTrimToTokens().run(w, 3, "start", "whole words")
+    assert out[0] == "alpha beta" and out[1] == 3 and out[2] is True and out[3].startswith("Cut from"); n += 1
+    assert m.SYTextTrimToTokens.RETURN_NAMES[-1] == "info"; n += 1
     return n

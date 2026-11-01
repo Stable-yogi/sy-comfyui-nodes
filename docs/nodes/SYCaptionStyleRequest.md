@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_caption_style_request.py`
 
-**What it does:** Builds a request that asks an LLM to caption an image: short, detailed, tags or training caption. It only builds the text.
+**What it does:** Builds a request that asks an LLM to caption an image: short, detailed, tags or training caption, with an optional trigger word and a list of words it must not use. An info line gives the word limit. It only builds the text.
 
 ## Inputs
 
@@ -13,5 +13,6 @@ Source: `nodes/sy_caption_style_request.py`
 | trigger_word | STRING | no | A word the caption must start with, often used in training. | default '' |
 | subject_hint | STRING | no | What the image shows, if you know it. Helps the model. | default '' |
 | notes | STRING | no | Extra wishes, for example: mention the background. | default '', multiline |
+| avoid_words | STRING | no | Words the caption must not use, separated by commas, for example: beautiful, stunning. | default '' |
 
-Outputs: `STRING`
+Outputs: `STRING`, `STRING`

@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_threshold.py`
 
-**What it does:** Makes a black and white picture: brighter than the level becomes white, darker becomes black. Also gives a mask.
+**What it does:** Makes a black and white picture: brighter than the level becomes white, darker becomes black. Also gives a mask. Can cut on one colour channel instead of brightness, and the info output says how much turned white.
 
 ## Inputs
 
@@ -12,5 +12,6 @@ Source: `nodes/sy_threshold.py`
 | level | FLOAT | yes | Brightness where black turns to white. Higher means more of the picture goes black. | 0.0 to 1.0, step 0.01, default 0.5 |
 | softness | FLOAT | yes | Width of a smooth grey ramp around the level. 0 gives a hard edge. | 0.0 to 0.5, step 0.01, default 0.0 |
 | invert | BOOLEAN | yes | Swap black and white. | default False |
+| channel | COMBO | no | What to cut on: normal brightness, one colour channel, or the highest of red, green and blue. | one of: brightness, red, green, blue, highest |
 
-Outputs: `IMAGE`, `MASK`
+Outputs: `IMAGE`, `MASK`, `STRING`

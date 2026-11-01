@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_prompt_sections.py`
 
-**What it does:** Joins prompt parts (subject, setting, lighting, camera, style, extra) into one prompt. Empty parts are skipped.
+**What it does:** Joins prompt parts (subject, setting, lighting, camera, style, extra) into one prompt. Empty parts are skipped, repeated tags can be removed, and the info line shows which parts were used and the size.
 
 ## Inputs
 
@@ -16,5 +16,6 @@ Source: `nodes/sy_prompt_sections.py`
 | camera | STRING | no | Camera, lens and angle. | default '', multiline |
 | style | STRING | no | The look: painting, photo, anime and so on. | default '', multiline |
 | extra | STRING | no | Anything else you want to add at the end. | default '', multiline |
+| remove_repeats | BOOLEAN | no | On: a comma tag already used in an earlier part is dropped. Not with label_colon. | default False |
 
-Outputs: `STRING`, `INT`
+Outputs: `STRING`, `INT`, `STRING`

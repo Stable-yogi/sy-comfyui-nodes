@@ -16,7 +16,7 @@ def run():
     assert c(0, -4, 1, 4) == -4
     assert c(9, -4, 1, 4) == -4
     assert c(3, 0, 0, 5) == 0                                             # step 0 never moves
-    assert m.SYCounter().run(4, 0, 1, 3, True) == (0,)
+    assert m.SYCounter().run(4, 0, 1, 3, True)[0] == 0
     for bad in ((-1, 0, 1, 3), (1.5, 0, 1, 3), (True, 0, 1, 3), (0, 0, 1, -1), (0, "a", 1, 3)):
         try:
             c(*bad)
@@ -24,5 +24,18 @@ def run():
         except ValueError as e:
             assert str(e)
     assert c(0, 0, 1, -1, False) == 0                                     # max ignored when wrap is off
-    assert m.SYCounter.RETURN_TYPES == ("INT",)
-    return 17
+    # new: lap and info
+    assert m.counter_details(0, 0, 1, 3) == (0, 0, "Run 0: 0 + 1 x 0 = 0 (inside 0..3)")
+    assert m.counter_details(5, 0, 1, 3)[:2] == (1, 1)
+    assert "wrapped into 0..3 -> 1 (round 2)" in m.counter_details(5, 0, 1, 3)[2]
+    assert [m.counter_details(i, 0, 1, 3)[1] for i in range(9)] == [0, 0, 0, 0, 1, 1, 1, 1, 2]
+    assert m.counter_details(5, 10, 1, 12, False) == (15, 0, "Run 5: 10 + 1 x 5 = 15")
+    assert m.counter_details(2, 10, -1, 12)[:2] == (11, 0)
+    assert m.SYCounter().run(7, 0, 1, 3, True)[:2] == (3, 1)
+    try:
+        m.counter_details(0, 5, 1, 2)
+        raise SystemExit("must raise")
+    except ValueError as e:
+        assert "max_value" in str(e) and "wrap" in str(e)
+    assert m.SYCounter.RETURN_TYPES == ("INT", "INT", "STRING") and len(m.SYCounter.RETURN_NAMES) == 3
+    return 27

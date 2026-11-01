@@ -27,11 +27,12 @@ def repeat_indices(total, times, mode):
 
 
 class SYBatchRepeat:
-    DESCRIPTION = "Repeats each picture N times in a row, or repeats the whole batch N times."
+    DESCRIPTION = ("Repeats each picture N times in a row, or repeats the whole batch N times. "
+                   "Refuses plainly when the result would be too big, and tells you the new count.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE", "INT")
-    RETURN_NAMES = ("images", "count")
+    RETURN_TYPES = ("IMAGE", "INT", "STRING")
+    RETURN_NAMES = ("images", "count", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -46,7 +47,8 @@ class SYBatchRepeat:
     def run(self, images, times, mode):
         check_shape(images.shape)
         ids = repeat_indices(images.shape[0], times, mode)
-        return (images[ids], len(ids))
+        info = "%d pictures x %d (%s) = %d pictures" % (images.shape[0], times, mode.replace("_", " "), len(ids))
+        return (images[ids], len(ids), info)
 
 
 NODE_CLASS_MAPPINGS = {}

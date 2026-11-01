@@ -4,10 +4,10 @@ Four workflows that together hold every SY node. Use them to check that all node
 
 | Workflow file | Groups | Nodes |
 |---|---|---|
-| `StableYogi-SY-Test-1-Text.json` | Text | 59 |
-| `StableYogi-SY-Test-2-Picture.json` | Image, Resize | 82 |
-| `StableYogi-SY-Test-3-Tools.json` | Utility, Editors | 68 |
-| `StableYogi-SY-Test-4-Numbers-Logic.json` | Values, Logic, Notes | 35 |
+| `StableYogi-SY-Test-1-Text.json` | Text | 65 |
+| `StableYogi-SY-Test-2-Picture.json` | Image, Resize | 99 |
+| `StableYogi-SY-Test-3-Tools.json` | Utility, Editors | 77 |
+| `StableYogi-SY-Test-4-Numbers-Logic.json` | Values, Logic, Notes | 40 |
 
 Each file also holds the nodes that feed its nodes (a picture, a mask, a seed), in a group called HELPERS or SOURCES. Each node has a Result box next to it.
 

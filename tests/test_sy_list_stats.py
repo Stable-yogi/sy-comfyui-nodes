@@ -46,7 +46,29 @@ def run():
     msg = raises(m.list_stats, [])
     assert msg and "numbers is empty" in msg; n += 1
     r = m.SYListStats().run("4 8")
-    assert r[0] == 2 and r[2] == 6.0 and len(r) == 7; n += 1
+    assert r[0] == 2 and r[2] == 6.0 and len(r) == 10; n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYListStats"] == "List Stats SY"; n += 1
     assert m.SYListStats.CATEGORY == "SY/Values"; n += 1
+    return n + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.parse_numbers_lenient('1, x, 3 5px') == ([1.0, 3.0], ['x', '5px']))
+    n += ok('not a number' not in (rs(m.parse_numbers_lenient, 'a b') or '') and rs(m.parse_numbers_lenient, 'a b') is not None)
+    n += ok(m.stats_extras([2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0])[0] == 2.0)
+    n += ok(m.stats_extras([3.0, 1.0, 2.0])[1] == '1, 2, 3')
+    n += ok('2 skipped' in m.stats_extras([1.0], ['x', 'y'])[2])
+    n += ok(m.SYListStats().run('1 x 3', True)[0] == 2)
+    n += ok(rs(m.SYListStats().run, '1 x 3') is not None)
+    n += ok(m.SYListStats().run('4 8')[8] == '4, 8')
     return n

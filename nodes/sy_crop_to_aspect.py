@@ -26,12 +26,26 @@ def crop_box(width, height, aspect_w, aspect_h, offset_x=0.0, offset_y=0.0):
     return (x, y, cw, ch)
 
 
+def snap_size(cw, ch, multiple_of):
+    """Pure function. Shrinks the crop to a multiple of `multiple_of` (never below one step, never above the crop)."""
+    if multiple_of < 1:
+        raise ValueError("multiple_of must be 1 or more, got %s" % multiple_of)
+    if multiple_of == 1:
+        return cw, ch
+    return max(1, min(cw, cw // multiple_of * multiple_of or cw)), max(1, min(ch, ch // multiple_of * multiple_of or ch))
+
+
+def crop_info(width, height, x, y, cw, ch):
+    """Pure function. One plain sentence."""
+    return "Cropped %dx%d -> %dx%d (took x=%d, y=%d)" % (width, height, cw, ch, x, y)
+
+
 class SYCropToAspect:
-    DESCRIPTION = "Crops a picture to a shape such as 16:9 or 1:1. Takes the biggest area of that shape, centred or moved with the offsets."
+    DESCRIPTION = "Crops a picture to a shape such as 16:9 or 1:1. Takes the biggest area of that shape, centred or moved with the offsets. Can snap the size to a multiple of 8 or 64 and says what it took."
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE", "INT", "INT")
-    RETURN_NAMES = ("image", "width", "height")
+    RETURN_TYPES = ("IMAGE", "INT", "INT", "STRING")
+    RETURN_NAMES = ("image", "width", "height", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -42,13 +56,20 @@ class SYCropToAspect:
                 "aspect_h": ("INT", {"default": 9, "min": 1, "max": 1000, "tooltip": "Height part of the shape, the 9 in 16:9."}),
                 "offset_x": ("FLOAT", {"default": 0.0, "min": -1.0, "max": 1.0, "step": 0.01, "tooltip": "Moves the crop sideways. -1 is left, 0 is centre, 1 is right."}),
                 "offset_y": ("FLOAT", {"default": 0.0, "min": -1.0, "max": 1.0, "step": 0.01, "tooltip": "Moves the crop up or down. -1 is top, 0 is centre, 1 is bottom."}),
-            }
+            },
+            "optional": {
+                "multiple_of": ("INT", {"default": 1, "min": 1, "max": 512, "step": 1, "tooltip": "Trim the crop so width and height are multiples of this, for example 8 or 64. 1 = off."}),
+            },
         }
 
-    def run(self, image, aspect_w, aspect_h, offset_x, offset_y):
+    def run(self, image, aspect_w, aspect_h, offset_x, offset_y, multiple_of=1):
         need_image(image)
         x, y, cw, ch = crop_box(image.shape[2], image.shape[1], aspect_w, aspect_h, offset_x, offset_y)
-        return (image[:, y:y + ch, x:x + cw, :].contiguous(), cw, ch)
+        if multiple_of > 1:
+            cw, ch = snap_size(cw, ch, multiple_of)
+            x = min(x, image.shape[2] - cw)
+            y = min(y, image.shape[1] - ch)
+        return (image[:, y:y + ch, x:x + cw, :].contiguous(), cw, ch, crop_info(image.shape[2], image.shape[1], x, y, cw, ch))
 
 
 NODE_CLASS_MAPPINGS = {}

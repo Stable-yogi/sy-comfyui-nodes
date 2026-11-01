@@ -2,9 +2,11 @@
 try:
     from ._sy_common import category, register
     from ._sy_image_ops import clamp01, need_image
+    from ._sy_d1_finish import MASK_TIP, MIX_TIP, ENABLED_TIP, finish_rgb, info_line
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
     from _sy_image_ops import clamp01, need_image
+    from _sy_d1_finish import MASK_TIP, MIX_TIP, ENABLED_TIP, finish_rgb, info_line
 
 ANGLES = ("top_left", "top", "top_right", "left", "right", "bottom_left", "bottom", "bottom_right")
 # The eight outer cells of the 3x3 kernel, clockwise from the top left corner.
@@ -61,11 +63,12 @@ def emboss_plane(plane, strength, angle):
 
 
 class SYEmboss:
-    DESCRIPTION = "Turns a picture into a grey relief, as if pressed into metal. The angle sets where the light comes from."
+    DESCRIPTION = ("Turns a picture into a grey relief, as if pressed into metal. The angle sets where the light comes from. "
+                   "Adds a mix slider (blend the relief into the original), a mask, an on/off switch and an info line, and keeps transparency.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -74,24 +77,32 @@ class SYEmboss:
                 "image": ("IMAGE", {"tooltip": "The picture or batch of pictures to change."}),
                 "strength": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 10.0, "step": 0.1, "tooltip": "How deep the relief looks. 0 gives flat grey."}),
                 "angle": (list(ANGLES), {"default": "top_left", "tooltip": "The side the light comes from."}),
-            }
+            },
+            "optional": {
+                "mask": ("MASK", {"tooltip": MASK_TIP}),
+                "mix": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01, "tooltip": MIX_TIP}),
+                "enabled": ("BOOLEAN", {"default": True, "tooltip": ENABLED_TIP}),
+            },
         }
 
-    def run(self, image, strength, angle):
+    def run(self, image, strength, angle, mask=None, mix=1.0, enabled=True):
         import torch
         import torch.nn.functional as F
 
         need_image(image)
         check_strength(strength)
+        check_angle(angle)
+        detail = "strength %g, light from %s" % (strength, angle.replace("_", " "))
+        if not enabled:
+            return (image, info_line("Emboss", False, mix, mask is not None))
         k = torch.tensor(emboss_kernel(angle), dtype=torch.float32, device=image.device).view(1, 1, 3, 3)
         rgb = image[..., :3].to(torch.float32)
         luma = (0.2126 * rgb[..., 0] + 0.7152 * rgb[..., 1] + 0.0722 * rgb[..., 2]).unsqueeze(1)
         padded = F.pad(luma, (1, 1, 1, 1), mode="replicate")
         conv = F.conv2d(padded, k)
         res = (0.5 + float(strength) * (conv - luma)).clamp(0.0, 1.0).squeeze(1).unsqueeze(-1)
-        out = image.clone()
-        out[..., :3] = res.expand(-1, -1, -1, 3).to(image.dtype)
-        return (out,)
+        out = finish_rgb(image, res.expand(-1, -1, -1, 3), mask, mix, True)
+        return (out, info_line("Emboss", True, mix, mask is not None, detail))
 
 
 NODE_CLASS_MAPPINGS = {}

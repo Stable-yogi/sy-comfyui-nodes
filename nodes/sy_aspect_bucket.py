@@ -57,12 +57,20 @@ def pick_bucket(width, height, buckets_text=DEFAULT_BUCKETS, target=1024, multip
     return bw, bh, "%d:%d" % best
 
 
+def bucket_info(width, height, bw, bh, label):
+    """Pure function. One plain sentence: picture shape, chosen bucket and how far the shapes differ."""
+    off = abs(math.log((bw / float(bh)) / (width / float(height)))) * 100.0
+    return "%dx%d picture matches bucket %s -> %dx%d (%.1f MP, shape differs by %.1f%%)" % (
+        width, height, label, bw, bh, bw * bh / 1e6, off)
+
+
 class SYAspectBucket:
-    DESCRIPTION = "Picks the training size whose shape is closest to your picture, for example 1344x768 for a wide picture."
+    DESCRIPTION = ("Picks the training size whose shape is closest to your picture, for example 1344x768 for a wide picture. "
+                   "Also tells you the megapixels and how much the shape had to bend, in plain words.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("INT", "INT", "STRING")
-    RETURN_NAMES = ("bucket_width", "bucket_height", "ratio")
+    RETURN_TYPES = ("INT", "INT", "STRING", "STRING")
+    RETURN_NAMES = ("bucket_width", "bucket_height", "ratio", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -78,7 +86,8 @@ class SYAspectBucket:
         }
 
     def run(self, width, height, buckets, include_flips, target_resolution, multiple_of):
-        return pick_bucket(width, height, buckets, target_resolution, multiple_of, include_flips)
+        bw, bh, label = pick_bucket(width, height, buckets, target_resolution, multiple_of, include_flips)
+        return (bw, bh, label, bucket_info(width, height, bw, bh, label))
 
 
 NODE_CLASS_MAPPINGS = {}

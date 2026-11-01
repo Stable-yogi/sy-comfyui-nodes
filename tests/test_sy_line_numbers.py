@@ -42,5 +42,16 @@ def run():
     assert raises(m.number_lines, ["a"], -1000001, ". ", False, False); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYLineNumbers"] == "Line Numbers SY"; n += 1
     assert m.SYLineNumbers.CATEGORY == "SY/Text"; n += 1
-    assert m.SYLineNumbers().run("a\r\nb\n\nc", 1, ". ", False, True) == ("1. a\n2. b\n\n3. c", 3); n += 1
+    assert m.SYLineNumbers().run("a\r\nb\n\nc", 1, ". ", False, True) == ("1. a\n2. b\n\n3. c", 3, "Numbered 3 lines, starting at 1."); n += 1
+    assert m.strip_numbers(["1. a", "2. b"], ". ") == (["a", "b"], 2); n += 1
+    assert m.strip_numbers(["10) a", "b", "3 c", "-1. d"], ". ") == (["a", "b", "c", "d"], 3); n += 1
+    assert m.strip_numbers(["01 a", "02 b"], " ") == (["a", "b"], 2); n += 1
+    assert m.strip_numbers(["1.a"], ".") == (["a"], 1); n += 1
+    assert m.strip_numbers(["2024 was good"], ". ") == (["was good"], 1); n += 1
+    assert m.strip_numbers(["no number", ""], ". ") == (["no number", ""], 0); n += 1
+    assert m.SYLineNumbers().run("1. a\n2. b\nc", 1, ". ", False, False, "remove numbers") == ("a\nb\nc", 2, "Removed the number from 2 of 3 lines."); n += 1
+    assert m.SYLineNumbers().run("", 1, ". ", False, True)[2] == "Numbered 0 lines: nothing to number."; n += 1
+    assert m.SYLineNumbers().run("a", 5, ". ", False, False)[2] == "Numbered 1 line, starting at 5."; n += 1
+    assert raises(lambda: m.SYLineNumbers().run("a", 1, ". ", False, False, "flip")); n += 1
+    assert m.SYLineNumbers.RETURN_NAMES == ("text", "count", "info"); n += 1
     return n

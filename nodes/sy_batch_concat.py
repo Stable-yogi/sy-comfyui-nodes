@@ -7,12 +7,23 @@ except ImportError:  # run as a plain file by the selftest
     from _sy_batchtools import concat_plan, concat_tensors
 
 
+def concat_info(counts, width, height, resized):
+    """Pure function. One plain sentence about a join. counts is the picture count of each part."""
+    if not counts:
+        raise ValueError("nothing to join: connect at least two batches")
+    total = sum(counts)
+    parts = "+".join(str(c) for c in counts)
+    note = ", other sizes were resized to match the first" if resized else ""
+    return "Joined %d batches (%s = %d pictures) at %dx%d%s" % (len(counts), parts, total, width, height, note)
+
+
 class SYBatchConcat:
-    DESCRIPTION = "Joins two to four picture batches into one batch, in order. Other sizes can be resized to match the first."
+    DESCRIPTION = ("Joins two to four picture batches into one batch, in order. Other sizes can be resized to match the first. "
+                   "Also tells you how many pictures each part gave and the final size.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE", "INT")
-    RETURN_NAMES = ("images", "count")
+    RETURN_TYPES = ("IMAGE", "INT", "STRING")
+    RETURN_NAMES = ("images", "count", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -31,7 +42,9 @@ class SYBatchConcat:
     def run(self, image_1, image_2, resize_to_first, image_3=None, image_4=None):
         parts = [t for t in (image_1, image_2, image_3, image_4) if t is not None]
         out = concat_tensors(parts, bool(resize_to_first))
-        return (out, int(out.shape[0]))
+        sizes = set((int(t.shape[2]), int(t.shape[1])) for t in parts)
+        info = concat_info([int(t.shape[0]) for t in parts], int(out.shape[2]), int(out.shape[1]), len(sizes) > 1)
+        return (out, int(out.shape[0]), info)
 
 
 NODE_CLASS_MAPPINGS = {}

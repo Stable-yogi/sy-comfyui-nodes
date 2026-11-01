@@ -8,13 +8,14 @@ function viewUrl(f) {
     "&subfolder=" + encodeURIComponent(f.subfolder || "") + "&rand=" + Math.random());
 }
 
-function addCompareView(node) {
+function addCompareView(node, names) {
+  names = names || ["A", "B"];
   const P = pal();
   const box = document.createElement("div");
   box.style.cssText = "position:relative;width:100%;height:100%;min-height:160px;overflow:hidden;border-radius:6px;background:" + P.surface;
   const imgB = document.createElement("img");
   const imgA = document.createElement("img");
-  for (const im of [imgA, imgB]) {
+  for (const im of [imgB, imgA]) {  // A goes on top: the slider cuts it, so B shows behind it
     im.style.cssText = "position:absolute;inset:0;width:100%;height:calc(100% - 26px);object-fit:contain";
     im.alt = "";
     box.append(im);
@@ -31,7 +32,7 @@ function addCompareView(node) {
   slider.min = "0";
   slider.max = "100";
   slider.value = "50";
-  slider.setAttribute("aria-label", "Compare slider: left shows A, right shows B");
+  slider.setAttribute("aria-label", "Compare slider: left shows " + names[0] + ", right shows " + names[1]);
   slider.style.cssText = "position:absolute;left:6px;right:6px;bottom:2px;height:22px;margin:0";
   box.append(slider);
   const apply = () => {
@@ -132,19 +133,20 @@ app.registerExtension({
   name: "sy.images",
   async beforeRegisterNodeDef(nodeType, nodeData) {
     const name = nodeData.name;
-    if (name !== "SYImageCompare" && name !== "SYLoadImageMini") return;
+    if (name !== "SYImageCompare" && name !== "SYBeforeAfter" && name !== "SYLoadImageMini") return;
     const created = nodeType.prototype.onNodeCreated;
     nodeType.prototype.onNodeCreated = function () {
       const r = created ? created.apply(this, arguments) : undefined;
       try {
         if (name === "SYImageCompare") addCompareView(this);
+        else if (name === "SYBeforeAfter") addCompareView(this, ["before", "after"]);
         else addLoadMini(this);
       } catch (e) {
         console.warn("[SY] image view not shown", e);
       }
       return r;
     };
-    if (name === "SYImageCompare") {
+    if (name === "SYImageCompare" || name === "SYBeforeAfter") {
       const executed = nodeType.prototype.onExecuted;
       nodeType.prototype.onExecuted = function (msg) {
         if (executed) executed.apply(this, arguments);

@@ -18,5 +18,16 @@ def run():
             raise SystemExit("bad args must raise")
         except ValueError:
             pass
-    assert m.SYBatchPick.RETURN_TYPES == ("IMAGE",)
-    return 9  # checks
+    assert m.SYBatchPick.RETURN_TYPES == ("IMAGE", "STRING")
+    # wrap off: no wrap-around, plain message instead
+    assert m.pick_indices(5, 1, 3, False) == [1, 2, 3]
+    assert m.pick_indices(5, 0, 5, False) == [0, 1, 2, 3, 4]
+    try:
+        m.pick_indices(5, 3, 3, False)
+        raise SystemExit("expected ValueError")
+    except ValueError as e:
+        assert "only holds 5" in str(e)
+    assert m.pick_indices(5, 3, 3) == [3, 4, 0]   # default still wraps
+    assert m.pick_info(6, [3, 4]) == "Took 3, 4 of 6 (counting from 0)"
+    assert list(m.SYBatchPick.INPUT_TYPES()["optional"]) == ["wrap"]
+    return 9 + 9  # checks

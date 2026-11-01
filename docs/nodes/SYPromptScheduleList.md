@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_prompt_schedule_list.py`
 
-**What it does:** Turns a prompt schedule into a list with one prompt per frame, one per line. Also tells how many segments it has.
+**What it does:** Turns a prompt schedule into one prompt per frame, one per line. Adds over a plain loop: it can fill the frames before the first key, and the info line warns about a missing 0 key or keys past the last frame.
 
 ## Inputs
 
@@ -10,5 +10,6 @@ Source: `nodes/sy_prompt_schedule_list.py`
 |---|---|---|---|---|
 | text | STRING | yes | One line per key, written as frame: prompt. Blank lines and # lines are skipped. | default '0: a cat\n24: a dog', multiline |
 | total_frames | INT | yes | How many frames to list. The most allowed is 2000. | 1 to 2000, default 48 |
+| fill_before_first | BOOLEAN | no | On: frames before the first key use the first prompt instead of an empty line. | default False |
 
-Outputs: `STRING`, `INT`
+Outputs: `STRING`, `INT`, `STRING`

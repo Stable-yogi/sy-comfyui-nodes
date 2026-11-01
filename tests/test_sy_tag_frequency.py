@@ -38,4 +38,33 @@ def run():
     assert "min_count" in bad("a", ",", True, 0, 0)
     assert "top_n" in bad("a", ",", True, 1, -1)
     assert m.SYTagFrequency().run("a, b\na", ",", True, 1, 0)[1] == 2
-    return 16
+    return 16 + _extra()
+
+
+def _extra():
+    n = 0
+    caps = "ohwx, dog, grass\ndog, ohwx, grass\ncat, grass, grass\n\nOHWX, watermark text, Dog"
+    txt, c = m.caption_problems(caps, ",", True, "ohwx", "watermark")
+    assert c == 4, txt; n += 1
+    assert "Same tag twice in one caption (1 caption(s)): line 3: grass" in txt; n += 1
+    assert "Trigger word 'ohwx' is missing in 1 caption(s): lines 3" in txt; n += 1
+    assert "not the first tag in 1 caption(s): lines 2" in txt; n += 1
+    assert "Banned word 'watermark' found in 1 caption(s): lines 5" in txt; n += 1
+    assert m.caption_problems("a, b\nc, d") == ("No problems found in 2 caption(s)", 0); n += 1
+    assert m.caption_problems("  \n") == ("No captions to check: put one caption on each line", 0); n += 1
+    assert m.caption_problems("a, A", ",", True)[1] == 1; n += 1
+    assert m.caption_problems("a, A", ",", False)[1] == 0; n += 1
+    assert m.caption_problems("a cat, b", ",", True, "", "cat")[1] == 1; n += 1
+    assert m.caption_problems("concatenate, b", ",", True, "", "cat")[1] == 0; n += 1
+    assert m.caption_problems("ohwx, a", ",", True, "OHWX")[1] == 0; n += 1
+    many = "\n".join("x" for _ in range(12))
+    assert "... (4 more)" in m.caption_problems(many, ",", True, "ohwx")[0]; n += 1
+    try:
+        m.caption_problems("a", "")
+        raise SystemExit("empty separator must raise")
+    except ValueError:
+        n += 1
+    out = m.SYTagFrequency().run("a, b\nb, a", ",", True, 1, 0, "a", "")
+    assert len(out) == 4 and out[1] == 2 and out[3] == 1 and "not the first" in out[2]; n += 1
+    assert m.SYTagFrequency.RETURN_NAMES[-2:] == ("problems", "problem_count"); n += 1
+    return n

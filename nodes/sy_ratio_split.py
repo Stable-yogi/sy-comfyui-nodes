@@ -26,23 +26,48 @@ def parse_ratios(ratios):
     return values
 
 
-def ratio_split(total, ratios):
-    """Pure function. Returns (p1, p2, p3, p4, list_text); unused parts are 0."""
+def _whole_shares(total, values):
+    """Share a whole number out in whole parts that add up exactly (largest remainder method)."""
+    t = int(round(abs(total)))
+    s = sum(values)
+    raw = [t * v / s for v in values]
+    base = [int(x) for x in raw]
+    left = t - sum(base)
+    order = sorted(range(len(raw)), key=lambda i: (-(raw[i] - base[i]), i))
+    for i in order[:left]:
+        base[i] += 1
+    sign = -1 if total < 0 else 1
+    return [float(sign * b) for b in base]
+
+
+def ratio_split(total, ratios, whole_numbers=False):
+    """Pure function. Returns (p1, p2, p3, p4, list_text); unused parts are 0.
+    whole_numbers gives whole parts that add up exactly to the (rounded) total, like 100 split 1:1:1 = 34, 33, 33."""
     total = float(total)
     values = parse_ratios(ratios)
     s = sum(values)
-    shares = [total * v / s for v in values]
+    shares = _whole_shares(total, values) if whole_numbers else [total * v / s for v in values]
     text = ", ".join("%g" % x for x in shares)
     shares += [0.0] * (4 - len(shares))
     return shares[0], shares[1], shares[2], shares[3], text
 
 
+def split_info(total, ratios, whole_numbers=False):
+    """Pure function. One plain sentence about the split."""
+    out = ratio_split(total, ratios, whole_numbers)
+    parts = len(parse_ratios(ratios))
+    text = "%g split %s = %s (parts add up to %g)" % (float(total), str(ratios).replace(" ", ""), out[4], sum(out[:parts]))
+    if whole_numbers and float(total) != round(float(total)):
+        text += ", total was rounded to a whole number first"
+    return text
+
+
 class SYRatioSplit:
-    DESCRIPTION = "Shares a number out by a ratio. For example 100 split 1:3 gives 25 and 75. Up to four parts."
+    DESCRIPTION = "Shares a number out by a ratio. For example 100 split 1:3 gives 25 and 75. Up to four parts. Turn on whole_numbers to get whole parts that add up exactly, which is what you need to share out frames or pixels."
     CATEGORY = category("Values")
     FUNCTION = "run"
-    RETURN_TYPES = ("FLOAT", "FLOAT", "FLOAT", "FLOAT", "STRING")
-    RETURN_NAMES = ("part_1", "part_2", "part_3", "part_4", "list")
+    RETURN_TYPES = ("FLOAT", "FLOAT", "FLOAT", "FLOAT", "STRING", "STRING")
+    RETURN_NAMES = ("part_1", "part_2", "part_3", "part_4", "list", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -51,11 +76,14 @@ class SYRatioSplit:
             "required": {
                 "total": ("FLOAT", {"default": 100.0, "min": -big, "max": big, "step": 0.01, "tooltip": "The number to share out."}),
                 "ratios": ("STRING", {"default": "1:2:1", "multiline": False, "tooltip": "Up to four numbers split by colons, like 1:2:1. No negatives."}),
-            }
+            },
+            "optional": {
+                "whole_numbers": ("BOOLEAN", {"default": False, "tooltip": "On gives whole parts that add up exactly (100 split 1:1:1 = 34, 33, 33). Good for frames."}),
+            },
         }
 
-    def run(self, total, ratios):
-        return ratio_split(total, ratios)
+    def run(self, total, ratios, whole_numbers=False):
+        return ratio_split(total, ratios, whole_numbers) + (split_info(total, ratios, whole_numbers),)
 
 
 NODE_CLASS_MAPPINGS = {}

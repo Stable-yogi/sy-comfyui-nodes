@@ -40,4 +40,9 @@ def run():
     assert raises(m.stretch_range, [], 1); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYAutoContrast"] == "Auto Contrast SY"; n += 1
     assert m.SYAutoContrast.CATEGORY == "SY/Image"; n += 1
+    spec = m.SYAutoContrast.INPUT_TYPES()
+    assert list(spec["required"]) == ["image", "clip_percent"]; n += 1
+    assert list(spec["optional"]) == ["mask", "mix", "enabled", "per_colour"]; n += 1
+    assert spec["optional"]["per_colour"][1]["default"] is False; n += 1
+    assert m.SYAutoContrast.RETURN_NAMES == ("image", "info"); n += 1
     return n

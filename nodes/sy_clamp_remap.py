@@ -28,12 +28,25 @@ def clamp_remap(value, in_min, in_max, out_min, out_max, clamp=True):
     return out_min + t * (out_max - out_min), clamped
 
 
+def remap_info(value, in_min, in_max, out_min, out_max, clamp=True):
+    """Pure function. Returns (was_outside, info). was_outside is true when value sits outside the input range."""
+    result, clamped = clamp_remap(value, in_min, in_max, out_min, out_max, clamp)
+    lo, hi = min(in_min, in_max), max(in_min, in_max)
+    outside = value < lo or value > hi
+    text = "%g in %g..%g -> %g in %g..%g" % (value, in_min, in_max, result, out_min, out_max)
+    if outside and clamp:
+        text += " (value was outside the input range, held at %g)" % clamped
+    elif outside:
+        text += " (value is outside the input range, clamp is off so the result runs past the output range)"
+    return outside, text
+
+
 class SYClampRemap:
-    DESCRIPTION = "Keeps a number inside a range, and moves it from one range to another. Example: 0 to 1 becomes 0 to 255."
+    DESCRIPTION = "Keeps a number inside a range, and moves it from one range to another. Example: 0 to 1 becomes 0 to 255. Also tells you when the number was outside the range, with a plain info line."
     CATEGORY = category("Values")
     FUNCTION = "run"
-    RETURN_TYPES = ("FLOAT", "FLOAT")
-    RETURN_NAMES = ("remapped", "clamped")
+    RETURN_TYPES = ("FLOAT", "FLOAT", "BOOLEAN", "STRING")
+    RETURN_NAMES = ("remapped", "clamped", "was_outside", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -51,7 +64,8 @@ class SYClampRemap:
         }
 
     def run(self, value, in_min, in_max, out_min, out_max, clamp):
-        return clamp_remap(value, in_min, in_max, out_min, out_max, clamp)
+        outside, info = remap_info(value, in_min, in_max, out_min, out_max, clamp)
+        return clamp_remap(value, in_min, in_max, out_min, out_max, clamp) + (outside, info)
 
 
 NODE_CLASS_MAPPINGS = {}

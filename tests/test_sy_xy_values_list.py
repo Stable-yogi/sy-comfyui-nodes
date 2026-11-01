@@ -52,5 +52,21 @@ def run():
     assert bad(h.grid_layout, 100, 1, 1000, 10, 0, 0, 0, 0); n += 1
     assert bad(h.grid_layout, 0, 1, 10, 10, 0, 0, 0, 0); n += 1
     assert bad(h.grid_layout, 1, 1, 10, 10, -1, 0, 0, 0); n += 1
-    assert m.SYXYValuesList.RETURN_TYPES == ("STRING", "INT"); n += 1
+    assert m.SYXYValuesList.RETURN_TYPES[:2] == ("STRING", "INT") and m.SYXYValuesList.RETURN_NAMES == ("values", "count", "info"); n += 1
+    assert len(m.SYXYValuesList.RETURN_TYPES) == 3; n += 1
+    assert set(m.SYXYValuesList.INPUT_TYPES()["optional"]) == {"scale", "whole_numbers", "remove_duplicates"}; n += 1
+    assert m.log_range(1, 8, 4) == ["1", "2", "4", "8"]; n += 1
+    assert m.log_range(5, 5, 1) == ["5"]; n += 1
+    assert bad(m.log_range, 0, 8, 4) and bad(m.log_range, -1, 8, 4); n += 2
+    txt, cnt, info = m.make_list_ex("numbers", 1, 8, 4, "", 0, 1, 1, "log")
+    assert txt == "1" + chr(10) + "2" + chr(10) + "4" + chr(10) + "8" and cnt == 4 and "log spaced" in info; n += 1
+    assert m.make_list_ex("numbers", 1, 7, 4, "", 0, 1, 1)[:2] == m.make_list("numbers", 1, 7, 4, "", 0, 1, 1); n += 1
+    txt, cnt, info = m.make_list_ex("numbers", 20, 21, 4, "", 0, 1, 1, "linear", True)
+    assert txt == "20" + chr(10) + "21" and cnt == 2 and "repeated" in info and "whole" in info; n += 1
+    txt, cnt, info = m.make_list_ex("text list", 0, 0, 1, "a, A, b", 0, 1, 1, "linear", False, True)
+    assert cnt == 2 and "1 repeated value removed" in info; n += 1
+    assert "typed list" in m.make_list_ex("text list", 0, 0, 1, "a,b", 0, 1, 1)[2]; n += 1
+    assert "seeds" in m.make_list_ex("seeds", 0, 0, 1, "", 1, 3, 1)[2]; n += 1
+    assert "..." in m.make_list_ex("numbers", 0, 20, 20, "", 0, 1, 1)[2]; n += 1
+    assert bad(m.make_list_ex, "numbers", 1, 8, 4, "", 0, 1, 1, "sideways"); n += 1
     return n

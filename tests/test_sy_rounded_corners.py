@@ -57,4 +57,23 @@ def run():
     assert raises(m.radius_pixels, -1.0, 10, 10); n += 1
     assert m.DEFAULT_BACKGROUND == "#000000"; n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYRoundedCorners"] == "Rounded Corners SY"; n += 1
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _i = m.corner_info(10.0, 1000, 500)
+    _c("Corner radius 10.0%" in _i and "50 px" in _i and "1000x500" in _i and "painted" in _i)
+    _c("see-through" in m.corner_info(10.0, 1000, 500, True))
+    _c("unchanged" in m.corner_info(0.0, 100, 100))
+    _c("25 px" in m.corner_info(50.0, 100, 50))
+    _r(m.corner_info, 51.0, 100, 100)
+    _c(m.SYRoundedCorners.RETURN_NAMES == ("image", "mask", "info") and "transparent_corners" in m.SYRoundedCorners.INPUT_TYPES()["optional"])
+    return (n) + _k[0]

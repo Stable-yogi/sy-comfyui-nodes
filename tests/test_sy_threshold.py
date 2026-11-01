@@ -38,4 +38,25 @@ def run():
     assert raises(m.threshold_value, 0.5, -0.1, 0.0); n += 1
     assert raises(m.threshold_value, 0.5, 0.5, -0.1); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYThreshold"] == "Threshold SY"; n += 1
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _i = m.threshold_info(0.5, 0.0, False, 25, 100)
+    _c("Cut the brightness at 0.50" in _i and "25.0% of the picture is white" in _i and "soft" not in _i and "swapped" not in _i)
+    _c("soft ramp of +/-0.10" in m.threshold_info(0.5, 0.1, False, 25, 100) and "swapped" in m.threshold_info(0.5, 0.0, True, 25, 100))
+    _c("all black" in m.threshold_info(0.9, 0.0, False, 0, 100) and "all white" in m.threshold_info(0.1, 0.0, False, 100, 100))
+    _c("Cut the red" in m.threshold_info(0.5, 0.0, False, 1, 100, "red"))
+    _r(m.threshold_info, 0.5, 0.0, False, 1, 100, "alpha")
+    _r(m.threshold_info, 1.5, 0.0, False, 1, 100)
+    _c(m.CHANNELS[0] == "brightness" and len(m.CHANNELS) == 5)
+    _c(m.SYThreshold.RETURN_NAMES == ("image", "mask", "info") and "channel" in m.SYThreshold.INPUT_TYPES()["optional"])
+    return (n) + _k[0]

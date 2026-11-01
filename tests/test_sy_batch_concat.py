@@ -32,5 +32,10 @@ def run():
     raises(t.concat_plan, [(2, 8, 8, 3), (3, 4, 4, 3)], False)
     ok(t.concat_plan([(2, 8, 8, 3), (3, 8, 8, 4)], False)["total"] == 5)
     raises(t.concat_plan, [], True)
-    ok(m.SYBatchConcat.RETURN_NAMES == ("images", "count"))
+    ok(m.SYBatchConcat.RETURN_NAMES == ("images", "count", "info"))
+    ok(m.SYBatchConcat.RETURN_TYPES == ("IMAGE", "INT", "STRING"))
+    t = m.concat_info([2, 3, 1], 512, 768, False)
+    ok("3 batches" in t and "2+3+1 = 6" in t and "512x768" in t and "resized" not in t)
+    ok("resized" in m.concat_info([1, 1], 64, 64, True))
+    raises(m.concat_info, [], 8, 8, False)
     return N[0]

@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_clamp_remap.py`
 
-**What it does:** Keeps a number inside a range, and moves it from one range to another. Example: 0 to 1 becomes 0 to 255.
+**What it does:** Keeps a number inside a range, and moves it from one range to another. Example: 0 to 1 becomes 0 to 255. Also tells you when the number was outside the range, with a plain info line.
 
 ## Inputs
 
@@ -15,4 +15,4 @@ Source: `nodes/sy_clamp_remap.py`
 | out_max | FLOAT | yes | End of the range the number goes to. | -1000000000000000.0 to 1000000000000000.0, step 0.01, default 100.0 |
 | clamp | BOOLEAN | yes | On keeps the result inside the output range. Off lets it run past. | default True |
 
-Outputs: `FLOAT`, `FLOAT`
+Outputs: `FLOAT`, `FLOAT`, `BOOLEAN`, `STRING`

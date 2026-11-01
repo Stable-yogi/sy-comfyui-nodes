@@ -128,9 +128,37 @@ def run():
 
     # the node wrapper returns valid, report and the text unchanged
     text = json.dumps([box()])
-    v, r, t = m.SYLayoutJsonCheck().run(text, 1000, 800, True)
+    v, r, t = m.SYLayoutJsonCheck().run(text, 1000, 800, True)[:3]
     assert v is True and r.startswith("VALID") and t == text
-    v, r, t = m.SYLayoutJsonCheck().run("nope", 1000, 800, True)
+    v, r, t = m.SYLayoutJsonCheck().run("nope", 1000, 800, True)[:3]
     assert v is False and r.startswith("INVALID")
-    assert m.SYLayoutJsonCheck.RETURN_TYPES == ("BOOLEAN", "STRING", "STRING")
-    return n + 5
+    # new: multiple warnings, clipped_boxes output
+    ok_text = json.dumps([box(0, 0, 64, 64, label="a"), box(10, 64, 64, 60, label="b")])
+    v, r, c = m.check_with_extras(ok_text, 1000, 800, True, 64)
+    assert v is True and c == ok_text
+    assert 'WARNING: box 2 ("b"): x, h are not a multiple of 64' in r and r.count("WARNING") == 1
+    assert m.check_with_extras(ok_text, 1000, 800, True, 1)[1].count("WARNING") == 0     # off by default
+    assert "y is not a multiple of 8" in m.check_with_extras(json.dumps([box(0, 5, 8, 8)]), 100, 100, True, 8)[1]
+    n += 4
+    over = json.dumps([box(900, 700, 300, 300, label="big"), box(5000, 0, 10, 10), box(0, 0, 0, 5), "junk", box(10, 10, 20, 20)])
+    v, r, c = m.check_with_extras(over, 1000, 800, True, 1)
+    assert v is False and r.startswith("INVALID") and "FIX:" in r and "3 dropped" in r and "1 box changed" in r
+    fixed = json.loads(c)
+    assert [(f["x"], f["y"], f["w"], f["h"]) for f in fixed] == [(900, 700, 100, 100), (10, 10, 20, 20)]
+    assert fixed[0]["label"] == "big"
+    v2, r2, c2 = m.check_with_extras(c, 1000, 800, True, 1)                       # the fixed list passes the check
+    assert v2 is True and c2 == c
+    v, r, c = m.check_with_extras("{not json", 1000, 800, True, 8)
+    assert v is False and c == "{not json" and "FIX" not in r
+    assert json.loads(m.check_with_extras(json.dumps([box(-5, -5, 20, 20)]), 100, 100)[2]) == [box(0, 0, 15, 15)]
+    assert json.loads(m.check_with_extras(json.dumps([box(0, 0, 1500, 20, label="x" * 100)]), 100, 100)[2])[0]["label"] == "x" * MAX_LABEL
+    out = m.SYLayoutJsonCheck().run(over, 1000, 800, True, 1)
+    assert len(out) == 4 and out[2] == over and json.loads(out[3])
+    assert m.SYLayoutJsonCheck().run(text, 1000, 800, True)[3] == text           # valid list comes back unchanged
+    n += 7
+    single = json.dumps(box(10, 10, 50, 50))
+    assert m.check_with_extras(single, 100, 100)[0] is True and m.check_with_extras(single, 100, 100)[2] == single
+    assert m.check_with_extras(json.dumps(box(10, 10, 500, 50)), 100, 100)[0] is False
+    n += 2
+    assert m.SYLayoutJsonCheck.RETURN_TYPES == ("BOOLEAN", "STRING", "STRING", "STRING") and m.SYLayoutJsonCheck.RETURN_NAMES[:3] == ("valid", "report", "layout_boxes")
+    return n + 6

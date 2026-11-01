@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_gguf_loaders.py`
 
-**What it does:** Loads one text encoder (CLIP) file. It can be a .gguf file or a normal one. Pick the model family. A .gguf file needs the gguf Python package (the node tells you how to add it).
+**What it does:** Loads one text encoder (CLIP) file. It can be a .gguf file or a normal one. Pick the model family. Adds a name_filter box, a plain info text, and a warning when the file name and the family do not fit. A .gguf file needs the gguf Python package (the node tells you how to add it).
 
 ## Inputs
 
@@ -10,5 +10,6 @@ Source: `nodes/sy_gguf_loaders.py`
 |---|---|---|---|---|
 | clip_name | COMBO | yes | The text encoder file to load (.gguf or normal). | one of: |
 | type | COMBO | yes | The model family this text encoder is used with. | one of: stable_diffusion, stable_cascade, sd3, stable_audio, mochi, ltxv, pixart, cosmos, lumina2, wan, hidream, chroma ... |
+| name_filter | STRING | no | Optional. Words like 'umt5 Q8': loads the first matching file and ignores the list. | default '' |
 
-Outputs: `CLIP`
+Outputs: `CLIP`, `STRING`

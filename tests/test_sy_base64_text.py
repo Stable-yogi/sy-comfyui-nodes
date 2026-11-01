@@ -37,6 +37,12 @@ def run():
     assert msg and "text is not valid base64" in msg; n += 1
     msg = raises(m.base64_text, "abc", "flip", False)
     assert msg and "mode" in msg; n += 1
+    assert m.base64_text("data:text/plain;base64,YWJj", "decode", False) == "abc"; n += 1  # data address start is dropped
+    assert m.base64_text("DATA:x;BASE64,YWJj", "decode", False) == "abc"; n += 1
+    assert m.base64_info("abc", "YWJj", "encode", False) == "Encoded 3 characters into 4 characters of base64."; n += 1
+    assert "Decoded web-safe base64 into 3" in m.base64_info("YWJj", "abc", "decode", True); n += 1
+    assert m.SYBase64Text().run("abc", "encode", False) == ("YWJj", "Encoded 3 characters into 4 characters of base64."); n += 1
+    assert m.SYBase64Text.RETURN_NAMES[-1] == "info" and len(m.SYBase64Text.RETURN_TYPES) == 2; n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYBase64Text"] == "Base64 Text SY"; n += 1
     assert m.SYBase64Text.CATEGORY == "SY/Text"; n += 1
     return n

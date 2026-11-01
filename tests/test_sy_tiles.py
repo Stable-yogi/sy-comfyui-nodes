@@ -87,8 +87,50 @@ def run():
     assert coverage(m.make_info(100, 70, 40, 39), 2) > 0.0; n += 1
     assert raises(m.merge_plan, info, 0); n += 1
     # node shape
-    assert m.SYTileSplit.RETURN_TYPES == ("IMAGE", "STRING"); n += 1
-    assert m.SYTileMerge.RETURN_TYPES == ("IMAGE",); n += 1
+    assert m.SYTileSplit.RETURN_TYPES[:2] == ("IMAGE", "STRING"); n += 1
+    assert m.SYTileMerge.RETURN_TYPES[:1] == ("IMAGE",); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYTileSplit"] == "Tile Split SY"; n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYTileMerge"] == "Tile Merge SY"; n += 1
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _inf = m.make_info(2048, 1536, 1024, 64)
+    _i = m.split_info(_inf)
+    _c("2048x1536 into 3 x 2 = 6 tiles of 1024x1024, overlap 64 px" in _i and "only the first" not in _i and "not cut" not in _i)
+    _c("only the first was cut" in m.split_info(_inf, 4) and "4 pictures" in m.split_info(_inf, 4))
+    _c("not cut" in m.split_info(m.make_info(500, 400, 1024, 64)))
+    _c("1 tile" in m.split_info(m.make_info(500, 400, 1024, 64)))
+    _j = m.merge_info(_inf, 2, "linear", 6)
+    _c("Joined 6 tiles into one 4096x3072 picture" in _j and "x2" in _j and "linear" in _j)
+    _c(m.SYTileSplit.RETURN_NAMES == ("tiles", "tile_info", "tile_count", "info") and len(m.SYTileSplit.RETURN_TYPES) == 4)
+    _c(m.SYTileMerge.RETURN_NAMES == ("image", "info") and len(m.SYTileMerge.RETURN_TYPES) == 2)
+    try:
+        import torch
+    except ImportError:
+        torch = None
+    if torch is not None:
+        batch = torch.rand(3, 100, 70, 3)
+        t1, ti, c1, _x = m.SYTileSplit().run(batch, 64, 8)
+        t3, ti3, c3, x3 = m.SYTileSplit().run(batch, 64, 8, "all pictures")
+        assert t3.shape[0] == 3 * c1 and c3 == 3 * c1 and ti3 == ti and torch.equal(t3[:c1], t1) and "3 pictures" in x3, x3; n += 1
+        merged1 = m.SYTileMerge().run(t1, ti, "linear")[0]
+        merged3 = m.SYTileMerge().run(t3, ti3, "linear")[0]
+        assert merged3.shape == (3, 100, 70, 3) and merged1.shape[0] == 1 and torch.allclose(merged3[0], merged1[0]); n += 1
+        assert (merged3 - batch).abs().max() < 1e-5; n += 1
+        assert m.SYTileMerge().run(t1.half(), ti, "linear")[0].dtype == torch.float16; n += 1
+        assert m.SYTileMerge().run(t1, ti, "none")[0].dtype == torch.float32; n += 1
+        try:
+            m.SYTileMerge().run(t1[:-1], ti, "linear")
+            raise AssertionError("short tile list accepted")
+        except ValueError:
+            n += 1
+    return (n) + _k[0]

@@ -49,11 +49,38 @@ def compare_grids(gray_a, gray_b, size=8, threshold=5):
     return d, dup, report
 
 
-def tensor_to_gray(image, size):
-    """First picture of a [B,H,W,C] tensor -> brightness rows, shrunk to (size*4) x (size*4). torch is imported here."""
+def pick_index(index, count, name="index"):
+    """Pure function. Which picture of a batch: 0 is the first, -1 the last. Plain error when it is outside the batch."""
+    index, count = int(index), int(count)
+    if count < 1:
+        raise ValueError("%s: the picture batch is empty" % name)
+    idx = index + count if index < 0 else index
+    if idx < 0 or idx >= count:
+        raise ValueError("%s %d is outside the batch of %d picture(s) (allowed: %d to %d)" % (name, index, count, -count, count - 1))
+    return idx
+
+
+def similarity_percent(distance, bits):
+    """Pure function. 100 when the fingerprints match, 0 when every bit differs."""
+    if bits < 1:
+        raise ValueError("a fingerprint needs at least 1 bit")
+    return 100.0 * (1.0 - float(distance) / float(bits))
+
+
+def shape_note(width_a, height_a, width_b, height_b):
+    """Pure function. A warning when the two pictures have clearly different shapes (the fingerprint squeezes both to a square grid)."""
+    ra, rb = width_a / float(height_a), width_b / float(height_b)
+    if abs(ra - rb) / max(ra, rb) <= 0.05:
+        return ""
+    return (" Note: the pictures have different shapes (%dx%d and %dx%d), so a low match can come from the shape alone."
+            % (width_a, height_a, width_b, height_b))
+
+
+def tensor_to_gray(image, size, index=0):
+    """One picture of a [B,H,W,C] tensor (the first by default) -> brightness rows, shrunk to (size*4) x (size*4). torch is imported here."""
     import torch
 
-    img = image[0, ..., :3].float()
+    img = image[pick_index(index, image.shape[0]), ..., :3].float()
     if img.shape[-1] == 3:
         gray = img[..., 0] * 0.299 + img[..., 1] * 0.587 + img[..., 2] * 0.114
     else:
@@ -63,11 +90,12 @@ def tensor_to_gray(image, size):
 
 
 class SYImageHashDuplicate:
-    DESCRIPTION = "Compares two pictures with a small fingerprint. Tells you how different they are and if they are near duplicates."
+    DESCRIPTION = ("Compares two pictures with a small fingerprint. Tells you how different they are, a match percentage, and if they "
+                   "are near duplicates. For a batch, choose which picture of each batch to compare.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("INT", "BOOLEAN", "STRING")
-    RETURN_NAMES = ("distance", "near_duplicate", "report")
+    RETURN_TYPES = ("INT", "BOOLEAN", "STRING", "FLOAT")
+    RETURN_NAMES = ("distance", "near_duplicate", "report", "match_percent")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -77,11 +105,17 @@ class SYImageHashDuplicate:
                 "image_b": ("IMAGE", {"tooltip": "Second picture. If it is a batch, the first picture of the batch is used."}),
                 "hash_size": ("INT", {"default": 8, "min": 4, "max": 32, "tooltip": "Fingerprint grid size. 8 gives 64 bits. Bigger notices smaller differences."}),
                 "threshold": ("INT", {"default": 5, "min": 0, "max": 1024, "tooltip": "Largest number of differing bits that still counts as a near duplicate."}),
-            }
+            },
+            "optional": {
+                "index_a": ("INT", {"default": 0, "min": -1000000, "max": 1000000, "tooltip": "Which picture of batch A to use. 0 is the first, -1 the last."}),
+                "index_b": ("INT", {"default": 0, "min": -1000000, "max": 1000000, "tooltip": "Which picture of batch B to use. 0 is the first, -1 the last."}),
+            },
         }
 
-    def run(self, image_a, image_b, hash_size, threshold):
-        return compare_grids(tensor_to_gray(image_a, hash_size), tensor_to_gray(image_b, hash_size), hash_size, threshold)
+    def run(self, image_a, image_b, hash_size, threshold, index_a=0, index_b=0):
+        d, dup, report = compare_grids(tensor_to_gray(image_a, hash_size, index_a), tensor_to_gray(image_b, hash_size, index_b), hash_size, threshold)
+        report += shape_note(image_a.shape[2], image_a.shape[1], image_b.shape[2], image_b.shape[1])
+        return (d, dup, report, similarity_percent(d, hash_size * hash_size))
 
 
 NODE_CLASS_MAPPINGS = {}

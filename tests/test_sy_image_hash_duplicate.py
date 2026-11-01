@@ -60,5 +60,16 @@ def run():
     assert "no pixels" in bad(m.average_hash, [], 8)
     assert "no pixels" in bad(m.average_hash, [[]], 8)
     assert "at least 2" in bad(m.average_hash, a, 1)
-    assert m.SYImageHashDuplicate.RETURN_TYPES == ("INT", "BOOLEAN", "STRING")
-    return 28
+    assert m.SYImageHashDuplicate.RETURN_TYPES == ("INT", "BOOLEAN", "STRING", "FLOAT")
+    n = 28
+    assert m.pick_index(0, 3) == 0 and m.pick_index(-1, 3) == 2 and m.pick_index(2, 3) == 2; n += 1
+    assert "outside the batch of 3" in bad(m.pick_index, 3, 3, "index_a"); n += 1
+    assert "index_a -4" in bad(m.pick_index, -4, 3, "index_a"); n += 1
+    assert "empty" in bad(m.pick_index, 0, 0); n += 1
+    assert m.similarity_percent(0, 64) == 100.0 and m.similarity_percent(64, 64) == 0.0 and m.similarity_percent(16, 64) == 75.0; n += 1
+    assert "at least 1" in bad(m.similarity_percent, 0, 0); n += 1
+    assert m.shape_note(1024, 1024, 1000, 1000) == "" and m.shape_note(1024, 768, 1000, 760) == ""; n += 1
+    assert "different shapes (1024x1024 and 1920x1080)" in m.shape_note(1024, 1024, 1920, 1080); n += 1
+    assert m.SYImageHashDuplicate.RETURN_NAMES == ("distance", "near_duplicate", "report", "match_percent"); n += 1
+    assert list(m.SYImageHashDuplicate.INPUT_TYPES()["optional"]) == ["index_a", "index_b"]; n += 1
+    return n

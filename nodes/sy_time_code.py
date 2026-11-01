@@ -57,11 +57,11 @@ def convert(mode, frame, fps, timecode):
 
 
 class SYTimeCode:
-    DESCRIPTION = "Turns a frame number into a time code like 00:00:03:12, or reads a time code back into a frame number."
+    DESCRIPTION = "Turns a frame number into a time code like 00:00:03:12, or reads a time code back into a frame number. The info line says both in one plain sentence. No drop frame: every second has the whole number of frames."
     CATEGORY = category("Values")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING", "FLOAT", "INT")
-    RETURN_NAMES = ("timecode", "seconds", "frame")
+    RETURN_TYPES = ("STRING", "FLOAT", "INT", "STRING")
+    RETURN_NAMES = ("timecode", "seconds", "frame", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -75,7 +75,8 @@ class SYTimeCode:
         }
 
     def run(self, mode, frame, fps, timecode):
-        return convert(mode, frame, fps, timecode)
+        code, seconds, fr = convert(mode, frame, fps, timecode)
+        return (code, seconds, fr, "frame %d at %s fps = %s (%.3f seconds)" % (fr, fps, code, seconds))
 
 
 NODE_CLASS_MAPPINGS = {}

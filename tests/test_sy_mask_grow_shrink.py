@@ -45,4 +45,23 @@ def run():
     assert raises(m.grow_shrink, d, 5000)
     assert raises(m.grow_shrink, d, 1, "triangle")
     n += 2
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _c("unchanged" in m.grow_shrink_info(0, "round", 10, 10, 100))
+    _c("Grew" in m.grow_shrink_info(3, "round", 10, 30, 100) and "30.0%" in m.grow_shrink_info(3, "round", 10, 30, 100))
+    _c("Shrunk" in m.grow_shrink_info(-3, "square", 30, 10, 100))
+    _c("Nothing white is left" in m.grow_shrink_info(-3, "round", 30, 0, 100))
+    _c("whole mask is white" in m.grow_shrink_info(3, "round", 30, 100, 100))
+    _c("was empty" in m.grow_shrink_info(3, "round", 0, 0, 100))
+    _c(m.SYMaskGrowShrink.RETURN_NAMES == ("mask", "info") and len(m.SYMaskGrowShrink.RETURN_TYPES) == 2)
+    return (n) + _k[0]

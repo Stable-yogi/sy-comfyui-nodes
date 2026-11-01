@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_xy_label_strip.py`
 
-**What it does:** Writes the XY grid as a Markdown table. Each cell shows its picture number, so you can match it to the batch.
+**What it does:** Writes the XY grid as a Markdown table. Each cell shows its picture number, so you can match it to the batch. Also gives the picture count, a numbered list of cells, and an info line that warns about repeated values or a very big grid.
 
 ## Inputs
 
@@ -13,4 +13,4 @@ Source: `nodes/sy_xy_label_strip.py`
 | x_name | STRING | yes | Name of the X axis, shown in the table corner. | default 'X' |
 | y_name | STRING | yes | Name of the Y axis, shown in the table corner. | default 'Y' |
 
-Outputs: `STRING`
+Outputs: `STRING`, `INT`, `STRING`, `STRING`

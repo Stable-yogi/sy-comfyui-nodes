@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_sepia.py`
 
-**What it does:** Gives a picture the warm brown tone of an old photograph. Strength blends from the original to full sepia.
+**What it does:** Gives a picture the warm brown tone of an old photograph. Strength blends from the original to full sepia. The info output says how much was mixed in.
 
 ## Inputs
 
@@ -11,4 +11,4 @@ Source: `nodes/sy_sepia.py`
 | image | IMAGE | yes | The picture or batch of pictures to change. | picture batch [B,H,W,3] |
 | strength | FLOAT | yes | 0 keeps the original, 1 is full sepia. | 0.0 to 1.0, step 0.01, default 1.0 |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `STRING`

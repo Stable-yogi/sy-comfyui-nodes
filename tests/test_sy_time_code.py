@@ -38,4 +38,22 @@ def run():
     assert raises(m.timecode_to_frame, "00:00:-1:00", 24); n += 1
     assert raises(m.convert, "sideways", 1, 24.0, ""); n += 1
     assert m.SYTimeCode().run("frame_to_timecode", 24, 24.0, "")[0] == "00:00:01:00"; n += 1
+    return n + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.SYTimeCode().run('frame_to_timecode', 36, 24.0, '')[3] == 'frame 36 at 24.0 fps = 00:00:01:12 (1.500 seconds)')
+    n += ok(m.SYTimeCode().run('timecode_to_frame', 0, 24.0, '00:00:01:12')[2] == 36)
+    n += ok(len(m.SYTimeCode().run('frame_to_timecode', 0, 24.0, '')) == 4)
+    n += ok(rs(m.SYTimeCode().run, 'timecode_to_frame', 0, 24.0, '00:00:01') is not None)
     return n

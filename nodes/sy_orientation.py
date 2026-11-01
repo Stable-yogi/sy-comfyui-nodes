@@ -2,8 +2,18 @@
 
 try:
     from ._sy_common import category, register
+    from ._sy_d3_info import plural, ratio_text, size_text
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
+    from _sy_d3_info import plural, ratio_text, size_text
+
+
+def orientation_info(kind, width, height, count=1):
+    """Pure function. Plain sentence: orientation, size, ratio, megapixels and batch count."""
+    text = "%s picture, %s (ratio %s, %.2f megapixels)" % (kind.capitalize(), size_text(width, height), ratio_text(width, height), width * height / 1e6)
+    if count > 1:
+        text += "; the batch has %s, the size of the first is shown" % plural(count, "picture")
+    return text + "."
 
 
 def classify(width, height, tolerance_percent=0.0):
@@ -30,11 +40,11 @@ def image_size(image):
 
 
 class SYOrientation:
-    DESCRIPTION = "Tells if an image is landscape, portrait or square, and gives its width and height."
+    DESCRIPTION = "Tells if an image is landscape, portrait or square, and gives its width and height, its width/height ratio, and a plain info sentence (ratio like 16:9, megapixels)."
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING", "BOOLEAN", "INT", "INT")
-    RETURN_NAMES = ("orientation", "is_landscape", "width", "height")
+    RETURN_TYPES = ("STRING", "BOOLEAN", "INT", "INT", "FLOAT", "STRING")
+    RETURN_NAMES = ("orientation", "is_landscape", "width", "height", "aspect_ratio", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -48,7 +58,10 @@ class SYOrientation:
     def run(self, image, tolerance_percent=0.0):
         width, height = image_size(image)
         kind = classify(width, height, tolerance_percent)
-        return (kind, kind == "landscape", width, height)
+        count = int(image.shape[0])
+        if count < 1:
+            raise ValueError("the picture batch is empty: connect at least 1 picture")
+        return (kind, kind == "landscape", width, height, width / float(height), orientation_info(kind, width, height, count))
 
 
 NODE_CLASS_MAPPINGS = {}

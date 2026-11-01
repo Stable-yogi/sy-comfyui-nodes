@@ -2,9 +2,11 @@
 try:
     from ._sy_common import category, register
     from ._sy_image_ops import need_image
+    from ._sy_d1_finish import MASK_TIP, MIX_TIP, ENABLED_TIP, finish_rgb, info_line
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
     from _sy_image_ops import need_image
+    from _sy_d1_finish import MASK_TIP, MIX_TIP, ENABLED_TIP, finish_rgb, info_line
 
 
 def mean_std(values):
@@ -32,11 +34,12 @@ def match_values(values, ref_mean, ref_std, strength):
 
 
 class SYColourMatch:
-    DESCRIPTION = "Makes a picture look like the colours of a reference picture. Good for keeping a series of pictures in one look."
+    DESCRIPTION = ("Makes a picture look like the colours of a reference picture. Good for keeping a series of pictures in one look. "
+                   "Adds a mask (match only the white part), an on/off switch and an info line, and keeps transparency.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -45,16 +48,23 @@ class SYColourMatch:
                 "image": ("IMAGE", {"tooltip": "The picture or batch of pictures to change."}),
                 "reference": ("IMAGE", {"tooltip": "The picture whose colours are copied. A batch is matched one to one, then repeats."}),
                 "strength": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01, "tooltip": "How far to move towards the reference. 0 changes nothing, 1 is a full match."}),
-            }
+            },
+            "optional": {
+                "mask": ("MASK", {"tooltip": MASK_TIP}),
+                "enabled": ("BOOLEAN", {"default": True, "tooltip": ENABLED_TIP}),
+            },
         }
 
-    def run(self, image, reference, strength):
+    def run(self, image, reference, strength, mask=None, enabled=True):
         import torch
 
         need_image(image)
         need_image(reference)
         if not 0.0 <= strength <= 1.0:
             raise ValueError("strength must be between 0 and 1, got %s" % strength)
+        ref_count = reference.shape[0]
+        if not enabled:
+            return (image, info_line("Colour Match", False, 1.0, mask is not None))
         rgb = min(image.shape[3], reference.shape[3], 3)
         if reference.shape[0] != image.shape[0]:
             reference = reference[[i % reference.shape[0] for i in range(image.shape[0])]]
@@ -68,7 +78,9 @@ class SYColourMatch:
         matched = (src - s_mean) * scale + r_mean
         out = image.clone()
         out[..., :rgb] = (src * (1.0 - strength) + matched * strength).clamp(0.0, 1.0)
-        return (out,)
+        if mask is not None and rgb == 3:
+            out = finish_rgb(image, out[..., :3], mask, 1.0, True)
+        return (out, info_line("Colour Match", True, strength, mask is not None, "reference %d picture(s)" % ref_count))
 
 
 NODE_CLASS_MAPPINGS = {}

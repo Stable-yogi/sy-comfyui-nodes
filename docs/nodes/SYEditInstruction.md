@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_edit_instruction.py`
 
-**What it does:** Writes one clear sentence for an image edit model, such as 'Replace the hat with a red cap.' It can add a line to keep the rest unchanged.
+**What it does:** Writes one clear sentence for an image edit model, such as 'Replace the hat with a red cap.' It can add a line to keep the rest unchanged, or to keep one named thing (for example the face). A notes line warns about ignored or too long input.
 
 ## Inputs
 
@@ -13,5 +13,6 @@ Source: `nodes/sy_edit_instruction.py`
 | keep_rest | BOOLEAN | yes | Adds a line asking the model to leave everything else alone. | default True |
 | to_value | STRING | no | What it should become. Needed for every action except remove and fix_lighting. | default '' |
 | extra | STRING | no | Optional extra detail added after the main sentence. | default '' |
+| keep_detail | STRING | no | Name what must not change, for example: the face and the pose. | default '' |
 
-Outputs: `STRING`
+Outputs: `STRING`, `STRING`

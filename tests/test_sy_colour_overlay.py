@@ -50,4 +50,7 @@ def run():
     assert raises(m.check_mask_shape, (1, 1, 4, 6), (1, 4, 6, 3)); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYColourOverlay"] == "Colour Overlay SY"; n += 1
     assert m.DEFAULT_COLOUR.startswith("#") and len(m.DEFAULT_COLOUR) == 7; n += 1
+    spec = m.SYColourOverlay.INPUT_TYPES()
+    assert list(spec["required"]) == ["image", "colour", "opacity", "mode"] and list(spec["optional"]) == ["mask", "enabled"]; n += 1
+    assert m.SYColourOverlay.RETURN_NAMES == ("image", "info"); n += 1
     return n

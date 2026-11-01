@@ -35,4 +35,11 @@ def run():
     ok(len(q) == 6 and q[-1] == (2, 0, 0.5))
     raises(m.interp_plan, 1, 1)
     raises(m.interp_plan, 5000, 4)
+    ok(m.new_fps(16, 1) == 32.0 and m.new_fps(24, 3) == 96.0 and m.new_fps(0, 2) == 0.0)
+    raises(m.new_fps, -1, 1)
+    t = m.blend_info(10, 1, False, 19, 16.0, 512, 512)
+    ok("10 frames -> 19 frames" in t and "frame rate to 32 (was 16)" in t and "512x512" in t and "MB" in t)
+    ok("enter your frame rate" in m.blend_info(10, 1, True, 20, 0.0, 64, 64) and "last blends into first" in m.blend_info(10, 1, True, 20, 0.0, 64, 64))
+    ok("lot" in m.blend_info(100, 1, False, 199, 0.0, 2048, 2048) and "lot" not in m.blend_info(3, 1, False, 5, 0.0, 64, 64))
+    ok(m.SYFrameInterpolateBlend.RETURN_NAMES == ("images", "count", "new_fps", "info"))
     return N[0]

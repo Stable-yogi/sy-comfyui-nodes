@@ -14,13 +14,30 @@ def _sentence(text):
     return re.sub(r"(^|[.!?]\s+|\n\s*)([a-z])", lambda m: m.group(1) + m.group(2).upper(), text)
 
 
-def case_trim(text, case="keep", trim=True, collapse_spaces=False, strip_empty_lines=False):
-    """Pure function. Applies the chosen steps in order: spaces, trim, empty lines, case."""
+def _title(text):
+    """Pure function. Title Case that does not capitalise the letter after an apostrophe ("don't" stays "Don't")."""
+    return re.sub(r"[A-Za-z]+(?:['’][A-Za-z]+)*", lambda m: m.group(0)[0].upper() + m.group(0)[1:].lower(), text)
+
+
+def tidy_commas_line(line):
+    """Pure function. 'a ,b,, c,' becomes 'a, b, c'. Commas inside numbers like 1,000 are left alone."""
+    keep = "\x00"
+    line = re.sub(r"(?<=\d),(?=\d)", keep, line)
+    line = re.sub(r"\s*,(\s*,)*\s*", ", ", line)
+    line = line.strip(" ,\t")
+    return line.replace(keep, ",")
+
+
+def case_trim(text, case="keep", trim=True, collapse_spaces=False, strip_empty_lines=False, tidy_commas=False):
+    """Pure function. Applies the chosen steps in order: commas, spaces, trim, empty lines, case.
+    tidy_commas fixes stray commas and spaces in a tag list, line by line."""
     if not isinstance(text, str):
         raise ValueError("text must be a string, got %s" % type(text).__name__)
     if case not in CASES:
         raise ValueError("case must be one of: %s" % ", ".join(CASES))
     out = text
+    if tidy_commas:
+        out = "\n".join(tidy_commas_line(line) if line.strip() else line for line in out.split("\n"))
     if collapse_spaces:
         out = "\n".join(re.sub(r"[ \t]+", " ", line) for line in out.split("\n"))
     if trim:
@@ -32,18 +49,26 @@ def case_trim(text, case="keep", trim=True, collapse_spaces=False, strip_empty_l
     elif case == "lower":
         out = out.lower()
     elif case == "title":
-        out = out.title()
+        out = _title(out)
     elif case == "sentence":
         out = _sentence(out)
     return out
 
 
+def case_info(before, after):
+    """Pure function. One plain line: what the clean-up changed."""
+    if before == after:
+        return "No change: the text was already clean"
+    return "Cleaned: %d -> %d characters, %d -> %d line(s)" % (len(before), len(after), len(before.splitlines()), len(after.splitlines()))
+
+
 class SYTextCaseTrim:
-    DESCRIPTION = "Changes upper and lower case and cleans up text: trims each line, collapses double spaces, removes empty lines."
+    DESCRIPTION = ("Changes upper and lower case and cleans up text: trims each line, collapses double spaces, removes empty lines. "
+                   "tidy_commas also fixes stray commas in a tag list ('a ,b,, c,' becomes 'a, b, c'). The info line says what changed.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("text",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("text", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -54,11 +79,15 @@ class SYTextCaseTrim:
                 "trim": ("BOOLEAN", {"default": True, "tooltip": "Remove spaces at the start and end of the text and of every line."}),
                 "collapse_spaces": ("BOOLEAN", {"default": False, "tooltip": "Turn several spaces in a row into one space."}),
                 "strip_empty_lines": ("BOOLEAN", {"default": False, "tooltip": "Remove lines that are empty or hold only spaces."}),
-            }
+            },
+            "optional": {
+                "tidy_commas": ("BOOLEAN", {"default": False, "tooltip": "On: fix stray commas and spaces in a tag list, like 'a ,b,, c,' to 'a, b, c'."}),
+            },
         }
 
-    def run(self, text, case="keep", trim=True, collapse_spaces=False, strip_empty_lines=False):
-        return (case_trim(text, case, trim, collapse_spaces, strip_empty_lines),)
+    def run(self, text, case="keep", trim=True, collapse_spaces=False, strip_empty_lines=False, tidy_commas=False):
+        out = case_trim(text, case, trim, collapse_spaces, strip_empty_lines, tidy_commas)
+        return (out, case_info(text, out))
 
 
 NODE_CLASS_MAPPINGS = {}

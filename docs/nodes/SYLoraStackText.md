@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_lora_stack_text.py`
 
-**What it does:** Writes up to 4 LoRA names and strengths as a short summary and as <lora:name:0.8> tags. It does not apply the LoRAs.
+**What it does:** Writes up to 4 LoRA names and strengths as a short summary and as <lora:name:0.8> tags. It does not apply the LoRAs. Gives the count, can leave out strength-0 slots, and warns when a LoRA is picked twice or the total is very high.
 
 ## Inputs
 
@@ -16,5 +16,6 @@ Source: `nodes/sy_lora_stack_text.py`
 | strength_3 | FLOAT | yes | Strength for slot 3. | -20.0 to 20.0, step 0.05, default 1.0 |
 | lora_4 | COMBO | yes | LoRA for slot 4. Leave on None to skip it. | one of: None, test_lora.safetensors |
 | strength_4 | FLOAT | yes | Strength for slot 4. | -20.0 to 20.0, step 0.05, default 1.0 |
+| skip_zero | BOOLEAN | no | On: a slot with strength 0 is left out of the text. | default False |
 
-Outputs: `STRING`, `STRING`
+Outputs: `STRING`, `STRING`, `INT`, `STRING`

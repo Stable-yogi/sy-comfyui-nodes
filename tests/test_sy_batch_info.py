@@ -27,4 +27,12 @@ def run():
     ok(m.describe_batch((1, 8, 8, 4))[4] == "1 picture, 8x8, 4 channels")
     raises(m.describe_batch, (8, 8, 3))
     raises(m.describe_batch, (0, 8, 8, 3))
+    assert m.size_warnings(512, 512) == ""
+    assert "multiple of 8" in m.size_warnings(1001, 1000)
+    assert "megapixels" in m.size_warnings(4096, 4096)
+    assert m.orientation(10, 10) == "square" and m.orientation(20, 10) == "landscape" and m.orientation(10, 20) == "portrait"
+    assert m.SYBatchInfo.RETURN_NAMES[:6] == ("images", "count", "width", "height", "channels", "text")
+    assert m.SYBatchInfo.RETURN_NAMES[6:] == ("megapixels", "orientation", "warnings")
+    assert len(m.SYBatchInfo.RETURN_TYPES) == len(m.SYBatchInfo.RETURN_NAMES)
+    N[0] += 7
     return N[0]

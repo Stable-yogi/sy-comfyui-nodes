@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_apply_mask_to_image.py`
 
-**What it does:** Hides the part of a picture outside the mask. The hidden part becomes see-through (alpha), black or gray.
+**What it does:** Hides the part of a picture outside the mask. The hidden part becomes see-through (alpha), black or gray. A soft edge (feather) avoids hard cut-out lines. A mask of another size or batch is fitted for you.
 
 ## Inputs
 
@@ -12,5 +12,6 @@ Source: `nodes/sy_apply_mask_to_image.py`
 | mask | MASK | yes | The mask. It is stretched to the picture size if needed. | mask [B,H,W] |
 | fill | COMBO | yes | What the hidden part becomes: see-through (adds an alpha channel), black or gray. | one of: alpha, black, gray |
 | keep | COMBO | yes | masked keeps the white part of the mask, outside keeps the black part. | one of: masked, outside |
+| feather | INT | no | Softens the mask edge by this many pixels so the cut-out has no hard line. 0 = off. | 0 to 512, step 1, default 0 |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `STRING`

@@ -9,6 +9,8 @@ except ImportError:  # run as a plain file by the selftest
     from _sy_hexcolour import parse_hex
 
 SHAPES = ("linear", "radial")
+EASES = ("linear", "smooth")
+MAX_SIDE = 8192
 DEFAULT_A = "#" + "1b1b2f"
 DEFAULT_B = "#" + "f5d58a"
 
@@ -41,16 +43,48 @@ def gradient_t(x, y, w, h, shape, angle):
     return 0.0 if t < 0.0 else 1.0 if t > 1.0 else t
 
 
+def check_ease(ease):
+    if ease not in EASES:
+        raise ValueError("ease must be one of: %s, got %r" % (", ".join(EASES), ease))
+
+
+def ease_t(t, ease):
+    """Pure function. linear leaves the position alone; smooth slows the fade at both ends (less visible start and end line)."""
+    check_ease(ease)
+    t = 0.0 if t < 0.0 else 1.0 if t > 1.0 else t
+    return t if ease == "linear" else t * t * (3.0 - 2.0 * t)
+
+
+def pick_size(width, height, ref_width=None, ref_height=None):
+    """Pure function. The size of the new picture: the reference picture's size when one is connected, else width x height."""
+    if ref_width is not None and ref_height is not None:
+        width, height = int(ref_width), int(ref_height)
+    if width > MAX_SIDE or height > MAX_SIDE:
+        raise ValueError("the gradient would be %dx%d, more than %d pixels on a side: make it smaller and enlarge it afterwards" % (width, height, MAX_SIDE))
+    check_size(width, height)
+    return int(width), int(height)
+
+
+def gradient_info(width, height, shape, angle, colour_a, colour_b, ease, batch, from_ref):
+    """Pure function. One plain line about the gradient that was made."""
+    how = "from the centre outward" if shape == "radial" else "at %g degrees" % angle
+    text = "Made a %s %s gradient %s%s, %s to %s" % (
+        "smooth" if ease == "smooth" else "plain", shape, how, "" if not from_ref else " (size taken from the connected picture)",
+        colour_a.strip(), colour_b.strip())
+    return "%s: %dx%d, %d picture(s)." % (text, width, height, batch)
+
+
 def gradient_pixel(t, a, b):
     return tuple(a[i] + t * (b[i] - a[i]) for i in range(3))
 
 
 class SYGradientImage:
-    DESCRIPTION = "Makes a new picture that fades from one colour to another, in a straight line or from the centre outward."
+    DESCRIPTION = ("Makes a new picture that fades from one colour to another, in a straight line or from the centre outward. "
+                   "Connect a picture to copy its size, and pick smooth for a softer start and end. The mask shows the fade position.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE", "MASK")
-    RETURN_NAMES = ("image", "mask")
+    RETURN_TYPES = ("IMAGE", "MASK", "STRING")
+    RETURN_NAMES = ("image", "mask", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -63,14 +97,23 @@ class SYGradientImage:
                 "colour_b": ("STRING", {"default": DEFAULT_B, "multiline": False, "tooltip": "Ending colour, as 3 or 6 hex digits like a web colour."}),
                 "angle": ("FLOAT", {"default": 0.0, "min": -360.0, "max": 360.0, "step": 1.0, "tooltip": "Linear only. 0 goes left to right, 90 goes top to bottom."}),
                 "batch_size": ("INT", {"default": 1, "min": 1, "max": 64, "step": 1, "tooltip": "How many identical pictures to make."}),
-            }
+            },
+            "optional": {
+                "size_from": ("IMAGE", {"tooltip": "Optional picture whose width and height are copied. The width and height above are then ignored."}),
+                "ease": (list(EASES), {"default": "linear", "tooltip": "linear: even fade. smooth: slow start and end, which hides the line where the fade begins."}),
+            },
         }
 
-    def run(self, width, height, shape, colour_a, colour_b, angle, batch_size):
+    def run(self, width, height, shape, colour_a, colour_b, angle, batch_size, size_from=None, ease="linear"):
         import torch
 
-        check_size(width, height)
+        from_ref = size_from is not None
+        if from_ref:
+            width, height = pick_size(width, height, int(size_from.shape[2]), int(size_from.shape[1]))
+        else:
+            width, height = pick_size(width, height)
         check_shape(shape)
+        check_ease(ease)
         if batch_size < 1:
             raise ValueError("batch_size must be at least 1, got %s" % batch_size)
         a = parse_hex(colour_a, "colour_a")
@@ -85,12 +128,14 @@ class SYGradientImage:
             half = abs(dx) * width / 2.0 + abs(dy) * height / 2.0
             t = (px * dx + py * dy + half) / (2.0 * half)
         t = t.clamp(0.0, 1.0)
+        if ease == "smooth":
+            t = t * t * (3.0 - 2.0 * t)
         ca = torch.tensor(a, dtype=torch.float32)
         cb = torch.tensor(b, dtype=torch.float32)
         img = ca + t.unsqueeze(-1) * (cb - ca)
         img = img[None].repeat(batch_size, 1, 1, 1).contiguous()
         mask = t[None].repeat(batch_size, 1, 1).contiguous()
-        return (img, mask)
+        return (img, mask, gradient_info(width, height, shape, angle, colour_a, colour_b, ease, batch_size, from_ref))
 
 
 NODE_CLASS_MAPPINGS = {}

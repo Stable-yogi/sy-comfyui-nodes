@@ -48,4 +48,25 @@ def run():
     assert raises(m.mirror_index, 0, 0, True); n += 1
     assert raises(m.mirror_index, 4, 4, True); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYMirrorImage"] == "Mirror Image SY"; n += 1
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _c("left half onto the right" in m.mirror_info("left_to_right", 64, 32) and "odd" not in m.mirror_info("left_to_right", 64, 32))
+    _c("middle column 32" in m.mirror_info("left_to_right", 65, 32) and "middle row" not in m.mirror_info("left_to_right", 65, 32))
+    _c("middle column 2 and middle row 3" in m.mirror_info("four_way", 5, 7))
+    _c("middle row 3" in m.mirror_info("top_to_bottom", 4, 7) and "middle column" not in m.mirror_info("top_to_bottom", 4, 7))
+    _c("nothing changed" in m.mirror_info("left_to_right", 1, 9))
+    for _mode in m.MODES:
+        _c(len(m.mirror_info(_mode, 10, 10)) > 20)
+    _r(m.mirror_info, "diagonal", 4, 4)
+    _c(m.SYMirrorImage.RETURN_NAMES == ("image", "info"))
+    return (n) + _k[0]

@@ -15,12 +15,20 @@ def min_max(a, b):
     return float(min(a, b)), float(max(a, b))
 
 
+def min_max_info(a, b):
+    """Pure function. Returns (swapped, info). swapped is true when a was the bigger one."""
+    low, high = min_max(a, b)
+    if a == b:
+        return False, "a and b are equal (%g)" % low
+    return a > b, "min %g, max %g (a=%g is the %s one)" % (low, high, a, "bigger" if a > b else "smaller")
+
+
 class SYMinMax:
-    DESCRIPTION = "Takes two numbers and gives the smaller one and the bigger one."
+    DESCRIPTION = "Takes two numbers and gives the smaller one and the bigger one. Also says if a and b were swapped (a was the bigger one) and gives an info line. Handy to make sure a start never ends up after an end."
     CATEGORY = category("Values")
     FUNCTION = "run"
-    RETURN_TYPES = ("FLOAT", "FLOAT")
-    RETURN_NAMES = ("min", "max")
+    RETURN_TYPES = ("FLOAT", "FLOAT", "BOOLEAN", "STRING")
+    RETURN_NAMES = ("min", "max", "swapped", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -29,7 +37,7 @@ class SYMinMax:
         return {"required": {"a": num("The first number."), "b": num("The second number.")}}
 
     def run(self, a, b):
-        return min_max(a, b)
+        return min_max(a, b) + min_max_info(a, b)
 
 
 NODE_CLASS_MAPPINGS = {}

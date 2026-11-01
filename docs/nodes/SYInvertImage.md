@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_invert_image.py`
 
-**What it does:** Inverts the colours of a picture like a photo negative. Can invert only red, green or blue. Transparency is left alone.
+**What it does:** Inverts the colours of a picture like a photo negative. Can invert only red, green or blue. Transparency is left alone. Add a mask to invert only part of the picture.
 
 ## Inputs
 
@@ -10,5 +10,6 @@ Source: `nodes/sy_invert_image.py`
 |---|---|---|---|---|
 | image | IMAGE | yes | The picture or batch of pictures to invert. | picture batch [B,H,W,3] |
 | channels | COMBO | yes | Which colours to flip. rgb flips all three; red, green or blue flips just that one. | one of: rgb, red, green, blue |
+| mask | MASK | no | Optional. Change only where this mask is white. A different size is stretched to fit. | mask [B,H,W] |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `STRING`

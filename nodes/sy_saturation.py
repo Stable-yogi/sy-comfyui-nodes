@@ -2,9 +2,11 @@
 try:
     from ._sy_common import category, register
     from ._sy_image_ops import need_image
+    from ._sy_d3_info import need_nonempty
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
     from _sy_image_ops import need_image
+    from _sy_d3_info import need_nonempty
 
 MODES = ("saturation", "vibrance")
 
@@ -38,12 +40,26 @@ def saturate_pixel(r, g, b, amount, mode):
     return tuple(out)
 
 
+def saturation_info(amount, mode):
+    """Pure function. Plain sentence: what the setting does to the colours."""
+    check_mode(mode)
+    check_amount(amount)
+    if amount == 0:
+        return "Amount is 0: the picture was passed through unchanged."
+    if amount <= -100 and mode == "saturation":
+        return "Saturation -100 removes all colour: the result is a grey picture."
+    way = "stronger" if amount > 0 else "weaker"
+    if mode == "saturation":
+        return "Every colour made %d%% %s (saturation mode)." % (abs(amount), way)
+    return "Dull colours made up to %d%% %s, strong colours moved less (vibrance mode)." % (abs(amount), way)
+
+
 class SYSaturation:
-    DESCRIPTION = "Makes colours stronger or weaker. Vibrance mostly lifts dull colours and leaves strong ones alone."
+    DESCRIPTION = "Makes colours stronger or weaker. Vibrance mostly lifts dull colours and leaves strong ones alone. The info output says what the setting did."
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -59,10 +75,12 @@ class SYSaturation:
         import torch
 
         need_image(image)
+        need_nonempty(image.shape)
         check_mode(mode)
         check_amount(amount)
+        info = saturation_info(float(amount), mode)
         if amount == 0:
-            return (image,)
+            return (image, info)
         rgb = image[..., :3].to(torch.float32)
         grey = (0.2126 * rgb[..., 0] + 0.7152 * rgb[..., 1] + 0.0722 * rgb[..., 2]).unsqueeze(-1)
         k = float(amount) / 100.0
@@ -74,7 +92,7 @@ class SYSaturation:
         res = (grey + (rgb - grey) * factor).clamp(0.0, 1.0)
         out = image.clone()
         out[..., :3] = res.to(image.dtype)
-        return (out,)
+        return (out, info)
 
 
 NODE_CLASS_MAPPINGS = {}

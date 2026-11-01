@@ -20,6 +20,28 @@ def run():
     except ValueError:
         pass
     out = m.SYTimestamp().run("compact", True)
-    assert len(out) == 1 and len(out[0]) == 14 and out[0].isdigit()
+    assert len(out[0]) == 14 and out[0].isdigit()
     assert m.SYTimestamp.CATEGORY == "SY/Utility"
-    return 10
+    # --- value pass A2: custom pattern, zone text, extra outputs
+    n = 10
+    assert m.format_custom(t, "%Y%m%d_%H%M", True) == "20231114_2213"; n += 1
+    assert m.format_custom(t, "%A %d %B %Y", True) == "Tuesday 14 November 2023"; n += 1
+    assert m.format_custom(t, "%H:%M:%S", True) == "22-13-20"; n += 1  # the colon is not allowed in a file name
+    assert m.format_custom(t, "%H:%M", True, False) == "22:13"; n += 1
+    assert m.format_custom(t, "100%% %y", True) == "100% 23"; n += 1
+    assert m.format_custom(t, "run %j", True) == "run 318"; n += 1
+    for bad in ("", "  ", "%Q", "%", "%-d", "%f"):
+        try:
+            m.format_custom(t, bad, True)
+            raise SystemExit("bad pattern must raise: %r" % bad)
+        except ValueError:
+            n += 1
+    assert m.zone_text(t, True) == "UTC"; n += 1
+    z = m.zone_text(t, False)
+    assert z == "local time" or (z.startswith("UTC") and len(z) == 9); n += 1
+    o = m.SYTimestamp().run("compact", True, "%Y", True)
+    assert len(o) == len(m.SYTimestamp.RETURN_TYPES) == 3 and len(o[0]) == 4 and o[1] > 1700000000 and "custom pattern, UTC" in o[2]; n += 1
+    o = m.SYTimestamp().run("date", True)
+    assert len(o[0]) == 10 and o[2].endswith("(format date, UTC)"); n += 1
+    assert m.SYTimestamp.RETURN_NAMES == ("timestamp", "unix_seconds", "info"); n += 1
+    return n

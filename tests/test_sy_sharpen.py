@@ -31,4 +31,30 @@ def run():
     assert near(out[0], 0.2); n += 1
     assert raises(m.sharpen_line, [0.1], -1, 1); n += 1
     assert raises(m.sharpen_line, [0.1], 1, -1); n += 1
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _c(m.unsharp_value(0.5, 0.4, 1.0) == m.unsharp_value(0.5, 0.4, 1.0, 0.0))
+    _c(abs(m.unsharp_value(0.5, 0.49, 1.0, 0.05) - 0.5) < 1e-12)
+    _c(abs(m.unsharp_value(0.5, 0.4, 1.0, 0.05) - 0.6) < 1e-9)
+    _c(m.sharpen_line([0.5, 0.5, 0.5], 1.0, 2.0, 0.1) == [0.5, 0.5, 0.5])
+    _c(m.sharpen_line([0.2, 0.2, 0.8, 0.8], 1.0, 1.0) != m.sharpen_line([0.2, 0.2, 0.8, 0.8], 1.0, 1.0, 0.9))
+    _r(m.sharpen_line, [0.1, 0.2], 1.0, 1.0, 2.0)
+    _c("nothing was sharpened" in m.sharpen_info(1.0, 0.0))
+    _i = m.sharpen_info(1.5, 1.0)
+    _c("1.5 px" in _i and "strength 1.00" in _i and "ignoring" not in _i and "halos" not in _i)
+    _c("ignoring brightness differences below 0.02" in m.sharpen_info(1.0, 1.0, 0.02))
+    _c("halos" in m.sharpen_info(1.0, 3.0))
+    _r(m.sharpen_info, -1, 1)
+    _r(m.sharpen_info, 1, 1, -0.1)
+    _c(m.SYSharpen.RETURN_NAMES == ("image", "info") and "threshold" in m.SYSharpen.INPUT_TYPES()["optional"])
+    return (n) + _k[0]

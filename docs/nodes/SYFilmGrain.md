@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_film_grain.py`
 
-**What it does:** Adds film grain. The same seed always gives the same grain. Choose grey or colour grain and how coarse it is.
+**What it does:** Adds film grain. The same seed always gives the same grain. Choose grey or colour grain and how coarse it is. Midtones response keeps pure black and white clean, like real film. Add a mask to grain only one area.
 
 ## Inputs
 
@@ -13,5 +13,8 @@ Source: `nodes/sy_film_grain.py`
 | size | INT | yes | Grain size in pixels. 1 is fine grain, bigger is coarse. | 1 to 32, default 1 |
 | seed | INT | yes | Number that fixes the grain pattern. Change it for a new pattern. | 0 to 4294967295, default 0 |
 | color_grain | BOOLEAN | yes | On gives coloured grain, off gives grey grain. | default False |
+| response | COMBO | no | even: same grain everywhere. midtones: less in pure black and white, like real film. | one of: even, midtones |
+| animated | BOOLEAN | no | On: every frame of a batch gets its own grain. Off: all frames get the same grain. | default True |
+| mask | MASK | no | Optional. Add grain only where this mask is white. A different size is stretched to fit. | mask [B,H,W] |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `STRING`

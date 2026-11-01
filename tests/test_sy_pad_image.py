@@ -33,5 +33,25 @@ def run():
     assert raises(m.parse_colour, "white", "1,2"); n += 1
     assert raises(m.parse_colour, "white", "1,2,300"); n += 1
     assert raises(m.parse_colour, "pink"); n += 1
-    assert m.SYPadImage.RETURN_TYPES == ("IMAGE", "MASK", "INT", "INT"); n += 1
-    return n
+    assert m.SYPadImage.RETURN_TYPES [:4] == ("IMAGE", "MASK", "INT", "INT"); n += 1
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _c(m.snap_extra(100, 8) == 4 and m.snap_extra(96, 8) == 0 and m.snap_extra(7, 1) == 0 and m.snap_extra(1, 64) == 63)
+    _c("multiple_of" in _r(m.snap_extra, 10, 0))
+    _i = m.pad_info(512, 512, 64, 64, 0, 0)
+    _c("Padded 512x512 to 640x512" in _i and "extra" not in _i and "megapixels" not in _i)
+    _c("3 px right and 5 px bottom extra" in m.pad_info(100, 100, 0, 3, 0, 5, 3, 5))
+    _c("too big" in m.pad_info(4000, 4000, 100, 100, 100, 100))
+    _r(m.pad_info, 10, 10, -1, 0, 0, 0)
+    _c(m.SYPadImage.RETURN_NAMES == ("image", "mask", "width", "height", "info") and "multiple_of" in m.SYPadImage.INPUT_TYPES()["optional"])
+    return (n) + _k[0]

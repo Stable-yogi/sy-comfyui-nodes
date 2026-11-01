@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_line_pick.py`
 
-**What it does:** Takes one line from a text. Count from the top with 0, 1, 2 or from the bottom with -1, -2.
+**What it does:** Takes one line from a text. Count from the top with 0, 1, 2 or from the bottom with -1, -2. A number that is too big can wrap round to the start (handy with a counter) or stick to the last line instead of stopping, and an info line says which line was taken.
 
 ## Inputs
 
@@ -11,5 +11,7 @@ Source: `nodes/sy_line_pick.py`
 | text | STRING | yes | The text with several lines. | default '', multiline |
 | index | INT | yes | Line to take, counting from 0. Negative counts from the end. | -100000 to 100000, default 0 |
 | skip_blank | BOOLEAN | yes | Ignore empty lines when counting. | default True |
+| out_of_range | COMBO | no | If the index is past the last line: stop with a message, wrap round to the start, or use the nearest end. | one of: error, wrap around, clamp to ends |
+| strip | BOOLEAN | no | On: remove spaces around the picked line. | default False |
 
-Outputs: `STRING`, `INT`
+Outputs: `STRING`, `INT`, `STRING`

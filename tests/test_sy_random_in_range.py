@@ -20,12 +20,35 @@ def run():
     assert 0.2 <= f <= 0.8 and i == round(f)
     i, f = m.random_in_range(2 ** 64 - 1, 0, 10)
     assert 0 <= i <= 10
-    assert m.SYRandomInRange().run(5, 0, 10) == m.random_in_range(5, 0, 10)
+    assert m.SYRandomInRange().run(5, 0, 10)[:2] == m.random_in_range(5, 0, 10)
     for bad in ((-1, 0, 1), (1.5, 0, 1), (True, 0, 1), (1, 5, 1), (1, float("nan"), 1), (1, "a", 2)):
         try:
             m.random_in_range(*bad)
             raise SystemExit("must raise for %r" % (bad,))
         except ValueError as e:
             assert str(e)
-    assert m.SYRandomInRange.RETURN_TYPES == ("INT", "FLOAT")
-    return 18
+    assert m.SYRandomInRange.RETURN_TYPES[:2] == ("INT", "FLOAT")
+    return 18 + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.random_in_range(5, 0, 10, 0.0) == m.random_in_range(5, 0, 10))
+    n += ok(all(abs(m.random_in_range(s, 2, 9, 0.5)[1] * 2 - round(m.random_in_range(s, 2, 9, 0.5)[1] * 2)) < 1e-9 for s in range(40)))
+    n += ok(all(2 <= m.random_in_range(s, 2, 9, 0.5)[1] <= 9 for s in range(40)))
+    n += ok(m.random_in_range(7, 0, 10, 0.5)[0] == m.random_in_range(7, 0, 10)[0])
+    n += ok(m.random_in_range(3, 5, 5, 0.5) == (5, 5.0))
+    n += ok(rs(m.random_in_range, 1, 0, 10, -1) is not None)
+    n += ok('seed 5 gives int' in m.random_report(5, 0, 10)[2])
+    n += ok('step 0.5' in m.random_report(5, 0, 10, 0.5)[2])
+    n += ok(len(m.SYRandomInRange().run(5, 0, 10)) == 3)
+    return n

@@ -39,5 +39,13 @@ def run():
     assert raises(m.band_value, 0.5, -0.1, 1.0, 0.0); n += 1
     assert raises(m.band_value, 0.5, 0.0, 1.5, 0.0); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYLuminanceMask"] == "Luminance Mask SY"; n += 1
-    assert m.SYLuminanceMask.RETURN_TYPES == ("MASK",); n += 1
+    assert m.SYLuminanceMask.RETURN_TYPES == ("MASK", "STRING"); n += 1
+    assert m.check_source("red") is None and raises(m.check_source, "alpha"); n += 1
+    t = m.mask_info("luminance", 0.5, 1.0, 0.1, True, 4, 35.0)
+    assert "brightness between 0.5 and 1" in t and "soft fade of 0.1" in t and "inverted" in t and "feathered 4 px" in t and "35.0% selected" in t; n += 1
+    assert "the red channel" in m.mask_info("red", 0.0, 1.0, 0.0, False, 0, 50.0) and "soft fade" not in m.mask_info("red", 0.0, 1.0, 0.0, False, 0, 50.0); n += 1
+    assert "empty" in m.mask_info("luminance", 0.9, 1.0, 0.0, False, 0, 0.0) and "Widen" in m.mask_info("luminance", 0.9, 1.0, 0.0, False, 0, 0.0); n += 1
+    assert "whole picture" in m.mask_info("luminance", 0.0, 1.0, 0.0, False, 0, 100.0); n += 1
+    assert m.SYLuminanceMask.RETURN_NAMES == ("mask", "info"); n += 1
+    assert list(m.SYLuminanceMask.INPUT_TYPES()["optional"]) == ["source", "feather"]; n += 1
     return n

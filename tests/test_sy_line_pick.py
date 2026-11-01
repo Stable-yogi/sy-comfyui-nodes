@@ -21,5 +21,26 @@ def run():
             raise SystemExit("bad args must raise")
         except ValueError:
             pass
-    assert m.SYLinePick.RETURN_TYPES == ("STRING", "INT")
-    return 13  # checks
+    assert m.SYLinePick.RETURN_TYPES == ("STRING", "INT", "STRING")
+    assert m.line_pick("a\nb\nc", 3, True, "wrap around") == ("a", 3)
+    assert m.line_pick("a\nb\nc", 7, True, "wrap around") == ("b", 3)
+    assert m.line_pick("a\nb\nc", -4, True, "wrap around") == ("c", 3)
+    assert m.line_pick("a\nb\nc", 9, True, "clamp to ends") == ("c", 3)
+    assert m.line_pick("a\nb\nc", -9, True, "clamp to ends") == ("a", 3)
+    assert m.line_pick("a\nb\nc", 1, True, "wrap around") == ("b", 3)
+    assert m.line_pick("  a  \nb", 0, True, "error", True) == ("a", 2)
+    assert m.line_pick("  a  \nb", 0, True, "error", False) == ("  a  ", 2)
+    assert m.line_pick_ex("a\nb", 5, True, "wrap around") == ("b", 2, 1, "wrapped")
+    assert m.line_pick_ex("a\nb", 5, True, "clamp to ends") == ("b", 2, 1, "clamped")
+    assert m.line_pick_ex("a\nb", -1, True) == ("b", 2, 1, "")
+    for bad in (("a\nb", 2, True, "error"), ("", 0, True, "wrap around"), ("\n", 0, True, "clamp to ends"), ("a", 0, True, "sideways")):
+        try:
+            m.line_pick(*bad)
+            raise SystemExit("bad args must raise")
+        except ValueError:
+            pass
+    assert m.SYLinePick().run("a\nb\nc", 1, True) == ("b", 3, "Picked line 2 of 3.")
+    assert m.SYLinePick().run("a\nb\nc", 4, True, "wrap around") == ("b", 3, "Picked line 2 of 3 (index 4 wrapped round).")
+    assert m.SYLinePick().run("a\nb\nc", 4, True, "clamp to ends")[2] == "Picked line 3 of 3 (index 4 was past the end)."
+    assert m.SYLinePick.RETURN_NAMES == ("line", "total_lines", "info")
+    return 28  # checks

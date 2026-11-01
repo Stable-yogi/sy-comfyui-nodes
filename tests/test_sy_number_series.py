@@ -37,6 +37,27 @@ def run():
     msg = raises(m.format_series, [1.0], 9)
     assert msg and "decimals" in msg; n += 1
     assert raises(m.format_series, [1.0], -1); n += 1
-    assert m.SYNumberSeries().run(0.0, 1.0, 5, 3) == ("0, 0.25, 0.5, 0.75, 1", 5); n += 1
+    assert m.SYNumberSeries().run(0.0, 1.0, 5, 3)[:2] == ("0, 0.25, 0.5, 0.75, 1", 5); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYNumberSeries"] == "Number Series SY"; n += 1
+    return n + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.number_series(0, 1, 4, False) == [0.0, 0.25, 0.5, 0.75])
+    n += ok(m.number_series(0, 1, 5) == m.number_series(0, 1, 5, True))
+    n += ok(m.series_info(0, 1, 5) == (0.25, '5 numbers from 0 to 1, step 0.25'))
+    n += ok('left out' in m.series_info(0, 1, 4, False)[1])
+    n += ok(m.SYNumberSeries().run(0.0, 1.0, 4, 2, False)[0] == '0, 0.25, 0.5, 0.75')
+    n += ok(m.SYNumberSeries().run(0.0, 1.0, 5, 3)[2] == 0.25)
+    n += ok(rs(m.number_series, 0, 1, 1, False) is not None)
     return n

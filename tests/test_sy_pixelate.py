@@ -41,4 +41,28 @@ def run():
     assert m.pixelate_grid([[1.0, 3.0, 5.0, 7.0]], 4, "average") == [[4.0] * 4]; n += 1
     assert raises(m.pixelate_grid, g, 2, "bilinear"); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYPixelate"] == "Pixelate SY"; n += 1
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _c(m.resolve_block(8, 0, 100) == 8)
+    _c(m.resolve_block(8, 32, 1024) == 32 and m.resolve_block(8, 30, 1024) == 35 and m.resolve_block(8, 4096, 100) == 1)
+    _r(m.resolve_block, 0, 0, 100)
+    _r(m.resolve_block, 8, -1, 100)
+    _c(m.pool_window(8, 100, 50) == (8, 8) and m.pool_window(128, 64, 1024) == (64, 128) and m.pool_window(5, 3, 2) == (3, 2))
+    _r(m.pool_window, 0, 4, 4)
+    _i = m.pixelate_info(8, 100, 50, "average")
+    _c("13 x 7 = 91 blocks" in _i and "1 block " in m.pixelate_info(100, 100, 50, "average").replace("(", " ").replace(".", " ") and "mean colour" in _i and "lower block_size" not in _i)
+    _c("top-left" in m.pixelate_info(8, 100, 50, "nearest"))
+    _c("lower block_size" in m.pixelate_info(64, 100, 50, "average"))
+    _c("unchanged" in m.pixelate_info(1, 100, 50, "average"))
+    _c(m.SYPixelate.RETURN_NAMES == ("image", "info") and "blocks_across" in m.SYPixelate.INPUT_TYPES()["optional"])
+    return (n) + _k[0]

@@ -28,8 +28,61 @@ def _auto_type(value):
     return value
 
 
-def build_json(lines_text, auto_types=True, indent=2):
+def _put(data, key, value, nest, number):
+    """Puts one value in. With nest on, a key like a.b makes {"a": {"b": value}}."""
+    if not nest or "." not in key:
+        if key in data:
+            raise ValueError("line %d repeats the key %r: use each key once" % (number, key))
+        data[key] = value
+        return
+    parts = [p.strip() for p in key.split(".")]
+    if any(p == "" for p in parts):
+        raise ValueError("line %d has an empty part in the key %r: write it like a.b" % (number, key))
+    cur = data
+    for p in parts[:-1]:
+        if p not in cur:
+            cur[p] = {}
+        elif not isinstance(cur[p], dict):
+            raise ValueError("line %d: %r is already a plain value, it cannot also hold keys" % (number, p))
+        cur = cur[p]
+    if parts[-1] in cur:
+        raise ValueError("line %d repeats the key %r: use each key once" % (number, key))
+    cur[parts[-1]] = value
+
+
+def json_info(data):
+    """Pure function. One plain line: how many keys and what kinds of values."""
+    counts = {"number": 0, "true/false": 0, "list": 0, "group": 0, "empty": 0}
+    total = 0
+
+    def walk(d):
+        nonlocal total
+        for v in d.values():
+            total += 1
+            if isinstance(v, dict):
+                counts["group"] += 1
+                walk(v)
+            elif isinstance(v, list):
+                counts["list"] += 1
+            elif isinstance(v, bool):
+                counts["true/false"] += 1
+            elif isinstance(v, (int, float)):
+                counts["number"] += 1
+            elif v is None:
+                counts["empty"] += 1
+
+    walk(data)
+    bits = ["%d %s" % (c, k if c == 1 or k != "number" else "numbers") for k, c in counts.items() if c]
+    return "%d key%s%s." % (total, "" if total == 1 else "s", (" (" + ", ".join(bits) + ")") if bits else "")
+
+
+def build_json(lines_text, auto_types=True, indent=2, nest_dots=False, list_separator=""):
     """Pure function. Each line is 'key: value' (or 'key=value'). Blank lines and lines starting with # are skipped."""
+    return build_json_data(lines_text, auto_types, indent, nest_dots, list_separator)[0]
+
+
+def build_json_data(lines_text, auto_types=True, indent=2, nest_dots=False, list_separator=""):
+    """Pure function. Returns (json_text, data)."""
     if not isinstance(lines_text, str):
         raise ValueError("lines must be text, got %s" % type(lines_text).__name__)
     indent = int(indent)
@@ -51,20 +104,24 @@ def build_json(lines_text, auto_types=True, indent=2):
         value = line[cut + 1:].strip()
         if not key:
             raise ValueError("line %d has an empty key: write it as key: value" % number)
-        if key in data:
-            raise ValueError("line %d repeats the key %r: use each key once" % (number, key))
-        data[key] = _auto_type(value) if auto_types else value
+        if list_separator and list_separator in value:
+            parts = [x.strip() for x in value.split(list_separator) if x.strip()]
+            item = [_auto_type(x) if auto_types else x for x in parts]
+        else:
+            item = _auto_type(value) if auto_types else value
+        _put(data, key, item, nest_dots, number)
     if not data:
         raise ValueError("no key: value lines found: write at least one line")
-    return json.dumps(data, ensure_ascii=False, indent=indent if indent > 0 else None)
+    return json.dumps(data, ensure_ascii=False, indent=indent if indent > 0 else None), data
 
 
 class SYJSONPromptBuilder:
-    DESCRIPTION = "Turns lines like 'subject: a fox' into a valid JSON text. Quotes and special characters are escaped for you."
+    DESCRIPTION = ("Turns lines like 'subject: a fox' into a valid JSON text. Quotes and special characters are escaped for you. Can also "
+                   "build groups from keys like camera.angle, turn 'a | b | c' into a list, and an info line counts the keys.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("json",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("json", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -73,11 +130,16 @@ class SYJSONPromptBuilder:
                 "lines": ("STRING", {"multiline": True, "default": "subject: a fox\nmood: calm", "tooltip": "One key: value per line. Lines starting with # are skipped."}),
                 "auto_types": ("BOOLEAN", {"default": True, "tooltip": "On: true, false, null and numbers become real JSON values. Off: all text."}),
                 "indent": ("INT", {"default": 2, "min": 0, "max": 8, "tooltip": "Spaces per level. 0 gives one compact line."}),
-            }
+            },
+            "optional": {
+                "nest_dots": ("BOOLEAN", {"default": False, "tooltip": "On: a key like camera.angle becomes a group: {\"camera\": {\"angle\": ...}}."}),
+                "list_separator": ("STRING", {"default": "", "tooltip": "A mark that splits a value into a list, for example | so that tags: a | b gives [\"a\", \"b\"]. Empty: off."}),
+            },
         }
 
-    def run(self, lines, auto_types, indent):
-        return (build_json(lines, auto_types, indent),)
+    def run(self, lines, auto_types, indent, nest_dots=False, list_separator=""):
+        text, data = build_json_data(lines, auto_types, indent, nest_dots, list_separator)
+        return (text, json_info(data))
 
 
 NODE_CLASS_MAPPINGS = {}

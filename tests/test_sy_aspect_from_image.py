@@ -35,6 +35,28 @@ def run():
         except ValueError:
             pass
     n += 1
-    assert m.SYAspectFromSize().run(1600, 900) == ("16:9", 1600 / 900)
+    assert m.SYAspectFromSize().run(1600, 900)[:2] == ("16:9", 1600 / 900)
     n += 1
+    return n + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.aspect_report(1600, 900)[2] == 'landscape')
+    n += ok(m.aspect_report(900, 1600)[2] == 'portrait')
+    n += ok(m.aspect_report(512, 512)[2] == 'square')
+    n += ok(m.aspect_report(1600, 900)[3] == '1600x900 is 16:9, landscape, 1.44 megapixels')
+    n += ok('closest to' in m.aspect_report(1013, 677)[3] and 'exact shape' in m.aspect_report(1013, 677)[3])
+    n += ok(m.aspect_report(1600, 900)[:2] == m.aspect_from_size(1600, 900))
+    n += ok(rs(m.aspect_report, 0, 5) is not None)
+    n += ok(len(m.SYAspectFromSize().run(10, 10)) == 4)
     return n

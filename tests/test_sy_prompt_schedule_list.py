@@ -34,7 +34,24 @@ def run():
     assert raises("0: a", -4); n += 1
     assert raises("0: a\nbroken", 5); n += 1
     assert raises("0: a\n0: b", 5); n += 1
-    assert m.SYPromptScheduleList().run("0: a\n1: b", 2) == ("a\nb", 2); n += 1
-    assert m.SYPromptScheduleList.RETURN_TYPES == ("STRING", "INT"); n += 1
+    assert m.SYPromptScheduleList().run("0: a\n1: b", 2)[:2] == ("a\nb", 2); n += 1
+    assert m.SYPromptScheduleList.RETURN_TYPES == ("STRING", "INT", "STRING"); n += 1
     assert m.MAX_FRAMES == 2000; n += 1
+    return n + _extra()
+
+
+def _extra():
+    n = 0
+    assert m.expand_schedule("2: late", 4, True)[0].split("\n") == ["late"] * 4; n += 1
+    assert m.expand_schedule("2: late", 4, False)[0].split("\n") == ["", "", "late", "late"]; n += 1
+    assert m.expand_schedule("", 3, True)[0] == "\n\n"; n += 1
+    info = m.schedule_info("2: late", 4)
+    assert "WARNING" in info and "frames 0-1" in info and "fill_before_first" in info; n += 1
+    assert "WARNING" not in m.schedule_info("2: late", 4, True) and "use the first prompt" in m.schedule_info("2: late", 4, True); n += 1
+    assert "ignored" in m.schedule_info("0: a\n10: b", 5) and "1 segment" in m.schedule_info("0: a\n10: b", 5); n += 1
+    assert "no keys" in m.schedule_info("", 5); n += 1
+    assert m.schedule_info("0: a\n3: b", 6) == "6 frame(s), 2 segment(s)"; n += 1
+    out = m.SYPromptScheduleList().run("1: x", 3, True)
+    assert out == ("x\nx\nx", 1, m.schedule_info("1: x", 3, True)); n += 1
+    assert m.SYPromptScheduleList.RETURN_NAMES[-1] == "info"; n += 1
     return n

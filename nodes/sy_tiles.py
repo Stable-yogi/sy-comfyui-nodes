@@ -3,9 +3,12 @@ import json
 
 try:
     from ._sy_common import category, register
+    from ._sy_d3_info import plural, size_text
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
+    from _sy_d3_info import plural, size_text
 
+BATCH_MODES = ["first picture only", "all pictures"]
 INFO_KEYS = ("width", "height", "tile_w", "tile_h", "overlap", "xs", "ys", "cols", "rows")
 
 
@@ -139,44 +142,75 @@ def merge_plan(info, scale):
     return plan
 
 
+def split_info(info, batch_count=1):
+    """Pure function. Plain sentence for Tile Split SY, from the dict that make_info gives."""
+    n = info["cols"] * info["rows"]
+    text = "Cut %s into %d x %d = %s of %s, overlap %d px." % (
+        size_text(info["width"], info["height"]), info["cols"], info["rows"], plural(n, "tile"),
+        size_text(info["tile_w"], info["tile_h"]), min(info["overlap"], max(info["tile_w"], info["tile_h"]) - 1))
+    if n == 1:
+        text += " The picture fits in one tile, so it was not cut: lower tile_size to cut it."
+    if batch_count > 1:
+        text += " The input had %d pictures: only the first was cut." % batch_count
+    return text
+
+
+def merge_info(info, scale, blend, got):
+    """Pure function. Plain sentence for Tile Merge SY."""
+    return "Joined %s into one %s picture (tiles were enlarged x%d, blend %s)." % (
+        plural(got, "tile"), size_text(info["width"] * scale, info["height"] * scale), scale, blend)
+
+
 class SYTileSplit:
-    DESCRIPTION = "Cuts one big picture into equal tiles that overlap a little. Process the tiles, then join them with Tile Merge SY."
+    DESCRIPTION = "Cuts one big picture into equal tiles that overlap a little. Process the tiles, then join them with Tile Merge SY. Also gives the tile count and a plain info sentence (grid size, tile size, and a warning when the picture is smaller than one tile)."
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE", "STRING")
-    RETURN_NAMES = ("tiles", "tile_info")
+    RETURN_TYPES = ("IMAGE", "STRING", "INT", "STRING")
+    RETURN_NAMES = ("tiles", "tile_info", "tile_count", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "image": ("IMAGE", {"tooltip": "The picture to cut. If you give a batch, only the first picture is used."}),
+                "image": ("IMAGE", {"tooltip": "The picture to cut. A batch: only the first picture is used, unless batch_mode says all."}),
                 "tile_size": ("INT", {"default": 1024, "min": 64, "max": 8192, "tooltip": "Width and height of one tile in pixels."}),
                 "overlap": ("INT", {"default": 64, "min": 0, "max": 2048, "tooltip": "How many pixels neighbouring tiles share. Must be smaller than the tile size."}),
-            }
+            },
+            "optional": {
+                "batch_mode": (BATCH_MODES, {"default": "first picture only", "tooltip": "first picture only keeps the old behaviour. all pictures cuts every picture of a batch, one after the other."}),
+            },
         }
 
-    def run(self, image, tile_size, overlap):
+    def run(self, image, tile_size, overlap, batch_mode="first picture only"):
         import torch
+        if image.dim() != 4 or image.shape[0] < 1:
+            raise ValueError("the picture batch is empty: connect at least 1 picture")
         height = int(image.shape[1])
         width = int(image.shape[2])
         info = make_info(width, height, tile_size, overlap)
-        pic = image[0]
+        if batch_mode not in BATCH_MODES:
+            raise ValueError("batch_mode must be one of: %s" % ", ".join(BATCH_MODES))
+        pics = image if batch_mode == "all pictures" else image[:1]
         tw = info["tile_w"]
         th = info["tile_h"]
         tiles = []
-        for y in info["ys"]:
-            for x in info["xs"]:
-                tiles.append(pic[y:y + th, x:x + tw, :])
-        return (torch.stack(tiles, dim=0), json.dumps(info))
+        for pic in pics:
+            for y in info["ys"]:
+                for x in info["xs"]:
+                    tiles.append(pic[y:y + th, x:x + tw, :])
+        used = int(pics.shape[0])
+        text = split_info(info, int(image.shape[0]) if used == 1 else 1)
+        if used > 1:
+            text += " All %d pictures were cut, %d tiles in total, picture after picture." % (used, len(tiles))
+        return (torch.stack(tiles, dim=0), json.dumps(info), len(tiles), text)
 
 
 class SYTileMerge:
-    DESCRIPTION = "Joins tiles from Tile Split SY back into one picture. Works after an upscale of a whole-number factor."
+    DESCRIPTION = "Joins tiles from Tile Split SY back into one picture. Works after an upscale of a whole-number factor. Tiles from a batch cut with batch_mode all pictures give a batch back. The info output says the new size and the enlarge factor."
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -190,11 +224,14 @@ class SYTileMerge:
 
     def run(self, tiles, tile_info, blend):
         import torch
+        if tiles.dim() != 4 or tiles.shape[0] < 1:
+            raise ValueError("the tile batch is empty: connect the tiles from Tile Split SY")
         info = parse_info(tile_info)
         expected = info["cols"] * info["rows"]
         got = int(tiles.shape[0])
-        if got != expected:
+        if got % expected != 0:
             raise ValueError("expected %d tiles, got %d" % (expected, got))
+        pics = got // expected
         th_in = int(tiles.shape[1])
         tw_in = int(tiles.shape[2])
         channels = int(tiles.shape[3])
@@ -203,21 +240,29 @@ class SYTileMerge:
         out_h = info["height"] * s
         plan = merge_plan(info, s)
         dev = tiles.device
+        keep = tiles.dtype if tiles.dtype in (torch.float16, torch.bfloat16, torch.float32, torch.float64) else torch.float32
         tiles = tiles.to(torch.float32)
-        acc = torch.zeros((out_h, out_w, channels), dtype=torch.float32, device=dev)
-        if blend == "none":
+        results = []
+        for p in range(pics):
+            acc = torch.zeros((out_h, out_w, channels), dtype=torch.float32, device=dev)
+            if blend == "none":
+                for i, (x0, y0, wx, wy) in enumerate(plan):
+                    acc[y0:y0 + th_in, x0:x0 + tw_in, :] = tiles[p * expected + i]
+                results.append(acc.clamp(0.0, 1.0))
+                continue
+            wsum = torch.zeros((out_h, out_w, 1), dtype=torch.float32, device=dev)
             for i, (x0, y0, wx, wy) in enumerate(plan):
-                acc[y0:y0 + th_in, x0:x0 + tw_in, :] = tiles[i]
-            return (acc.clamp(0.0, 1.0).unsqueeze(0),)
-        wsum = torch.zeros((out_h, out_w, 1), dtype=torch.float32, device=dev)
-        for i, (x0, y0, wx, wy) in enumerate(plan):
-            wxt = torch.tensor(wx, dtype=torch.float32, device=dev)
-            wyt = torch.tensor(wy, dtype=torch.float32, device=dev)
-            w = (wyt[:, None] * wxt[None, :]).unsqueeze(-1)
-            acc[y0:y0 + th_in, x0:x0 + tw_in, :] += tiles[i] * w
-            wsum[y0:y0 + th_in, x0:x0 + tw_in, :] += w
-        out = acc / wsum.clamp(min=1e-12)
-        return (out.clamp(0.0, 1.0).unsqueeze(0),)
+                wxt = torch.tensor(wx, dtype=torch.float32, device=dev)
+                wyt = torch.tensor(wy, dtype=torch.float32, device=dev)
+                w = (wyt[:, None] * wxt[None, :]).unsqueeze(-1)
+                acc[y0:y0 + th_in, x0:x0 + tw_in, :] += tiles[p * expected + i] * w
+                wsum[y0:y0 + th_in, x0:x0 + tw_in, :] += w
+            results.append((acc / wsum.clamp(min=1e-12)).clamp(0.0, 1.0))
+        out = torch.stack(results, dim=0).to(keep)
+        text = merge_info(info, s, blend, expected)
+        if pics > 1:
+            text += " %d pictures were joined (the tiles came picture after picture)." % pics
+        return (out, text)
 
 
 NODE_CLASS_MAPPINGS = {}

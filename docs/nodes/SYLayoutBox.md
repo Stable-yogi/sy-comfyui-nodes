@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_layout_box.py`
 
-**What it does:** Makes one named box for a picture layout. Join several with Layout Boxes Merge, then check or preview them.
+**What it does:** Makes one named box for a picture layout. Can snap the numbers to a multiple of 8 or 64 and refuse a box that leaves the picture. Join several with Layout Boxes Merge, then check or preview them.
 
 ## Inputs
 
@@ -14,5 +14,8 @@ Source: `nodes/sy_layout_box.py`
 | h | INT | yes | Height of the box in pixels. | 1 to 16384, default 256 |
 | label | STRING | yes | Short name shown on the box, up to 80 characters. | default 'box' |
 | colour | COMBO | yes | Colour the preview uses to draw this box. | one of: red, orange, yellow, green, cyan, blue, purple, pink, white, black |
+| canvas_width | INT | no | Picture width. If above 0, a box that runs past the right edge is refused. 0 skips the check. | 0 to 16384, default 0 |
+| canvas_height | INT | no | Picture height. If above 0, a box that runs past the bottom edge is refused. 0 skips the check. | 0 to 16384, default 0 |
+| snap_to | INT | no | Round x, y, w and h to a multiple of this, for example 8 or 64. 1 keeps your numbers. | 1 to 512, default 1 |
 
-Outputs: `STRING`
+Outputs: `STRING`, `STRING`

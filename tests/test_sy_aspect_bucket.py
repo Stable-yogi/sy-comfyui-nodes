@@ -53,5 +53,10 @@ def run():
     assert "multiple" in bad(m.pick_bucket, 100, 100, "1:1", 1024, 0)
     assert "target" in bad(m.pick_bucket, 100, 100, "1:1", 32, 64)
     assert "not a ratio" in bad(m.pick_bucket, 100, 100, "x")
-    assert m.SYAspectBucket().run(1920, 1080, "1:1, 4:3, 3:2, 16:9", True, 1024, 64) == (1344, 768, "16:9")
-    return 36
+    res = m.SYAspectBucket().run(1920, 1080, "1:1, 4:3, 3:2, 16:9", True, 1024, 64)
+    assert res[:3] == (1344, 768, "16:9") and len(res) == 4
+    t = m.bucket_info(1920, 1080, 1344, 768, "16:9")
+    assert "1920x1080" in t and "16:9" in t and "1344x768" in t and "1.0 MP" in t and "1.6%" in t
+    assert "differs by" in m.bucket_info(1000, 1000, 1344, 768, "16:9")
+    assert m.SYAspectBucket.RETURN_NAMES == ("bucket_width", "bucket_height", "ratio", "info")
+    return 36 + 7

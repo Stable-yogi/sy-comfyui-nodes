@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_image_stats.py`
 
-**What it does:** Measures a picture: average brightness, contrast, and how many pixels are very dark or very bright.
+**What it does:** Measures a picture: average brightness, contrast, and how many pixels are very dark or very bright. The verdict says in plain words if it looks dark, bright, flat or clipped.
 
 ## Inputs
 
@@ -12,4 +12,4 @@ Source: `nodes/sy_image_stats.py`
 | dark_level | FLOAT | yes | Pixels darker than this count as dark. Must be lower than bright_level. | 0.0 to 1.0, step 0.01, default 0.1 |
 | bright_level | FLOAT | yes | Pixels brighter than this count as bright. Must be higher than dark_level. | 0.0 to 1.0, step 0.01, default 0.9 |
 
-Outputs: `FLOAT`, `FLOAT`, `FLOAT`, `FLOAT`, `STRING`
+Outputs: `FLOAT`, `FLOAT`, `FLOAT`, `FLOAT`, `STRING`, `STRING`

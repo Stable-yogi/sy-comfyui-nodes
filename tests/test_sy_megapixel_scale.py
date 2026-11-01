@@ -33,5 +33,26 @@ def run():
                 (65536, 1, 4000, 1)):
         assert _raises(*bad), bad
         n += 1
-    assert m.SYMegapixelScale().run(1024, 1024, 1.0, 1) == (1000, 1000); n += 1
+    assert m.SYMegapixelScale().run(1024, 1024, 1.0, 1)[:2] == (1000, 1000); n += 1
+    return n + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.scale_to_megapixels(512, 512, 4.0, 16, True) == (512, 512))
+    n += ok(m.scale_to_megapixels(512, 512, 4.0, 16) == m.scale_to_megapixels(512, 512, 4.0, 16, False))
+    n += ok(m.scale_to_megapixels(2048, 2048, 1.0, 16, True) == m.scale_to_megapixels(2048, 2048, 1.0, 16))
+    n += ok('lowered to the current size' in m.megapixel_report(512, 512, 4.0, 16, True)[2])
+    n += ok('lowered' not in m.megapixel_report(2048, 2048, 1.0, 16, True)[2])
+    n += ok(m.megapixel_report(1024, 1024, 1.0, 1)[2].startswith('1024x1024 -> 1000x1000 (target 1 MP'))
+    n += ok(len(m.SYMegapixelScale().run(1024, 1024, 1.0, 16)) == 3)
     return n

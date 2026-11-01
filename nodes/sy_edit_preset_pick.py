@@ -13,6 +13,10 @@ PRESETS = {
     "remove_background_to_white": "Remove the background and put the subject on a plain white background.",
     "sharpen_and_clean": "Make the picture sharper and cleaner by removing blur, noise and small marks.",
     "change_season_to_winter": "Change the season to winter with snow on the ground and bare, frosty trees.",
+    "remove_text_and_watermark": "Remove all text, logos and watermarks from the picture and rebuild the area behind them naturally.",
+    "blur_background": "Blur the background softly like a portrait lens, and keep the subject sharp.",
+    "golden_hour_light": "Change the light to warm golden hour sunlight with long soft shadows.",
+    "turn_to_black_and_white": "Turn this picture into a classic black and white photo with rich contrast.",
 }
 
 
@@ -26,12 +30,29 @@ def pick_preset(preset, custom_override=""):
     return PRESETS[preset]
 
 
+def pick_with_info(preset, custom_override="", extra=""):
+    """Pure function. Returns (text, info). extra is added as a closing sentence to whichever text is used."""
+    custom = str(custom_override or "").strip()
+    text = pick_preset(preset, custom)
+    tail = " ".join(str(extra or "").split())
+    if tail:
+        text = text.rstrip() + " " + (tail if tail.endswith((".", "!", "?")) else tail + ".")
+    if custom:
+        info = "Used your own text (preset %s ignored)." % preset
+    else:
+        info = "Used preset %s." % preset
+    if tail:
+        info += " Added your extra sentence."
+    return text, info
+
+
 class SYEditPresetPick:
-    DESCRIPTION = "Gives ready-made wording for common picture edits like fixing light or removing the background. Your own text replaces it if you type any."
+    DESCRIPTION = ("Gives ready-made wording for common picture edits like fixing light, blurring or removing the background. Your own "
+                   "text replaces it if you type any, and an extra sentence can be added to either. An info line says which was used.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("text",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("text", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -41,11 +62,12 @@ class SYEditPresetPick:
             },
             "optional": {
                 "custom_override": ("STRING", {"default": "", "multiline": True, "tooltip": "If you type anything here, it is used instead of the preset."}),
+                "extra": ("STRING", {"default": "", "tooltip": "A closing sentence added to the text, for example: Keep the dog unchanged."}),
             },
         }
 
-    def run(self, preset, custom_override=""):
-        return (pick_preset(preset, custom_override),)
+    def run(self, preset, custom_override="", extra=""):
+        return pick_with_info(preset, custom_override, extra)
 
 
 NODE_CLASS_MAPPINGS = {}

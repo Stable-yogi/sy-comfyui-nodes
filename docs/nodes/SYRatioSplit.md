@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_ratio_split.py`
 
-**What it does:** Shares a number out by a ratio. For example 100 split 1:3 gives 25 and 75. Up to four parts.
+**What it does:** Shares a number out by a ratio. For example 100 split 1:3 gives 25 and 75. Up to four parts. Turn on whole_numbers to get whole parts that add up exactly, which is what you need to share out frames or pixels.
 
 ## Inputs
 
@@ -10,5 +10,6 @@ Source: `nodes/sy_ratio_split.py`
 |---|---|---|---|---|
 | total | FLOAT | yes | The number to share out. | -1000000000.0 to 1000000000.0, step 0.01, default 100.0 |
 | ratios | STRING | yes | Up to four numbers split by colons, like 1:2:1. No negatives. | default '1:2:1' |
+| whole_numbers | BOOLEAN | no | On gives whole parts that add up exactly (100 split 1:1:1 = 34, 33, 33). Good for frames. | default False |
 
-Outputs: `FLOAT`, `FLOAT`, `FLOAT`, `FLOAT`, `STRING`
+Outputs: `FLOAT`, `FLOAT`, `FLOAT`, `FLOAT`, `STRING`, `STRING`

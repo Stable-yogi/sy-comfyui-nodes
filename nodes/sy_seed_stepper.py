@@ -29,12 +29,26 @@ def step_seeds(base_seed, step, count, index, wrap=True):
     return seeds[index], seeds
 
 
+def used_index(count, index, wrap=True):
+    """Pure function. The place of the list that is really used (an index past the end wraps when wrap is on)."""
+    count, index = int(count), int(index)
+    if count < 1:
+        raise ValueError("count must be at least 1")
+    if index < 0:
+        raise ValueError("index must be 0 or more")
+    if index >= count:
+        if not wrap:
+            raise ValueError("index %d is outside the list of %d seeds - lower index or turn wrap on" % (index, count))
+        return index % count
+    return index
+
+
 class SYSeedStepper:
-    DESCRIPTION = "Builds a list of seeds (base, base+step, base+2*step...) and gives the seed at one index, plus the whole list."
+    DESCRIPTION = "Builds a list of seeds (base, base+step, base+2*step...) and gives the seed at one index, plus the whole list. Also tells which place was really used after a wrap-around, with a plain info line, so off-by-one mistakes are easy to see."
     CATEGORY = category("Values")
     FUNCTION = "run"
-    RETURN_TYPES = ("INT", "STRING")
-    RETURN_NAMES = ("seed", "seed_list")
+    RETURN_TYPES = ("INT", "STRING", "INT", "STRING")
+    RETURN_NAMES = ("seed", "seed_list", "used_index", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -50,7 +64,10 @@ class SYSeedStepper:
 
     def run(self, base_seed, step, count, index, wrap=True):
         seed, seeds = step_seeds(base_seed, step, count, index, bool(wrap))
-        return (seed, ", ".join(str(s) for s in seeds))
+        used = used_index(count, index, bool(wrap))
+        info = "index %d%s -> seed %d (place %d of %d, step %d)" % (
+            index, " wrapped to %d" % used if used != int(index) else "", seed, used + 1, int(count), int(step))
+        return (seed, ", ".join(str(s) for s in seeds), used, info)
 
 
 NODE_CLASS_MAPPINGS = {}

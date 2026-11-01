@@ -34,4 +34,17 @@ def run():
     assert all(0.0 <= v <= 1.0 for v in m.match_values([0.0, 1.0], 0.5, 5.0, 1.0)); n += 1
     assert raises(m.match_values, [0.1], 0.5, 0.1, 2.0); n += 1
     assert raises(m.mean_std, []); n += 1
+    spec = m.SYColourMatch.INPUT_TYPES()
+    assert list(spec["required"]) == ["image", "reference", "strength"] and list(spec["optional"]) == ["mask", "enabled"]; n += 1
+    assert m.SYColourMatch.RETURN_NAMES == ("image", "info"); n += 1
+    try:
+        import torch
+    except ImportError:
+        torch = None
+    if torch is not None:
+        img = torch.rand(1, 8, 8, 3)
+        ref = torch.rand(1, 8, 8, 3)
+        info = m.SYColourMatch().run(img, ref, 0.4)[1]
+        assert "mix 40%" in info and "strength" not in info, info; n += 1
+        assert "mix 100%" in m.SYColourMatch().run(img, ref, 1.0)[1]; n += 1
     return n

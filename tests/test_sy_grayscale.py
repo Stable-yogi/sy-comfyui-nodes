@@ -17,6 +17,13 @@ def near(a, b, eps=1e-6):
     return abs(a - b) < eps
 
 
+class FakeShape:
+    ndim = 4
+
+    def __init__(self, shape):
+        self.shape = shape
+
+
 def run():
     n = 0
     assert near(m.grey_value(1, 0, 0, "rec709"), 0.2126); n += 1
@@ -40,4 +47,11 @@ def run():
     h = m.grayscale_pixel((1.0, 0.0, 0.0), "average", 0.5)
     assert near(h[0], 1.0 - 0.5 * (1.0 - 1.0 / 3.0)) and near(h[1], 1.0 / 6.0); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYGrayscale"] == "Grayscale SY"; n += 1
+    assert "kept" in m.grey_info("rec709", 0.0); n += 1
+    assert m.grey_info("rec601", 1.0) == "Made fully grey using rec601."; n += 1
+    assert "50% grey" in m.grey_info("average", 0.5, "only inside the mask"); n += 1
+    assert m.SYGrayscale.RETURN_NAMES == ("image", "info"); n += 1
+    assert list(m.SYGrayscale.INPUT_TYPES()["optional"]) == ["mask"]; n += 1
+    assert raises(m.d2.need_rgb, FakeShape((1, 4, 4, 1)), "Grayscale"); n += 1
+    assert "colour picture" in raises(m.d2.need_rgb, FakeShape((1, 4, 4, 1)), "Grayscale"); n += 1
     return n

@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_aspect_from_image.py`
 
-**What it does:** Reads a width and height and gives the ratio as text, like 16:9, plus the ratio as a number. An odd ratio is matched to the nearest common one.
+**What it does:** Reads a width and height and gives the ratio as text, like 16:9, plus the ratio as a number. An odd ratio is matched to the nearest common one. Also says landscape, portrait or square and gives an info line with the megapixels.
 
 ## Inputs
 
@@ -11,4 +11,4 @@ Source: `nodes/sy_aspect_from_image.py`
 | width | INT | yes | Picture width in pixels. Used with height to find the shape, like 16:9. | 1 to 65536, default 1024 |
 | height | INT | yes | Picture height in pixels. Used with width to find the shape, like 16:9. | 1 to 65536, default 1024 |
 
-Outputs: `STRING`, `FLOAT`
+Outputs: `STRING`, `FLOAT`, `STRING`, `STRING`

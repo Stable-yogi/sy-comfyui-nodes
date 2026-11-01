@@ -34,5 +34,24 @@ def run():
     ok(m.split_name("sub/dir\\model.v2.safetensors") == ("sub/dir\\model.v2.safetensors", "model.v2"))
     ok(m.split_name("plain") == ("plain", "plain"))
     raises(m.SYLoaderNamePicker().run, "checkpoints", "x.safetensors")  # no ComfyUI list here
-    ok(m.SYLoaderNamePicker.RETURN_TYPES == ("STRING", "STRING"))
+    by = {"checkpoints": ["sdxl.safetensors", "Flux/flux_dev.safetensors"], "loras": ["style.safetensors"], "vae": ["ae.safetensors"],
+          "clip": [], "unet": [], "upscale_models": []}
+    r = m.resolve("checkpoints", "sdxl.safetensors", "", by)
+    ok(r[0] == "sdxl.safetensors" and r[2] == 1 and r[1] == "checkpoints: sdxl.safetensors")
+    r = m.resolve("checkpoints", "sdxl.safetensors", "FLUX dev", by)
+    ok(r[0] == "Flux/flux_dev.safetensors" and r[2] == 1 and "picked" in r[1])
+    ok("in the loras list" in m.wrong_folder_message("checkpoints", "style.safetensors", by) and "Change folder to loras" in m.wrong_folder_message("checkpoints", "style.safetensors", by))
+    ok(m.wrong_folder_message("checkpoints", "nothing.safetensors", by) == "")
+    try:
+        m.resolve("checkpoints", "style.safetensors", "", by)
+        raise AssertionError("wrong folder must raise")
+    except ValueError as e:
+        ok("Change folder to loras" in str(e))
+    raises(m.resolve, "checkpoints", "sdxl.safetensors", "zzz", by)
+    raises(m.resolve, "nope", "a", "", by)
+    raises(m.resolve, "clip", "a", "", by)  # empty folder: plain refusal
+    ok(m.folders_holding("ae.safetensors", by) == ["vae"])
+    spec = m.SYLoaderNamePicker.INPUT_TYPES()
+    ok(list(spec["required"]) == ["folder", "name"] and list(spec["optional"]) == ["name_filter"])
+    ok(m.SYLoaderNamePicker.RETURN_TYPES == ("STRING", "STRING", "INT", "STRING") and m.SYLoaderNamePicker.RETURN_NAMES[:2] == ("name", "name_no_ext"))
     return N[0]

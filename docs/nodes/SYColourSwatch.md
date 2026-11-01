@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_colour_swatch.py`
 
-**What it does:** Reads a colour code (like d4a537), gives red, green and blue numbers, a clean code and a small colour picture.
+**What it does:** Reads a colour code (like d4a537), gives red, green and blue numbers, a clean code, a small colour picture and an info line that says if black or white text reads best on it.
 
 ## Inputs
 
@@ -10,4 +10,4 @@ Source: `nodes/sy_colour_swatch.py`
 |---|---|---|---|---|
 | colour | STRING | yes | A hex colour: 3 or 6 digits, with or without the # sign. | default 'd4a537' |
 
-Outputs: `INT`, `INT`, `INT`, `STRING`, `IMAGE`
+Outputs: `INT`, `INT`, `INT`, `STRING`, `IMAGE`, `STRING`

@@ -30,5 +30,23 @@ def run():
             raise SystemExit("bad args must raise")
         except ValueError:
             pass
-    assert m.SYHexColourMix.RETURN_TYPES == ("STRING", "INT", "INT", "INT")
-    return 15  # checks
+    assert m.SYHexColourMix.RETURN_TYPES[:4] == ("STRING", "INT", "INT", "INT")
+    return 15 + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.mix_info('000', '#FFFFFF', 0.5) == '000000 + ffffff at 50% = #808080')
+    n += ok(m.SYHexColourMix().run('000000', 'ffffff', 0.0)[-1].endswith('= #000000'))
+    n += ok(m.SYHexColourMix.RETURN_TYPES[-1] == 'STRING')
+    n += ok(rs(m.mix_info, 'zz', '000', 0.5) is not None)
+    return n

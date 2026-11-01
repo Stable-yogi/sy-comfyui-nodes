@@ -40,4 +40,9 @@ def run():
     msg = raises(m.bc_value, 0.5, 0, -120)
     assert msg and "contrast" in msg; n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYBrightnessContrast"] == "Brightness Contrast SY"; n += 1
+    spec = m.SYBrightnessContrast.INPUT_TYPES()
+    assert list(spec["required"]) == ["image", "brightness", "contrast"]; n += 1
+    assert list(spec["optional"]) == ["mask", "mix", "enabled"]; n += 1
+    assert spec["optional"]["mix"][1]["default"] == 1.0 and spec["optional"]["enabled"][1]["default"] is True; n += 1
+    assert m.SYBrightnessContrast.RETURN_TYPES == ("IMAGE", "STRING") and m.SYBrightnessContrast.RETURN_NAMES == ("image", "info"); n += 1
     return n

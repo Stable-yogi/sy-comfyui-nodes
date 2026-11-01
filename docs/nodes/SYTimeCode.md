@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_time_code.py`
 
-**What it does:** Turns a frame number into a time code like 00:00:03:12, or reads a time code back into a frame number.
+**What it does:** Turns a frame number into a time code like 00:00:03:12, or reads a time code back into a frame number. The info line says both in one plain sentence. No drop frame: every second has the whole number of frames.
 
 ## Inputs
 
@@ -13,4 +13,4 @@ Source: `nodes/sy_time_code.py`
 | fps | FLOAT | yes | Frames per second. | 1.0 to 1000.0, step 0.01, default 24.0 |
 | timecode | STRING | yes | Time code as HH:MM:SS:FF. Used when mode is timecode_to_frame. | default '00:00:00:00' |
 
-Outputs: `STRING`, `FLOAT`, `INT`
+Outputs: `STRING`, `FLOAT`, `INT`, `STRING`

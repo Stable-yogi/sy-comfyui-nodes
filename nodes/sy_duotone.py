@@ -3,10 +3,12 @@ try:
     from ._sy_common import category, register
     from ._sy_image_ops import need_image
     from ._sy_hexcolour import parse_hex
+    from ._sy_d1_finish import MASK_TIP, MIX_TIP, ENABLED_TIP, finish_rgb, info_line
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
     from _sy_image_ops import need_image
     from _sy_hexcolour import parse_hex
+    from _sy_d1_finish import MASK_TIP, MIX_TIP, ENABLED_TIP, finish_rgb, info_line
 
 # built from two pieces so the selftest hex-colour scan stays quiet; the real value is a normal web colour
 DEFAULT_SHADOW = "#" + "1b1b2f"
@@ -32,11 +34,12 @@ def duotone_pixel(rgb, shadow, highlight, strength):
 
 
 class SYDuotone:
-    DESCRIPTION = "Recolours a picture using only two colours: one for the dark parts and one for the bright parts."
+    DESCRIPTION = ("Recolours a picture using only two colours: one for the dark parts and one for the bright parts. "
+                   "Adds a mask (recolour only the white part), an on/off switch and an info line, and keeps transparency.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -46,10 +49,14 @@ class SYDuotone:
                 "shadow_colour": ("STRING", {"default": DEFAULT_SHADOW, "multiline": False, "tooltip": "Colour for the darkest parts, as 3 or 6 hex digits like a web colour."}),
                 "highlight_colour": ("STRING", {"default": DEFAULT_HIGHLIGHT, "multiline": False, "tooltip": "Colour for the brightest parts, as 3 or 6 hex digits like a web colour."}),
                 "strength": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01, "tooltip": "How much duotone to apply. 0 keeps the original colours."}),
-            }
+            },
+            "optional": {
+                "mask": ("MASK", {"tooltip": MASK_TIP}),
+                "enabled": ("BOOLEAN", {"default": True, "tooltip": ENABLED_TIP}),
+            },
         }
 
-    def run(self, image, shadow_colour, highlight_colour, strength):
+    def run(self, image, shadow_colour, highlight_colour, strength, mask=None, enabled=True):
         import torch
 
         need_image(image)
@@ -57,14 +64,16 @@ class SYDuotone:
         highlight = parse_hex(highlight_colour, "highlight_colour")
         if not 0.0 <= strength <= 1.0:
             raise ValueError("strength must be between 0 and 1, got %s" % strength)
+        label = "%s to %s, strength %d%%" % (shadow_colour.strip(), highlight_colour.strip(), int(round(strength * 100)))
+        if not enabled:
+            return (image, info_line("Duotone", False, 1.0, mask is not None))
         rgb = image[..., :3].to(torch.float32)
         t = (0.2126 * rgb[..., 0] + 0.7152 * rgb[..., 1] + 0.0722 * rgb[..., 2]).clamp(0.0, 1.0).unsqueeze(-1)
         s = torch.tensor(shadow, dtype=torch.float32, device=image.device)
         h = torch.tensor(highlight, dtype=torch.float32, device=image.device)
         mapped = s + t * (h - s)
-        out = image.clone()
-        out[..., :3] = (rgb + (mapped - rgb) * float(strength)).to(image.dtype)
-        return (out,)
+        out = finish_rgb(image, rgb + (mapped - rgb) * float(strength), mask, 1.0, True)
+        return (out, info_line("Duotone", True, 1.0, mask is not None, label))
 
 
 NODE_CLASS_MAPPINGS = {}

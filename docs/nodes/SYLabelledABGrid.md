@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_image_grid.py`
 
-**What it does:** Puts two to four pictures in a strip with a caption under each. Good for comparing checkpoints on the same prompt.
+**What it does:** Puts two to four pictures in a strip with a caption under each. Good for comparing checkpoints on the same prompt. Pictures of other sizes can keep their shape instead of being stretched. The info line gives the strip size.
 
 ## Inputs
 
@@ -20,5 +20,6 @@ Source: `nodes/sy_image_grid.py`
 | image_d | IMAGE | no | Optional fourth picture. | picture batch [B,H,W,3] |
 | label_c | STRING | no | Caption under the third picture. | default 'C' |
 | label_d | STRING | no | Caption under the fourth picture. | default 'D' |
+| fit | COMBO | no | If a picture has another size than the first: stretch it, or keep its shape inside the cell. | one of: stretch, keep shape |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `STRING`

@@ -41,4 +41,28 @@ def run():
     assert m.SYLayoutBoxesMerge().run(boxes_1=a, boxes_3=c)[0] == m.merge_boxes([a, "", c, ""])
     assert m.SYLayoutBoxesMerge().run(boxes_2=b)[0] == m.merge_boxes([b])
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYLayoutBoxesMerge"] == "Layout Boxes Merge SY"
-    return 17
+    # new: eight inputs, drop_duplicates, count and info
+    e = layout_box_text(40, 0, 10, 10, "e", "red")
+    out = json.loads(m.SYLayoutBoxesMerge().run(boxes_5=e, boxes_8=a)[0])
+    assert [x["label"] for x in out] == ["e", "a"]
+    assert "all 8 inputs are empty" in bad([""] * 8)
+    assert "input 7" in bad([""] * 6 + ["{broken"])
+    text, count, info = m.merge_details([a, b, "", c])
+    assert count == 3 and info == "Joined 3 boxes from 3 inputs."
+    assert m.merge_details([a])[2] == "Joined 1 box from 1 input."
+    assert m.merge_details([a, a, b], False)[1] == 3                     # copies kept by default
+    text, count, info = m.merge_details([a, a, b], True)
+    assert count == 2 and [x["label"] for x in json.loads(text)] == ["a", "b"] and "Dropped 1 exact copy." in info
+    assert "Dropped 2 exact copies." in m.merge_details([a, a, a], True)[2]
+    near = layout_box_text(0, 0, 10, 11, "a", "red")                     # different size: not a copy
+    assert m.merge_details([a, near], True)[1] == 2
+    assert 'Same label used twice: "a"' in m.merge_details([a, near])[2]
+    assert "Same label" not in m.merge_details([a, b])[2]
+    assert "most allowed" in bad([many, a])
+    assert len(json.loads(m.merge_boxes([many, many], True))) == 1       # 64 identical boxes collapse to one
+    out = m.SYLayoutBoxesMerge().run(boxes_1=a, boxes_2=a, drop_duplicates=True)
+    assert out[1] == 1 and json.loads(out[0]) == json.loads(a)
+    assert m.SYLayoutBoxesMerge.RETURN_TYPES == ("STRING", "INT", "STRING") and len(m.SYLayoutBoxesMerge.RETURN_NAMES) == 3
+    opt = list(m.SYLayoutBoxesMerge.INPUT_TYPES()["optional"])
+    assert opt[:4] == ["boxes_1", "boxes_2", "boxes_3", "boxes_4"] and opt[-1] == "drop_duplicates" and len(opt) == 9
+    return 38

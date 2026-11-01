@@ -21,7 +21,7 @@ def parse_banned(text):
     return [i.strip() for i in items if i.strip()]
 
 
-def review_caption(caption, min_words=5, max_words=75, max_repeat=3, banned=""):
+def review_caption(caption, min_words=5, max_words=75, max_repeat=3, banned="", must_start_with="", must_include=""):
     """Pure function. Returns (ok, report). Every problem found is listed on its own line."""
     if min_words < 0 or max_words < 1 or min_words > max_words:
         raise ValueError("min_words must be 0 or more and not bigger than max_words (got %s and %s)" % (min_words, max_words))
@@ -50,17 +50,25 @@ def review_caption(caption, min_words=5, max_words=75, max_repeat=3, banned=""):
         phrase = " ".join(words_of(item))
         if phrase and re.search(r"(?:^| )%s(?: |$)" % re.escape(phrase), text):
             problems.append('banned word: "%s" is in the caption' % item)
+    first = " ".join(words_of(must_start_with))
+    if first and " ".join(words[:len(first.split())]) != first:
+        problems.append('missing trigger: the caption must start with "%s"' % must_start_with.strip())
+    for item in parse_banned(must_include):
+        phrase = " ".join(words_of(item))
+        if phrase and not re.search(r"(?:^| )%s(?: |$)" % re.escape(phrase), text):
+            problems.append('missing word: "%s" is not in the caption' % item)
     if problems:
         return False, "NOT OK: %d problem%s\n%s" % (len(problems), "" if len(problems) == 1 else "s", "\n".join("- " + p for p in problems))
     return True, "OK: %d words, no problems." % len(words)
 
 
 class SYCaptionReview:
-    DESCRIPTION = "Reviews one caption for training: too short or long, words repeated too often, words you banned. Gives true or false and a report."
+    DESCRIPTION = ("Reviews one caption for training: too short or long, words repeated too often, words you banned. Can also check "
+                   "that the trigger word comes first and that must-have words are there. Gives true or false, a report and the word count.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("BOOLEAN", "STRING")
-    RETURN_NAMES = ("ok", "report")
+    RETURN_TYPES = ("BOOLEAN", "STRING", "INT")
+    RETURN_NAMES = ("ok", "report", "word_count")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -71,11 +79,16 @@ class SYCaptionReview:
                 "max_words": ("INT", {"default": 75, "min": 1, "max": 1000, "tooltip": "More words than this counts as too long."}),
                 "max_repeat": ("INT", {"default": 3, "min": 1, "max": 100, "tooltip": "How often one word may appear. Small words like the and of are ignored."}),
                 "banned_words": ("STRING", {"default": "", "multiline": True, "tooltip": "Words or phrases that must not appear. Separate with commas or new lines."}),
-            }
+            },
+            "optional": {
+                "must_start_with": ("STRING", {"default": "", "tooltip": "Trigger word the caption must begin with, for example sks_dog. Empty skips the check."}),
+                "must_include": ("STRING", {"default": "", "multiline": True, "tooltip": "Words that must appear, separated by commas or new lines."}),
+            },
         }
 
-    def run(self, caption, min_words, max_words, max_repeat, banned_words):
-        return review_caption(caption, min_words, max_words, max_repeat, banned_words)
+    def run(self, caption, min_words, max_words, max_repeat, banned_words, must_start_with="", must_include=""):
+        ok, report = review_caption(caption, min_words, max_words, max_repeat, banned_words, must_start_with, must_include)
+        return ok, report, len(words_of(caption))
 
 
 NODE_CLASS_MAPPINGS = {}

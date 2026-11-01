@@ -34,4 +34,19 @@ def run():
         assert _raises(*bad), bad
         n += 1
     assert m.SYVideoFramesCalc().run(5, 16, True)[0] == 81; n += 1
+    # --- value pass A2: frame step, rounding, info line
+    assert m.calc_frames(5, 16, True, 8)[0] == 81 and m.calc_frames(6, 16, True, 8)[0] == 97; n += 2
+    assert m.calc_frames(5, 16, True, 4, "up")[0] == 81 and m.calc_frames(5.1, 16, True, 4, "up")[0] == 85; n += 2
+    assert m.calc_frames(5.1, 16, True, 4, "down")[0] == 81 and m.calc_frames(5, 16, False, 8, "up")[0] == 80; n += 2
+    for secs in (0.4, 1.3, 2.9, 7.7):  # up is never shorter, down is never longer
+        up = m.calc_frames(secs, 24, True, 4, "up")[0]
+        down = m.calc_frames(secs, 24, True, 4, "down")[0]
+        assert up >= max(1, int(secs * 24 + 0.5)) >= down and (up - 1) % 4 == 0 and (down - 1) % 4 == 0; n += 1
+    assert _raises(5, 16, True, 0) and _raises(5, 16, True, 4, "sideways"); n += 2
+    assert m.calc_info(5, 16, 81, 81 / 16, True) == "5 s x 16 fps = 80 frames, moved to 81 to fit the 4n+1 rule. Real length: 5.062 s."; n += 1
+    assert m.calc_info(5.0625, 16, 81, 5.0625, True) == "5.0625 s x 16 fps = 81 frames, already fits the 4n+1 rule. Real length: 5.062 s."; n += 1
+    assert m.calc_info(5, 16, 80, 5.0, False) == "5 s x 16 fps = 80 frames. Real length: 5.000 s."; n += 1
+    out = m.SYVideoFramesCalc().run(5, 16, True, 8, "up")
+    assert len(out) == len(m.SYVideoFramesCalc.RETURN_TYPES) == len(m.SYVideoFramesCalc.RETURN_NAMES) == 4 and out[0] == 81 and "8n+1" in out[3]; n += 1
+    assert m.SYVideoFramesCalc().run(5, 16, True)[:3] == (81, 16.0, 81 / 16); n += 1
     return n

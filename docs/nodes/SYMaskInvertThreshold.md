@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_mask_invert_threshold.py`
 
-**What it does:** Flips a mask (white and black swap) and can first turn it into hard black and white at a cut-off value.
+**What it does:** Flips a mask (white and black swap) and can first turn it into hard black and white at a cut-off value. The info output says what was done and how much is white, and warns about an all-black or all-white result.
 
 ## Inputs
 
@@ -13,4 +13,4 @@ Source: `nodes/sy_mask_invert_threshold.py`
 | use_threshold | BOOLEAN | yes | Turn soft grays into pure black or white first. | default False |
 | threshold | FLOAT | yes | Values at or above this become white. Only used when use_threshold is on. | 0.0 to 1.0, step 0.01, default 0.5 |
 
-Outputs: `MASK`
+Outputs: `MASK`, `STRING`

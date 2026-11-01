@@ -38,4 +38,8 @@ def run():
     n += 1
     assert raises(m.apply_mask, img, mask, "pink") and raises(m.apply_mask, img, mask, "alpha", "both")
     n += 1
+    assert "see-through" in m.apply_info("alpha", "masked", 0) and "white part" in m.apply_info("alpha", "masked", 0); n += 1
+    assert "black part" in m.apply_info("black", "outside", 4) and "soft edge 4 px" in m.apply_info("black", "outside", 4); n += 1
+    assert m.SYApplyMaskToImage.RETURN_NAMES == ("image", "info"); n += 1
+    assert list(m.SYApplyMaskToImage.INPUT_TYPES()["optional"]) == ["feather"]; n += 1
     return n

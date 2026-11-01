@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_image_hash_duplicate.py`
 
-**What it does:** Compares two pictures with a small fingerprint. Tells you how different they are and if they are near duplicates.
+**What it does:** Compares two pictures with a small fingerprint. Tells you how different they are, a match percentage, and if they are near duplicates. For a batch, choose which picture of each batch to compare.
 
 ## Inputs
 
@@ -12,5 +12,7 @@ Source: `nodes/sy_image_hash_duplicate.py`
 | image_b | IMAGE | yes | Second picture. If it is a batch, the first picture of the batch is used. | picture batch [B,H,W,3] |
 | hash_size | INT | yes | Fingerprint grid size. 8 gives 64 bits. Bigger notices smaller differences. | 4 to 32, default 8 |
 | threshold | INT | yes | Largest number of differing bits that still counts as a near duplicate. | 0 to 1024, default 5 |
+| index_a | INT | no | Which picture of batch A to use. 0 is the first, -1 the last. | -1000000 to 1000000, default 0 |
+| index_b | INT | no | Which picture of batch B to use. 0 is the first, -1 the last. | -1000000 to 1000000, default 0 |
 
-Outputs: `INT`, `BOOLEAN`, `STRING`
+Outputs: `INT`, `BOOLEAN`, `STRING`, `FLOAT`

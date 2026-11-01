@@ -25,13 +25,25 @@ def aspect_from_size(width, height):
     return (best, value)
 
 
+def aspect_report(width, height):
+    """Pure function. Returns (ratio, ratio_float, orientation, info)."""
+    ratio, value = aspect_from_size(width, height)
+    width, height = int(width), int(height)
+    orientation = "square" if width == height else ("landscape" if width > height else "portrait")
+    g = math.gcd(width, height)
+    exact = max(width // g, height // g) <= SMALL
+    info = "%dx%d is %s, %s, %.2f megapixels" % (width, height, ratio, orientation, width * height / 1e6)
+    if not exact:
+        info = "%dx%d is closest to %s (exact shape %.3f), %s, %.2f megapixels" % (width, height, ratio, value, orientation, width * height / 1e6)
+    return ratio, value, orientation, info
+
+
 class SYAspectFromSize:
-    DESCRIPTION = ("Reads a width and height and gives the ratio as text, like 16:9, plus the ratio as a number. "
-                   "An odd ratio is matched to the nearest common one.")
+    DESCRIPTION = "Reads a width and height and gives the ratio as text, like 16:9, plus the ratio as a number. An odd ratio is matched to the nearest common one. Also says landscape, portrait or square and gives an info line with the megapixels."
     CATEGORY = category("Resize")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING", "FLOAT")
-    RETURN_NAMES = ("ratio", "ratio_float")
+    RETURN_TYPES = ("STRING", "FLOAT", "STRING", "STRING")
+    RETURN_NAMES = ("ratio", "ratio_float", "orientation", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -43,7 +55,7 @@ class SYAspectFromSize:
         }
 
     def run(self, width, height):
-        return aspect_from_size(width, height)
+        return aspect_report(width, height)
 
 
 NODE_CLASS_MAPPINGS = {}

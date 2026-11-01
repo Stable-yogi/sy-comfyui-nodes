@@ -36,4 +36,14 @@ def run():
     assert raises(m.hash_text, "abc", "md5", -1, False); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYHashText"] == "Hash Text SY"; n += 1
     assert m.SYHashText.CATEGORY == "SY/Text"; n += 1
+    assert m.hash_text("  A   Cat ", "md5", 0, False, True) == m.hash_text("a cat", "md5", 0, False); n += 1
+    assert m.hash_text("A Cat", "md5", 0, False, False) != m.hash_text("a cat", "md5", 0, False); n += 1
+    assert m.normalize_text(" A \n Cat\t") == "a cat"; n += 1
+    assert m.hash_info("abc", "sha256", 8) == "sha256 of 3 characters, code is 8 of 64 characters."; n += 1
+    assert m.hash_info("abc", "md5", 0, True) == "md5 of 3 characters, code is 32 of 32 characters. Capitals and extra spaces were ignored. Fine for file names; not safe for secrets."; n += 1
+    assert m.hash_info("abc", "sha1", 99).startswith("sha1 of 3 characters, code is 40 of 40"); n += 1
+    out = m.SYHashText().run("abc", "sha256", 8, False)
+    assert out == ("ba7816bf", "sha256 of 3 characters, code is 8 of 64 characters."); n += 1
+    assert m.SYHashText().run("A c", "md5", 0, False, normalize=True)[0] == m.hash_text("a c", "md5", 0, False); n += 1
+    assert m.SYHashText.RETURN_NAMES == ("digest", "info"); n += 1
     return n

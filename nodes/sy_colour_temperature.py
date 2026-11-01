@@ -2,9 +2,11 @@
 try:
     from ._sy_common import category, register
     from ._sy_image_ops import need_image
+    from ._sy_d1_finish import MASK_TIP, MIX_TIP, ENABLED_TIP, finish_rgb, info_line
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
     from _sy_image_ops import need_image
+    from _sy_d1_finish import MASK_TIP, MIX_TIP, ENABLED_TIP, finish_rgb, info_line
 
 
 def check_params(warmth, tint):
@@ -29,11 +31,12 @@ def apply_gains(rgb, gains):
 
 
 class SYColourTemperature:
-    DESCRIPTION = "Makes a picture warmer (orange) or cooler (blue), and can push it towards magenta or green."
+    DESCRIPTION = ("Makes a picture warmer (orange) or cooler (blue), and can push it towards magenta or green. Adds a mask, a mix slider "
+                   "to blend with the original, an on/off switch and an info line, and keeps transparency.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -42,21 +45,26 @@ class SYColourTemperature:
                 "image": ("IMAGE", {"tooltip": "The picture or batch of pictures to adjust."}),
                 "warmth": ("FLOAT", {"default": 0.0, "min": -100.0, "max": 100.0, "step": 1.0, "tooltip": "Above 0 is warmer (more red, less blue). Below 0 is cooler."}),
                 "tint": ("FLOAT", {"default": 0.0, "min": -100.0, "max": 100.0, "step": 1.0, "tooltip": "Above 0 pushes towards magenta. Below 0 pushes towards green."}),
-            }
+            },
+            "optional": {
+                "mask": ("MASK", {"tooltip": MASK_TIP}),
+                "mix": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01, "tooltip": MIX_TIP}),
+                "enabled": ("BOOLEAN", {"default": True, "tooltip": ENABLED_TIP}),
+            },
         }
 
-    def run(self, image, warmth, tint):
+    def run(self, image, warmth, tint, mask=None, mix=1.0, enabled=True):
         import torch
 
         need_image(image)
         check_params(warmth, tint)
-        if warmth == 0.0 and tint == 0.0:
-            return (image,)
+        detail = "warmth %g, tint %g" % (warmth, tint)
+        if not enabled or (warmth == 0.0 and tint == 0.0):
+            return (image, info_line("Colour Temperature", enabled, mix, mask is not None, detail if enabled else ""))
         gains = torch.tensor(temperature_gains(warmth, tint), dtype=torch.float32, device=image.device)
         rgb = image[..., :3].to(torch.float32)
-        out = image.clone()
-        out[..., :3] = (rgb * gains).clamp(0.0, 1.0).to(image.dtype)
-        return (out,)
+        out = finish_rgb(image, rgb * gains, mask, mix, True)
+        return (out, info_line("Colour Temperature", True, mix, mask is not None, detail))
 
 
 NODE_CLASS_MAPPINGS = {}

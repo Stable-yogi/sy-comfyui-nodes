@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_luminance_mask.py`
 
-**What it does:** Builds a mask from brightness. Pixels between low and high are white in the mask, the rest are black, with an optional soft fade.
+**What it does:** Builds a mask from brightness (or from one colour channel). Pixels between low and high are white in the mask, the rest are black, with an optional soft fade and feather. The info line tells how much of the picture is selected.
 
 ## Inputs
 
@@ -13,5 +13,7 @@ Source: `nodes/sy_luminance_mask.py`
 | high | FLOAT | yes | Brightest brightness that still counts. 1 is white. | 0.0 to 1.0, step 0.01, default 1.0 |
 | softness | FLOAT | yes | Width of the fade outside the band. 0 gives hard black and white. | 0.0 to 0.5, step 0.01, default 0.0 |
 | invert | BOOLEAN | yes | Swap the mask so the chosen band becomes black. | default False |
+| source | COMBO | no | What to measure: overall brightness, or one colour channel (red is good for skin, blue for sky). | one of: luminance, red, green, blue, brightest channel |
+| feather | INT | no | Soften the finished mask by this many pixels, so it blends without a hard edge. 0 is off. | 0 to 512, step 1, default 0 |
 
-Outputs: `MASK`
+Outputs: `MASK`, `STRING`

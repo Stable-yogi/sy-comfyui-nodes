@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_save_image_to_folder.py`
 
-**What it does:** Saves pictures into a folder inside the ComfyUI output folder. The name can use {date} {time} {seed} {counter} {width} {height} {batch} {model} {input}. Preview mode saves nothing in the output folder.
+**What it does:** Saves pictures into a folder inside the ComfyUI output folder. The name can use {date} {time} {seed} {counter} {width} {height} {batch} {model} {input}. Never overwrites: a taken name gets the next number. Optional text file next to each picture with the seed, model and size. Gives the saved paths, a plain info line (with notes such as jpg losing transparency) and the folder. Preview mode saves nothing in the output folder.
 
 ## Inputs
 
@@ -19,5 +19,7 @@ Source: `nodes/sy_save_image_to_folder.py`
 | date_folder | BOOLEAN | no | Put the pictures in a folder named with today's date inside the subfolder. | default False |
 | model_name | STRING | no | Text for the {model} token, for example a model file name. Folder and extension are cut off. | default '' |
 | input_name | STRING | no | Text for the {input} token, for example the name of the source picture. | default '' |
+| sidecar | COMBO | no | Also write a .txt next to each picture: settings = seed, size, model. custom text = your own text. | one of: off, settings, custom text |
+| sidecar_text | STRING | no | Text for the .txt files when sidecar is custom text, for example the prompt. | default '', multiline |
 
-Outputs: `STRING`
+Outputs: `STRING`, `STRING`, `STRING`

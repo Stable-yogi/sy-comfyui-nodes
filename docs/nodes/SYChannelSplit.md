@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_channel_split.py`
 
-**What it does:** Splits a picture into four masks: red, green, blue and alpha (transparency). Alpha is all ones if the picture has none.
+**What it does:** Splits a picture into four masks: red, green, blue and alpha (transparency). Alpha is all ones if the picture has none. Also gives a brightness (luma) mask.
 
 ## Inputs
 
@@ -10,4 +10,4 @@ Source: `nodes/sy_channel_split.py`
 |---|---|---|---|---|
 | image | IMAGE | yes | The picture or batch of pictures to split. Outputs are red, green, blue and alpha masks. | picture batch [B,H,W,3] |
 
-Outputs: `MASK`, `MASK`, `MASK`, `MASK`
+Outputs: `MASK`, `MASK`, `MASK`, `MASK`, `MASK`

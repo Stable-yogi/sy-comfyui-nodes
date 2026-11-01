@@ -63,4 +63,23 @@ def run():
     assert msg and "mode" in msg; n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYSaturation"] == "Saturation SY"; n += 1
     assert m.SYSaturation.CATEGORY == "SY/Image"; n += 1
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _c("unchanged" in m.saturation_info(0, "saturation"))
+    _c("grey" in m.saturation_info(-100, "saturation") and "grey" not in m.saturation_info(-100, "vibrance"))
+    _c("30% stronger" in m.saturation_info(30, "saturation") and "20% weaker" in m.saturation_info(-20, "saturation"))
+    _c("vibrance" in m.saturation_info(40, "vibrance") and "Dull colours" in m.saturation_info(40, "vibrance"))
+    _r(m.saturation_info, 101, "saturation")
+    _r(m.saturation_info, 5, "hue")
+    _c(m.SYSaturation.RETURN_NAMES == ("image", "info"))
+    return (n) + _k[0]

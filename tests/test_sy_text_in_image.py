@@ -32,4 +32,24 @@ def run():
     assert _raises("  ", "top")
     assert _raises("hi", "nowhere")
     assert m.SYTextInImage().run("A", "bottom")[0].startswith('Write the exact text "A"')
-    return n + 6  # checks
+    return n + 6 + _extra()
+
+
+def _extra():
+    n = 0
+    f = m.build_text_phrase
+    assert f('say "hi"', "top", "", "", True) == "Write the exact text \"say 'hi'\" at the top of the picture."; n += 1
+    assert f("\u201chi\u201d", "top", "", "", True).startswith('Write the exact text "\'hi\'"'); n += 1
+    try:
+        f('say "hi"', "top")
+    except ValueError as e:
+        assert "fix_quotes" in str(e); n += 1
+    assert m.phrase_info("OPEN") == "1 word(s), 4 character(s) of picture text"; n += 1
+    assert "WARNING" in m.phrase_info("this is a rather long sentence for a sign"); n += 1
+    assert "language_hint" in m.phrase_info("Gr\u00fc\u00dfe"); n += 1
+    assert "language_hint" not in m.phrase_info("Gr\u00fc\u00dfe", "German"); n += 1
+    assert "capital letters" in m.phrase_info("open"); n += 1
+    out = m.SYTextInImage().run('a "b"', "top", "", "", True)
+    assert out[0].startswith("Write the exact text") and out[1].startswith("2 word(s)"); n += 1
+    assert m.SYTextInImage.RETURN_NAMES == ("phrase", "info"); n += 1
+    return n

@@ -37,7 +37,29 @@ def run():
     assert msg and "base" in msg; n += 1
     msg = raises(m.size_text, 10, "1024", 5)
     assert msg and "decimals" in msg; n += 1
-    assert m.SYSizeText().run(2048, "1024", 1) == ("2.0 KB",); n += 1
+    assert m.SYSizeText().run(2048, "1024", 1)[:1] == ("2.0 KB",); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYSizeText"] == "Size Text SY"; n += 1
     assert m.SYSizeText.CATEGORY == "SY/Values"; n += 1
+    return n + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.size_text(536870912, '1024', 1, 'GB') == '0.5 GB')
+    n += ok(m.size_text(2048, '1024', 1, 'auto') == m.size_text(2048, '1024', 1))
+    n += ok(m.size_text(1500, '1000', 1, 'KB') == '1.5 KB')
+    n += ok(m.size_text(5, '1024', 0, 'B') == '5 B')
+    n += ok('unit must be' in rs(m.size_text, 5, '1024', 1, 'XB'))
+    n += ok(m.size_report(2048, '1024', 1)[1] == 2.0)
+    n += ok(m.size_report(2048, '1024', 1)[2] == '2048 bytes = 2.0 KB (1024 base)')
+    n += ok(m.SYSizeText().run(1048576, '1024', 1, 'KB')[1] == 1024.0)
     return n

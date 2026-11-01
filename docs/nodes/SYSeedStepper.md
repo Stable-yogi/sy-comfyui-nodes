@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_seed_stepper.py`
 
-**What it does:** Builds a list of seeds (base, base+step, base+2*step...) and gives the seed at one index, plus the whole list.
+**What it does:** Builds a list of seeds (base, base+step, base+2*step...) and gives the seed at one index, plus the whole list. Also tells which place was really used after a wrap-around, with a plain info line, so off-by-one mistakes are easy to see.
 
 ## Inputs
 
@@ -14,4 +14,4 @@ Source: `nodes/sy_seed_stepper.py`
 | index | INT | yes | Which place of the list to give out. 0 is the first. | 0 to 100000, default 0 |
 | wrap | BOOLEAN | yes | On: an index past the end starts over at the front. Off: that is an error. | default True |
 
-Outputs: `INT`, `STRING`
+Outputs: `INT`, `STRING`, `INT`, `STRING`

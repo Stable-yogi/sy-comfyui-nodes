@@ -21,7 +21,7 @@ def clean_panels(props):
 
 
 class SYWorkflowHeader:
-    DESCRIPTION = "A title banner for the top of a workflow with three buttons: Nodes to Install, How to Use and Nodes Info. It does nothing when the workflow runs."
+    DESCRIPTION = "A title banner for the top of a workflow with three help buttons: Nodes to Install, How to Use and Nodes Info. Fill the title and the three texts in the node panel in the browser. It has no inputs or outputs and does nothing when the workflow runs, so you can leave it in for people you share the workflow with."
     CATEGORY = category("Notes")
     FUNCTION = "run"
     RETURN_TYPES = ()

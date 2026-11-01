@@ -37,4 +37,8 @@ def run():
     assert m.check_channels("rgb") is None; n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYInvertImage"] == "Invert Image SY"; n += 1
     assert m.SYInvertImage.CATEGORY.endswith("Image"); n += 1
+    assert m.invert_info("rgb") == "Inverted all colours."; n += 1
+    assert "red channel only" in m.invert_info("red", "x"); n += 1
+    assert raises(m.invert_info, "alpha"); n += 1
+    assert m.SYInvertImage.RETURN_NAMES == ("image", "info"); n += 1
     return n

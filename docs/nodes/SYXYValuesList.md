@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_xy_values_list.py`
 
-**What it does:** Builds the list of values for one side of an XY plot: a number range, a typed list, or a run of seeds.
+**What it does:** Builds the list of values for one side of an XY plot: a number range, a typed list, or a run of seeds. Numbers can be spaced evenly or by a factor (log), rounded to whole numbers (for steps), and repeated values can be dropped. The info output shows what the list holds.
 
 ## Inputs
 
@@ -16,5 +16,8 @@ Source: `nodes/sy_xy_values_list.py`
 | seed_first | INT | yes | First seed (seeds mode). | 0 to 9223372036854775807, default 0 |
 | seed_count | INT | yes | How many seeds to make (seeds mode). | 1 to 64, default 4 |
 | seed_step | INT | yes | Added to each seed to get the next one (seeds mode). | -1000000 to 1000000, default 1 |
+| scale | COMBO | no | numbers mode: linear = same distance between values, log = same factor (1, 2, 4, 8). Log needs numbers above 0. | one of: linear, log |
+| whole_numbers | BOOLEAN | no | numbers mode: round to whole numbers, good for steps. Repeated values are dropped. | default False |
+| remove_duplicates | BOOLEAN | no | Drop values that appear twice, so no picture is rendered twice. | default False |
 
-Outputs: `STRING`, `INT`
+Outputs: `STRING`, `INT`, `STRING`

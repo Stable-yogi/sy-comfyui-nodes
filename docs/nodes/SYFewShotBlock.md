@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_few_shot_block.py`
 
-**What it does:** Builds a few-shot text: your task, up to 4 worked examples, then the new input with an empty output line.
+**What it does:** Builds a few-shot text: your task, up to 4 worked examples, then the new input with an empty output line. An info line counts the examples used, warns about a half-filled example that was skipped, and gives a rough token count.
 
 ## Inputs
 
@@ -21,4 +21,4 @@ Source: `nodes/sy_few_shot_block.py`
 | example_in_4 | STRING | no | Example 4: the input. Empty skips the pair. | default '', multiline |
 | example_out_4 | STRING | no | Example 4: the answer you want. Empty skips the pair. | default '', multiline |
 
-Outputs: `STRING`
+Outputs: `STRING`, `STRING`

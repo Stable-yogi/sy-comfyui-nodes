@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_text_case_trim.py`
 
-**What it does:** Changes upper and lower case and cleans up text: trims each line, collapses double spaces, removes empty lines.
+**What it does:** Changes upper and lower case and cleans up text: trims each line, collapses double spaces, removes empty lines. tidy_commas also fixes stray commas in a tag list ('a ,b,, c,' becomes 'a, b, c'). The info line says what changed.
 
 ## Inputs
 
@@ -13,5 +13,6 @@ Source: `nodes/sy_text_case_trim.py`
 | trim | BOOLEAN | yes | Remove spaces at the start and end of the text and of every line. | default True |
 | collapse_spaces | BOOLEAN | yes | Turn several spaces in a row into one space. | default False |
 | strip_empty_lines | BOOLEAN | yes | Remove lines that are empty or hold only spaces. | default False |
+| tidy_commas | BOOLEAN | no | On: fix stray commas and spaces in a tag list, like 'a ,b,, c,' to 'a, b, c'. | default False |
 
-Outputs: `STRING`
+Outputs: `STRING`, `STRING`

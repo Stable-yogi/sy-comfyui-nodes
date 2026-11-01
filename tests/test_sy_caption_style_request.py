@@ -25,4 +25,11 @@ def run():
         except ValueError:
             n += 1
     assert "caption" in m.SYCaptionStyleRequest().run("short", 0)[0]; n += 1
+    assert "Never use these words: beautiful, stunning." in m.caption_request("short", 0, "", "", "", " beautiful,\nstunning ,"); n += 1
+    assert "Never use" not in m.caption_request("short", 0, "", "", "", " , "); n += 1
+    assert m.request_info("short") == "Style short, up to 20 words (about 29 tokens of answer), no trigger word."; n += 1
+    assert m.request_info("tags", 10, " sks ", "a, b") == "Style tags, up to 10 words (about 15 tokens of answer), starts with sks, 2 words banned."; n += 1
+    assert m.request_info("short", 0, "", "x").endswith("1 word banned."); n += 1
+    assert m.SYCaptionStyleRequest.RETURN_NAMES == ("request", "info"); n += 1
+    assert m.SYCaptionStyleRequest().run("short", 0, avoid_words="x")[0].count("Never use") == 1; n += 1
     return n

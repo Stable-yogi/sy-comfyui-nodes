@@ -23,26 +23,55 @@ PRESETS = {
 NAMES = [NONE] + list(PRESETS)
 
 
-def apply_style(text, style, extra_negative=""):
-    """Pure function. Returns (positive, negative)."""
+def _tags(s):
+    return [t.strip() for t in s.split(",") if t.strip()]
+
+
+def _drop_known(words_text, known):
+    """Removes comma tags of words_text that are already in the known list (case ignored). Returns (text, removed)."""
+    have = {t.lower() for t in known}
+    all_tags = _tags(words_text)
+    keep = [t for t in all_tags if t.lower() not in have]
+    return ", ".join(keep), len(all_tags) - len(keep)
+
+
+def apply_style(text, style, extra_negative="", remove_repeats=False):
+    """Pure function. Returns (positive, negative). remove_repeats leaves out preset tags you already wrote yourself."""
+    return apply_style_info(text, style, extra_negative, remove_repeats)[:2]
+
+
+def apply_style_info(text, style, extra_negative="", remove_repeats=False):
+    """Pure function. Returns (positive, negative, info)."""
     if not isinstance(text, str) or not isinstance(extra_negative, str):
         raise ValueError("text and extra_negative must be strings")
     if style not in NAMES:
         raise ValueError("unknown style %r: pick one of %s" % (style, ", ".join(NAMES)))
     if style == NONE:
-        return (text.strip(), extra_negative.strip())
+        return (text.strip(), extra_negative.strip(), "Style none: the prompt was left as it is")
     prefix, suffix, negative = PRESETS[style]
+    removed = 0
+    if remove_repeats:
+        suffix, r1 = _drop_known(suffix, _tags(text))
+        negative, r2 = _drop_known(negative, _tags(extra_negative))
+        removed = r1 + r2
     pos = ", ".join(p for p in (prefix, text.strip(), suffix) if p)
     neg = ", ".join(p for p in (negative, extra_negative.strip()) if p)
-    return (pos, neg)
+    info = "Style %s: added %d word(s) to the prompt and %d to the negative" % (
+        style, len(pos.split()) - len(text.split()), len(neg.split()) - len(extra_negative.split()))
+    if removed:
+        info += "; left out %d preset tag(s) you already had" % removed
+    if not text.strip():
+        info += "; WARNING: your prompt is empty, only the style words are used"
+    return (pos, neg, info)
 
 
 class SYPromptStyleTemplates:
-    DESCRIPTION = "Pick one of 12 style presets (or none). Adds words before and after your prompt and gives a matching negative prompt."
+    DESCRIPTION = ("Pick one of 12 style presets (or none). Adds words before and after your prompt and gives a matching negative prompt. "
+                   "Can skip preset tags you already wrote, and the info line says what was added.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING", "STRING")
-    RETURN_NAMES = ("positive", "negative")
+    RETURN_TYPES = ("STRING", "STRING", "STRING")
+    RETURN_NAMES = ("positive", "negative", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -53,11 +82,12 @@ class SYPromptStyleTemplates:
             },
             "optional": {
                 "extra_negative": ("STRING", {"multiline": True, "default": "", "tooltip": "Your own negative words, added after the preset negative."}),
+                "remove_repeats": ("BOOLEAN", {"default": False, "tooltip": "On: preset tags you already wrote (like 'blurry') are not added twice."}),
             },
         }
 
-    def run(self, text, style="photo", extra_negative=""):
-        return apply_style(text, style, extra_negative)
+    def run(self, text, style="photo", extra_negative="", remove_repeats=False):
+        return apply_style_info(text, style, extra_negative, remove_repeats)
 
 
 NODE_CLASS_MAPPINGS = {}

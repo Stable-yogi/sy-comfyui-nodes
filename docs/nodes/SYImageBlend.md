@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_image_blend.py`
 
-**What it does:** Lays one picture over another. Pick a blend mode and how strong the top picture is. A smaller top picture is stretched to fit.
+**What it does:** Lays one picture over another. Pick a blend mode and how strong the top picture is. A top picture of another size is stretched, or scaled to cover and cropped. A mask limits where it shows, and the top picture's transparency can be used.
 
 ## Inputs
 
@@ -12,5 +12,8 @@ Source: `nodes/sy_image_blend.py`
 | top | IMAGE | yes | The picture laid over the base. It is resized to the base size when needed. | picture batch [B,H,W,3] |
 | mode | COMBO | yes | How the two pictures mix. Normal just shows the top picture. | one of: normal, multiply, screen, overlay, add, difference |
 | opacity | FLOAT | yes | How strong the top picture is. 0 shows only the base, 1 the full mix. | 0.0 to 1.0, step 0.01, default 0.5 |
+| top_fit | COMBO | no | If the top picture has another size: stretch it, or fill and crop (keeps its shape). | one of: stretch, fill and crop |
+| use_top_alpha | BOOLEAN | no | On: transparent parts of the top picture (if it has transparency) let the base show through. | default False |
+| mask | MASK | no | Optional. The top picture shows only where this mask is white. A different size is stretched to fit. | mask [B,H,W] |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `STRING`

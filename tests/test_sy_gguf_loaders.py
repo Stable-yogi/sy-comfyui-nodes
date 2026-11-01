@@ -69,13 +69,18 @@ def run():
     for bad in ("torch", "numpy", "gguf"):
         assert not hasattr(m, bad) and not hasattr(n, bad); c += 1
     # node classes
-    for cls, rets in ((m.SYUnetLoaderGGUF, ("MODEL",)), (m.SYCLIPLoaderGGUF, ("CLIP",)), (m.SYDualCLIPLoaderGGUF, ("CLIP",))):
+    for cls, rets in ((m.SYUnetLoaderGGUF, ("MODEL", "STRING")), (m.SYCLIPLoaderGGUF, ("CLIP", "STRING")), (m.SYDualCLIPLoaderGGUF, ("CLIP", "STRING"))):
         assert cls.RETURN_TYPES == rets and cls.CATEGORY.startswith("SY/") and cls.DESCRIPTION; c += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYUnetLoaderGGUF"] == "UnetLoaderGGUF SY"; c += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYCLIPLoaderGGUF"] == "CLIPLoaderGGUF SY"; c += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYDualCLIPLoaderGGUF"] == "DualCLIPLoaderGGUF SY"; c += 1
     # input names match the original nodes
     assert list(m.SYUnetLoaderGGUF.INPUT_TYPES()["required"]) == ["unet_name"]; c += 1
+    assert list(m.SYUnetLoaderGGUF.INPUT_TYPES()["optional"]) == ["name_filter"]; c += 1
+    assert list(m.SYCLIPLoaderGGUF.INPUT_TYPES()["optional"]) == ["name_filter"]; c += 1
+    assert list(m.SYDualCLIPLoaderGGUF.INPUT_TYPES()["optional"]) == ["name_filter1", "name_filter2"]; c += 1
+    for cls in (m.SYUnetLoaderGGUF, m.SYCLIPLoaderGGUF, m.SYDualCLIPLoaderGGUF):
+        assert cls.RETURN_NAMES[-1] == "info" and len(cls.RETURN_NAMES) == len(cls.RETURN_TYPES); c += 1
     assert list(m.SYCLIPLoaderGGUF.INPUT_TYPES()["required"]) == ["clip_name", "type"]; c += 1
     assert list(m.SYDualCLIPLoaderGGUF.INPUT_TYPES()["required"]) == ["clip_name1", "clip_name2", "type"]; c += 1
     # bad input is a plain ValueError, before any heavy import
@@ -83,4 +88,19 @@ def run():
     assert raises(m.SYCLIPLoaderGGUF().run, "", "stable_diffusion"); c += 1
     assert raises(m.SYCLIPLoaderGGUF().run, "enc.gguf", "not_a_type"); c += 1
     assert raises(m.SYDualCLIPLoaderGGUF().run, "a.gguf", "b.gguf", "not_a_type"); c += 1
+    # added value: info text, quant notes, filters, warnings
+    txt = m.info_for([("flux1-dev-Q4_K_M.gguf", 6 * 1024 ** 3)], ["name_filter 'q4' picked it."], m.unet_warnings("flux1-dev-Q4_K_M.gguf"))
+    assert "flux1-dev-Q4_K_M.gguf | GGUF (compressed) | 6.0 GB | Q4_K_M" in txt and "Q4 = good balance" in txt and "picked it" in txt and "Warning" not in txt; c += 1
+    assert "Q8 = nearly the same" in m.info_for([("sub/model-Q8_0.gguf", 10)]); c += 1
+    assert "Q5 = close" in m.info_for([("m-Q5_K_S.gguf", 10)]); c += 1
+    assert "Q2 = smallest" in m.info_for([("m-Q2_K.gguf", 10)]); c += 1
+    assert m.unet_warnings("umt5_xxl-Q8_0.gguf") and "CLIPLoaderGGUF" in m.unet_warnings("t5xxl-Q8_0.gguf")[0]; c += 1
+    assert m.unet_warnings("wan2.2-Q4_K_M.gguf") == []; c += 1
+    assert "Warning: " in m.info_for([("a.gguf", 5)], [], ["bad"]); c += 1
+    assert m.pick_with_filter(["a-Q4.gguf", "a-Q8.gguf"], "a-Q4.gguf", "q8", "GGUF model")[0] == "a-Q8.gguf"; c += 1
+    assert m.pick_with_filter(["a-Q4.gguf"], "a-Q4.gguf", "", "GGUF model") == ("a-Q4.gguf", ""); c += 1
+    assert raises(m.pick_with_filter, ["a-Q4.gguf"], "a-Q4.gguf", "zzz", "GGUF model"); c += 1
+    assert raises(m.check_size, "a.gguf", 0); c += 1
+    assert raises(m.SYUnetLoaderGGUF().run, "x.gguf", "zzz"); c += 1  # filter matches nothing: plain refusal
+    assert raises(m.SYDualCLIPLoaderGGUF().run, "a.gguf", "b.gguf", "stable_diffusion", "zzz", ""); c += 1
     return c

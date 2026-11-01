@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_batch_concat.py`
 
-**What it does:** Joins two to four picture batches into one batch, in order. Other sizes can be resized to match the first.
+**What it does:** Joins two to four picture batches into one batch, in order. Other sizes can be resized to match the first. Also tells you how many pictures each part gave and the final size.
 
 ## Inputs
 
@@ -14,4 +14,4 @@ Source: `nodes/sy_batch_concat.py`
 | image_3 | IMAGE | no | Optional third batch. | picture batch [B,H,W,3] |
 | image_4 | IMAGE | no | Optional fourth batch. | picture batch [B,H,W,3] |
 
-Outputs: `IMAGE`, `INT`
+Outputs: `IMAGE`, `INT`, `STRING`

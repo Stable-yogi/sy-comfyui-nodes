@@ -9,8 +9,26 @@ SECTIONS = ("subject", "setting", "lighting", "camera", "style", "extra")
 LABEL_MODES = ("none", "label_colon")
 
 
-def build_sections(parts, join_with=", ", label_mode="none"):
-    """Pure function. parts is a dict name -> text. Returns (text, used_count)."""
+def _drop_repeat_tags(used):
+    """Removes a comma tag that already appeared in an earlier part (case ignored). Returns the new parts."""
+    seen = set()
+    out = []
+    for value in used:
+        keep = []
+        for tag in value.split(","):
+            tag = tag.strip()
+            if not tag or tag.lower() in seen:
+                continue
+            seen.add(tag.lower())
+            keep.append(tag)
+        if keep:
+            out.append(", ".join(keep))
+    return out
+
+
+def build_sections(parts, join_with=", ", label_mode="none", remove_repeats=False):
+    """Pure function. parts is a dict name -> text. Returns (text, used_count).
+    remove_repeats drops a tag that is already in an earlier part (parts are split at commas). Not used with label_colon."""
     if label_mode not in LABEL_MODES:
         raise ValueError("unknown label_mode %r: choose one of %s" % (label_mode, ", ".join(LABEL_MODES)))
     join_with = ", " if join_with is None else str(join_with)
@@ -25,15 +43,30 @@ def build_sections(parts, join_with=", ", label_mode="none"):
         used.append(("%s: %s" % (name.capitalize(), value)) if label_mode == "label_colon" else value)
     if total > MAX_INPUT:
         raise ValueError("sections are too long: %d characters (limit %d)" % (total, MAX_INPUT))
+    if remove_repeats and label_mode == "none":
+        used = _drop_repeat_tags(used)
     return join_with.join(used), len(used)
 
 
+def sections_info(parts, text):
+    """Pure function. One plain line: which parts were used, which were empty, the size."""
+    names = [n for n in SECTIONS if str(parts.get(n) or "").strip()]
+    if not names:
+        return "All parts are empty, so the prompt is empty"
+    empty = [n for n in SECTIONS if n not in names]
+    line = "Used %d of %d parts (%s)" % (len(names), len(SECTIONS), ", ".join(names))
+    if empty:
+        line += "; empty: " + ", ".join(empty)
+    return line + "; %d characters, about %d tokens" % (len(text), -(-len(text) // 4))
+
+
 class SYPromptSections:
-    DESCRIPTION = "Joins prompt parts (subject, setting, lighting, camera, style, extra) into one prompt. Empty parts are skipped."
+    DESCRIPTION = ("Joins prompt parts (subject, setting, lighting, camera, style, extra) into one prompt. Empty parts are skipped, "
+                   "repeated tags can be removed, and the info line shows which parts were used and the size.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING", "INT")
-    RETURN_NAMES = ("text", "sections_used")
+    RETURN_TYPES = ("STRING", "INT", "STRING")
+    RETURN_NAMES = ("text", "sections_used", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -51,13 +84,16 @@ class SYPromptSections:
                 "camera": box("Camera, lens and angle."),
                 "style": box("The look: painting, photo, anime and so on."),
                 "extra": box("Anything else you want to add at the end."),
+                "remove_repeats": ("BOOLEAN", {"default": False, "tooltip": "On: a comma tag already used in an earlier part is dropped. Not with label_colon."}),
             },
         }
 
-    def run(self, join_with=", ", label_mode="none", subject="", setting="", lighting="", camera="", style="", extra=""):
+    def run(self, join_with=", ", label_mode="none", subject="", setting="", lighting="", camera="", style="", extra="",
+            remove_repeats=False):
         parts = {"subject": subject, "setting": setting, "lighting": lighting,
                  "camera": camera, "style": style, "extra": extra}
-        return build_sections(parts, join_with, label_mode)
+        text, used = build_sections(parts, join_with, label_mode, remove_repeats)
+        return (text, used, sections_info(parts, text))
 
 
 NODE_CLASS_MAPPINGS = {}

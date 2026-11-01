@@ -6,7 +6,7 @@ try:
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
 
-STYLES = ("plain", "chat tags", "json messages")
+STYLES = ("plain", "chat tags", "json messages", "chatml")
 
 
 def build_chat_prompt(system, user, assistant="", style="plain"):
@@ -37,6 +37,14 @@ def build_chat_prompt(system, user, assistant="", style="plain"):
         # With no assistant text the open tag tells the model it is its turn.
         parts.append("<|assistant|>\n" + assistant)
         return "\n".join(parts).rstrip("\n") + ("" if assistant else "\n")
+    if style == "chatml":
+        parts = []
+        if system:
+            parts.append("<|im_start|>system\n" + system + "<|im_end|>")
+        parts.append("<|im_start|>user\n" + user + "<|im_end|>")
+        # The open assistant turn tells the model it is its turn; assistant text is a head start for the answer.
+        parts.append("<|im_start|>assistant\n" + assistant)
+        return "\n".join(parts)
     messages = []
     if system:
         messages.append({"role": "system", "content": system})
@@ -46,12 +54,18 @@ def build_chat_prompt(system, user, assistant="", style="plain"):
     return json.dumps(messages, ensure_ascii=False, indent=2)
 
 
+def prompt_info(prompt, style):
+    """Pure function. One plain line: style, size and a rough token count (about 4 letters per token)."""
+    return "Style %s, %d characters, about %d tokens." % (style, len(prompt), (len(prompt) + 3) // 4)
+
+
 class SYChatPromptBuilder:
-    DESCRIPTION = "Joins a system text, a user text and an optional assistant text into one text for any LLM node. It does not call an LLM."
+    DESCRIPTION = ("Joins a system text, a user text and an optional assistant text into one text for any LLM node: plain labels, chat tags, "
+                   "ChatML or a JSON message list. An info line gives the size and a rough token count. It does not call an LLM.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("prompt",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("prompt", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -59,7 +73,7 @@ class SYChatPromptBuilder:
             "required": {
                 "system": ("STRING", {"multiline": True, "default": "", "tooltip": "Standing instructions for the model. Can be empty."}),
                 "user": ("STRING", {"multiline": True, "default": "", "tooltip": "What you ask the model. Must not be empty."}),
-                "style": (list(STYLES), {"default": "plain", "tooltip": "plain labels, chat tags, or a JSON list of messages."}),
+                "style": (list(STYLES), {"default": "plain", "tooltip": "plain labels, chat tags, chatml, or a JSON list of messages."}),
             },
             "optional": {
                 "assistant": ("STRING", {"multiline": True, "default": "", "tooltip": "Optional start of the answer, to steer the model."}),
@@ -67,7 +81,8 @@ class SYChatPromptBuilder:
         }
 
     def run(self, system, user, style, assistant=""):
-        return (build_chat_prompt(system, user, assistant, style),)
+        prompt = build_chat_prompt(system, user, assistant, style)
+        return (prompt, prompt_info(prompt, style))
 
 
 NODE_CLASS_MAPPINGS = {}

@@ -2,9 +2,11 @@
 try:
     from ._sy_common import category, register
     from ._sy_image_ops import need_image
+    from ._sy_d3_info import need_nonempty, size_text
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
     from _sy_image_ops import need_image
+    from _sy_d3_info import need_nonempty, size_text
 
 MODES = ("left_to_right", "right_to_left", "top_to_bottom", "bottom_to_top", "four_way")
 
@@ -43,12 +45,38 @@ def mode_axes(mode):
     }[mode]
 
 
+SIDE_WORDS = {
+    "left_to_right": "left half onto the right",
+    "right_to_left": "right half onto the left",
+    "top_to_bottom": "top half onto the bottom",
+    "bottom_to_top": "bottom half onto the top",
+    "four_way": "top-left quarter onto the other three",
+}
+
+
+def mirror_info(mode, width, height):
+    """Pure function. Plain sentence: what was copied, plus a note about a middle line that stays when a side is odd."""
+    check_mode(mode)
+    rows_start, cols_start = mode_axes(mode)
+    text = "Copied the %s of a %s picture." % (SIDE_WORDS[mode], size_text(width, height))
+    notes = []
+    if cols_start is not None and width % 2 == 1:
+        notes.append("middle column %d" % (width // 2))
+    if rows_start is not None and height % 2 == 1:
+        notes.append("middle row %d" % (height // 2))
+    if notes:
+        text += " The side is an odd number of pixels, so the " + " and ".join(notes) + " stays as it is."
+    if (cols_start is not None and width < 2) or (rows_start is not None and height < 2):
+        text += " The picture is only 1 pixel wide in that direction, so nothing changed."
+    return text
+
+
 class SYMirrorImage:
-    DESCRIPTION = "Copies one half of a picture, flipped, onto the other half so it becomes symmetric. Four way mirrors one quarter."
+    DESCRIPTION = "Copies one half of a picture, flipped, onto the other half so it becomes symmetric. Four way mirrors one quarter. The info output says which side was copied and what happens with an odd-sized picture."
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -63,6 +91,7 @@ class SYMirrorImage:
         import torch
 
         need_image(image)
+        need_nonempty(image.shape)
         rows_start, cols_start = mode_axes(mode)
         out = image
         if rows_start is not None:
@@ -71,7 +100,7 @@ class SYMirrorImage:
         if cols_start is not None:
             idx = torch.tensor(axis_indices(image.shape[2], cols_start), dtype=torch.long, device=image.device)
             out = out.index_select(2, idx)
-        return (out.contiguous(),)
+        return (out.contiguous(), mirror_info(mode, int(image.shape[2]), int(image.shape[1])))
 
 
 NODE_CLASS_MAPPINGS = {}

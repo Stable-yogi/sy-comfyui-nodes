@@ -44,6 +44,27 @@ def run():
     assert msg and "width" in msg; n += 1
     assert raises(m.wrap_text, "x", 1001, True); n += 1
     assert raises(m.wrap_text, None, 10, True); n += 1
-    assert m.SYTextWrap().run("one two", 4, True) == ("one\ntwo", 2); n += 1
+    assert m.SYTextWrap().run("one two", 4, True)[:2] == ("one\ntwo", 2); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYTextWrap"] == "Text Wrap SY"; n += 1
+    return n + _extra()
+
+
+def _extra():
+    n = 0
+    t, c = m.wrap_text("line one\nline two", 40, True, True)
+    assert t == "line one\nline two" and c == 2; n += 1
+    t, c = m.wrap_text("aaaa bbbb cccc\ndd", 9, False, True)
+    assert t == "aaaa bbbb\ncccc\ndd" and c == 3; n += 1
+    t, c = m.wrap_text("a\n\nb", 40, False, True)
+    assert t == "a\n\nb" and c == 3; n += 1
+    t, c = m.wrap_text("\n\n a  b \n\n", 40, True, True)
+    assert t == "a b" and c == 1; n += 1
+    assert m.wrap_text("", 10, True, True) == ("", 0); n += 1
+    assert m.wrap_text("x y", 10, True, False) == m.wrap_text("x y", 10, True); n += 1
+    assert m.wrap_info("one two", "one\ntwo", 4) == "2 line(s), longest line 3 of 4 characters"; n += 1
+    assert "1 word(s) were longer" in m.wrap_info("abcdefgh", "abcd\nefgh", 4); n += 1
+    assert m.wrap_info("", "", 10) == "0 line(s), longest line 0 of 10 characters"; n += 1
+    out = m.SYTextWrap().run("ab cd\nef", 4, True, True)
+    assert out[0] == "ab\ncd\nef" and out[1] == 3 and out[2].startswith("3 line(s)"); n += 1
+    assert m.SYTextWrap.RETURN_NAMES == ("text", "line_count", "info"); n += 1
     return n

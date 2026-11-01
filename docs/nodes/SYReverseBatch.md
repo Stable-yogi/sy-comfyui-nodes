@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_reverse_batch.py`
 
-**What it does:** Turns a batch of pictures around so the last one comes first. Handy for playing a video backwards.
+**What it does:** Turns a batch of pictures around so the last one comes first. Handy for playing a video backwards. Also gives the picture count and an info sentence.
 
 ## Inputs
 
@@ -10,4 +10,4 @@ Source: `nodes/sy_reverse_batch.py`
 |---|---|---|---|---|
 | images | IMAGE | yes | The batch of pictures or video frames to reverse. | picture batch [B,H,W,3] |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `INT`, `STRING`

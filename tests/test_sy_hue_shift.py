@@ -56,4 +56,10 @@ def run():
     assert raises(m.check_settings, -181.0, 1.0); n += 1
     assert raises(m.shift_pixel, p, 10.0, -0.1); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYHueShift"] == "Hue Shift SY"; n += 1
+    assert "kept" in m.hue_info(0.0, 1.0); n += 1
+    assert "kept" in m.hue_info(90.0, 0.0); n += 1
+    t = m.hue_info(-45.0, 0.5, "note here")
+    assert "-45 degrees" in t and "50% strength" in t and "note here" in t; n += 1
+    assert "+120 degrees" in m.hue_info(120.0, 1.0) and "strength" not in m.hue_info(120.0, 1.0); n += 1
+    assert m.SYHueShift.RETURN_NAMES == ("image", "info"); n += 1
     return n

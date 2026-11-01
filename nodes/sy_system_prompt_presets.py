@@ -21,23 +21,53 @@ PRESETS = {
 PRESET_NAMES = tuple(PRESETS)
 
 
-def system_prompt(preset, custom=""):
-    """Pure function. A non-empty custom text wins over the chosen preset."""
-    if not isinstance(custom, str):
-        raise ValueError("custom must be text, got %s" % type(custom).__name__)
+NO_CHATTER = "Do not add greetings, explanations, markdown or code fences. Output the answer only."
+
+
+def system_prompt(preset, custom="", no_chatter=False, reply_language="", extra_rules=""):
+    """Pure function. A non-empty custom text wins over the chosen preset.
+    Then, if asked, extra rules, a reply language and the no-chatter rule are added at the end."""
+    return system_prompt_info(preset, custom, no_chatter, reply_language, extra_rules)[0]
+
+
+def system_prompt_info(preset, custom="", no_chatter=False, reply_language="", extra_rules=""):
+    """Pure function. Returns (system_prompt, info)."""
+    for value in (custom, reply_language, extra_rules):
+        if not isinstance(value, str):
+            raise ValueError("custom, reply_language and extra_rules must be text, got %s" % type(value).__name__)
     if custom.strip():
-        return custom.strip()
-    if preset not in PRESETS:
-        raise ValueError("unknown preset %r: pick one of %s" % (preset, ", ".join(PRESET_NAMES)))
-    return PRESETS[preset]
+        text = custom.strip()
+        source = "your custom text"
+    else:
+        if preset not in PRESETS:
+            raise ValueError("unknown preset %r: pick one of %s" % (preset, ", ".join(PRESET_NAMES)))
+        text = PRESETS[preset]
+        source = "preset '%s'" % preset
+    added = []
+    if extra_rules.strip():
+        text += " " + extra_rules.strip()
+        added.append("extra rules")
+    lang = " ".join(reply_language.split()).strip(" .")
+    if lang:
+        text += " Reply in %s." % lang
+        added.append("reply language %s" % lang)
+    if no_chatter:
+        text += " " + NO_CHATTER
+        added.append("no-chatter rule")
+    info = "System prompt from %s" % source
+    if added:
+        info += " plus " + ", ".join(added)
+    info += "; %d characters, about %d tokens" % (len(text), -(-len(text) // 4))
+    return text, info
 
 
 class SYSystemPromptPresets:
-    DESCRIPTION = "Gives a ready-made system prompt for an LLM node. Type your own text in custom and it replaces the choice."
+    DESCRIPTION = ("Gives a ready-made system prompt for an LLM node. Type your own text in custom and it replaces the choice. "
+                   "Can add a no-chatter rule (no greetings or code fences), a reply language and your own extra rules.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("system_prompt",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("system_prompt", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -47,11 +77,14 @@ class SYSystemPromptPresets:
             },
             "optional": {
                 "custom": ("STRING", {"multiline": True, "default": "", "tooltip": "Your own system prompt. If not empty it replaces the preset."}),
+                "no_chatter": ("BOOLEAN", {"default": False, "tooltip": "On: tell the model to skip greetings, explanations and code fences."}),
+                "reply_language": ("STRING", {"default": "", "tooltip": "Language of the answer, for example 'English' or 'German'. Empty adds nothing."}),
+                "extra_rules": ("STRING", {"multiline": True, "default": "", "tooltip": "Your own extra lines, added after the preset, for example 'Keep it under 50 words.'"}),
             },
         }
 
-    def run(self, preset, custom=""):
-        return (system_prompt(preset, custom),)
+    def run(self, preset, custom="", no_chatter=False, reply_language="", extra_rules=""):
+        return system_prompt_info(preset, custom, no_chatter, reply_language, extra_rules)
 
 
 NODE_CLASS_MAPPINGS = {}

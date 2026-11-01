@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_levels_adjust.py`
 
-**What it does:** Brightness, contrast, saturation and gamma in one node. Default values change nothing.
+**What it does:** Black point, white point, gamma, contrast, brightness and saturation in one node. Default values change nothing. Add a mask to adjust only one area. The info line lists what was changed.
 
 ## Inputs
 
@@ -13,5 +13,8 @@ Source: `nodes/sy_levels_adjust.py`
 | contrast | FLOAT | yes | Spread between dark and light. 1 is unchanged, 0 is flat grey. | 0.0 to 3.0, step 0.01, default 1.0 |
 | saturation | FLOAT | yes | Colour strength. 1 is unchanged, 0 is black and white. | 0.0 to 3.0, step 0.01, default 1.0 |
 | gamma | FLOAT | yes | Middle tones. Above 1 brightens the shadows, below 1 darkens them. | 0.1 to 5.0, step 0.01, default 1.0 |
+| black_point | FLOAT | no | Brightness that becomes pure black, for example 0.05. Fixes washed-out shadows. | 0.0 to 0.99, step 0.01, default 0.0 |
+| white_point | FLOAT | no | Brightness that becomes pure white, for example 0.95. Fixes dull highlights. | 0.01 to 1.0, step 0.01, default 1.0 |
+| mask | MASK | no | Optional. Adjust only where this mask is white. A different size is stretched to fit. | mask [B,H,W] |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `STRING`

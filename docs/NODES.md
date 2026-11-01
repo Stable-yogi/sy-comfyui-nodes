@@ -1,10 +1,9 @@
 # SY Nodes: full node list
 
-All 250 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 271 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
-
-## SY/Text (60)
+## SY/Text (63)
 
 - Base64 Text SY
 - Caption Prefix Suffix SY
@@ -18,6 +17,7 @@ All 250 nodes, by group. Every node is in the **SY** folder of the node library 
 - EditStepsList SY
 - Few Shot Block SY
 - Find Replace SY
+- H3 Prompt SY
 - H3PromptBuilder SY
 - Hash Text SY
 - JSON Field Get SY
@@ -40,6 +40,7 @@ All 250 nodes, by group. Every node is in the **SY** folder of the node library 
 - Prompt Schedule SY
 - Prompt Sections SY
 - Prompt Style Templates SY
+- Prompt Tidy SY
 - Prompt Weight Wrap SY
 - Random Choice SY
 - Regex Extract SY
@@ -66,8 +67,9 @@ All 250 nodes, by group. Every node is in the **SY** folder of the node library 
 - TextInImage SY
 - TextRepeat SY
 - Token Estimate SY
+- Wildcard Prompt SY
 
-## SY/Image (71)
+## SY/Image (84)
 
 - Add Border SY
 - ApplyMaskToImage SY
@@ -78,6 +80,7 @@ All 250 nodes, by group. Every node is in the **SY** folder of the node library 
 - Batch Pick SY
 - Batch Repeat SY
 - Batch To List SY
+- Before After SY
 - Brightness Contrast SY
 - Channel Split SY
 - Checkerboard SY
@@ -88,6 +91,7 @@ All 250 nodes, by group. Every node is in the **SY** folder of the node library 
 - Crop Square Centre For Training SY
 - Crop To Aspect SY
 - CropByMask SY
+- Decode SY
 - Dominant Colors SY
 - Duotone SY
 - Edge Detect SY
@@ -100,7 +104,9 @@ All 250 nodes, by group. Every node is in the **SY** folder of the node library 
 - Gaussian Blur SY
 - Gradient Image SY
 - Grayscale SY
+- H3 Tiled Upscale SY
 - Hue Shift SY
+- Image Adjust SY
 - Image Blend SY
 - Image Compare SY
 - Image Grid SY
@@ -112,8 +118,10 @@ All 250 nodes, by group. Every node is in the **SY** folder of the node library 
 - Labelled AB Grid SY
 - Levels Adjust SY
 - List To Batch SY
+- Load Clip SY
 - Load Image Mini SY
 - Luminance Mask SY
+- Mask Tools SY
 - MaskCombine SY
 - MaskFeather SY
 - MaskFromBox SY
@@ -124,21 +132,28 @@ All 250 nodes, by group. Every node is in the **SY** folder of the node library 
 - MaskToBox SY
 - Mirror Image SY
 - Orientation SY
+- Outpaint Pad SY
 - Pad Image SY
 - PasteBack SY
 - Ping Pong SY
 - Pixelate SY
 - Posterize SY
+- Reference Picture SY
 - Reverse Batch SY
 - Roll Image SY
 - Rounded Corners SY
+- RTX Upscale SY
 - Saturation SY
+- Save Pack SY
+- Save Result SY
 - Sepia SY
 - Sharpen SY
 - Solarize SY
 - Threshold SY
 - Tile Merge SY
 - Tile Split SY
+- Tone Curve SY
+- Upscale SY
 - Vignette SY
 
 ## SY/Resize (11)
@@ -198,14 +213,14 @@ All 250 nodes, by group. Every node is in the **SY** folder of the node library 
 - Select By Index Text SY
 - Switch SY
 
-## SY/Utility (59)
+## SY/Utility (64)
 
 - Batch Size Calc SY
 - Checkpoint Loader Info SY
 - Checkpoint Name Filter SY
 - CLIP Loader SY
 - CLIPLoaderGGUF SY
-- DateParts SY
+- Date Parts SY
 - DualCLIPLoaderGGUF SY
 - Empty Latent SY
 - Filename Builder SY
@@ -215,6 +230,7 @@ All 250 nodes, by group. Every node is in the **SY** folder of the node library 
 - Free VRAM SY
 - H3 Chain Settings SY
 - H3 Chain To Video SY
+- H3 Guides SY
 - H3 Load Session SY
 - H3 Render Segment SY
 - H3 Repair Segment SY
@@ -234,6 +250,8 @@ All 250 nodes, by group. Every node is in the **SY** folder of the node library 
 - Load Text SY
 - Loader Name Picker SY
 - Lora Loader Stack SY
+- LoRA SY
+- Model Loader SY
 - Model Preset Bundle SY
 - Pixel Count Info SY
 - Precision Info SY
@@ -241,10 +259,12 @@ All 250 nodes, by group. Every node is in the **SY** folder of the node library 
 - Safetensors Header Info SY
 - Sampler Settings SY
 - Sampler Settings Unpack SY
+- Sampler SY
 - Save Image To Folder SY
 - Save Text SY
 - Save With Caption SY
 - Short ID SY
+- Show SY
 - System Info SY
 - Tile Grid Calc SY
 - Timestamp SY

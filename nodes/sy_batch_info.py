@@ -15,12 +15,29 @@ def describe_batch(shape):
     return count, width, height, channels, text
 
 
+def size_warnings(width, height):
+    """Pure function. Plain advice about the picture size, or an empty text when all is fine."""
+    notes = []
+    if width % 8 or height % 8:
+        notes.append("size %dx%d is not a multiple of 8; many models need 8 (or 16/64)" % (width, height))
+    mp = width * height / 1e6
+    if mp > 4.2:
+        notes.append("%.1f megapixels is large; it may run out of graphics memory" % mp)
+    return "; ".join(notes)
+
+
+def orientation(width, height):
+    """Pure function. landscape, portrait or square."""
+    return "square" if width == height else "landscape" if width > height else "portrait"
+
+
 class SYBatchInfo:
-    DESCRIPTION = "Reports the number of pictures in a batch and their width, height and channels. The pictures pass through unchanged."
+    DESCRIPTION = ("Reports the number of pictures in a batch and their width, height and channels. The pictures pass through unchanged. "
+                   "Also gives megapixels, landscape/portrait and a plain warning when the size is not a multiple of 8 or is very large.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE", "INT", "INT", "INT", "INT", "STRING")
-    RETURN_NAMES = ("images", "count", "width", "height", "channels", "text")
+    RETURN_TYPES = ("IMAGE", "INT", "INT", "INT", "INT", "STRING", "FLOAT", "STRING", "STRING")
+    RETURN_NAMES = ("images", "count", "width", "height", "channels", "text", "megapixels", "orientation", "warnings")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -28,7 +45,7 @@ class SYBatchInfo:
 
     def run(self, images):
         count, width, height, channels, text = describe_batch(images.shape)
-        return (images, count, width, height, channels, text)
+        return (images, count, width, height, channels, text, round(width * height / 1e6, 3), orientation(width, height), size_warnings(width, height))
 
 
 NODE_CLASS_MAPPINGS = {}

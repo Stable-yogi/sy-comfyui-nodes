@@ -36,4 +36,6 @@ def run():
     assert m.check_sizes(1, 1, 1, 1) is None; n += 1
     assert m.DEFAULT_A.startswith("#") and len(m.DEFAULT_A) == 7; n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYCheckerboard"] == "Checkerboard SY"; n += 1
+    assert m.SYCheckerboard.RETURN_TYPES == ("IMAGE", "MASK", "STRING"); n += 1
+    assert m.SYCheckerboard.RETURN_NAMES == ("image", "mask", "info"); n += 1
     return n

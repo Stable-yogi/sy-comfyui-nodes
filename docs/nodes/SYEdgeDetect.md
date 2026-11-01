@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_edge_detect.py`
 
-**What it does:** Finds the outlines in a picture and draws them as a grey edge map. Strong edges are bright, flat areas are dark.
+**What it does:** Finds the outlines in a picture and draws them as a grey edge map. Strong edges are bright, flat areas are dark. Adds a noise filter (blur first), a threshold that drops faint edges, and an info line.
 
 ## Inputs
 
@@ -12,5 +12,7 @@ Source: `nodes/sy_edge_detect.py`
 | method | COMBO | yes | Sobel gives smooth thick edges. Laplacian gives thin sharp lines. | one of: sobel, laplacian |
 | strength | FLOAT | yes | Brightness boost for the edges. Raise it to see faint edges. | 0.1 to 10.0, step 0.1, default 1.0 |
 | invert | BOOLEAN | yes | Turn on for dark lines on a white background. | default False |
+| blur_first | FLOAT | no | Blur radius applied before looking for edges. 1 to 3 hides grain and noise. | 0.0 to 20.0, step 0.5, default 0.0 |
+| threshold | FLOAT | no | Edges weaker than this are dropped. 0.1 cleans faint lines. | 0.0 to 1.0, step 0.01, default 0.0 |
 
-Outputs: `IMAGE`, `MASK`
+Outputs: `IMAGE`, `MASK`, `STRING`

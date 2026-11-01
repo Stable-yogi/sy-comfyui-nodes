@@ -43,5 +43,18 @@ def run():
             raise SystemExit("bad limits must raise")
         except ValueError:
             pass
-    assert m.SYCaptionReview().run("a red fox runs home", 5, 75, 3, "") == (True, "OK: 5 words, no problems.")
-    return 28
+    assert m.SYCaptionReview().run("a red fox runs home", 5, 75, 3, "") == (True, "OK: 5 words, no problems.", 5)
+    ok, rep = r("sks dog runs on grass", 1, 75, 3, "", "sks")
+    assert ok
+    ok, rep = r("a dog sks runs", 1, 75, 3, "", "sks")
+    assert not ok and 'missing trigger: the caption must start with "sks"' in rep
+    assert r("Photo Of SKS man smiling", 1, 75, 3, "", "photo of sks")[0]
+    assert not r("photo of man", 1, 75, 3, "", "photo of sks")[0]
+    assert not r("sksfoo dog", 1, 75, 3, "", "sks")[0]
+    ok, rep = r("a dog on grass", 1, 75, 3, "", "", "dog, sky")
+    assert not ok and 'missing word: "sky"' in rep and "dog" not in rep.replace("a dog", "")
+    assert r("a dog under the sky", 1, 75, 3, "", "", "dog\nsky")[0]
+    assert r("anything goes here ok", 1, 75, 3, "", "  ", " , ")[0]
+    assert m.SYCaptionReview().run("a dog under sky now", 1, 75, 3, "", "a dog", "sky") == (True, "OK: 5 words, no problems.", 5)
+    assert m.SYCaptionReview.RETURN_NAMES == ("ok", "report", "word_count")
+    return 38

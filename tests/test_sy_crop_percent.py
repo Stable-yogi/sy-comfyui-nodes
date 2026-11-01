@@ -37,4 +37,27 @@ def run():
     assert raises(m.crop_box, 0, 10, 0, 0, 0, 0); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYCropPercent"] == "Crop Percent SY"; n += 1
     assert m.SYCropPercent.CATEGORY == "SY/Resize"; n += 1
+    return n + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.crop_box(100, 50, 0, 0, 0, 0, 1) == m.crop_box(100, 50, 0, 0, 0, 0))
+    n += ok((lambda b: (b[2] - b[0]) % 8 == 0 and (b[3] - b[1]) % 8 == 0)(m.crop_box(1000, 700, 10, 10, 10, 10, 8)))
+    n += ok(m.crop_box(100, 100, 0, 0, 0, 0, 64) == (18, 18, 82, 82))
+    n += ok('less than one multiple' in rs(m.crop_box, 100, 100, 40, 40, 0, 0, 64))
+    n += ok(rs(m.crop_box, 100, 100, 0, 0, 0, 0, 0) is not None)
+    n += ok(m.crop_info(100, 50, (0, 0, 100, 50)) == 'nothing cropped, the picture stays 100x50')
+    n += ok(m.crop_info(100, 50, (10, 0, 90, 50)).startswith('cropped 100x50 -> 80x50'))
+    n += ok('multiple of 8' in m.crop_info(100, 50, (10, 0, 90, 48), 8))
+    n += ok(m.SYCropPercent.RETURN_TYPES[-1] == 'STRING')
     return n

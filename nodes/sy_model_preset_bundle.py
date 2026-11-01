@@ -2,9 +2,11 @@
 try:
     from ._sy_common import category, register
     from ._sy_sampler_names import sampler_names, scheduler_names, pick_valid
+    from ._sy_a1_sizes import ASPECTS, fit_aspect, snap_value, ratio_text
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
     from _sy_sampler_names import sampler_names, scheduler_names, pick_valid
+    from _sy_a1_sizes import ASPECTS, fit_aspect, snap_value, ratio_text
 
 # name: (steps, cfg, sampler, scheduler, width, height, note). Starting points only, not rules.
 PRESETS = {
@@ -45,20 +47,56 @@ def get_preset(name, valid_samplers=None, valid_schedulers=None):
             "width": width, "height": height, "note": note}
 
 
+def size_multiple(name):
+    """Pure function. The size step a preset wants: 32 for LTX video, 16 for the others."""
+    return 32 if name == "LTX video" else 16
+
+
+def preset_size(name, aspect="preset"):
+    """Pure function. (width, height) of a preset. With an aspect (like '16:9') the picture keeps about the same number
+    of pixels (the memory budget of the preset) in that shape, snapped to the size step of the preset."""
+    if name not in PRESETS:
+        raise ValueError("unknown preset %r. Pick one of: %s" % (name, ", ".join(PRESETS)))
+    if aspect not in ASPECTS:
+        raise ValueError("unknown aspect %r. Pick one of: %s" % (aspect, ", ".join(ASPECTS)))
+    width, height = PRESETS[name][4], PRESETS[name][5]
+    if ASPECTS[aspect] is None:
+        return width, height
+    step = size_multiple(name)
+    w, h = fit_aspect(width * height, ASPECTS[aspect][0], ASPECTS[aspect][1])
+    return snap_value(w, step, "nearest", minimum=step), snap_value(h, step, "nearest", minimum=step)
+
+
+def preset_info(name, p, aspect="preset"):
+    """Pure function. One readable summary of what the node gives."""
+    mp = p["width"] * p["height"] / 1_000_000
+    size = "%dx%d (%.2f MP, %s)" % (p["width"], p["height"], mp, ratio_text(p["width"], p["height"]))
+    if aspect != "preset":
+        size += ", reshaped to %s from the preset size" % aspect
+    return "%s: %d steps, cfg %g, %s / %s, %s. %s" % (name, p["steps"], p["cfg"], p["sampler_name"], p["scheduler"], size, p["note"])
+
+
 class SYModelPresetBundle:
-    DESCRIPTION = "Pick a model family and get its usual steps, cfg, sampler, scheduler, size and a short note. These are starting points."
+    DESCRIPTION = ("Pick a model family and get its usual steps, cfg, sampler, scheduler, size and a short note. These are starting points. "
+                   "Adds an aspect choice (the preset's pixel budget in another shape, such as 16:9 or 9:16, snapped to a size the model likes) "
+                   "and a one-line info text.")
     CATEGORY = category("Utility")
     FUNCTION = "run"
-    RETURN_TYPES = ("INT", "FLOAT", "STRING", "STRING", "INT", "INT", "STRING")
-    RETURN_NAMES = ("steps", "cfg", "sampler_name", "scheduler", "width", "height", "note")
+    RETURN_TYPES = ("INT", "FLOAT", "STRING", "STRING", "INT", "INT", "STRING", "FLOAT", "STRING")
+    RETURN_NAMES = ("steps", "cfg", "sampler_name", "scheduler", "width", "height", "note", "megapixels", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
-        return {"required": {"preset": (preset_names(), {"tooltip": "The model family whose usual settings you want."})}}
+        return {
+            "required": {"preset": (preset_names(), {"tooltip": "The model family whose usual settings you want."})},
+            "optional": {"aspect": (list(ASPECTS), {"default": "preset", "tooltip": "preset = the preset's own size. Or a shape like 16:9: same pixel budget, new shape."})},
+        }
 
-    def run(self, preset):
+    def run(self, preset, aspect="preset"):
         p = get_preset(preset, sampler_names(), scheduler_names())
-        return (p["steps"], p["cfg"], p["sampler_name"], p["scheduler"], p["width"], p["height"], p["note"])
+        p["width"], p["height"] = preset_size(preset, aspect)
+        mp = p["width"] * p["height"] / 1_000_000
+        return (p["steps"], p["cfg"], p["sampler_name"], p["scheduler"], p["width"], p["height"], p["note"], mp, preset_info(preset, p, aspect))
 
 
 NODE_CLASS_MAPPINGS = {}

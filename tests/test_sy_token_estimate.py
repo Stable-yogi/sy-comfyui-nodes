@@ -24,4 +24,19 @@ def run():
         n += 1
     assert m.SYTokenEstimate().run("a b")[0] == 2; n += 1
     assert "estimate" in m.SYTokenEstimate.DESCRIPTION; n += 1
+    return n + _extra()
+
+
+def _extra():
+    n = 0
+    assert m.estimate_info(2, 11, 4) == (False, "About 4 tokens (2 words, 11 characters); a CLIP text encoder reads this in 1 piece(s) of 75"); n += 1
+    over, info = m.estimate_info(200, 900, 160, 77)
+    assert over is True and "3 piece(s)" in info and "OVER your limit of 77 by about 83 tokens" in info; n += 1
+    over, info = m.estimate_info(2, 11, 40, 77)
+    assert over is False and info.endswith("within your limit of 77 (37 left)"); n += 1
+    assert m.estimate_info(0, 0, 0)[1].endswith("in 0 piece(s) of 75"); n += 1
+    out = m.SYTokenEstimate().run("word " * 100, 50)
+    assert out[2] > 50 and out[3] is True and len(out) == 5; n += 1
+    assert m.SYTokenEstimate().run("a b")[3] is False; n += 1
+    assert m.SYTokenEstimate.RETURN_NAMES[-2:] == ("over_limit", "info"); n += 1
     return n

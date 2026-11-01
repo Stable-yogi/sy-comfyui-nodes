@@ -30,4 +30,7 @@ def run():
     raises(m.repeat_indices, 3, 0, "each_picture")
     raises(m.repeat_indices, 3, 2, "sideways")
     raises(m.repeat_indices, 100, 256, "whole_batch")
+    assert m.SYBatchRepeat.RETURN_NAMES == ("images", "count", "info")
+    assert m.SYBatchRepeat.RETURN_TYPES == ("IMAGE", "INT", "STRING")
+    N[0] += 2
     return N[0]

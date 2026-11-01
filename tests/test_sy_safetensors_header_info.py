@@ -81,4 +81,29 @@ def run():
         raise SystemExit("None must raise")
     except ValueError:
         n += 1
+    # --- value pass A2: kind guess, main data type, metadata, one-line summary
+    import _sy_a2_files as hf
+    lora = {"__metadata__": {"ss_network_dim": "16", "note": "a  b\nc"}, "lora_unet_x.lora_down.weight": {"dtype": "F16", "shape": [4, 4], "data_offsets": [0, 32]}}
+    assert hf.kind_guess(lora) == "LoRA"; n += 1
+    assert hf.kind_guess({"first_stage_model.encoder.x": {}, "model.diffusion_model.a": {}}).startswith("full checkpoint"); n += 1
+    assert hf.kind_guess({"model.diffusion_model.a": {}}) == "diffusion model"; n += 1
+    assert hf.kind_guess({"double_blocks.0.x": {}}) == "diffusion model"; n += 1
+    assert hf.kind_guess({"decoder.conv_in.weight": {}, "encoder.down.0": {}}) == "VAE"; n += 1
+    assert hf.kind_guess({"text_model.encoder.x": {}}) == "text encoder"; n += 1
+    assert hf.kind_guess({"zzz": {}}) == "unknown" and hf.kind_guess({}) == "empty file"; n += 1
+    assert hf.main_dtype_text({"a": {"dtype": "BF16", "shape": [2, 2]}}) == "bf16 (100%)"; n += 1
+    mixed = {"a": {"dtype": "BF16", "shape": [10]}, "b": {"dtype": "F8_E4M3", "shape": [30]}}
+    assert hf.main_dtype_text(mixed) == "mixed: fp8 e4m3 75%, bf16 25%"; n += 1
+    assert hf.main_dtype_text({}) == "no tensors"; n += 1
+    ml = hf.metadata_lines(lora)
+    assert ml.split("\n") == ["note: a b c", "ss_network_dim: 16"]; n += 1
+    assert hf.metadata_lines({"x": {"dtype": "F16", "shape": [1]}}) == ""; n += 1
+    long_meta = {"__metadata__": {"k%02d" % i: "v" * 300 for i in range(33)}}
+    out = hf.metadata_lines(long_meta).split("\n")
+    assert len(out) == 31 and out[-1] == "... and 3 more keys" and out[0].endswith("..."); n += 1
+    one = m.one_line_summary(lora, 2 * 1024 ** 3)
+    assert one.startswith("LoRA, fp16 (100%), 0.00 billion parameters") and one.endswith("2.00 GB"); n += 1
+    assert m.KINDS[-2:] == ("diffusion_models", "text_encoders") and m.split_choice("text_encoders/t5.safetensors")[0] == "text_encoders"; n += 1
+    assert m.SYSafetensorsHeaderInfo.RETURN_NAMES == ("report", "summary", "metadata") and len(m.SYSafetensorsHeaderInfo.RETURN_TYPES) == 3; n += 1
+    assert m.read_header is hf.read_header and m.MAX_HEADER_BYTES == 20 * 1024 * 1024; n += 1
     return n

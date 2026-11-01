@@ -43,6 +43,20 @@ def run():
     class Fake:                                                             # stands in for a picture batch
         shape = (4, 8, 8, 3)
 
-    assert m.SYDatasetPairCheck().run("a\nb\nc\nd", 0, False, images=Fake()) == (True, "MATCH: 4 pictures and 4 captions.")
+    assert m.SYDatasetPairCheck().run("a\nb\nc\nd", 0, False, images=Fake()) == (True, "MATCH: 4 pictures and 4 captions.", 4)
     assert m.SYDatasetPairCheck().run("a\nb", 2, False)[0] is True
-    return 22
+    assert m.pair_report(5, "a\nb")[1].endswith("Picture 3 to 5 have no caption.")
+    assert m.pair_report(3, "a\nb")[1].endswith("Picture 3 has no caption.")
+    assert m.pair_report(2, "a\nb\nc\nd")[1].endswith("Caption line 3 to 4 have no picture.")
+    assert m.pair_report(2, "a\nb\nc")[1].endswith("Caption line 3 has no picture.")
+    assert "Picture" not in m.pair_report(2, "a\nb")[1]
+    assert m.repeated_lines(["a", "B", " b ", "", "", "A"]) == [(3, 2), (6, 1)]
+    ok, rep = m.pair_report(3, "dog\nCat\nDOG", False, True)
+    assert ok and "WARNING: 1 caption is repeated (line 3 repeats line 1)." in rep
+    assert "repeated" not in m.pair_report(3, "dog\nCat\nDOG")[1]
+    assert "2 captions are repeated" in m.pair_report(4, "a\na\na\nb", False, True)[1]
+    assert "repeated" not in m.pair_report(2, "a\n\n\n", True, True)[1]
+    assert m.SYDatasetPairCheck().run("a\nb\nb", 3, False, warn_duplicates=True)[1].endswith("(line 3 repeats line 2).")
+    assert m.SYDatasetPairCheck().run("a\n\nb", 2, True)[2] == 2
+    assert m.SYDatasetPairCheck.RETURN_NAMES == ("match", "report", "caption_count")
+    return 35

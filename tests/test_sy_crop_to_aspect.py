@@ -31,4 +31,15 @@ def run():
     assert (w, h) == (1000, 200) and y == 0; n += 1
     assert raises(m.crop_box, 100, 100, 0, 9); n += 1
     assert raises(m.crop_box, 0, 100, 1, 1); n += 1
+    assert m.snap_size(1080, 607, 1) == (1080, 607); n += 1
+    assert m.snap_size(1080, 607, 8) == (1080, 600); n += 1
+    assert m.snap_size(5, 3, 8) == (5, 3); n += 1
+    assert m.snap_size(70, 40, 64) == (64, 40); n += 1
+    try:
+        m.snap_size(10, 10, 0)
+        raise SystemExit("expected ValueError")
+    except ValueError as e:
+        assert "multiple_of" in str(e); n += 1
+    assert "1920x1080 -> 1080x1080" in m.crop_info(1920, 1080, 420, 0, 1080, 1080); n += 1
+    assert m.SYCropToAspect.RETURN_NAMES == ("image", "width", "height", "info"); n += 1
     return n

@@ -1,8 +1,10 @@
 """Size Presets SY: pick a common picture size by name."""
 try:
     from ._sy_common import category, register
+    from ._sy_b_sizeinfo import size_facts
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
+    from _sy_b_sizeinfo import size_facts
 
 # name -> (width, height). Twenty common sizes, landscape and portrait.
 PRESETS = {
@@ -29,30 +31,53 @@ PRESETS = {
 }
 
 
-def preset_size(name):
-    """Pure function. Returns (width, height) for a preset name."""
-    if name not in PRESETS:
+# more sizes, added after the first twenty so saved workflows keep working
+MORE_PRESETS = {
+    "1344x768 wide": (1344, 768),
+    "768x1344 portrait": (768, 1344),
+    "1328x1328 square": (1328, 1328),
+    "1664x928 wide": (1664, 928),
+    "928x1664 portrait": (928, 1664),
+}
+
+
+def preset_size(name, swap=False):
+    """Pure function. Returns (width, height) for a preset name. swap turns landscape into portrait and back."""
+    if name in PRESETS:
+        w, h = PRESETS[name]
+    elif name in MORE_PRESETS:
+        w, h = MORE_PRESETS[name]
+    else:
         raise ValueError("unknown size preset %r, pick one from the list" % (name,))
-    return PRESETS[name]
+    return (h, w) if swap else (w, h)
+
+
+def preset_report(name, swap=False):
+    """Pure function. Returns (width, height, info)."""
+    w, h = preset_size(name, swap)
+    return w, h, "%s%s: %dx%d (%s)" % (name, ", swapped" if swap else "", w, h, size_facts(w, h))
 
 
 class SYSizePresets:
-    DESCRIPTION = "Pick a common picture size by name, like 1024x1024 square or 2048x1152 wide. Gives a width and a height."
+    DESCRIPTION = "Pick a common picture size by name, like 1024x1024 square or 2048x1152 wide. Gives a width and a height, plus an info line with the megapixels and shape. The swap switch turns any size on its side."
     CATEGORY = category("Resize")
     FUNCTION = "run"
-    RETURN_TYPES = ("INT", "INT")
-    RETURN_NAMES = ("width", "height")
+    RETURN_TYPES = ("INT", "INT", "STRING")
+    RETURN_NAMES = ("width", "height", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "preset": (list(PRESETS), {"default": "1024x1024 square", "tooltip": "A common picture size. Portrait is taller than wide."}),
-            }
+                "preset": (list(PRESETS) + list(MORE_PRESETS), {"default": "1024x1024 square", "tooltip": "A common picture size. Portrait is taller than wide."}),
+            },
+            "optional": {
+                "swap": ("BOOLEAN", {"default": False, "tooltip": "On turns the chosen size on its side: 1216x832 becomes 832x1216."}),
+            },
         }
 
-    def run(self, preset):
-        return preset_size(preset)
+    def run(self, preset, swap=False):
+        return preset_report(preset, bool(swap))
 
 
 NODE_CLASS_MAPPINGS = {}

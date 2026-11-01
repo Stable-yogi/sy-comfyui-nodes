@@ -29,7 +29,7 @@ def run():
     eq(m.tag_sort("a|b", separator="|", order="alphabetical"), ["a", "b"])
     eq(m.tag_sort(""), [])
     eq(m.tag_sort(None), [])
-    eq(m.SYTagSort().run("b, a", ",", "alphabetical", 0, True), ("a, b",))
+    eq(m.SYTagSort().run("b, a", ",", "alphabetical", 0, True)[0], "a, b")
     for bad in (dict(separator=""), dict(order="nope")):
         try:
             m.tag_sort("a, b", **bad)
@@ -41,5 +41,27 @@ def run():
         raise SystemExit("too long input must raise")
     except ValueError:
         n += 1
-    eq(m.SYTagSort.RETURN_TYPES, ("STRING",))
+    eq(m.SYTagSort.RETURN_TYPES, ("STRING", "STRING"))
+    return n + _extra()
+
+
+def _extra():
+    n = 0
+    t = "dog, ohwx, Cat, dog, watermark, bird"
+    assert m.tag_sort(t, trigger_first="ohwx") == ["ohwx", "dog", "Cat", "watermark", "bird"]; n += 1
+    assert m.tag_sort(t, order="alphabetical", trigger_first="ohwx", remove_tags="Watermark") == ["ohwx", "bird", "Cat", "dog"]; n += 1
+    assert m.tag_sort("a, b", trigger_first="ohwx, woman") == ["ohwx", "woman", "a", "b"]; n += 1
+    assert m.tag_sort("a, OHWX, b", trigger_first="ohwx") == ["ohwx", "a", "b"]; n += 1
+    assert m.tag_sort("a, b, a", dedupe=False, trigger_first="a") == ["a", "b"]; n += 1
+    assert m.tag_sort("a, b", remove_tags="a\nb") == []; n += 1
+    assert m.tag_sort("a|b|c", separator="|", remove_tags="b") == ["a", "c"]; n += 1
+    tags, st = m.tag_sort_full(t, trigger_first="ohwx, woman", remove_tags="watermark")
+    assert st == {"removed": 1, "duplicates": 1, "pinned_moved": 1, "pinned_added": 1, "total": 6}, st; n += 1
+    assert tags[:2] == ["ohwx", "woman"]; n += 1
+    info = m.sort_info(st, "keep", len(tags))
+    assert info == "5 tag(s) out (from 6), order: keep; 1 repeated removed, 1 unwanted removed, 1 moved to the front, 1 was missing and added at the front", info; n += 1
+    assert m.sort_info({"removed": 0, "duplicates": 0, "pinned_moved": 0, "pinned_added": 0, "total": 2}, "keep", 2) == "2 tag(s) out (from 2), order: keep"; n += 1
+    out = m.SYTagSort().run("b, a, b", ",", "alphabetical", 0, True, "z")
+    assert out[0] == "z, a, b" and out[1].startswith("3 tag(s) out (from 3)"); n += 1
+    assert m.SYTagSort.RETURN_NAMES == ("text", "info"); n += 1
     return n

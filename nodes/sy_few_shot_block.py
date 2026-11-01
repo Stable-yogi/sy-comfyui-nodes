@@ -33,12 +33,34 @@ def few_shot_block(task, pairs, new_input, input_label="Input", output_label="Ou
     return "\n\n".join(blocks)
 
 
+def few_shot_info(pairs, text):
+    """Pure function. Tells how many examples were used, which half-filled pairs were skipped and a rough token count."""
+    used = 0
+    problems = []
+    for i, (a, b) in enumerate(pairs, start=1):
+        a = "" if a is None else str(a).strip()
+        b = "" if b is None else str(b).strip()
+        if a and b:
+            used += 1
+        elif a and not b:
+            problems.append("example %d skipped: its answer is empty" % i)
+        elif b and not a:
+            problems.append("example %d skipped: its input is empty" % i)
+    info = "%d example%s used, about %d tokens." % (used, "" if used == 1 else "s", (len(text) + 3) // 4)
+    if used == 0:
+        info += " No examples: the model gets only the task (zero-shot)."
+    if problems:
+        info += " WARNING: " + "; ".join(problems) + "."
+    return info
+
+
 class SYFewShotBlock:
-    DESCRIPTION = "Builds a few-shot text: your task, up to 4 worked examples, then the new input with an empty output line."
+    DESCRIPTION = ("Builds a few-shot text: your task, up to 4 worked examples, then the new input with an empty output line. An info line "
+                   "counts the examples used, warns about a half-filled example that was skipped, and gives a rough token count.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("text",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("text", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -56,7 +78,8 @@ class SYFewShotBlock:
 
     def run(self, task, new_input, input_label="Input", output_label="Output", **kw):
         pairs = [(kw.get("example_in_%d" % i, ""), kw.get("example_out_%d" % i, "")) for i in range(1, MAX_PAIRS + 1)]
-        return (few_shot_block(task, pairs, new_input, input_label, output_label),)
+        text = few_shot_block(task, pairs, new_input, input_label, output_label)
+        return (text, few_shot_info(pairs, text))
 
 
 NODE_CLASS_MAPPINGS = {}

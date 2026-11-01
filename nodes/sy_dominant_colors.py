@@ -87,12 +87,20 @@ def kmeans_colours(pixels, count, rounds=12):
     return [c for c, _ in kmeans_clusters(pixels, count, rounds)]
 
 
+def share_text(sizes):
+    """Pure function. Cluster sizes -> '52%, 31%, 17%' (each share of all pixels, whole percent)."""
+    total = float(sum(sizes))
+    if total <= 0:
+        raise ValueError("no pixels were counted")
+    return ", ".join("%d%%" % int(round(100.0 * s / total)) for s in sizes)
+
+
 class SYDominantColors:
-    DESCRIPTION = "Finds the main colours of a picture. Gives a text list of hex colours and a strip of colour swatches."
+    DESCRIPTION = "Finds the main colours of a picture. Gives a text list of hex colours, a strip of colour swatches and how much of the picture each colour covers. Can read any picture of a batch and ignore the area outside a mask."
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING", "IMAGE")
-    RETURN_NAMES = ("hex_list", "swatches")
+    RETURN_TYPES = ("STRING", "IMAGE", "STRING")
+    RETURN_NAMES = ("hex_list", "swatches", "shares")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -101,26 +109,44 @@ class SYDominantColors:
                 "image": ("IMAGE", {"tooltip": "The picture to read. Only the first picture of a batch is used."}),
                 "count": ("INT", {"default": 5, "min": 1, "max": 12, "tooltip": "How many main colours to find."}),
                 "sample_size": ("INT", {"default": 128, "min": 16, "max": 512, "tooltip": "The picture is shrunk to this longest side first. Bigger is slower."}),
-            }
+            },
+            "optional": {
+                "mask": ("MASK", {"tooltip": "Optional. Only the white part of the mask is read, for example the subject without the background."}),
+                "picture_number": ("INT", {"default": 0, "min": 0, "max": 4095, "tooltip": "Which picture of a batch to read, counting from 0. The default is the first."}),
+            },
         }
 
-    def run(self, image, count, sample_size):
+    def run(self, image, count, sample_size, mask=None, picture_number=0):
         import torch
 
         need_image(image)
         check_settings(count, sample_size)
+        if picture_number >= image.shape[0]:
+            raise ValueError("picture_number %d does not exist: the batch holds %d picture(s), counted from 0" % (picture_number, image.shape[0]))
         _, h, w, _c = image.shape
         nw, nh = sample_dims(w, h, sample_size)
         ys = torch.tensor([sample_index(i, nh, h) for i in range(nh)], dtype=torch.long)
         xs = torch.tensor([sample_index(i, nw, w) for i in range(nw)], dtype=torch.long)
-        small = image[0, :, :, :3].detach().cpu().to(torch.float32)
+        small = image[picture_number, :, :, :3].detach().cpu().to(torch.float32)
         small = small.index_select(0, ys).index_select(1, xs)
         pixels = [tuple(row) for row in small.reshape(-1, 3).tolist()]
-        colours = kmeans_colours(pixels, int(count))
+        if mask is not None:
+            m = mask if mask.dim() == 3 else mask.unsqueeze(0)
+            m = m[min(picture_number, m.shape[0] - 1)].detach().cpu().to(torch.float32)
+            if tuple(m.shape) != (h, w):
+                import torch.nn.functional as F
+                m = F.interpolate(m.view(1, 1, *m.shape), size=(h, w), mode="nearest").view(h, w)
+            m = m.index_select(0, ys).index_select(1, xs)
+            keep = (m.reshape(-1) >= 0.5).tolist()
+            pixels = [p for p, k in zip(pixels, keep) if k]
+            if not pixels:
+                raise ValueError("the mask is empty (nothing white), so there are no colours to read; paint something white")
+        clusters = kmeans_clusters(pixels, int(count))
+        colours = [c for c, _ in clusters]
         hex_list = ", ".join(to_hex(c) for c in colours)
         blocks = [torch.tensor(c, dtype=torch.float32).view(1, 1, 3).expand(SWATCH_HEIGHT, SWATCH_HEIGHT, 3) for c in colours]
         sw = torch.cat(blocks, dim=1).unsqueeze(0).to(image.dtype).contiguous()
-        return (hex_list, sw)
+        return (hex_list, sw, share_text([s for _, s in clusters]))
 
 
 NODE_CLASS_MAPPINGS = {}

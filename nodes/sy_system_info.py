@@ -52,25 +52,66 @@ def read_ram_mb():
         return -1, -1
 
 
+def read_gpu_name():
+    """Name of the current GPU, or '' when torch or a GPU is missing."""
+    try:
+        import torch
+        return torch.cuda.get_device_name() if torch.cuda.is_available() else ""
+    except Exception:
+        return ""
+
+
+def check_needs(vram_free_mb, ram_free_mb, need_vram_gb=0.0, need_ram_gb=0.0):
+    """Pure function. Returns (enough, text). A need of 0 is not checked. An unknown value (-1) is not checked either."""
+    need_v, need_r = float(need_vram_gb), float(need_ram_gb)
+    if need_v < 0 or need_r < 0:
+        raise ValueError("the memory you need cannot be negative")
+    problems, notes = [], []
+    for label, free, need, advice in (
+            ("VRAM", vram_free_mb, need_v, "Close other programs, unload models, or pick a smaller model."),
+            ("RAM", ram_free_mb, need_r, "Close other programs or lower the batch size.")):
+        if need <= 0:
+            continue
+        if free is None or free < 0:
+            notes.append("%s could not be read, so it was not checked." % label)
+        elif free / 1024.0 < need:
+            problems.append("Not enough %s: %.1f GB free, %g GB needed. %s" % (label, free / 1024.0, need, advice))
+        else:
+            notes.append("%s ok: %.1f GB free, %g GB needed." % (label, free / 1024.0, need))
+    if problems:
+        return False, " ".join(problems)
+    if notes:
+        return True, " ".join(notes)
+    return True, "No memory need was given, so nothing was checked."
+
+
 class SYSystemInfo:
-    DESCRIPTION = "Reports free video memory and free system memory as a short text and two numbers. Shows -1 if unknown."
+    DESCRIPTION = ("Reports free video memory and free system memory as a short text and numbers. Shows -1 if unknown. "
+                   "Type how much memory your next step needs and it says if there is enough, or stops the run early with a plain message.")
     CATEGORY = category("Utility")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING", "INT", "INT")
-    RETURN_NAMES = ("report", "vram_free_mb", "ram_free_mb")
+    RETURN_TYPES = ("STRING", "INT", "INT", "INT", "INT", "BOOLEAN", "STRING", "STRING")
+    RETURN_NAMES = ("report", "vram_free_mb", "ram_free_mb", "vram_total_mb", "ram_total_mb", "enough", "check", "gpu_name")
 
     @classmethod
     def INPUT_TYPES(cls):
-        return {"required": {}}
+        return {"required": {}, "optional": {
+            "need_vram_gb": ("FLOAT", {"default": 0.0, "min": 0.0, "max": 1000.0, "step": 0.5, "tooltip": "VRAM the next step needs, for example 12. 0 means do not check."}),
+            "need_ram_gb": ("FLOAT", {"default": 0.0, "min": 0.0, "max": 10000.0, "step": 0.5, "tooltip": "System RAM the next step needs, for example 32. 0 means do not check."}),
+            "stop_if_short": ("BOOLEAN", {"default": False, "tooltip": "On: stop the run with a plain message when there is not enough memory."}),
+        }}
 
     @classmethod
     def IS_CHANGED(cls, **kwargs):
         return float("nan")  # memory changes all the time, so run every time
 
-    def run(self):
+    def run(self, need_vram_gb=0.0, need_ram_gb=0.0, stop_if_short=False):
         vt, vf = read_vram_mb()
         rt, rf = read_ram_mb()
-        return (format_report(vt, vf, rt, rf), int(vf), int(rf))
+        enough, check = check_needs(vf, rf, need_vram_gb, need_ram_gb)
+        if stop_if_short and not enough:
+            raise ValueError(check)
+        return (format_report(vt, vf, rt, rf), int(vf), int(rf), int(vt), int(rt), enough, check, read_gpu_name())
 
 
 NODE_CLASS_MAPPINGS = {}

@@ -2,9 +2,11 @@
 try:
     from ._sy_common import category, register
     from ._sy_image_ops import need_image
+    from . import _sy_d2_common as d2
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
     from _sy_image_ops import need_image
+    import _sy_d2_common as d2
 
 TURNS = ("none", "90 clockwise", "180", "270 clockwise")
 
@@ -28,12 +30,34 @@ def flip_rotate_grid(grid, flip_h, flip_v, turn):
     return g
 
 
+def result_size(width, height, turn):
+    """Pure function. Picture size after the turn: a quarter turn swaps width and height."""
+    return (height, width) if turn_steps(turn) % 2 else (width, height)
+
+
+def flip_info(width, height, flip_h, flip_v, turn, mask_given=False):
+    """Pure function. One plain line: what was done and the new size."""
+    steps = []
+    if flip_h:
+        steps.append("mirrored left to right")
+    if flip_v:
+        steps.append("mirrored top to bottom")
+    if turn_steps(turn):
+        steps.append("turned %s degrees clockwise" % turn.replace(" clockwise", ""))
+    if not steps:
+        return "Nothing selected: the picture was passed through unchanged (%s)." % d2.size_text(width, height)
+    nw, nh = result_size(width, height, turn)
+    text = "%s; %s -> %s" % (", then ".join(steps).capitalize(), d2.size_text(width, height), d2.size_text(nw, nh))
+    return text + ("; the mask was changed the same way." if mask_given else ".")
+
+
 class SYFlipRotate:
-    DESCRIPTION = "Mirrors a picture and turns it in steps of 90 degrees. The mirror is done first, then the turn."
+    DESCRIPTION = ("Mirrors a picture and turns it in steps of 90 degrees. The mirror is done first, then the turn. "
+                   "Connect a mask to change it the same way, so picture and mask stay matched.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "MASK", "STRING")
+    RETURN_NAMES = ("image", "mask", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -43,22 +67,41 @@ class SYFlipRotate:
                 "flip_horizontal": ("BOOLEAN", {"default": False, "tooltip": "Mirror left to right."}),
                 "flip_vertical": ("BOOLEAN", {"default": False, "tooltip": "Mirror top to bottom."}),
                 "rotate": (list(TURNS), {"default": "none", "tooltip": "Turn the picture clockwise by this much after any flip."}),
-            }
+            },
+            "optional": {
+                "mask": ("MASK", {"tooltip": "Optional. Flipped and turned exactly like the picture. Must have the same size as the picture."}),
+            },
         }
 
-    def run(self, image, flip_horizontal, flip_vertical, rotate):
+    @staticmethod
+    def _apply(t, flip_horizontal, flip_vertical, steps):
+        import torch
+
+        if flip_horizontal:
+            t = torch.flip(t, dims=[2])
+        if flip_vertical:
+            t = torch.flip(t, dims=[1])
+        if steps:
+            t = torch.rot90(t, k=-steps, dims=(1, 2))  # negative k is clockwise
+        return t.contiguous()
+
+    def run(self, image, flip_horizontal, flip_vertical, rotate, mask=None):
         import torch
 
         need_image(image)
         steps = turn_steps(rotate)
-        out = image
-        if flip_horizontal:
-            out = torch.flip(out, dims=[2])
-        if flip_vertical:
-            out = torch.flip(out, dims=[1])
-        if steps:
-            out = torch.rot90(out, k=-steps, dims=(1, 2))  # negative k is clockwise
-        return (out.contiguous(),)
+        h, w = image.shape[1], image.shape[2]
+        out = self._apply(image, flip_horizontal, flip_vertical, steps)
+        if mask is None:
+            out_mask = torch.zeros((out.shape[0], out.shape[1], out.shape[2]), dtype=torch.float32)
+        else:
+            mb, mh, mw = d2.shape_of_mask(tuple(mask.shape))
+            if (mh, mw) != (h, w):
+                raise ValueError("the mask is %s but the picture is %s: resize one of them first so they match"
+                                 % (d2.size_text(mw, mh), d2.size_text(w, h)))
+            m3 = mask.float() if mask.dim() == 3 else mask.float().unsqueeze(0)
+            out_mask = self._apply(m3, flip_horizontal, flip_vertical, steps)
+        return (out, out_mask, flip_info(w, h, flip_horizontal, flip_vertical, rotate, mask is not None))
 
 
 NODE_CLASS_MAPPINGS = {}

@@ -20,5 +20,20 @@ def run():
         raise SystemExit("must raise")
     except ValueError:
         n += 1
-    assert m.SYXYLabelStrip.RETURN_TYPES == ("STRING",); n += 1
+    assert m.SYXYLabelStrip.RETURN_TYPES[:1] == ("STRING",) and m.SYXYLabelStrip.RETURN_NAMES == ("table", "count", "cell_list", "info"); n += 1
+    assert len(m.SYXYLabelStrip.RETURN_TYPES) == 4; n += 1
+    assert m.cell_lines("a\nb", "p\nq", "S", "C") == ["1: S=a, C=p", "2: S=b, C=p", "3: S=a, C=q", "4: S=b, C=q"]; n += 1
+    assert m.cell_lines("a", "", "", "") == ["1: X=a"]; n += 1
+    assert m.cell_lines("", "p\nq") == ["1: Y=p", "2: Y=q"]; n += 1
+    try:
+        m.cell_lines("", "")
+        raise SystemExit("must raise")
+    except ValueError:
+        n += 1
+    assert m.grid_info("a\nb\nc", "p\nq") == "Grid 3 columns x 2 rows = 6 pictures."; n += 1
+    assert m.grid_info("a", "") == "Grid 1 columns x 1 row = 1 pictures."; n += 1
+    assert "Warning: X repeats a" in m.grid_info("a\nA\nb", ""); n += 1
+    assert "Warning: Y repeats" in m.grid_info("a", "p\np"); n += 1
+    assert "a lot to render" in m.grid_info("\n".join(str(i) for i in range(7)), "\n".join(str(i) for i in range(6))); n += 1
+    assert "a lot" not in m.grid_info("a\nb", "p"); n += 1
     return n

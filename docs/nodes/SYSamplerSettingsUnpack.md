@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_sampler_settings.py`
 
-**What it does:** Splits a sampler settings bundle back into steps, cfg, sampler and scheduler.
+**What it does:** Splits a sampler settings bundle back into steps, cfg, sampler, scheduler and denoise. Bundles made before denoise existed give denoise 1.
 
 ## Inputs
 
@@ -10,4 +10,4 @@ Source: `nodes/sy_sampler_settings.py`
 |---|---|---|---|---|
 | settings | SY_SAMPLER_SETTINGS | yes | The bundle from a Sampler Settings node. |  |
 
-Outputs: `INT`, `FLOAT`, `STRING`, `STRING`
+Outputs: `INT`, `FLOAT`, `STRING`, `STRING`, `FLOAT`, `STRING`

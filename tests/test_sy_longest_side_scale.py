@@ -26,5 +26,31 @@ def run():
     for bad in ((0, 5, 100, 1), (5, 0, 100, 1), (5, 5, 0, 1), (5, 5, 70000, 1), (5, 5, 100, 0), (-1, 5, 100, 1)):
         assert _raises(*bad), bad
         n += 1
-    assert m.SYLongestSideScale().run(2000, 1000, 1000, 1) == (1000, 500); n += 1
+    assert m.SYLongestSideScale().run(2000, 1000, 1000, 1)[:2] == (1000, 500); n += 1
+    return n + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.scale_longest_side(800, 600, 2048, 8, True) == (800, 600))
+    n += ok(m.scale_longest_side(800, 600, 400, 8, True) == m.scale_longest_side(800, 600, 400, 8))
+    n += ok(m.scale_longest_side(800, 600, 2048, 8) == m.scale_longest_side(800, 600, 2048, 8, False, 0.0))
+    n += ok((lambda r: r[0] * r[1] <= 2_000_000)(m.scale_longest_side(1000, 1000, 4096, 8, False, 2.0)))
+    n += ok(m.scale_longest_side(1000, 1000, 4096, 8, False, 2.0)[0] == m.scale_longest_side(1000, 1000, 4096, 8, False, 2.0)[1])
+    n += ok('too small' in rs(m.scale_longest_side, 100, 100, 100, 64, False, 0.001))
+    n += ok(rs(m.scale_longest_side, 100, 100, 100, 8, False, -1) is not None)
+    n += ok('limited by no_upscale' in m.scale_report(800, 600, 2048, 8, True)[2])
+    n += ok('limited by the megapixel cap' in m.scale_report(1000, 1000, 4096, 8, False, 2.0)[2])
+    n += ok('limited' not in m.scale_report(800, 600, 400, 8)[2])
+    n += ok(m.scale_report(2000, 1000, 1000, 1)[2].startswith('2000x1000 -> 1000x500 (x0.5'))
+    n += ok(m.SYLongestSideScale().run(2000, 1000, 1000, 1)[:2] == (1000, 500))
     return n

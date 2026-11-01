@@ -38,5 +38,26 @@ def run():
         raise SystemExit("too long input must raise")
     except ValueError:
         n += 1
-    eq(m.SYJSONFromReply.RETURN_TYPES, ("STRING", "BOOLEAN"))
+    eq(m.SYJSONFromReply.RETURN_TYPES, ("STRING", "BOOLEAN", "STRING"))
+    eq(m.json_from_reply('{"a": 1} then {"b": 2}', which="last"), ('{"b":2}', True))
+    eq(m.json_from_reply('{"a": 1} then {"b": 2, "c": 3} and [1]', which="largest"), ('{"b":2,"c":3}', True))
+    eq(m.json_from_reply('{"a": 1} then {"b": 2}', which="first"), ('{"a":1}', True))
+    eq(m.json_from_reply('{"a": {"x": 1}} [5]', which="last"), ("[5]", True))
+    eq(m.json_from_reply('{"a": [1]}', pretty=True), ('{\n  "a": [\n    1\n  ]\n}', True))
+    eq(m.json_from_reply("{'a': True, 'b': None, 'c': 'x'}", python_style=True), ('{"a":true,"b":null,"c":"x"}', True))
+    eq(m.json_from_reply("{'a': True}", raise_if_missing=False), ("", False))
+    eq(m.json_from_reply("{'a': {1, 2}}", python_style=True, raise_if_missing=False), ("", False))
+    eq(m.extract_blocks('x {"a": [1]} y [2] {bad} {"c": 3}'), [{"a": [1]}, [2], {"c": 3}])
+    eq(m.extract_blocks('x {"a": [1]} y [2]', limit=1), [{"a": [1]}])
+    eq(m.json_from_reply_info('{"a": 1, "b": 2}')[2], "Found an object with 2 keys (block 1 of 1).")
+    eq(m.json_from_reply_info('{"a": 1} [1]', which="last")[2], "Found a list with 1 item (block 2 of 2).")
+    eq(m.json_from_reply_info('{"a": 1} [1]')[2], "Found an object with 1 key (block 1 of 2).")
+    eq(m.json_from_reply_info("nope", raise_if_missing=False), ("", False, "No JSON found in the text."))
+    try:
+        m.json_from_reply("{}", which="middle")
+        raise SystemExit("bad which must raise")
+    except ValueError:
+        n += 1
+    eq(m.SYJSONFromReply().run('see {"k": 1}', which="last"), ('{"k":1}', True, "Found an object with 1 key (block 1 of 1)."))
+    eq(m.SYJSONFromReply.RETURN_NAMES, ("json_text", "found", "info"))
     return n

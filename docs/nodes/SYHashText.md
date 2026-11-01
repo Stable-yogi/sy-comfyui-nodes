@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_hash_text.py`
 
-**What it does:** Turns a text into a fingerprint code. The same text always gives the same code. Handy for file names.
+**What it does:** Turns a text into a fingerprint code. The same text always gives the same code. Handy for file names. Can ignore capital letters and extra spaces, so two nearly equal prompts get the same code, and an info line says what was made.
 
 ## Inputs
 
@@ -12,5 +12,6 @@ Source: `nodes/sy_hash_text.py`
 | algorithm | COMBO | yes | Which fingerprint method to use. sha256 is a good default. | one of: sha256, sha1, md5, sha512 |
 | length | INT | yes | Keep only this many characters of the code. 0 keeps all of it. | 0 to 128, default 0 |
 | strip | BOOLEAN | yes | On: remove spaces and new lines around the text first. | default False |
+| normalize | BOOLEAN | no | On: ignore capital letters and extra spaces, so 'A Cat' and 'a cat' give the same code. | default False |
 
-Outputs: `STRING`
+Outputs: `STRING`, `STRING`

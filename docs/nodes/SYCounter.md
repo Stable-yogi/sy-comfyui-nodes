@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_counter.py`
 
-**What it does:** Counts up by a step on each run. You feed it the run number, so the same number always gives the same answer.
+**What it does:** Counts up by a step on each run. You feed it the run number, so the same number always gives the same answer. The info line shows the sum and when it wrapped; lap says which round you are on.
 
 ## Inputs
 
@@ -14,4 +14,4 @@ Source: `nodes/sy_counter.py`
 | max_value | INT | yes | Highest value before it starts over at start. Used only when wrap is on. | -9007199254740991 to 9007199254740991, default 9 |
 | wrap | BOOLEAN | yes | On starts over at start after max_value. Off keeps counting. | default True |
 
-Outputs: `INT`
+Outputs: `INT`, `INT`, `STRING`

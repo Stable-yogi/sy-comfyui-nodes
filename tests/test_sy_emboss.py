@@ -48,4 +48,7 @@ def run():
     assert raises(m.emboss_plane, [], 1.0, "top"); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYEmboss"] == "Emboss SY"; n += 1
     assert m.SYEmboss.CATEGORY == "SY/Image"; n += 1
+    spec = m.SYEmboss.INPUT_TYPES()
+    assert list(spec["required"]) == ["image", "strength", "angle"] and list(spec["optional"]) == ["mask", "mix", "enabled"]; n += 1
+    assert m.SYEmboss.RETURN_NAMES == ("image", "info"); n += 1
     return n

@@ -1,10 +1,10 @@
 """Edge Detect SY: turns a picture into a grey edge map (Sobel or Laplacian)."""
 try:
     from ._sy_common import category, register
-    from ._sy_image_ops import need_image, clamp01
+    from ._sy_image_ops import need_image, clamp01, blur_tensor
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
-    from _sy_image_ops import need_image, clamp01
+    from _sy_image_ops import need_image, clamp01, blur_tensor
 
 METHODS = ("sobel", "laplacian")
 SOBEL_X = [[-1.0, 0.0, 1.0], [-2.0, 0.0, 2.0], [-1.0, 0.0, 1.0]]
@@ -42,7 +42,7 @@ def convolve_2d(grid, kernel):
     return out
 
 
-def edge_value(method, gx, gy, strength, invert):
+def edge_value(method, gx, gy, strength, invert, threshold=0.0):
     """Pure function. One finished edge value 0..1. For laplacian only gx is used (the Laplacian response)."""
     if method == "sobel":
         v = (gx * gx + gy * gy) ** 0.5 / 4.0
@@ -51,7 +51,14 @@ def edge_value(method, gx, gy, strength, invert):
     else:
         raise ValueError("method must be one of: %s" % ", ".join(METHODS))
     v = clamp01(v * strength)
+    if v < threshold:
+        v = 0.0
     return 1.0 - v if invert else v
+
+
+def check_threshold(threshold):
+    if not 0.0 <= threshold <= 1.0:
+        raise ValueError("threshold must be between 0 and 1, got %s" % threshold)
 
 
 def check_settings(method, strength):
@@ -61,24 +68,27 @@ def check_settings(method, strength):
         raise ValueError("strength must be between 0.1 and 10, got %s" % strength)
 
 
-def edge_map(grid, method, strength, invert):
-    """Pure function. Grey grid (list of rows, values 0..1) in, finished edge grid out."""
+def edge_map(grid, method, strength, invert, threshold=0.0):
+    """Pure function. Grey grid (list of rows, values 0..1) in, finished edge grid out.
+    Edges weaker than `threshold` are dropped (set to 0) before the optional invert."""
     check_settings(method, strength)
+    check_threshold(threshold)
     if method == "sobel":
         gx = convolve_2d(grid, SOBEL_X)
         gy = convolve_2d(grid, SOBEL_Y)
     else:
         gx = convolve_2d(grid, LAPLACE)
         gy = gx
-    return [[edge_value(method, gx[y][x], gy[y][x], strength, invert) for x in range(len(grid[0]))] for y in range(len(grid))]
+    return [[edge_value(method, gx[y][x], gy[y][x], strength, invert, threshold) for x in range(len(grid[0]))] for y in range(len(grid))]
 
 
 class SYEdgeDetect:
-    DESCRIPTION = "Finds the outlines in a picture and draws them as a grey edge map. Strong edges are bright, flat areas are dark."
+    DESCRIPTION = ("Finds the outlines in a picture and draws them as a grey edge map. Strong edges are bright, flat areas are dark. "
+                   "Adds a noise filter (blur first), a threshold that drops faint edges, and an info line.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE", "MASK")
-    RETURN_NAMES = ("image", "mask")
+    RETURN_TYPES = ("IMAGE", "MASK", "STRING")
+    RETURN_NAMES = ("image", "mask", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -88,16 +98,25 @@ class SYEdgeDetect:
                 "method": (list(METHODS), {"default": "sobel", "tooltip": "Sobel gives smooth thick edges. Laplacian gives thin sharp lines."}),
                 "strength": ("FLOAT", {"default": 1.0, "min": 0.1, "max": 10.0, "step": 0.1, "tooltip": "Brightness boost for the edges. Raise it to see faint edges."}),
                 "invert": ("BOOLEAN", {"default": False, "tooltip": "Turn on for dark lines on a white background."}),
-            }
+            },
+            "optional": {
+                "blur_first": ("FLOAT", {"default": 0.0, "min": 0.0, "max": 20.0, "step": 0.5, "tooltip": "Blur radius applied before looking for edges. 1 to 3 hides grain and noise."}),
+                "threshold": ("FLOAT", {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.01, "tooltip": "Edges weaker than this are dropped. 0.1 cleans faint lines."}),
+            },
         }
 
-    def run(self, image, method, strength, invert):
+    def run(self, image, method, strength, invert, blur_first=0.0, threshold=0.0):
         import torch
         import torch.nn.functional as F
 
         need_image(image)
         check_settings(method, strength)
+        check_threshold(threshold)
+        if not 0.0 <= blur_first <= 20.0:
+            raise ValueError("blur_first must be between 0 and 20, got %s" % blur_first)
         rgb = image[..., :3].to(torch.float32)
+        if blur_first > 0:
+            rgb = blur_tensor(rgb, blur_first)
         grey = (0.2126 * rgb[..., 0] + 0.7152 * rgb[..., 1] + 0.0722 * rgb[..., 2]).unsqueeze(1)
         x = F.pad(grey, (1, 1, 1, 1), mode="replicate")
 
@@ -112,11 +131,16 @@ class SYEdgeDetect:
         else:
             v = conv(LAPLACE).abs() / 4.0
         v = (v * float(strength)).clamp(0.0, 1.0)
+        if threshold > 0:
+            v = torch.where(v >= float(threshold), v, torch.zeros_like(v))
         if invert:
             v = 1.0 - v
         mask = v[:, 0].contiguous()
         out = mask.unsqueeze(-1).repeat(1, 1, 1, 3).to(image.dtype)
-        return (out, mask.to(image.dtype))
+        info = "Edge Detect: %s, strength %g%s%s%s" % (
+            method, strength, ", blurred first (%g)" % blur_first if blur_first > 0 else "",
+            ", faint edges under %g dropped" % threshold if threshold > 0 else "", ", inverted" if invert else "")
+        return (out, mask.to(image.dtype), info)
 
 
 NODE_CLASS_MAPPINGS = {}

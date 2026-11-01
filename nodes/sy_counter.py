@@ -24,12 +24,27 @@ def counter_value(run_index, start, step, max_value, wrap=True):
     return start + raw % (max_value - start + 1)
 
 
+def counter_details(run_index, start, step, max_value, wrap=True):
+    """Pure function. Returns (value, lap, info). lap counts how many times the value has gone round (0 on the first round)."""
+    value = counter_value(run_index, start, step, max_value, wrap)
+    lap = 0
+    if wrap:
+        span = max_value - start + 1
+        lap = abs(step * run_index) // span
+    info = "Run %d: %d + %d x %d = %d" % (run_index, start, step, run_index, start + step * run_index)
+    if wrap and value != start + step * run_index:
+        info += ", wrapped into %d..%d -> %d (round %d)" % (start, max_value, value, lap + 1)
+    elif wrap:
+        info += " (inside %d..%d)" % (start, max_value)
+    return value, lap, info
+
+
 class SYCounter:
-    DESCRIPTION = "Counts up by a step on each run. You feed it the run number, so the same number always gives the same answer."
+    DESCRIPTION = "Counts up by a step on each run. You feed it the run number, so the same number always gives the same answer. The info line shows the sum and when it wrapped; lap says which round you are on."
     CATEGORY = category("Logic")
     FUNCTION = "run"
-    RETURN_TYPES = ("INT",)
-    RETURN_NAMES = ("value",)
+    RETURN_TYPES = ("INT", "INT", "STRING")
+    RETURN_NAMES = ("value", "lap", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -44,7 +59,7 @@ class SYCounter:
         }
 
     def run(self, run_index, start, step, max_value, wrap):
-        return (counter_value(run_index, start, step, max_value, wrap),)
+        return counter_details(run_index, start, step, max_value, wrap)
 
 
 NODE_CLASS_MAPPINGS = {}

@@ -35,4 +35,13 @@ def run():
     assert m.check_mode("inside") is None; n += 1
     assert hx.parse_hex(m.DEFAULT_COLOUR) == (0.0, 0.0, 0.0); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYAddBorder"] == "Add Border SY"; n += 1
+    assert m.round_up(100, 1) == 100 and m.round_up(100, 8) == 104 and m.round_up(104, 8) == 104; n += 1
+    assert m.round_up(1, 64) == 64; n += 1
+    assert raises(m.round_up, 10, 0); n += 1
+    assert "unchanged" in m.border_info(64, 64, 0, "outside", 64, 64); n += 1
+    t = m.border_info(100, 50, 8, "outside", 116, 66)
+    assert "100x50 -> 116x66" in t and "8 px" in t; n += 1
+    assert "inside" in m.border_info(100, 50, 8, "inside", 100, 50); n += 1
+    assert list(m.SYAddBorder.INPUT_TYPES()["optional"]) == ["multiple_of"]; n += 1
+    assert m.SYAddBorder.RETURN_NAMES == ("image", "mask", "info"); n += 1
     return n

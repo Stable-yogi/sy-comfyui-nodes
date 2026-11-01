@@ -56,12 +56,19 @@ def paste_back(base, crop, mask, crop_info, feather):
     return mm.paste_list(base, crop, soft, info["x"], info["y"])
 
 
+def crop_summary(box, img_w, img_h, empty_used):
+    """Pure function. One plain sentence about the crop box (x, y, w, h)."""
+    x, y, w, h = box
+    note = " (mask was empty, whole picture used)" if empty_used else ""
+    return "Cropped %dx%d at x=%d, y=%d out of %dx%d%s" % (w, h, x, y, img_w, img_h, note)
+
+
 class SYCropByMask:
-    DESCRIPTION = "Cuts the picture and mask around the white part of the mask. Gives a crop info note for Paste Back SY."
+    DESCRIPTION = "Cuts the picture and mask around the white part of the mask. Gives a crop info note for Paste Back SY. A mask of the wrong size can be stretched to fit instead of stopping, and a sentence says what was cut."
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE", "MASK", "STRING")
-    RETURN_NAMES = ("crop", "crop_mask", "crop_info")
+    RETURN_TYPES = ("IMAGE", "MASK", "STRING", "STRING")
+    RETURN_NAMES = ("crop", "crop_mask", "crop_info", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -73,26 +80,32 @@ class SYCropByMask:
                 "multiple_of": ("INT", {"default": 8, "min": 1, "max": 512, "step": 1, "tooltip": "Crop width and height become a multiple of this. Models like 8 or 64."}),
                 "threshold": ("FLOAT", {"default": 0.5, "min": 0.01, "max": 1.0, "step": 0.01, "tooltip": "Mask values at or above this count as white."}),
                 "on_empty": (list(EMPTY_CHOICES), {"default": "whole_image", "tooltip": "When nothing is white: crop the whole image, or stop with an error."}),
-            }
+            },
+            "optional": {
+                "resize_mask": ("BOOLEAN", {"default": False, "tooltip": "On: stretch a mask of another size to the picture. Off: stop with a message when sizes differ."}),
+            },
         }
 
-    def run(self, image, mask, padding, multiple_of, threshold, on_empty):
+    def run(self, image, mask, padding, multiple_of, threshold, on_empty, resize_mask=False):
         m = mm.t_mask3(mask)
         n, h, w = image.shape[0], image.shape[1], image.shape[2]
+        if resize_mask and (m.shape[1] != h or m.shape[2] != w):
+            m = mm.t_resize_mask(m, h, w)
         if m.shape[1] != h or m.shape[2] != w:
             raise ValueError("the mask (%d x %d) and the image (%d x %d) must be the same size" % (m.shape[2], m.shape[1], w, h))
         m = mm.t_match_batch(m, n)
-        x, y, bw, bh = plan_crop(mm.t_bbox(m, threshold), int(padding), int(multiple_of), on_empty, w, h)
+        found = mm.t_bbox(m, threshold)
+        x, y, bw, bh = plan_crop(found, int(padding), int(multiple_of), on_empty, w, h)
         info = mm.make_crop_info((x, y, bw, bh), w, h)
-        return (image[:, y:y + bh, x:x + bw, :], m[:, y:y + bh, x:x + bw], info)
+        return (image[:, y:y + bh, x:x + bw, :], m[:, y:y + bh, x:x + bw], info, crop_summary((x, y, bw, bh), w, h, found is None))
 
 
 class SYPasteBack:
-    DESCRIPTION = "Pastes a processed crop back into the original picture with a soft edge, using the crop info from Crop By Mask SY."
+    DESCRIPTION = "Pastes a processed crop back into the original picture with a soft edge, using the crop info from Crop By Mask SY. Has a strength slider and an on/off switch, and keeps the original transparency."
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -105,14 +118,20 @@ class SYPasteBack:
             },
             "optional": {
                 "crop_mask": ("MASK", {"tooltip": "Only paste where this mask is white. Leave empty to paste the whole crop."}),
+                "strength": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01, "tooltip": "How strongly the crop replaces the original. 1 = fully, 0.5 = half blend, 0 = nothing."}),
+                "enabled": ("BOOLEAN", {"default": True, "tooltip": "Turn off to pass the original picture through untouched."}),
             },
         }
 
-    def run(self, image, crop, crop_info, feather, crop_mask=None):
+    def run(self, image, crop, crop_info, feather, crop_mask=None, strength=1.0, enabled=True):
         import torch
         import torch.nn.functional as F
         if feather < 0 or feather > mm.MAX_RADIUS:
             raise ValueError("feather must be between 0 and %d" % mm.MAX_RADIUS)
+        if not 0.0 <= strength <= 1.0:
+            raise ValueError("strength must be between 0 and 1, got %s" % strength)
+        if not enabled:
+            return (image, "Paste Back: switched off, original picture passed through")
         info = mm.parse_crop_info(crop_info)
         if image.shape[1] != info["image_h"] or image.shape[2] != info["image_w"]:
             raise ValueError("the image is not the same size as the one that was cropped (%d x %d)"
@@ -133,9 +152,9 @@ class SYPasteBack:
         base = mm.t_match_batch(image, n)
         crop = mm.t_match_batch(crop, n).to(base.dtype)
         out = base.clone()
-        s = soft.unsqueeze(-1).to(base.dtype)
+        s = (soft * float(strength)).unsqueeze(-1).to(base.dtype)
         out[:, y:y + h, x:x + w, :] = base[:, y:y + h, x:x + w, :] * (1.0 - s) + crop * s
-        return (out,)
+        return (out, "Pasted a %dx%d crop back at x=%d, y=%d, soft edge %d px, strength %d%%" % (w, h, x, y, int(feather), int(round(strength * 100))))
 
 
 NODE_CLASS_MAPPINGS = {}

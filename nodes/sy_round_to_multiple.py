@@ -35,12 +35,20 @@ def round_to_multiple(value, multiple, mode="nearest"):
     return float(result), int(math.floor(abs(result) + 0.5)) * (1 if result >= 0 else -1)
 
 
+def rounding_info(value, multiple, mode="nearest"):
+    """Pure function. One plain sentence: what the number became and how far it moved."""
+    result = round_to_multiple(value, multiple, mode)[0]
+    moved = result - value
+    how = "unchanged, already a multiple" if abs(moved) < 1e-9 else ("%g %s" % (abs(moved), "higher" if moved > 0 else "lower"))
+    return "%g -> %g (%s multiple of %g, %s)" % (value, result, mode, multiple, how)
+
+
 class SYRoundToMultiple:
-    DESCRIPTION = "Rounds a number to a multiple of a step, like 64 for image sizes. Choose nearest, round up or round down."
+    DESCRIPTION = "Rounds a number to a multiple of a step, like 64 for image sizes. Choose nearest, round up or round down. The info line says how far the number moved, so you see what the snap did."
     CATEGORY = category("Values")
     FUNCTION = "run"
-    RETURN_TYPES = ("FLOAT", "INT")
-    RETURN_NAMES = ("float", "int")
+    RETURN_TYPES = ("FLOAT", "INT", "STRING")
+    RETURN_NAMES = ("float", "int", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -53,7 +61,7 @@ class SYRoundToMultiple:
         }
 
     def run(self, value, multiple, mode):
-        return round_to_multiple(value, multiple, mode)
+        return round_to_multiple(value, multiple, mode) + (rounding_info(value, multiple, mode),)
 
 
 NODE_CLASS_MAPPINGS = {}

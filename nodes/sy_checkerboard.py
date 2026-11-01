@@ -27,11 +27,11 @@ def checker_is_a(x, y, cell):
 
 
 class SYCheckerboard:
-    DESCRIPTION = "Makes a new picture of two alternating colour squares, handy as a test pattern or background."
+    DESCRIPTION = "Makes a new picture of two alternating colour squares, handy as a test pattern or background. Also gives a mask of the first-colour squares and an info line."
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "MASK", "STRING")
+    RETURN_NAMES = ("image", "mask", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -58,7 +58,9 @@ class SYCheckerboard:
         ca = torch.tensor(a, dtype=torch.float32)
         cb = torch.tensor(b, dtype=torch.float32)
         img = torch.where(is_a, ca, cb)
-        return (img.unsqueeze(0).repeat(batch_size, 1, 1, 1).contiguous(),)
+        mask = is_a.squeeze(-1).to(torch.float32).unsqueeze(0).repeat(batch_size, 1, 1).contiguous()
+        info = "Checkerboard %dx%d, squares of %d px, %d picture(s)" % (width, height, cell, batch_size)
+        return (img.unsqueeze(0).repeat(batch_size, 1, 1, 1).contiguous(), mask, info)
 
 
 NODE_CLASS_MAPPINGS = {}

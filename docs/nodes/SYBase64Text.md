@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_base64_text.py`
 
-**What it does:** Turns a text into base64 code, or turns base64 code back into the text.
+**What it does:** Turns a text into base64 code, or base64 code back into text. Decoding forgives missing padding, line breaks and a pasted 'data:...;base64,' start, and a bad code gives one plain sentence. Also gives an info line.
 
 ## Inputs
 
@@ -12,4 +12,4 @@ Source: `nodes/sy_base64_text.py`
 | mode | COMBO | yes | encode makes base64 code; decode turns it back into text. | one of: encode, decode |
 | url_safe | BOOLEAN | yes | On: use the web-address-safe letters (- and _ instead of + and /). | default False |
 
-Outputs: `STRING`
+Outputs: `STRING`, `STRING`

@@ -26,7 +26,9 @@ import uuid
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SOFT_WORDS = ("were found", "found in the input folder", "no checkpoints", "could not auto-find",
-              "needs an H3 video latent", "there is no saved session")  # "needs a file", not a fault (the H3 upscaler needs a real H3 latent, which only a model run makes; Load Session needs a session an earlier H3 run saved)
+              "needs an H3 video latent", "there is no saved session",
+              "no model is picked", "no GGUF model is picked", "No text encoder is picked", "pick a video or a sound file first",
+              "RTX upscaler is not installed")  # "needs a file", not a fault (the H3 upscaler needs a real H3 latent, which only a model run makes; Load Session needs a session an earlier H3 run saved)
 
 
 def call(port, path, data=None, timeout=120):
@@ -192,6 +194,10 @@ def check_parts(port, paths, report_path, max_rounds=250):
         sy_run = {n["class_type"] for n in live.values() if n["class_type"].startswith("SY")} if r["ran_ok"] else set()
         sy_failed = {prompt[k]["class_type"] for k in roots if prompt[k]["class_type"].startswith("SY")}
         not_run = sorted(sy_in - sy_run - sy_failed)
+        # a node that only waits behind a "needs a file" node is not a fault either (nothing in this part is broken)
+        waiting = {prompt[k]["class_type"] for k, why in removed.items() if why == "waits for a broken node" and k in prompt}
+        waits_for_file = [c for c in not_run if c in waiting] if (needs_file and not failed) else []
+        not_run = [c for c in not_run if c not in waits_for_file]
         sy_pass |= sy_run
         ok = not failed and not not_run
         if not ok and verdict == "PASS":
@@ -208,6 +214,8 @@ def check_parts(port, paths, report_path, max_rounds=250):
             body += ["Broken nodes:", ""] + ["- %s (%s, id %s): %s" % (title(prompt[nid]), prompt[nid]["class_type"], nid, w) for nid, w in sorted(failed.items(), key=lambda x: prompt[x[0]]["class_type"])] + [""]
         if needs_file:
             body += ["Needs a file on this computer (not a fault):", ""] + ["- %s (%s): %s" % (title(prompt[nid]), prompt[nid]["class_type"], w) for nid, w in sorted(needs_file.items())] + [""]
+        if waits_for_file:
+            body += ["Wait behind a node that needs a file (not a fault): " + ", ".join(waits_for_file), ""]
         if not_run:
             body += ["Not reached (a node in front of them was broken): " + ", ".join(not_run), ""]
     missing = sorted(set(sy_types) - sy_seen)

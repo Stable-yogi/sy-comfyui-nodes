@@ -110,4 +110,10 @@ def run():
     assert raises(m.paste_back, base, crop, None, text, -1)
     assert raises(m.paste_back, base, solid(8, 8, 1.0, 1), None, text, 0)  # fewer channels
     n += 3
+    assert "512x256" in m.crop_summary((10, 20, 512, 256), 1024, 1024, False); n += 1
+    assert "mask was empty" in m.crop_summary((0, 0, 64, 64), 64, 64, True); n += 1
+    assert m.SYCropByMask.RETURN_NAMES == ("crop", "crop_mask", "crop_info", "info"); n += 1
+    assert list(m.SYCropByMask.INPUT_TYPES()["optional"]) == ["resize_mask"]; n += 1
+    assert m.SYPasteBack.RETURN_NAMES == ("image", "info"); n += 1
+    assert list(m.SYPasteBack.INPUT_TYPES()["optional"]) == ["crop_mask", "strength", "enabled"]; n += 1
     return n

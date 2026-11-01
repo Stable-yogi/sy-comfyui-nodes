@@ -41,4 +41,20 @@ def run():
     assert len(m.MATRIX) == 3 and all(len(r) == 3 for r in m.MATRIX); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYSepia"] == "Sepia SY"; n += 1
     assert m.SYSepia.CATEGORY == "SY/Image"; n += 1
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _c("unchanged" in m.sepia_info(0.0) and "Full sepia" in m.sepia_info(1.0))
+    _c("mixed in at 25%" in m.sepia_info(0.25) and "75% of the original" in m.sepia_info(0.25))
+    _r(m.sepia_info, 1.5)
+    _c(m.SYSepia.RETURN_NAMES == ("image", "info"))
+    return (n) + _k[0]

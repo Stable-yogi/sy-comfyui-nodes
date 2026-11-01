@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_text_template.py`
 
-**What it does:** Fills {name} placeholders in a text with up to four named values. A name with no matching input gives an error.
+**What it does:** Fills {name} placeholders in a text with up to four named values. A name with no matching input gives an error, or you can keep it or leave it empty. The info line lists what was filled and warns about names the template never uses.
 
 ## Inputs
 
@@ -17,5 +17,6 @@ Source: `nodes/sy_text_template.py`
 | value_3 | STRING | no | Text that replaces the placeholder named in name_3. | default '' |
 | name_4 | STRING | no | Placeholder name for value 4, used as {name} in the template. | default '' |
 | value_4 | STRING | no | Text that replaces the placeholder named in name_4. | default '' |
+| missing_mode | COMBO | no | A {name} with no value: stop with an error, keep it as written, or fill it with nothing. | one of: stop with an error, keep the {name} as it is, use empty text |
 
-Outputs: `STRING`
+Outputs: `STRING`, `STRING`

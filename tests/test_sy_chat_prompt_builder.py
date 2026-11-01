@@ -27,4 +27,10 @@ def run():
         except ValueError:
             n += 1
     assert m.SYChatPromptBuilder().run("S", "U", "plain")[0] == "System: S\n\nUser: U"; n += 1
+    assert m.build_chat_prompt("S", "U", "", "chatml") == "<|im_start|>system\nS<|im_end|>\n<|im_start|>user\nU<|im_end|>\n<|im_start|>assistant\n"; n += 1
+    assert m.build_chat_prompt("", "U", "A", "chatml") == "<|im_start|>user\nU<|im_end|>\n<|im_start|>assistant\nA"; n += 1
+    assert m.prompt_info("abcdefgh", "plain") == "Style plain, 8 characters, about 2 tokens."; n += 1
+    assert m.prompt_info("", "plain") == "Style plain, 0 characters, about 0 tokens."; n += 1
+    assert m.SYChatPromptBuilder().run("S", "U", "plain")[1].startswith("Style plain, 18 characters"); n += 1
+    assert m.SYChatPromptBuilder.RETURN_NAMES == ("prompt", "info") and "chatml" in m.STYLES; n += 1
     return n

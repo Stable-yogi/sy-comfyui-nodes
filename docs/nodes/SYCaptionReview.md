@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_caption_review.py`
 
-**What it does:** Reviews one caption for training: too short or long, words repeated too often, words you banned. Gives true or false and a report.
+**What it does:** Reviews one caption for training: too short or long, words repeated too often, words you banned. Can also check that the trigger word comes first and that must-have words are there. Gives true or false, a report and the word count.
 
 ## Inputs
 
@@ -13,5 +13,7 @@ Source: `nodes/sy_caption_review.py`
 | max_words | INT | yes | More words than this counts as too long. | 1 to 1000, default 75 |
 | max_repeat | INT | yes | How often one word may appear. Small words like the and of are ignored. | 1 to 100, default 3 |
 | banned_words | STRING | yes | Words or phrases that must not appear. Separate with commas or new lines. | default '', multiline |
+| must_start_with | STRING | no | Trigger word the caption must begin with, for example sks_dog. Empty skips the check. | default '' |
+| must_include | STRING | no | Words that must appear, separated by commas or new lines. | default '', multiline |
 
-Outputs: `BOOLEAN`, `STRING`
+Outputs: `BOOLEAN`, `STRING`, `INT`

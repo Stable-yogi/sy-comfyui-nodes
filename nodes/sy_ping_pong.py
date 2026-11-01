@@ -2,9 +2,23 @@
 try:
     from ._sy_common import category, register
     from ._sy_batchtools import check_shape
+    from ._sy_d3_info import plural
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
     from _sy_batchtools import check_shape
+    from _sy_d3_info import plural
+
+
+def pingpong_info(total, repeat_ends=False):
+    """Pure function. Plain sentence: frames in, frames out, and whether a loop will be smooth."""
+    order = pingpong_order(total, repeat_ends)
+    text = "%s became %s (forward, then back" % (plural(total, "frame"), plural(len(order), "frame"))
+    text += "; first and last frame shown twice)." if repeat_ends else "; no frame doubled, so a loop is smooth)."
+    if total == 1:
+        text += " Only 1 frame: there is nothing to play backwards."
+    elif total == 2 and not repeat_ends:
+        text += " With 2 frames and no repeated ends the result is the same as the input."
+    return text
 
 
 def pingpong_order(total, repeat_ends=False):
@@ -21,11 +35,11 @@ def pingpong_order(total, repeat_ends=False):
 
 
 class SYPingPong:
-    DESCRIPTION = "Adds the frames played backwards after the forward ones, so a clip goes there and back and loops smoothly."
+    DESCRIPTION = "Adds the frames played backwards after the forward ones, so a clip goes there and back and loops smoothly. The info output tells how many frames came out."
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE", "INT")
-    RETURN_NAMES = ("images", "count")
+    RETURN_TYPES = ("IMAGE", "INT", "STRING")
+    RETURN_NAMES = ("images", "count", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -39,7 +53,7 @@ class SYPingPong:
     def run(self, images, repeat_ends):
         check_shape(images.shape)
         ids = pingpong_order(images.shape[0], bool(repeat_ends))
-        return (images[ids], len(ids))
+        return (images[ids], len(ids), pingpong_info(images.shape[0], bool(repeat_ends)))
 
 
 NODE_CLASS_MAPPINGS = {}

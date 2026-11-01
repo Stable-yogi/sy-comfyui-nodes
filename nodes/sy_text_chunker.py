@@ -37,20 +37,46 @@ def split_chunks(text, max_chars, overlap=0):
     return chunks
 
 
-def pick_chunk(chunks, index):
-    """Pure function. index counts from 0; a bad index is an error, not a wrap."""
+INDEX_MODES = ("stop with an error", "wrap around", "stay on the last")
+
+
+def resolve_index(count, index, index_mode=INDEX_MODES[0]):
+    """Pure function. Turns the wanted index into a real piece number (or raises a plain error)."""
     index = int(index)
-    if index < 0 or index >= len(chunks):
-        raise ValueError("index %d is out of range: the text has %d chunks (use 0 to %d)" % (index, len(chunks), len(chunks) - 1))
-    return chunks[index]
+    if index_mode not in INDEX_MODES:
+        raise ValueError("index_mode must be one of: %s" % ", ".join(INDEX_MODES))
+    if 0 <= index < count:
+        return index
+    if index < 0:
+        raise ValueError("index %d is negative: use 0 to %d" % (index, count - 1))
+    if index_mode == INDEX_MODES[1]:
+        return index % count
+    if index_mode == INDEX_MODES[2]:
+        return count - 1
+    raise ValueError("index %d is out of range: the text has %d chunks (use 0 to %d, or set index_mode to wrap around)" % (index, count, count - 1))
+
+
+def pick_chunk(chunks, index, index_mode=INDEX_MODES[0]):
+    """Pure function. index counts from 0; by default a bad index is an error, not a wrap."""
+    return chunks[resolve_index(len(chunks), index, index_mode)]
+
+
+def chunk_info(chunks, index, real_index, overlap):
+    """Pure function. One plain line: which piece, how big, and the longest/shortest piece."""
+    line = "Piece %d of %d (%d characters, overlap %d)" % (real_index + 1, len(chunks), len(chunks[real_index]), overlap)
+    if real_index != int(index):
+        line += "; index %d was moved to %d" % (int(index), real_index)
+    return line
 
 
 class SYTextChunker:
-    DESCRIPTION = "Splits a long text into pieces of at most a set number of characters, with overlap. Gives you one piece by index, and the piece count."
+    DESCRIPTION = ("Splits a long text into pieces of at most a set number of characters, with overlap. Gives you one piece by index, the piece count "
+                   "and all pieces as a list. An index too big can wrap around instead of stopping.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING", "INT")
-    RETURN_NAMES = ("chunk", "count")
+    RETURN_TYPES = ("STRING", "INT", "STRING", "STRING")
+    RETURN_NAMES = ("chunk", "count", "all_chunks", "info")
+    OUTPUT_IS_LIST = (False, False, True, False)
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -60,12 +86,16 @@ class SYTextChunker:
                 "max_chars": ("INT", {"default": 1000, "min": 1, "max": 1000000, "tooltip": "Longest allowed piece, in characters."}),
                 "overlap": ("INT", {"default": 100, "min": 0, "max": 999999, "tooltip": "Characters repeated at the start of the next piece. Less than max_chars."}),
                 "index": ("INT", {"default": 0, "min": 0, "max": 1000000, "tooltip": "Which piece to output, counting from 0."}),
-            }
+            },
+            "optional": {
+                "index_mode": (list(INDEX_MODES), {"default": INDEX_MODES[0], "tooltip": "If index is past the last piece: stop with an error, start again at 0, or stay on the last piece."}),
+            },
         }
 
-    def run(self, text, max_chars, overlap, index):
+    def run(self, text, max_chars, overlap, index, index_mode=INDEX_MODES[0]):
         chunks = split_chunks(text, max_chars, overlap)
-        return (pick_chunk(chunks, index), len(chunks))
+        real = resolve_index(len(chunks), index, index_mode)
+        return (chunks[real], len(chunks), chunks, chunk_info(chunks, index, real, overlap))
 
 
 NODE_CLASS_MAPPINGS = {}

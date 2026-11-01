@@ -35,4 +35,20 @@ def run():
     assert raises(m.solarize_value, 0.5, -0.1); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYSolarize"] == "Solarize SY"; n += 1
     assert m.SYSolarize.CATEGORY == "SY/Image"; n += 1
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _c("negative" in m.solarize_info(0.0) and "almost unchanged" in m.solarize_info(1.0))
+    _c("0.50 (about 128 of 255)" in m.solarize_info(0.5))
+    _r(m.solarize_info, -0.1)
+    _c(m.SYSolarize.RETURN_NAMES == ("image", "info"))
+    return (n) + _k[0]

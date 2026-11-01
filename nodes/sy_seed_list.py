@@ -25,11 +25,11 @@ def make_seeds(base_seed, count, mode):
 
 
 class SYSeedList:
-    DESCRIPTION = "Makes a comma list of seeds. Sequential counts up. Random fixed looks random but is the same every run."
+    DESCRIPTION = "Makes a comma list of seeds. Sequential counts up. Random fixed looks random but is the same every run. Also gives the last seed (so the next list can start after it) and an info line."
     CATEGORY = category("Values")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING", "INT")
-    RETURN_NAMES = ("seed_list", "first_seed")
+    RETURN_TYPES = ("STRING", "INT", "INT", "STRING")
+    RETURN_NAMES = ("seed_list", "first_seed", "last_seed", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -43,7 +43,8 @@ class SYSeedList:
 
     def run(self, base_seed, count, mode):
         seeds = make_seeds(base_seed, count, mode)
-        return (", ".join(str(s) for s in seeds), seeds[0])
+        info = "%d seeds (%s from base %d), first %d, last %d" % (len(seeds), mode, base_seed, seeds[0], seeds[-1])
+        return (", ".join(str(s) for s in seeds), seeds[0], seeds[-1], info)
 
 
 NODE_CLASS_MAPPINGS = {}

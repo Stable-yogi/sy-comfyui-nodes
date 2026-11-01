@@ -21,12 +21,31 @@ def run():
     assert r(0.3, 0.1, "down") == (0.3, 0)
     assert r(1.26, 0.5) == (1.5, 2)
     assert r(7.0, 2.5, "up") == (7.5, 8)
-    assert m.SYRoundToMultiple().run(1000, 64, "down") == (960.0, 960)
+    assert m.SYRoundToMultiple().run(1000, 64, "down")[:2] == (960.0, 960)
     for bad in ((1, 0), (1, -4), (1, 2, "sideways"), (float("nan"), 2), ("a", 2), (1, True)):
         try:
             r(*bad)
             raise SystemExit("must raise for %r" % (bad,))
         except ValueError as e:
             assert str(e)
-    assert m.SYRoundToMultiple.RETURN_TYPES == ("FLOAT", "INT")
-    return 22
+    assert m.SYRoundToMultiple.RETURN_TYPES[:2] == ("FLOAT", "INT")
+    return 22 + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.rounding_info(70, 64) == '70 -> 64 (nearest multiple of 64, 6 lower)')
+    n += ok('6 higher' in m.rounding_info(58, 64, 'nearest'))
+    n += ok('already a multiple' in m.rounding_info(128, 64, 'up'))
+    n += ok(m.SYRoundToMultiple().run(1000, 64, 'down')[2].startswith('1000 -> 960'))
+    n += ok(rs(m.rounding_info, 5, 0) is not None)
+    return n

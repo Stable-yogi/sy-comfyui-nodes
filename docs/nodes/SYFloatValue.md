@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_float_value.py`
 
-**What it does:** A decimal number. Type it once and plug it into as many nodes as you like. Also gives the nearest whole number.
+**What it does:** A decimal number. Type it once and plug it into as many nodes as you like. Also gives the nearest whole number, the number as clean text, and an info line with the round-down and round-up choices.
 
 ## Inputs
 
@@ -10,4 +10,4 @@ Source: `nodes/sy_float_value.py`
 |---|---|---|---|---|
 | value | FLOAT | yes | The decimal number to send out. | -1000000000000000.0 to 1000000000000000.0, step 0.01, default 0.0 |
 
-Outputs: `FLOAT`, `INT`
+Outputs: `FLOAT`, `INT`, `STRING`, `STRING`

@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_empty_latent.py`
 
-**What it does:** Makes a blank latent to start a render from. 'standard 4ch /8' has 4 channels (SD 1.5, SDXL). 'flux 16ch /8' has 16 channels (Flux, SD3 style). Both are 8 times smaller than the picture.
+**What it does:** Makes a blank latent to start a render from. 'standard 4ch /8' has 4 channels (SD 1.5, SDXL). 'flux 16ch /8' has 16 channels (Flux, SD3 style). Both are 8 times smaller than the picture. Adds a snap_to option (round the size to 8, 16, 32 or 64 instead of silently cutting it), the real picture width and height as outputs, and an info text with warnings for sizes that are odd or very large.
 
 ## Inputs
 
@@ -12,5 +12,7 @@ Source: `nodes/sy_empty_latent.py`
 | height | INT | yes | Picture height in pixels. | 8 to 16384, step 8, default 1024 |
 | batch | INT | yes | How many blank latents to make at once. | 1 to 4096, default 1 |
 | latent_type | COMBO | yes | 4 channels for SD 1.5 and SDXL. 16 channels for Flux style models. | one of: standard 4ch /8, flux 16ch /8 |
+| snap_to | COMBO | no | off cuts the size to a multiple of 8. 16, 32 or 64 round it to that multiple. | one of: off, 8, 16, 32, 64 |
+| snap_direction | COMBO | no | How snap_to rounds: to the nearest multiple, always down, or always up. | one of: nearest, down, up |
 
-Outputs: `LATENT`
+Outputs: `LATENT`, `INT`, `INT`, `STRING`

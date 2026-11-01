@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_mask_from_box.py`
 
-**What it does:** Makes a mask that is white inside a rectangle and black elsewhere. Parts outside the canvas are cut off.
+**What it does:** Makes a mask that is white inside a rectangle and black elsewhere. Parts outside the canvas are cut off. Connect a picture to copy its size, place the box by its centre, feather it or invert it. The info line tells if the box was cut off or missed the canvas.
 
 ## Inputs
 
@@ -14,5 +14,9 @@ Source: `nodes/sy_mask_from_box.py`
 | box_height | INT | yes | Height of the box in pixels. | 0 to 16384, step 1, default 256 |
 | canvas_width | INT | yes | Width of the mask in pixels. | 1 to 16384, step 1, default 1024 |
 | canvas_height | INT | yes | Height of the mask in pixels. | 1 to 16384, step 1, default 1024 |
+| size_from | IMAGE | no | Optional picture whose width and height are used as the canvas. Stops size mismatches. | picture batch [B,H,W,3] |
+| anchor | COMBO | no | top-left: x and y are the box corner. centre: x and y are the middle of the box. | one of: top-left, centre |
+| feather | INT | no | Soften the box edge by this many pixels. 0 is a hard edge. | 0 to 512, step 1, default 0 |
+| invert | BOOLEAN | no | Swap white and black: everything except the box is selected. | default False |
 
-Outputs: `MASK`
+Outputs: `MASK`, `STRING`

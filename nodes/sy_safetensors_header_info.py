@@ -1,38 +1,16 @@
 """Safetensors Header Info SY: reads only the small JSON header of a .safetensors file and reports what is inside."""
-import json
 import os
-import struct
 
 try:
     from ._sy_common import category, register
     from ._sy_model_files import list_names, find_file, NONE_NAME
+    from ._sy_a2_files import MAX_HEADER_BYTES, read_header, kind_guess, main_dtype_text, metadata_lines, size_text
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
     from _sy_model_files import list_names, find_file, NONE_NAME
+    from _sy_a2_files import MAX_HEADER_BYTES, read_header, kind_guess, main_dtype_text, metadata_lines, size_text
 
-MAX_HEADER_BYTES = 20 * 1024 * 1024
-KINDS = ("checkpoints", "loras", "vae")
-
-
-def read_header(path, max_header=MAX_HEADER_BYTES):
-    """Pure file function. Reads only the 8-byte length and the JSON header. Never reads tensor data."""
-    size = os.path.getsize(path)
-    if size < 8:
-        raise ValueError("file is too small to be a safetensors file")
-    with open(path, "rb") as f:
-        (n,) = struct.unpack("<Q", f.read(8))
-        if n > max_header:
-            raise ValueError("header claims %d bytes, more than the %d byte limit. This is not a normal safetensors file." % (n, max_header))
-        if n + 8 > size:
-            raise ValueError("header is longer than the file. The file is damaged or not a safetensors file.")
-        raw = f.read(n)
-    try:
-        header = json.loads(raw.decode("utf-8"))
-    except (UnicodeDecodeError, ValueError):
-        raise ValueError("header is not valid JSON. The file is damaged or not a safetensors file.")
-    if not isinstance(header, dict):
-        raise ValueError("header is not a JSON object")
-    return header
+KINDS = ("checkpoints", "loras", "vae", "diffusion_models", "text_encoders")
 
 
 def summarize_header(header):
@@ -79,6 +57,15 @@ def split_choice(choice):
     return kind, name
 
 
+def one_line_summary(header, file_size=None):
+    """Pure function. One plain line: what the file looks like, its main data type, size and parameter count."""
+    summary = summarize_header(header)
+    parts = [kind_guess(header), main_dtype_text(header), "%.2f billion parameters" % (summary["total_params"] / 1e9)]
+    if file_size is not None:
+        parts.append(size_text(file_size))
+    return ", ".join(parts)
+
+
 def _choices():
     out = []
     for kind in KINDS:
@@ -87,23 +74,27 @@ def _choices():
 
 
 class SYSafetensorsHeaderInfo:
-    DESCRIPTION = "Shows what is inside a .safetensors model file (tensor count, data types, parameter estimate, metadata keys) without loading the model."
+    DESCRIPTION = ("Shows what is inside a .safetensors model file without loading it: tensor count, data types, parameter estimate, "
+                   "metadata keys. Also gives a one-line summary (looks like a LoRA, VAE, checkpoint ..., main data type, size) "
+                   "and the metadata values, such as what a LoRA was trained on. Lists checkpoints, loras, vae, diffusion models and text encoders.")
     CATEGORY = category("Utility")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("report",)
+    RETURN_TYPES = ("STRING", "STRING", "STRING")
+    RETURN_NAMES = ("report", "summary", "metadata")
 
     @classmethod
     def INPUT_TYPES(cls):
-        return {"required": {"model_file": (_choices(), {"tooltip": "A checkpoint, LoRA or VAE file. Only its small header is read."})}}
+        return {"required": {"model_file": (_choices(), {"tooltip": "A model file, for example loras/my_style.safetensors. Only its small header is read, so it is fast."})}}
 
     def run(self, model_file):
         if model_file == NONE_NAME:
             raise ValueError("no .safetensors files were found in the checkpoints, loras or vae folders")
         kind, name = split_choice(model_file)
         path = find_file(kind, name)
-        summary = summarize_header(read_header(path))
-        return (format_report(summary, os.path.getsize(path)),)
+        header = read_header(path)
+        summary = summarize_header(header)
+        size = os.path.getsize(path)
+        return (format_report(summary, size), one_line_summary(header, size), metadata_lines(header) or "no metadata in this file")
 
 
 NODE_CLASS_MAPPINGS = {}

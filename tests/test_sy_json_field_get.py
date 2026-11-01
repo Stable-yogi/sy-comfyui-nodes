@@ -29,5 +29,26 @@ def run():
             raise SystemExit("bad args must raise")
         except ValueError:
             n += 1
-    assert m.SYJSONFieldGet().run(DOC, "a.b.0") == ("10",); n += 1
+    assert m.SYJSONFieldGet().run(DOC, "a.b.0") == ("10", True, "number"); n += 1
+    assert m.get_field_ex(DOC, "nope", "fallback") == ("fallback", False, "default"); n += 1
+    assert m.get_field_ex(DOC, "nope", "") == ("", False, "default"); n += 1
+    assert m.get_field_ex(DOC, "a.b.9", "x")[1] is False; n += 1
+    assert m.get_field_ex(DOC, "a.b.0", "x") == ("10", True, "number"); n += 1
+    assert [m.get_field_ex(DOC, p)[2] for p in ("s", "t", "n", "a.b", "a")] == ["text", "true/false", "empty", "list", "object"]; n += 1
+    assert m.get_field_ex('```json\n{"k": 5}\n```', "k") == ("5", True, "number"); n += 1
+    assert m.get_field_ex('```\n{"k": "v"}', "k") == ("v", True, "text"); n += 1
+    for call in (lambda: m.get_field_ex("{bad", "a", "x"), lambda: m.get_field_ex("{}", "..b", "x"), lambda: m.get_field_ex("```\n{bad\n```", "a")):
+        try:
+            call()
+            raise SystemExit("must raise")
+        except ValueError:
+            n += 1
+    assert m.SYJSONFieldGet().run(DOC, "zzz", "use default", "none") == ("none", False, "default"); n += 1
+    assert m.SYJSONFieldGet().run(DOC, "a.b.0", "use default", "none")[1] is True; n += 1
+    try:
+        m.SYJSONFieldGet().run(DOC, "zzz", "error", "none")
+        raise SystemExit("must raise")
+    except ValueError:
+        n += 1
+    assert m.SYJSONFieldGet.RETURN_NAMES == ("value", "found", "kind"); n += 1
     return n

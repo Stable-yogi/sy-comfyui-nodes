@@ -16,13 +16,23 @@ def resolve_index(value, total, name):
     return idx
 
 
-def select_indices(total, start, end, step):
-    """Pure function. Frame numbers from start to end, both included, every `step` frames."""
+def clamp_index(value, total):
+    """Pure function. Moves a frame number (negative counts from the end) into the batch: the first or last frame at worst."""
+    value, total = int(value), int(total)
+    idx = value + total if value < 0 else value
+    return max(0, min(total - 1, idx))
+
+
+def select_indices(total, start, end, step, clamp=False):
+    """Pure function. Frame numbers from start to end, both included, every `step` frames.
+    With clamp on, numbers outside the batch are moved to the nearest frame instead of raising an error."""
     total, step = int(total), int(step)
     if total < 1:
         raise ValueError("batch is empty: need at least 1 frame, got %d" % total)
     if step < 1:
         raise ValueError("step must be at least 1, got %d" % step)
+    if clamp:
+        start, end = clamp_index(start, total), clamp_index(end, total)
     s = resolve_index(start, total, "start")
     e = resolve_index(end, total, "end")
     if e < s:
@@ -30,12 +40,21 @@ def select_indices(total, start, end, step):
     return list(range(s, e + 1, step))
 
 
+def select_info(total, ids):
+    """Pure function. One plain line: what was kept."""
+    if not ids:
+        return "No frames kept."
+    shown = ", ".join(str(i) for i in ids[:12]) + (", ..." if len(ids) > 12 else "")
+    return "Kept %d of %d frames (frame numbers start at 0): %s." % (len(ids), total, shown)
+
+
 class SYFrameSelect:
-    DESCRIPTION = "Takes some frames from a batch: from start to end (both included), every step frames. Negative numbers count from the end."
+    DESCRIPTION = ("Takes some frames from a batch: from start to end (both included), every step frames. Negative numbers count "
+                   "from the end. Turn on clamp to cope with a start or end past the batch instead of getting an error.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE", "INT")
-    RETURN_NAMES = ("images", "count")
+    RETURN_TYPES = ("IMAGE", "INT", "STRING")
+    RETURN_NAMES = ("images", "count", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -45,13 +64,16 @@ class SYFrameSelect:
                 "start": ("INT", {"default": 0, "min": -100000, "max": 100000, "tooltip": "First frame to keep, counting from 0. -1 means the last frame."}),
                 "end": ("INT", {"default": -1, "min": -100000, "max": 100000, "tooltip": "Last frame to keep, included. -1 means the last frame."}),
                 "step": ("INT", {"default": 1, "min": 1, "max": 1000, "tooltip": "Keep every this many frames. 2 keeps every second frame."}),
-            }
+            },
+            "optional": {
+                "clamp": ("BOOLEAN", {"default": False, "tooltip": "On: a start or end past the batch is moved to the first or last frame instead of an error."}),
+            },
         }
 
-    def run(self, images, start, end, step):
+    def run(self, images, start, end, step, clamp=False):
         check_shape(images.shape)
-        ids = select_indices(images.shape[0], start, end, step)
-        return (images[ids], len(ids))
+        ids = select_indices(images.shape[0], start, end, step, bool(clamp))
+        return (images[ids], len(ids), select_info(images.shape[0], ids))
 
 
 NODE_CLASS_MAPPINGS = {}

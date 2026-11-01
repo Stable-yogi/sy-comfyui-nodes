@@ -15,12 +15,17 @@ def split_pixel(pixel):
     return (pixel[0], pixel[1], pixel[2], a)
 
 
+def luma_value(r, g, b):
+    """Pure function. Brightness of one colour (weights 0.2126, 0.7152, 0.0722)."""
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
 class SYChannelSplit:
-    DESCRIPTION = "Splits a picture into four masks: red, green, blue and alpha (transparency). Alpha is all ones if the picture has none."
+    DESCRIPTION = "Splits a picture into four masks: red, green, blue and alpha (transparency). Alpha is all ones if the picture has none. Also gives a brightness (luma) mask."
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("MASK", "MASK", "MASK", "MASK")
-    RETURN_NAMES = ("red", "green", "blue", "alpha")
+    RETURN_TYPES = ("MASK", "MASK", "MASK", "MASK", "MASK")
+    RETURN_NAMES = ("red", "green", "blue", "alpha", "luma")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -41,7 +46,8 @@ class SYChannelSplit:
         g = image[..., 1].contiguous()
         b = image[..., 2].contiguous()
         a = image[..., 3].contiguous() if c == 4 else torch.ones_like(r)
-        return (r, g, b, a)
+        luma = (0.2126 * r + 0.7152 * g + 0.0722 * b).clamp(0.0, 1.0).contiguous()
+        return (r, g, b, a, luma)
 
 
 NODE_CLASS_MAPPINGS = {}

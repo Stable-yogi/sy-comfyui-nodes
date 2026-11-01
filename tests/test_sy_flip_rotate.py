@@ -33,5 +33,13 @@ def run():
     assert four == g; n += 1
     assert m.turn_steps("180") == 2; n += 1
     assert raises(m.turn_steps, "45"); n += 1
-    assert m.SYFlipRotate.RETURN_TYPES == ("IMAGE",); n += 1
+    assert m.SYFlipRotate.RETURN_TYPES == ("IMAGE", "MASK", "STRING"); n += 1
+    assert m.result_size(1024, 768, "none") == (1024, 768) and m.result_size(1024, 768, "90 clockwise") == (768, 1024); n += 1
+    assert m.result_size(1024, 768, "180") == (1024, 768) and m.result_size(1024, 768, "270 clockwise") == (768, 1024); n += 1
+    assert "unchanged" in m.flip_info(10, 20, False, False, "none"); n += 1
+    t = m.flip_info(1024, 768, True, False, "90 clockwise", True)
+    assert "1024x768 -> 768x1024" in t and "mirrored left to right" in t.lower() and "turned 90 degrees clockwise" in t and "mask was changed" in t; n += 1
+    assert "mirrored top to bottom" in m.flip_info(4, 4, False, True, "none").lower() and "mask" not in m.flip_info(4, 4, False, True, "none"); n += 1
+    assert raises(m.flip_info, 4, 4, False, False, "45"); n += 1
+    assert list(m.SYFlipRotate.INPUT_TYPES()["optional"]) == ["mask"]; n += 1
     return n

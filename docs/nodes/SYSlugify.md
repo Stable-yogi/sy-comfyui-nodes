@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_slugify.py`
 
-**What it does:** Turns any text into a simple name made of letters, digits and one separator. Accents are removed.
+**What it does:** Turns any text into a simple name made of letters, digits and one separator. Accents are removed. A fallback name stops empty results, windows_safe avoids names like con or nul, and the info line says what was dropped.
 
 ## Inputs
 
@@ -12,5 +12,7 @@ Source: `nodes/sy_slugify.py`
 | separator | COMBO | yes | The character placed between words. | one of: -, _ |
 | max_length | INT | yes | Longest result in characters. 0 means no limit. | 0 to 255, step 1, default 0 |
 | lowercase | BOOLEAN | yes | On makes every letter small. | default True |
+| fallback | STRING | no | Used when nothing is left, for example only Chinese or emoji. Try 'untitled'. | default '' |
+| windows_safe | BOOLEAN | no | On: names Windows cannot use (con, nul, com1) get '-file' added. | default False |
 
-Outputs: `STRING`
+Outputs: `STRING`, `STRING`

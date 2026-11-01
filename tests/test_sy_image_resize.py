@@ -39,5 +39,47 @@ def run():
     assert raises(m.plan_resize, 10, 10, 10, 10, "zoom", 1); n += 1
     assert raises(m.plan_resize, 0, 10, 10, 10, "stretch", 1); n += 1
     assert raises(m.round_multiple, 10, 0); n += 1
-    assert m.SYImageResize.RETURN_TYPES == ("IMAGE", "INT", "INT"); n += 1
+    assert m.SYImageResize.RETURN_TYPES == ("IMAGE", "INT", "INT", "MASK", "STRING"); n += 1
+    assert m.SYImageResize.RETURN_NAMES[-2:] == ("mask", "info"); n += 1
+    # --- scale limit
+    up = m.plan_resize(100, 100, 200, 200, "stretch", 1)
+    down = m.plan_resize(100, 100, 50, 50, "stretch", 1)
+    assert m.skip_reason(100, 100, up, "any") == "" and m.skip_reason(100, 100, down, "any") == ""
+    assert "never enlarge" in m.skip_reason(100, 100, up, "never enlarge") and m.skip_reason(100, 100, down, "never enlarge") == ""
+    assert "never shrink" in m.skip_reason(100, 100, down, "never shrink") and m.skip_reason(100, 100, up, "never shrink") == ""
+    assert raises(m.skip_reason, 100, 100, up, "sideways")
+    n += 5
+    # --- megapixel cap
+    assert m.cap_megapixels(1000, 1000, 4096, 4096, "stretch", 8, 0) == (4096, 4096, False)
+    w, h, cap = m.cap_megapixels(1000, 1000, 4096, 4096, "stretch", 8, 1.0)
+    po = m.plan_resize(1000, 1000, w, h, "stretch", 8)
+    assert cap and po["out_w"] * po["out_h"] <= 1000000 and po["out_w"] % 8 == 0 and w > 900
+    w, h, cap = m.cap_megapixels(1000, 1000, 512, 512, "stretch", 8, 1.0)
+    assert (w, h, cap) == (512, 512, False)
+    w, h, cap = m.cap_megapixels(2000, 1000, 4000, 4000, "pad", 64, 2.0)
+    po = m.plan_resize(2000, 1000, w, h, "pad", 64)
+    assert cap and po["out_w"] * po["out_h"] <= 4000000
+    assert raises(m.cap_megapixels, 10, 10, 10, 10, "stretch", 1, -1)
+    n += 5
+    # --- size error and info
+    big = m.plan_resize(10, 4000, 16384, 16384, "fill and crop", 1)
+    assert raises(m.check_scaled, big)
+    try:
+        m.check_scaled(big)
+    except ValueError as e:
+        assert "16384" in str(e) and "pick a smaller size" in str(e)
+    m.check_scaled(m.plan_resize(100, 100, 512, 512, "stretch", 8))
+    n += 2
+    t = m.resize_info(1000, 500, 512, 256, "fit inside")
+    assert "Fit inside: 1000x500 -> 512x256" in t and "shape kept" in t and t.endswith(".")
+    t = m.resize_info(1000, 500, 512, 512, "stretch")
+    assert "squashed or stretched" in t
+    assert "squashed" not in m.resize_info(100, 100, 200, 200, "stretch")
+    assert "cut off" in m.resize_info(1000, 500, 512, 512, "fill and crop")
+    assert "pad colour" in m.resize_info(1000, 500, 512, 512, "pad")
+    t = m.resize_info(100, 100, 100, 100, "stretch", skipped="the picture is smaller")
+    assert t.startswith("Left at 100x100") and "smaller" in t
+    t = m.resize_info(1000, 500, 512, 256, "fit inside", capped=True, mask_note="the mask was resized with the picture")
+    assert "max_megapixels" in t and "mask was resized" in t
+    n += 7
     return n

@@ -50,4 +50,17 @@ def run():
         raise SystemExit("tensor size mismatch must raise")
     except ValueError:
         n += 1
+    assert m.psnr_from_mean_sq(0.0) == 99.0; n += 1
+    assert abs(m.psnr_from_mean_sq(0.01) - 20.0) < 1e-9; n += 1
+    assert abs(m.psnr_from_mean_sq(1.0)) < 1e-9; n += 1
+    assert m.psnr_from_mean_sq(1e-20) == 99.0; n += 1
+    try:
+        m.psnr_from_mean_sq(-1.0)
+        raise SystemExit("expected ValueError")
+    except ValueError:
+        n += 1
+    assert m.verdict(0.0) == "identical" and m.verdict(0.005) == "almost identical"; n += 1
+    assert m.verdict(0.03) == "small differences" and m.verdict(0.1) == "clear differences" and m.verdict(0.5) == "very different"; n += 1
+    assert m.SYCompareMetrics.RETURN_NAMES == ("diff_score", "diff_image", "max_diff", "psnr", "info"); n += 1
+    assert list(m.SYCompareMetrics.INPUT_TYPES()["optional"]) == ["mask", "resize_b"]; n += 1
     return n

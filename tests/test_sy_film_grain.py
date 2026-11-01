@@ -32,4 +32,14 @@ def run():
     assert m.add_grain_value(0.05, -1.0, 0.2) == 0.0; n += 1
     assert m.add_grain_value(0.5, 3.0, 0.0) == 0.5; n += 1
     assert raises(m.grain_grid_size, 10, 10, 0); n += 1
+    assert m.grain_weight(0.5, "even") == 1.0 and m.grain_weight(0.0, "even") == 1.0; n += 1
+    assert near(m.grain_weight(0.5, "midtones"), 1.0) and m.grain_weight(0.0, "midtones") == 0.0 and m.grain_weight(1.0, "midtones") == 0.0; n += 1
+    assert near(m.grain_weight(0.25, "midtones"), 0.75) and m.grain_weight(2.0, "midtones") == 0.0; n += 1
+    assert raises(m.grain_weight, 0.5, "heavy"); n += 1
+    assert "no grain" in m.grain_info(0, 1, 0, False, "even", True, 1, 64, 64); n += 1
+    t = m.grain_info(0.1, 2, 7, True, "midtones", False, 4, 512, 256, "note")
+    assert "colour grain" in t and "size 2 px" in t and "seed 7" in t and "the same grain on all 4 frames" in t and "512x256" in t and "note" in t; n += 1
+    assert "different grain on all 3 frames" in m.grain_info(0.1, 1, 1, False, "even", True, 3, 8, 8); n += 1
+    assert "frames" not in m.grain_info(0.1, 1, 1, False, "even", True, 1, 8, 8); n += 1
+    assert m.SYFilmGrain.RETURN_NAMES == ("image", "info"); n += 1
     return n

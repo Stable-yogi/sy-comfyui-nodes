@@ -37,4 +37,22 @@ def run():
     except ValueError:
         pass
     assert m.compare_images(a, b, "blend", 5)[0][0][0] == 0.8  # amount is clamped
-    return 17  # checks
+    n = 17
+    assert "identical" in m.diff_text(0.0, 0.0, 0.0); n += 1
+    assert "identical" in m.diff_text(0.0001, 0.001, 0.0); n += 1
+    t = m.diff_text(0.05, 0.5, 12.5)
+    assert "5.00%" in t and "50.0%" in t and "12.5% of the pixels" in t; n += 1
+    t = m.compare_info("side_by_side", (512, 512), (512, 512), 1, 1, "nearest", "the pictures are identical")
+    assert t == "Compared A 512x512 with B 512x512 using side by side; the pictures are identical."; n += 1
+    t = m.compare_info("blend", (1024, 512), (512, 512), 4, 1, "smooth", "x")
+    assert "B was resized to the size of A (smooth), its shape changed" in t and "A has 4 picture(s) and B has 1" in t; n += 1
+    t = m.compare_info("wipe", (1024, 1024), (512, 512), 1, 1, "nearest", "x")
+    assert "its shape changed" not in t and "(nearest)" in t; n += 1
+    assert m.check_resize("nearest") is None; n += 1
+    try:
+        m.check_resize("blurry")
+        raise SystemExit("bad resize must raise")
+    except ValueError:
+        n += 1
+    assert m.SYImageCompare.RETURN_NAMES == ("image", "info") and "resize_b" in m.SYImageCompare.INPUT_TYPES()["optional"]; n += 1
+    return n  # checks

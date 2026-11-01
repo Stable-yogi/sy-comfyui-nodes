@@ -58,11 +58,12 @@ def check_mask_shape(mask_shape, image_shape):
 
 
 class SYColourOverlay:
-    DESCRIPTION = "Lays a flat colour over a picture using a blend mode and opacity. An optional mask limits where it shows."
+    DESCRIPTION = ("Lays a flat colour over a picture using a blend mode and opacity. An optional mask limits where it shows "
+                   "(a mask of another size is stretched to fit). Adds an on/off switch and an info line, and keeps transparency.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -74,11 +75,12 @@ class SYColourOverlay:
                 "mode": (list(MODES), {"default": "normal", "tooltip": "normal paints the colour; multiply darkens; screen lightens; overlay boosts contrast."}),
             },
             "optional": {
-                "mask": ("MASK", {"tooltip": "White applies the colour, black keeps the picture. Must be the same size as the image."}),
+                "mask": ("MASK", {"tooltip": "White applies the colour, black keeps the picture. A different size is stretched to fit."}),
+                "enabled": ("BOOLEAN", {"default": True, "tooltip": "Turn off to pass the picture through untouched (handy to compare before and after)."}),
             },
         }
 
-    def run(self, image, colour, opacity, mode, mask=None):
+    def run(self, image, colour, opacity, mode, mask=None, enabled=True):
         import torch
 
         need_image(image)
@@ -86,10 +88,17 @@ class SYColourOverlay:
         check_opacity(opacity)
         c = parse_hex(colour, "colour")
         w = float(opacity)
+        label = "%s %s at %d%%, %s" % (mode, colour.strip(), int(round(opacity * 100)), "inside the mask only" if mask is not None else "whole picture")
+        if not enabled:
+            return (image, "Colour Overlay: switched off, picture passed through unchanged")
         if mask is not None:
-            check_mask_shape(tuple(mask.shape), tuple(image.shape))
             m = mask if mask.ndim == 3 else mask.unsqueeze(0)
-            w = (m.to(torch.float32) * w).unsqueeze(-1).to(image.device)
+            if m.shape[0] not in (1, image.shape[0]):
+                raise ValueError("mask batch %s does not match image batch %s (use 1 or the same count)" % (m.shape[0], image.shape[0]))
+            if tuple(m.shape[1:]) != tuple(image.shape[1:3]):
+                import torch.nn.functional as F
+                m = F.interpolate(m.to(torch.float32).unsqueeze(1), size=(image.shape[1], image.shape[2]), mode="bilinear", align_corners=False).squeeze(1)
+            w = (m.to(torch.float32).clamp(0.0, 1.0) * w).unsqueeze(-1).to(image.device)
         rgb = image[..., :3].to(torch.float32)
         cv = torch.tensor(c, dtype=torch.float32, device=image.device)
         if mode == "normal":
@@ -103,7 +112,7 @@ class SYColourOverlay:
         res = (rgb + (blended - rgb) * w).clamp(0.0, 1.0)
         out = image.clone()
         out[..., :3] = res.to(image.dtype)
-        return (out,)
+        return (out, "Colour Overlay: " + label)
 
 
 NODE_CLASS_MAPPINGS = {}

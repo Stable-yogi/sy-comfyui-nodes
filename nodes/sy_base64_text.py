@@ -19,6 +19,8 @@ def base64_text(text, mode, url_safe):
         data = base64.urlsafe_b64encode(raw) if url_safe else base64.b64encode(raw)
         return data.decode("ascii")
     body = "".join(text.split())
+    if body.lower().startswith("data:") and ";base64," in body.lower():  # a pasted web data address: keep only the code
+        body = body[body.lower().index(";base64,") + len(";base64,"):]
     if url_safe:
         body = body.replace("-", "+").replace("_", "/")
     body += "=" * (-len(body) % 4)
@@ -29,12 +31,21 @@ def base64_text(text, mode, url_safe):
         raise ValueError("text is not valid base64 (or does not hold readable UTF-8 text); check the text and the url_safe setting")
 
 
+def base64_info(text, result, mode, url_safe):
+    """Pure function. One plain line telling what was done."""
+    kind = "web-safe base64" if url_safe else "base64"
+    if mode == "encode":
+        return "Encoded %d characters into %d characters of %s." % (len(text), len(result), kind)
+    return "Decoded %s into %d characters of text." % (kind, len(result))
+
+
 class SYBase64Text:
-    DESCRIPTION = "Turns a text into base64 code, or turns base64 code back into the text."
+    DESCRIPTION = ("Turns a text into base64 code, or base64 code back into text. Decoding forgives missing padding, line breaks "
+                   "and a pasted 'data:...;base64,' start, and a bad code gives one plain sentence. Also gives an info line.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("text",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("text", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -47,7 +58,8 @@ class SYBase64Text:
         }
 
     def run(self, text, mode, url_safe):
-        return (base64_text(text, mode, url_safe),)
+        out = base64_text(text, mode, url_safe)
+        return (out, base64_info(text, out, mode, url_safe))
 
 
 NODE_CLASS_MAPPINGS = {}

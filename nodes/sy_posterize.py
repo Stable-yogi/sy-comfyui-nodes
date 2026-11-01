@@ -2,9 +2,11 @@
 try:
     from ._sy_common import category, register
     from ._sy_image_ops import need_image
+    from ._sy_d3_info import need_nonempty
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
     from _sy_image_ops import need_image
+    from _sy_d3_info import need_nonempty
 
 
 def check_levels(levels):
@@ -20,12 +22,23 @@ def quantise(v, levels):
     return int(v * steps + 0.5) / float(steps)
 
 
+def posterize_info(levels):
+    """Pure function. Plain sentence: how many steps per channel and the most colours the picture can have now."""
+    check_levels(levels)
+    steps = [("%.2f" % (i / float(levels - 1))) for i in range(levels)]
+    shown = ", ".join(steps) if levels <= 6 else "%s ... %s" % (", ".join(steps[:3]), steps[-1])
+    text = "%d levels per colour channel (values %s), so at most %d different colours." % (levels, shown, levels ** 3)
+    if levels >= 128:
+        text += " That many levels looks almost like the original: lower levels for a visible poster look."
+    return text
+
+
 class SYPosterize:
-    DESCRIPTION = "Reduces each colour channel to a small number of flat levels for a poster or cartoon look."
+    DESCRIPTION = "Reduces each colour channel to a small number of flat levels for a poster or cartoon look. The info output lists the steps kept and the most colours left."
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -40,13 +53,14 @@ class SYPosterize:
         import torch
 
         need_image(image)
+        need_nonempty(image.shape)
         check_levels(levels)
         steps = float(levels - 1)
         out = image.clone()
         rgb = min(image.shape[3], 3)
         v = image[..., :rgb].clamp(0.0, 1.0)
         out[..., :rgb] = torch.floor(v * steps + 0.5) / steps
-        return (out,)
+        return (out, posterize_info(int(levels)))
 
 
 NODE_CLASS_MAPPINGS = {}

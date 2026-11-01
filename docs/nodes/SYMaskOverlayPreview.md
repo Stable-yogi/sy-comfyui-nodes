@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_mask_overlay_preview.py`
 
-**What it does:** Shows a mask on top of a picture as a coloured tint, so you can check what it covers.
+**What it does:** Shows a mask on top of a picture as a coloured tint, so you can check what it covers. A mask of another size is stretched to fit, and the info output says so. Can also tint the outside of the mask.
 
 ## Inputs
 
@@ -14,5 +14,6 @@ Source: `nodes/sy_mask_overlay_preview.py`
 | green | INT | yes | Green part of the tint colour, 0 to 255. | 0 to 255, step 1, default 0 |
 | blue | INT | yes | Blue part of the tint colour, 0 to 255. | 0 to 255, step 1, default 0 |
 | opacity | FLOAT | yes | How strong the tint is. 0 shows no tint, 1 covers the picture. | 0.0 to 1.0, step 0.01, default 0.5 |
+| invert_mask | BOOLEAN | no | On: tint everything outside the mask instead. Handy to check what a mask protects. | default False |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `STRING`

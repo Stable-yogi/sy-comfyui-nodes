@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_tag_sort.py`
 
-**What it does:** Splits a prompt into tags, then sorts them (A to Z, by length, or a repeatable shuffle) and removes repeats.
+**What it does:** Splits a prompt into tags, then sorts them (A to Z, by length, or a repeatable shuffle) and removes repeats. For training captions it can keep the trigger word first (added if missing) and delete unwanted tags.
 
 ## Inputs
 
@@ -13,5 +13,7 @@ Source: `nodes/sy_tag_sort.py`
 | order | COMBO | yes | keep = same order. Others sort A to Z, by length, or shuffle the same way every time. | one of: keep, alphabetical, shortest_first, longest_first, shuffle_seeded |
 | seed | INT | yes | Number for the shuffle. The same number gives the same order. | 0 to 9223372036854775807, default 0 |
 | dedupe | BOOLEAN | yes | On: remove tags that appear twice (capital letters are ignored). | default True |
+| trigger_first | STRING | no | Tags that must come first, in this order, for example 'ohwx'. Added when missing. | default '' |
+| remove_tags | STRING | no | Tags to delete, separated by commas, for example 'watermark, text'. Capital letters are ignored. | default '' |
 
-Outputs: `STRING`
+Outputs: `STRING`, `STRING`

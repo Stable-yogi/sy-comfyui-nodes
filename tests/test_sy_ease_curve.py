@@ -48,6 +48,28 @@ def run():
     msg = raises(m.ease, 1.5, "linear")
     assert msg and "t" in msg; n += 1
     assert raises(m.ease, -0.1, "linear"); n += 1
-    assert m.SYEaseCurve().run(0.5, "linear", 0.0, 10.0) == (5.0, 0.5); n += 1
+    assert m.SYEaseCurve().run(0.5, "linear", 0.0, 10.0)[:2] == (5.0, 0.5); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYEaseCurve"] == "Ease Curve SY"; n += 1
+    return n + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.ease_value(1.5, 'linear', 0, 10, 'clamp') == (10.0, 1.0))
+    n += ok(m.ease_value(-2, 'linear', 0, 10, 'clamp') == (0.0, 0.0))
+    n += ok(rs(m.ease_value, 1.5, 'linear', 0, 10) is not None)
+    n += ok(rs(m.ease_value, 0.5, 'linear', 0, 10, 'nope') is not None)
+    n += ok('held at the edge' in m.ease_report(1.5, 'linear', 0, 10, 'clamp')[2])
+    n += ok('held' not in m.ease_report(0.5, 'linear', 0, 10)[2])
+    n += ok(m.SYEaseCurve().run(2.0, 'smoothstep', 0.0, 4.0, 'clamp')[0] == 4.0)
+    n += ok(len(m.SYEaseCurve().run(0.5, 'linear', 0.0, 1.0)) == 3)
     return n

@@ -33,18 +33,36 @@ def ease(t, curve):
     return 6.0 * t ** 5 - 15.0 * t ** 4 + 10.0 * t ** 3
 
 
-def ease_value(t, curve, start, end):
-    """Pure function. Returns (value, eased)."""
+OUTSIDE = ("error", "clamp")
+
+
+def ease_value(t, curve, start, end, outside="error"):
+    """Pure function. Returns (value, eased). With outside="clamp" a t below 0 or above 1 is held at the edge."""
+    if outside not in OUTSIDE:
+        raise ValueError("outside_range must be one of: %s, got %r" % (", ".join(OUTSIDE), outside))
+    if outside == "clamp" and t == t:
+        t = min(max(t, 0.0), 1.0)
     e = ease(t, curve)
     return (start + (end - start) * e, e)
 
 
+def ease_report(t, curve, start, end, outside="error"):
+    """Pure function. Returns (value, eased, info)."""
+    value, e = ease_value(t, curve, start, end, outside)
+    held = ""
+    shown = t
+    if outside == "clamp" and (t < 0.0 or t > 1.0):
+        held = " (t %g was outside 0..1 and was held at the edge)" % t
+        shown = min(max(t, 0.0), 1.0)
+    return value, e, "%s at t=%g: eased %.4g, value %.6g (from %g to %g)%s" % (curve, shown, e, value, start, end, held)
+
+
 class SYEaseCurve:
-    DESCRIPTION = "Turns a position from 0 to 1 into a smooth curve value, then scales it between a start and an end number."
+    DESCRIPTION = "Turns a position from 0 to 1 into a smooth curve value, then scales it between a start and an end number. When t comes from another node and may run past 0 to 1, choose clamp. An info line tells what happened."
     CATEGORY = category("Values")
     FUNCTION = "run"
-    RETURN_TYPES = ("FLOAT", "FLOAT")
-    RETURN_NAMES = ("value", "eased")
+    RETURN_TYPES = ("FLOAT", "FLOAT", "STRING")
+    RETURN_NAMES = ("value", "eased", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -54,11 +72,14 @@ class SYEaseCurve:
                 "curve": (list(CURVES), {"default": "smoothstep", "tooltip": "The shape of the movement. in starts slow, out ends slow, in_out does both."}),
                 "start": ("FLOAT", {"default": 0.0, "min": -1e9, "max": 1e9, "step": 0.01, "tooltip": "The result when t is 0."}),
                 "end": ("FLOAT", {"default": 1.0, "min": -1e9, "max": 1e9, "step": 0.01, "tooltip": "The result when t is 1."}),
-            }
+            },
+            "optional": {
+                "outside_range": (list(OUTSIDE), {"default": "error", "tooltip": "What to do when t comes in below 0 or above 1. clamp holds it at the edge."}),
+            },
         }
 
-    def run(self, t, curve, start, end):
-        return ease_value(t, curve, start, end)
+    def run(self, t, curve, start, end, outside_range="error"):
+        return ease_report(t, curve, start, end, outside_range)
 
 
 NODE_CLASS_MAPPINGS = {}

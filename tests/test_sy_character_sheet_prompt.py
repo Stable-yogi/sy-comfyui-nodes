@@ -37,4 +37,17 @@ def run():
     assert _raises("x", d, "blue", "grid")
     assert _raises("x", d, "none", "circle")
     assert m.SYCharacterSheetPrompt().run("x", True, False, False, False, False, False, "none", "grid")[0].count("front view") == 1
-    return 19  # checks
+    assert "neutral pose" in f("x", d, "none", "grid", "neutral standing")
+    assert "T-pose, arms straight out" in f("x", d, "none", "grid", "T-pose")
+    assert f("x", d, "none", "grid", "any") == f("x", d, "none", "grid")
+    assert f("x", d, "none", "grid", "any", "  flat   colours ").endswith("Keep the same face, the same hair and the same outfit in every view. flat colours.")
+    assert f("x", d, "none", "grid", "any", "Clean lines!").endswith("Clean lines!")
+    assert _raises("x", d, "none", "grid", "sitting")
+    assert m.sheet_info(d, "plain_white", "row") == "3 views (front view, side view, back view), row, background plain_white. Try a wide canvas, about 3:1."
+    assert m.sheet_info({"front": True}, "none", "grid", "A-pose") == "1 view (front view), grid, background none, pose A-pose. Try a normal canvas."
+    assert "square" in m.sheet_info(d, "none", "grid")
+    assert m.sheet_info({}, "none", "grid") == "No view is chosen."
+    out = m.SYCharacterSheetPrompt().run("x", True, True, False, False, False, False, "none", "grid", "A-pose")
+    assert "A-pose" in out[0] and out[1].startswith("2 views")
+    assert m.SYCharacterSheetPrompt.RETURN_NAMES == ("prompt", "info")
+    return 31  # checks

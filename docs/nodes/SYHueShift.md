@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_hue_shift.py`
 
-**What it does:** Rotates all colours around the colour wheel. Greys stay grey.
+**What it does:** Rotates all colours around the colour wheel. Greys stay grey and transparency is kept. Add a mask to recolour only one area, for example a dress.
 
 ## Inputs
 
@@ -11,5 +11,6 @@ Source: `nodes/sy_hue_shift.py`
 | image | IMAGE | yes | The picture or batch of pictures to recolour. | picture batch [B,H,W,3] |
 | degrees | FLOAT | yes | How far to turn the colours. 180 swaps each colour for roughly its opposite. | -180.0 to 180.0, step 1.0, default 0.0 |
 | strength | FLOAT | yes | How much of the shifted colour to use. 0 keeps the original. | 0.0 to 1.0, step 0.01, default 1.0 |
+| mask | MASK | no | Optional. Change only where this mask is white. A different size is stretched to fit. | mask [B,H,W] |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `STRING`

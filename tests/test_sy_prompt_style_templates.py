@@ -27,4 +27,22 @@ def run():
         except ValueError:
             n += 1
     assert m.SYPromptStyleTemplates().run("fox", "cinematic")[0].startswith("cinematic still of"); n += 1
+    return n + _extra()
+
+
+def _extra():
+    n = 0
+    pos, neg = m.apply_style("a fox, Sharp Focus", "photo", "lowres", True)
+    assert pos == "photo of, a fox, Sharp Focus, natural light, realistic skin texture, 35mm"; n += 1
+    assert neg == "cartoon, painting, illustration, blurry, lowres"; n += 1
+    pos, neg = m.apply_style("a fox, sharp focus", "photo", "lowres", False)
+    assert pos.count("sharp focus") == 2 and neg.count("lowres") == 2; n += 1
+    pos, neg, info = m.apply_style_info("fox", "photo")
+    assert (pos, neg) == m.apply_style("fox", "photo") and info.startswith("Style photo: added"); n += 1
+    assert "left out 2" in m.apply_style_info("sharp focus, lowres", "photo", "lowres", True)[2]; n += 1
+    assert "WARNING" in m.apply_style_info("  ", "anime")[2]; n += 1
+    assert "left as it is" in m.apply_style_info("x", "none")[2]; n += 1
+    out = m.SYPromptStyleTemplates().run("fox", "anime", "bad", False)
+    assert len(out) == 3 and out[0].startswith("anime illustration of") and out[1].endswith(", bad"); n += 1
+    assert m.SYPromptStyleTemplates.RETURN_NAMES == ("positive", "negative", "info"); n += 1
     return n

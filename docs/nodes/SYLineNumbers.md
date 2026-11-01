@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_line_numbers.py`
 
-**What it does:** Puts a number in front of every line of a text. Can skip empty lines and pad the numbers with zeros.
+**What it does:** Puts a number in front of every line of a text. Can skip empty lines and pad the numbers with zeros. The other mode takes numbers off a numbered list again. An info line says what was done.
 
 ## Inputs
 
@@ -13,5 +13,6 @@ Source: `nodes/sy_line_numbers.py`
 | separator | STRING | yes | Text placed between the number and the line. | default '. ' |
 | pad_zeros | BOOLEAN | yes | On: fill numbers with leading zeros so they all have the same width. | default False |
 | skip_empty | BOOLEAN | yes | On: empty lines get no number and are not counted. | default False |
+| mode | COMBO | no | add numbers: number the lines. remove numbers: take the numbers off a list like 1. a / 2. b. | one of: add numbers, remove numbers |
 
-Outputs: `STRING`, `INT`
+Outputs: `STRING`, `INT`, `STRING`

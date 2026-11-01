@@ -36,4 +36,15 @@ def run():
     assert all(0.0 <= v <= 1.0 for v in r); n += 1
     assert raises(m.adjust_pixel, px, 0, 1, 1, 0); n += 1
     assert raises(m.adjust_pixel, px, 0, -1, 1, 1); n += 1
+    r = m.adjust_pixel([0.25, 0.5, 0.75], 0.0, 1.0, 1.0, 1.0, 0.25, 0.75)
+    assert near(r[0], 0.0) and near(r[1], 0.5) and near(r[2], 1.0); n += 1
+    r = m.adjust_pixel([0.1, 0.9, 0.5], 0.0, 1.0, 1.0, 1.0, 0.2, 0.8)
+    assert near(r[0], 0.0) and near(r[1], 1.0) and near(r[2], 0.5); n += 1
+    assert raises(m.adjust_pixel, px, 0, 1, 1, 1, 0.8, 0.2) and raises(m.adjust_pixel, px, 0, 1, 1, 1, 0.5, 0.5); n += 1
+    assert raises(m.adjust_pixel, px, 0, 1, 1, 1, -0.1, 1.0) and raises(m.adjust_pixel, px, 0, 1, 1, 1, 0.0, 1.5); n += 1
+    assert "not changed" in m.levels_info(0.0, 1.0, 1.0, 1.0, 0.0, 1.0); n += 1
+    t = m.levels_info(0.1, 1.2, 1.0, 0.8, 0.05, 0.95, "only inside the mask")
+    assert "black point 0.05" in t and "gamma 0.8" in t and "contrast 1.2" in t and "brightness +0.1" in t and "saturation" not in t and "only inside" in t; n += 1
+    assert m.SYLevelsAdjust.RETURN_NAMES == ("image", "info"); n += 1
+    assert list(m.SYLevelsAdjust.INPUT_TYPES()["optional"]) == ["black_point", "white_point", "mask"]; n += 1
     return n

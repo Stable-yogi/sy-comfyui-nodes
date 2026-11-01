@@ -46,4 +46,7 @@ def run():
     assert near(m.luma709(1, 1, 1), 1.0); n += 1
     assert m.DEFAULT_SHADOW == "#1b1b2f" and m.DEFAULT_HIGHLIGHT == "#f5d58a"; n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYDuotone"] == "Duotone SY"; n += 1
+    spec = m.SYDuotone.INPUT_TYPES()
+    assert list(spec["required"]) == ["image", "shadow_colour", "highlight_colour", "strength"]; n += 1
+    assert list(spec["optional"]) == ["mask", "enabled"] and m.SYDuotone.RETURN_NAMES == ("image", "info"); n += 1
     return n

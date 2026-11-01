@@ -28,5 +28,19 @@ def run():
     text = "a dog\n\nsks, a cat\n"
     assert m.apply_to_text(text, "sks", "hq", ", ", True) == "sks, a dog, hq\n\nsks, a cat, hq\n"
     assert m.apply_to_text("a dog\nb", "sks", "", ", ", False) == "sks, a dog\nb"
-    assert m.SYCaptionPrefixSuffix().run("x", "p", "s", ", ", False) == ("p, x, s",)
-    return 21
+    assert m.SYCaptionPrefixSuffix().run("x", "p", "s", ", ", False)[0] == "p, x, s"
+    # value pass C1: tidy option and info line
+    assert m.tidy_caption("a  dog ,, on   grass ,") == "a dog, on grass,"
+    assert m.tidy_caption("  a \n\n b  ") == "a\n\nb"
+    assert m.tidy_caption(None) == ""
+    t, i = m.apply_with_info("a  dog ,, x", "sks", "", ", ", False, True)
+    assert t == "sks, a dog, x" and "prefix added to 1, already there in 0" in i
+    t, i = m.apply_with_info("sks, a dog", "sks", "hq", ", ")
+    assert t == "sks, a dog, hq" and "prefix added to 0, already there in 1" in i and "suffix added to 1" in i
+    t, i = m.apply_with_info("a\n\nsks, b", "sks", "", ", ", True)
+    assert t == "sks, a\n\nsks, b" and i.startswith("2 captions:") and "prefix added to 1, already there in 1" in i
+    assert m.apply_with_info("x", "", "", ", ")[1] == "Nothing to add: prefix and suffix are both empty."
+    assert m.apply_with_info("a hq", "", "hq", ", ")[1].endswith("suffix added to 0, already there in 1.")
+    assert m.SYCaptionPrefixSuffix().run("x", "p", "s", ", ", False) == ("p, x, s", "1 caption: prefix added to 1, already there in 0; suffix added to 1, already there in 0.")
+    assert m.SYCaptionPrefixSuffix.RETURN_NAMES == ("caption", "info")
+    return 30

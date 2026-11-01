@@ -26,5 +26,19 @@ def run():
         except ValueError:
             pass
     n += 2
-    assert m.SYXYPick.RETURN_TYPES == ("STRING", "STRING", "INT", "INT", "INT"); n += 1
+    assert m.SYXYPick.RETURN_TYPES[:5] == ("STRING", "STRING", "INT", "INT", "INT") and len(m.SYXYPick.RETURN_TYPES) == 7; n += 1
+    assert m.SYXYPick.RETURN_NAMES[5:] == ("label", "is_last"); n += 1
+    assert m.pick_ex(xs, ys, 4) == ("b", "q", 1, 1, 6, "cell 5 of 6: X=b, Y=q", False); n += 1
+    assert m.pick_ex(xs, ys, 5)[6] is True and m.pick_ex(xs, ys, 0)[6] is False; n += 1
+    assert m.pick_ex(xs, "", 1)[5] == "cell 2 of 3: X=b"; n += 1
+    assert m.pick_ex("", "", 0)[5] == "cell 1 of 1" and m.pick_ex("", "", 0)[6] is True; n += 1
+    assert m.pick_ex(xs, ys, 99, False, True)[:5] == ("c", "q", 2, 1, 6); n += 1
+    assert m.pick_ex(xs, ys, 6, True, True)[:2] == ("a", "p"); n += 1
+    try:
+        m.pick_ex(xs, ys, 6)
+        raise SystemExit("must raise")
+    except ValueError:
+        pass
+    n += 1
+    assert set(m.SYXYPick.INPUT_TYPES()["optional"]) == {"clamp_to_last"}; n += 1
     return n

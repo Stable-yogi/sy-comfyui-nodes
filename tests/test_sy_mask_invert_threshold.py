@@ -32,4 +32,24 @@ def run():
     n += 2
     assert raises(m.invert_threshold, a, True, True, 1.5)
     n += 1
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _c("unchanged" in m.invert_info(False, False, 0.5, 10, 100))
+    _c("cut at 0.30" in m.invert_info(False, True, 0.3, 10, 100))
+    _c("then flipped" in m.invert_info(True, True, 0.3, 10, 100))
+    _c("flipped" in m.invert_info(True, False, 0.3, 10, 100) and "cut" not in m.invert_info(True, False, 0.3, 10, 100))
+    _c("all black" in m.invert_info(True, False, 0.5, 0, 100))
+    _c("all white" in m.invert_info(True, False, 0.5, 100, 100))
+    _c("10.0%" in m.invert_info(True, False, 0.5, 10, 100))
+    _c(m.SYMaskInvertThreshold.RETURN_NAMES == ("mask", "info") and len(m.SYMaskInvertThreshold.RETURN_TYPES) == 2)
+    return (n) + _k[0]

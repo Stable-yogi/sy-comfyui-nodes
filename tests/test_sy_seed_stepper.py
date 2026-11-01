@@ -18,6 +18,28 @@ def run():
         except ValueError:
             pass
     out = m.SYSeedStepper().run(100, 10, 3, 1, True)
-    assert out == (110, "100, 110, 120")
+    assert out[:2] == (110, "100, 110, 120")
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYSeedStepper"] == "Seed Stepper SY"
-    return 9
+    return 9 + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.used_index(4, 1) == 1)
+    n += ok(m.used_index(4, 6) == 2)
+    n += ok('outside the list' in rs(m.used_index, 4, 6, False))
+    n += ok(rs(m.used_index, 0, 0) is not None)
+    n += ok(m.SYSeedStepper().run(100, 10, 3, 4, True)[2] == 1)
+    n += ok('wrapped to 1' in m.SYSeedStepper().run(100, 10, 3, 4, True)[3])
+    n += ok('wrapped' not in m.SYSeedStepper().run(100, 10, 3, 1, True)[3])
+    n += ok(m.SYSeedStepper().run(100, 10, 3, 1, True)[0] == 110)
+    return n

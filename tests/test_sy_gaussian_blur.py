@@ -30,4 +30,11 @@ def run():
     assert spike[5] < 1.0 and spike[4] > 0.0 and near(spike[4], spike[6]); n += 1
     assert near(sum(spike), 1.0, 1e-4); n += 1
     assert raises(m.blur_line, [0.1], -0.5); n += 1
+    assert "left as it is" in m.blur_info(0, 100, 100); n += 1
+    t = m.blur_info(4.0, 512, 256, "only inside the mask")
+    assert "512x256" in t and "radius 4" in t and "only inside the mask" in t and t.endswith("."); n += 1
+    assert "radius is large" in m.blur_info(60.0, 64, 64); n += 1
+    assert "radius is large" not in m.blur_info(2.0, 512, 512); n += 1
+    assert m.SYGaussianBlur.RETURN_NAMES == ("image", "info"); n += 1
+    assert "mask" in m.SYGaussianBlur.INPUT_TYPES()["optional"]; n += 1
     return n

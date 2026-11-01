@@ -45,5 +45,11 @@ def run():
     s = m.summary_text(0.5, 0.25, 10.0, 20.0)
     assert "0.500" in s and "0.250" in s and "10.000" in s and "20.000" in s and "\n" not in s; n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYImageStats"] == "Image Stats SY"; n += 1
-    assert m.SYImageStats.RETURN_NAMES == ("mean", "contrast", "dark_percent", "bright_percent", "summary"); n += 1
+    assert m.SYImageStats.RETURN_NAMES == ("mean", "contrast", "dark_percent", "bright_percent", "summary", "verdict"); n += 1
+    v = m.verdict_text(0.5, 0.2, 5.0, 5.0)
+    assert v == "Looks balanced brightness." ; n += 1
+    assert "quite dark overall" in m.verdict_text(0.1, 0.2, 5.0, 0.0) and "quite bright overall" in m.verdict_text(0.9, 0.2, 0.0, 5.0); n += 1
+    assert "low contrast" in m.verdict_text(0.5, 0.02, 0.0, 0.0) and "very high contrast" in m.verdict_text(0.5, 0.45, 0.0, 0.0); n += 1
+    assert "30% of the pixels are almost black" in m.verdict_text(0.4, 0.3, 30.0, 0.0); n += 1
+    assert "blown out" in m.verdict_text(0.6, 0.3, 0.0, 40.0) and "blown out" not in m.verdict_text(0.6, 0.3, 0.0, 25.0); n += 1
     return n

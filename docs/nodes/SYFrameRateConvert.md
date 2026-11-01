@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_frame_rate_convert.py`
 
-**What it does:** Changes the frame rate of a clip, keeping its length. It drops or repeats the nearest frames, no blending.
+**What it does:** Changes the frame rate of a clip, keeping its length. It drops or repeats the nearest frames, no blending. Also gives the new length in seconds and an info line with how many frames were dropped or repeated.
 
 ## Inputs
 
@@ -12,4 +12,4 @@ Source: `nodes/sy_frame_rate_convert.py`
 | source_fps | FLOAT | yes | The frame rate the clip has now. | 0.1 to 1000.0, step 1.0, default 24.0 |
 | target_fps | FLOAT | yes | The frame rate you want. | 0.1 to 1000.0, step 1.0, default 16.0 |
 
-Outputs: `IMAGE`, `INT`, `FLOAT`
+Outputs: `IMAGE`, `INT`, `FLOAT`, `FLOAT`, `STRING`

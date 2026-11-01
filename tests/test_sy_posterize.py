@@ -37,4 +37,23 @@ def run():
     assert raises(m.quantise, 0.5, 257); n += 1
     assert raises(m.check_levels, 0); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYPosterize"] == "Posterize SY"; n += 1
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _i = m.posterize_info(4)
+    _c("4 levels per colour channel" in _i and "0.00, 0.33, 0.67, 1.00" in _i and "at most 64" in _i and "almost like" not in _i)
+    _c("0.00, 0.50, 1.00" not in m.posterize_info(2) and "0.00, 1.00" in m.posterize_info(2) and "at most 8 " in m.posterize_info(2))
+    _c("..." in m.posterize_info(16) and "1.00" in m.posterize_info(16))
+    _c("almost like" in m.posterize_info(256))
+    _r(m.posterize_info, 1)
+    _c(m.SYPosterize.RETURN_NAMES == ("image", "info"))
+    return (n) + _k[0]

@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_note.py`
 
-**What it does:** A note card for your workflow. Pick a style and the card gets a colour. The text can also go out as a prompt.
+**What it does:** A note card for your workflow. Pick a style and the card gets a colour. The text can also go out as a prompt, with the style in front if you like, and an info line counts the words.
 
 ## Inputs
 
@@ -10,5 +10,7 @@ Source: `nodes/sy_note.py`
 |---|---|---|---|---|
 | text | STRING | yes | Write your note here. Plain text. | default '', multiline |
 | style | COMBO | yes | Info is blue, tip is green, warning is red, step is gold, model is purple. | one of: info, tip, warning, step, model |
+| add_style_label | BOOLEAN | no | On puts the style in front of the sent text, for example WARNING: check the seed. | default False |
+| trim | BOOLEAN | no | On cuts spaces and blank lines from the start and end of the sent text. | default False |
 
-Outputs: `STRING`
+Outputs: `STRING`, `STRING`

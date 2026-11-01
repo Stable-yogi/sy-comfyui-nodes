@@ -45,4 +45,28 @@ def run():
     n += 2
     assert raises(m.mask_to_box, k, -1, 0.5, "error") and raises(m.mask_to_box, k, 0, 0.5, "bogus")
     n += 1
-    return n
+    _k = [0]
+    def _c(cond, msg="d3 check failed"):
+        _k[0] += 1
+        if not cond:
+            raise AssertionError(msg)
+    def _r(fn, *a):
+        _k[0] += 1
+        try:
+            fn(*a)
+        except ValueError as e:
+            return str(e)
+        raise AssertionError("expected ValueError for %r" % (a,))
+    _k0 = (3, 2, 3, 3)
+    _c(m.finish_box(_k0, 0, "error", 10, 8) == (3, 2, 3, 3, False))
+    b = m.finish_box(_k0, 0, "error", 40, 40, 8)
+    _c(b[2] % 8 == 0 and b[3] % 8 == 0 and b[4] is False)
+    _c(b[0] >= 0 and b[1] >= 0 and b[0] + b[2] <= 40 and b[1] + b[3] <= 40)
+    _c(m.finish_box(None, 0, "whole_image", 10, 8, 8) == (0, 0, 10, 8, True))
+    _c("empty" in _r(m.finish_box, None, 0, "error", 10, 8))
+    _c("multiple_of" in _r(m.finish_box, _k0, 0, "error", 10, 8, 0))
+    _c("whole 10x8 image" in m.box_info(0, 0, 10, 8, 10, 8, True))
+    _c("x=3, y=2, size 3x3" in m.box_info(3, 2, 3, 3, 10, 8, False) and "padding" not in m.box_info(3, 2, 3, 3, 10, 8, False))
+    _c("padding 2" in m.box_info(3, 2, 3, 3, 10, 8, False, 2) and "multiple of 8" in m.box_info(3, 2, 3, 3, 10, 8, False, 0, 8))
+    _c(m.SYMaskToBox.RETURN_NAMES[:4] == ("x", "y", "width", "height") and m.SYMaskToBox.RETURN_NAMES[4] == "info" and len(m.SYMaskToBox.RETURN_TYPES) == 5)
+    return (n) + _k[0]

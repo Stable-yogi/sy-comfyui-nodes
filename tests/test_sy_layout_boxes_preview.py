@@ -37,5 +37,35 @@ def run():
     assert "empty" in bad("")
     assert "not an object" in bad("[3]")
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYLayoutBoxesPreview"] == "Layout Boxes Preview SY"
-    assert m.SYLayoutBoxesPreview.RETURN_TYPES == ("IMAGE",)
-    return 20
+    # new: numbered plan, skipped boxes, info, tint and numbers
+    two = json.dumps([dict(b, label="in"), dict(b, x=500, label="out"), dict(b, x=50, label="in2")])
+    plan, skipped = m.plan_numbered(two, 100, 100)
+    assert skipped == [2] and [p[3] for p in plan] == [1, 3] and [p[2] for p in plan] == ["in", "in2"]
+    assert m.plan_boxes(two, 100, 100) == [p[:3] for p in plan]       # old function gives the same without numbers
+    assert m.preview_info(2, [2], 100, 80) == "Drew 2 boxes on 100x80. Not drawn because they are fully outside the picture: box 2."
+    assert m.preview_info(1, [], 64, 64) == "Drew 1 box on 64x64."
+    assert m.preview_info(0, [1, 4], 8, 8).endswith("box 1, 4.")
+    try:
+        from PIL import Image
+    except ImportError:
+        Image = None
+    if Image is not None:
+        def px(img, xy):
+            return img.getpixel(xy)
+        base = (40, 40, 44)
+        pl = m.plan_boxes(json.dumps([dict(b, colour="blue")]), 100, 100)
+        flat = m.draw_plan(Image.new("RGB", (100, 100), base), pl, 1, False)
+        assert px(flat, (25, 40)) == base                                # inside stays untouched by default
+        assert px(flat, (10, 40)) == COLOUR_RGB["blue"]                  # outline drawn
+        tint = m.draw_plan(Image.new("RGB", (100, 100), base), pl, 1, False, 0.5)
+        assert px(tint, (25, 40)) != base and px(tint, (5, 5)) == base   # tinted inside only
+        solid = m.draw_plan(Image.new("RGB", (100, 100), base), pl, 1, False, 1.0)
+        assert px(solid, (25, 40)) == COLOUR_RGB["blue"]
+        withnum = m.draw_plan(Image.new("RGB", (200, 200), base), m.plan_numbered(json.dumps([dict(b, y=60)]), 200, 200)[0], 1, False, 0.0, True)
+        assert withnum.getbbox() is not None and px(withnum, (10, 80)) == COLOUR_RGB["red"]
+        n_after = sum(1 for xy in [(x, y) for x in range(10, 40) for y in range(45, 60)] if px(withnum, xy) != base)
+        assert n_after > 0                                               # number label painted above the box
+    opt = m.SYLayoutBoxesPreview.INPUT_TYPES()["optional"]
+    assert list(opt)[0] == "image" and "fill_opacity" in opt and "show_numbers" in opt
+    assert m.SYLayoutBoxesPreview.RETURN_TYPES == ("IMAGE", "STRING") and len(m.SYLayoutBoxesPreview.RETURN_NAMES) == 2
+    return 36

@@ -1,6 +1,6 @@
 # SY Nodes for ComfyUI
 
-250 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
+271 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
 They load models, set sizes and seeds, switch parts of a graph on and off, edit masks and pictures, work with text,
 and save results. Our workflows use them, so one install of this pack gives you the nodes the workflows need.
 
@@ -36,12 +36,12 @@ Replace the folder with the new one and restart ComfyUI. Saved workflows keep wo
 
 | Group | Nodes | What is in it |
 |---|---|---|
-| SY/Text | 60 | Prompt and caption helpers, text join, find and replace, JSON, chat prompt builders |
-| SY/Image | 71 | Picture tools, masks, crop and paste, compare, grids, loaders and save steps |
+| SY/Text | 62 | Prompt and caption helpers, text join, find and replace, JSON, chat prompt builders |
+| SY/Image | 83 | Picture tools, masks, crop and paste, compare, grids, loaders and save steps |
 | SY/Resize | 11 | Sizes, aspect ratios, video sizes, H3 latent upscaler |
 | SY/Values | 27 | Seed, numbers, switches, lists |
 | SY/Logic | 10 | Switch, pick by number, compare, gate |
-| SY/Utility | 59 | Model and LoRA loaders, batch and video helpers, timers, memory tools, H3 bundle save and load |
+| SY/Utility | 64 | Model and LoRA loaders, batch and video helpers, timers, memory tools, H3 bundle save and load |
 | SY/Editors | 10 | Mask editor, 3D scene, XY grids, paint |
 | SY/Notes | 2 | Workflow header and notes |
 

@@ -32,12 +32,33 @@ def summary_text(mean, std, dark_pct, bright_pct):
     return "average brightness %.3f, contrast %.3f, dark pixels %.3f percent, bright pixels %.3f percent" % (mean, std, dark_pct, bright_pct)
 
 
+def verdict_text(mean, std, dark_pct, bright_pct):
+    """Pure function. Plain words about the picture: too dark, too bright, flat, clipped. Rules of thumb, not law."""
+    notes = []
+    if mean < 0.25:
+        notes.append("quite dark overall")
+    elif mean > 0.75:
+        notes.append("quite bright overall")
+    else:
+        notes.append("balanced brightness")
+    if std < 0.08:
+        notes.append("low contrast (flat look)")
+    elif std > 0.35:
+        notes.append("very high contrast")
+    if dark_pct > 25.0:
+        notes.append("%.0f%% of the pixels are almost black: shadow detail may be lost" % dark_pct)
+    if bright_pct > 25.0:
+        notes.append("%.0f%% of the pixels are almost white: highlights may be blown out" % bright_pct)
+    return "Looks " + "; ".join(notes) + "."
+
+
 class SYImageStats:
-    DESCRIPTION = "Measures a picture: average brightness, contrast, and how many pixels are very dark or very bright."
+    DESCRIPTION = ("Measures a picture: average brightness, contrast, and how many pixels are very dark or very bright. "
+                   "The verdict says in plain words if it looks dark, bright, flat or clipped.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("FLOAT", "FLOAT", "FLOAT", "FLOAT", "STRING")
-    RETURN_NAMES = ("mean", "contrast", "dark_percent", "bright_percent", "summary")
+    RETURN_TYPES = ("FLOAT", "FLOAT", "FLOAT", "FLOAT", "STRING", "STRING")
+    RETURN_NAMES = ("mean", "contrast", "dark_percent", "bright_percent", "summary", "verdict")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -57,12 +78,15 @@ class SYImageStats:
         if image.numel() == 0:
             raise ValueError("there are no pixels to measure")
         rgb = image[..., :3].to(torch.float32)
-        luma = 0.2126 * rgb[..., 0] + 0.7152 * rgb[..., 1] + 0.0722 * rgb[..., 2]
+        if rgb.shape[-1] >= 3:
+            luma = 0.2126 * rgb[..., 0] + 0.7152 * rgb[..., 1] + 0.0722 * rgb[..., 2]
+        else:  # a grey picture: its first channel is the brightness
+            luma = rgb[..., 0]
         mean = float(luma.mean())
         std = float(luma.std(unbiased=False))
         dark = 100.0 * float((luma < dark_level).float().mean())
         bright = 100.0 * float((luma > bright_level).float().mean())
-        return (mean, std, dark, bright, summary_text(mean, std, dark, bright))
+        return (mean, std, dark, bright, summary_text(mean, std, dark, bright), verdict_text(mean, std, dark, bright))
 
 
 NODE_CLASS_MAPPINGS = {}

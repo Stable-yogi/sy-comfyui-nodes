@@ -1,4 +1,6 @@
 """Caption Prefix Suffix SY: adds a trigger word before and/or after a caption, unless it is already there."""
+import re
+
 try:
     from ._sy_common import category, register
 except ImportError:  # run as a plain file by the selftest
@@ -56,12 +58,58 @@ def apply_to_text(text, prefix, suffix, separator=", ", per_line=False):
     return "\n".join(out)
 
 
+def tidy_caption(text):
+    """Pure function. Trims every line, squeezes repeated spaces, removes a space before a comma and doubled commas."""
+    out = []
+    for line in (text or "").replace("\r\n", "\n").split("\n"):
+        line = re.sub(r"[ \t]+", " ", line)
+        line = re.sub(r"\s+,", ",", line)
+        line = re.sub(r",(?:\s*,)+", ",", line)
+        out.append(line.strip())
+    return "\n".join(out)
+
+
+def apply_with_info(text, prefix, suffix, separator=", ", per_line=False, tidy=False):
+    """Pure function. Returns (new_text, info). info says how many captions got the prefix or suffix and how many already had it."""
+    text = text or ""
+    if tidy:
+        text = tidy_caption(text)
+    cp, cs = _clean_tag(prefix), _clean_tag(suffix)
+    bodies = [l for l in text.split("\n") if l.strip()] if per_line else [text]
+    added_p = added_s = had_p = had_s = 0
+    for b in bodies:
+        b = b.strip()
+        if cp:
+            if starts_with_tag(b, cp):
+                had_p += 1
+            else:
+                added_p += 1
+        if cs:
+            after = add_prefix_suffix(b, cp, "", separator) if cp else b
+            if ends_with_tag(after, cs):
+                had_s += 1
+            else:
+                added_s += 1
+    new = apply_to_text(text, prefix, suffix, separator, per_line)
+    if not cp and not cs:
+        return new, "Nothing to add: prefix and suffix are both empty."
+    parts = []
+    if cp:
+        parts.append("prefix added to %d, already there in %d" % (added_p, had_p))
+    if cs:
+        parts.append("suffix added to %d, already there in %d" % (added_s, had_s))
+    unit = "caption" if len(bodies) == 1 else "captions"
+    return new, "%d %s: %s." % (len(bodies), unit, "; ".join(parts))
+
+
 class SYCaptionPrefixSuffix:
-    DESCRIPTION = "Adds a trigger word before and/or after a caption. Skips it when the caption already starts or ends with it."
+    DESCRIPTION = ("Adds a trigger word before and/or after a caption, one caption or one per line. Skips it when the caption "
+                   "already starts or ends with it (any capital letters). Can also tidy stray spaces and commas, and an info "
+                   "line says how many captions were changed.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("caption",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("caption", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -72,11 +120,14 @@ class SYCaptionPrefixSuffix:
                 "suffix": ("STRING", {"default": "", "tooltip": "Trigger word or phrase to put last. Leave empty for none."}),
                 "separator": ("STRING", {"default": ", ", "tooltip": "Text placed between the trigger word and the caption."}),
                 "per_line": ("BOOLEAN", {"default": False, "tooltip": "On: treat every line as its own caption. Off: the whole text is one caption."}),
-            }
+            },
+            "optional": {
+                "tidy": ("BOOLEAN", {"default": False, "tooltip": "On: first squeeze double spaces, spaces before commas and doubled commas."}),
+            },
         }
 
-    def run(self, caption, prefix, suffix, separator, per_line):
-        return (apply_to_text(caption, prefix, suffix, separator, per_line),)
+    def run(self, caption, prefix, suffix, separator, per_line, tidy=False):
+        return apply_with_info(caption, prefix, suffix, separator, per_line, tidy)
 
 
 NODE_CLASS_MAPPINGS = {}

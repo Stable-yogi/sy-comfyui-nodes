@@ -37,5 +37,19 @@ def run():
         raise SystemExit("too long input must raise")
     except ValueError:
         n += 1
-    eq(m.SYPromptEmphasisStrip.RETURN_TYPES, ("STRING",))
+    eq(m.SYPromptEmphasisStrip.RETURN_TYPES, ("STRING", "STRING"))
+    eq(s("a embedding:easynegative, b"), "a embedding:easynegative, b")
+    eq(s("a embedding:easynegative, b", remove_embeddings=True), "a, b")
+    eq(s("(embedding:bad-hands:1.2), x", remove_embeddings=True), "x")
+    eq(s("myembedding:x", remove_embeddings=True), "myembedding:x")
+    eq(m.strip_emphasis_ex("a (red:1.2) ((b)) [c]")[0], "a red b c")
+    eq(m.strip_emphasis_ex("a (red:1.2) ((b)) [c]")[1], {"weights": 1, "brackets": 6, "lora": 0, "break": 0, "embeddings": 0})
+    eq(m.strip_emphasis_ex("x <lora:a:1> BREAK embedding:e", True, True, True)[1], {"weights": 0, "brackets": 0, "lora": 1, "break": 1, "embeddings": 1})
+    eq(m.strip_emphasis_ex("\\(a\\)")[1]["brackets"], 0)
+    eq(m.strip_info({"weights": 1, "brackets": 6}), "Removed 1 weight, 6 brackets.")
+    eq(m.strip_info({"lora": 2, "break": 1, "embeddings": 1}), "Removed 2 LoRA tags, 1 BREAK word, 1 embedding.")
+    eq(m.strip_info({}), "Nothing to strip.")
+    eq(m.SYPromptEmphasisStrip().run("a (b:1.1)"), ("a b", "Removed 1 weight."))
+    eq(m.SYPromptEmphasisStrip().run("plain"), ("plain", "Nothing to strip."))
+    eq(m.SYPromptEmphasisStrip.RETURN_NAMES, ("text", "info"))
     return n

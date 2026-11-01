@@ -41,5 +41,29 @@ def run():
     assert raises(100, 100, 0, 32); n += 1
     assert raises(100, 100, 1.0, 0); n += 1
     assert raises(100, 100, 0.0005, 64); n += 1  # budget below one block
-    assert m.SYVideoSizeFit().run(1920, 1080, 0.9, 32) == f(1920, 1080, 0.9, 32); n += 1
+    assert m.SYVideoSizeFit().run(1920, 1080, 0.9, 32)[:2] == f(1920, 1080, 0.9, 32); n += 1
+    return n + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok(m.fit_size(1920, 1080, 0.9, 32, 0) == m.fit_size(1920, 1080, 0.9, 32))
+    n += ok(max(m.fit_size(1920, 1080, 10.0, 32, 1280)) <= 1280)
+    n += ok((lambda s: s[0] % 32 == 0 and s[1] % 32 == 0)(m.fit_size(1920, 1080, 10.0, 32, 1000)))
+    n += ok(m.fit_size(640, 360, 10.0, 32, 4000) == m.fit_size(640, 360, 10.0, 32))
+    n += ok('smaller than multiple_of' in rs(m.fit_size, 640, 360, 1.0, 64, 32))
+    n += ok(rs(m.fit_size, 640, 360, 1.0, 32, -1) is not None)
+    n += ok('already fits' in m.fit_report(640, 352, 1.0, 32)[2])
+    n += ok(m.fit_report(1920, 1080, 0.9, 32)[2].startswith('1920x1080 -> '))
+    n += ok('longest side max 1280' in m.fit_report(1920, 1080, 10.0, 32, 1280)[2])
+    n += ok(m.SYVideoSizeFit().run(1920, 1080, 0.9, 32)[:2] == m.fit_size(1920, 1080, 0.9, 32))
     return n

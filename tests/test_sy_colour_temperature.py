@@ -43,4 +43,7 @@ def run():
     assert msg and "tint" in msg; n += 1
     assert raises(m.temperature_gains, -100.5, 0); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYColourTemperature"] == "Colour Temperature SY"; n += 1
+    spec = m.SYColourTemperature.INPUT_TYPES()
+    assert list(spec["required"]) == ["image", "warmth", "tint"] and list(spec["optional"]) == ["mask", "mix", "enabled"]; n += 1
+    assert m.SYColourTemperature.RETURN_NAMES == ("image", "info"); n += 1
     return n

@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_lora_loader_stack.py`
 
-**What it does:** Applies up to 4 LoRAs to the model and clip. Slots on None or with strength 0 are skipped.
+**What it does:** Applies up to 4 LoRAs to the model and clip. Slots on None or with strength 0 are skipped. Adds: a bypass switch (compare with and without LoRAs without rewiring), a clip_scale (0 = change only the model), trigger words or common training tags read from the LoRA files, and a warning for a LoRA used twice.
 
 ## Inputs
 
@@ -18,5 +18,7 @@ Source: `nodes/sy_lora_loader_stack.py`
 | strength_3 | FLOAT | yes | Strength for slot 3, used for model and clip. 0 skips it. | -20.0 to 20.0, step 0.05, default 1.0 |
 | lora_4 | COMBO | yes | LoRA for slot 4. Leave on None to skip it. | one of: None, test_lora.safetensors |
 | strength_4 | FLOAT | yes | Strength for slot 4, used for model and clip. 0 skips it. | -20.0 to 20.0, step 0.05, default 1.0 |
+| bypass | BOOLEAN | no | On = pass model and clip on without any LoRA. Handy to compare. | default False |
+| clip_scale | FLOAT | no | Clip strength = strength x this. 1 = same as before, 0 = model only. | 0.0 to 4.0, step 0.05, default 1.0 |
 
-Outputs: `MODEL`, `CLIP`, `STRING`
+Outputs: `MODEL`, `CLIP`, `STRING`, `STRING`, `STRING`

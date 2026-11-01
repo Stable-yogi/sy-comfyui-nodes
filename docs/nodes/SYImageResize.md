@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_image_resize.py`
 
-**What it does:** Changes the size of a picture. Stretch, fit inside the box, fill the box and crop the extra, or pad the gaps with a colour.
+**What it does:** Changes the size of a picture. Stretch, fit inside the box, fill the box and crop the extra, or pad the gaps with a colour. Can refuse to enlarge or shrink, cap the megapixels, and resize a mask with the picture. The info line tells the scale.
 
 ## Inputs
 
@@ -16,5 +16,9 @@ Source: `nodes/sy_image_resize.py`
 | interpolation | COMBO | yes | Smoothing method. Area is good for shrinking, nearest-exact keeps hard pixels. | one of: bilinear, bicubic, area, nearest-exact |
 | pad_color | COMBO | yes | Colour of the bars when the mode is pad. | one of: black, white, grey, red, green, blue |
 | custom_color | STRING | no | Optional own colour as red,green,blue numbers 0 to 255, for example 200,120,40. Empty uses the list. | default '' |
+| scale_limit | COMBO | no | never enlarge / never shrink: leave the picture as it is when the resize would go that way. | one of: any, never enlarge, never shrink |
+| max_megapixels | FLOAT | no | Lower the wanted size until the result is at most this many megapixels. 0 is off. | 0.0 to 268.0, step 0.1, default 0.0 |
+| mask | MASK | no | Optional mask that is resized together with the picture, so the two stay matched. | mask [B,H,W] |
+| pad_area_in_mask | COMBO | no | In pad mode: should the new bars count as masked (1) or not (0) in the mask output. | one of: not masked (0), masked (1) |
 
-Outputs: `IMAGE`, `INT`, `INT`
+Outputs: `IMAGE`, `INT`, `INT`, `MASK`, `STRING`

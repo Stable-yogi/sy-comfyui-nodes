@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_posterize.py`
 
-**What it does:** Reduces each colour channel to a small number of flat levels for a poster or cartoon look.
+**What it does:** Reduces each colour channel to a small number of flat levels for a poster or cartoon look. The info output lists the steps kept and the most colours left.
 
 ## Inputs
 
@@ -11,4 +11,4 @@ Source: `nodes/sy_posterize.py`
 | image | IMAGE | yes | The picture or batch of pictures to flatten into fewer colours. | picture batch [B,H,W,3] |
 | levels | INT | yes | How many brightness steps each colour channel keeps. 2 is the harshest. | 2 to 256, default 4 |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `STRING`

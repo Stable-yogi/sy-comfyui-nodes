@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_image_grid.py`
 
-**What it does:** Lays a batch of pictures out as one contact sheet. Optional captions, one per line, go under each picture.
+**What it does:** Lays a batch of pictures out as one contact sheet. Optional captions, one per line, go under each picture, or number them automatically. Pictures of other sizes can keep their shape. The info line gives the sheet size.
 
 ## Inputs
 
@@ -14,5 +14,7 @@ Source: `nodes/sy_image_grid.py`
 | background | STRING | yes | Sheet colour: black, white, gray, dark_gray, red, green, blue, gold or six hex digits. | default 'black' |
 | labels | STRING | no | One caption per line, in picture order. Leave empty for no captions. | default '', multiline |
 | label_size | INT | no | Caption text height in pixels. | 8 to 96, default 20 |
+| fit | COMBO | no | If a picture has another size than the first: stretch it, or keep its shape inside the cell. | one of: stretch, keep shape |
+| auto_number | BOOLEAN | no | On: when the labels box is empty, caption the pictures 1, 2, 3 ... | default False |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `STRING`

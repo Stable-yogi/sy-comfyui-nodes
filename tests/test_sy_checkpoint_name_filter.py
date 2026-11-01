@@ -24,4 +24,25 @@ def run():
         raise SystemExit("must raise")
     except ValueError:
         n += 1
+    # more value: several words, exclude, index, lists, info
+    c, k, lst, info = m.pick_match(names, "flux dev")
+    assert c == "Flux/flux_dev.safetensors" and k == 1 and lst == c and "1 of 4" in info; n += 1
+    c, k, lst, info = m.pick_match(names, "flux")
+    assert k == 2 and lst == "Flux/flux_dev.safetensors" + chr(10) + "flux_schnell.safetensors"; n += 1
+    assert m.pick_match(names, "flux", index=1)[0] == "flux_schnell.safetensors"; n += 1
+    assert m.pick_match(names, "flux", index=2)[0] == "Flux/flux_dev.safetensors"; n += 1  # wraps
+    assert m.pick_match(names, "flux", exclude="dev")[0] == "flux_schnell.safetensors"; n += 1
+    assert m.pick_match(names, "  KREA   muse ")[0] == "Krea2_Muse.safetensors"; n += 1
+    assert m.pick_match(names, "")[1] == 4; n += 1
+    for bad in ((names, "flux", "flux"), (names, "zzz"), ([], "a")):
+        try:
+            m.pick_match(*bad)
+            raise SystemExit("must raise")
+        except ValueError as e:
+            assert "checkpoint" in str(e)
+        n += 1
+    spec = m.SYCheckpointNameFilter.INPUT_TYPES()
+    assert list(spec["required"]) == ["contains"] and list(spec["optional"]) == ["exclude", "index"]; n += 1
+    assert m.SYCheckpointNameFilter.RETURN_TYPES == ("STRING", "INT", "STRING", "STRING"); n += 1
+    assert m.SYCheckpointNameFilter.RETURN_NAMES[:2] == ("name", "match_count"); n += 1
     return n

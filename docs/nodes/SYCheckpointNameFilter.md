@@ -2,12 +2,14 @@
 
 Source: `nodes/sy_checkpoint_name_filter.py`
 
-**What it does:** Looks through your checkpoint files and returns the name of the first one that contains your text.
+**What it does:** Looks through your checkpoint files and returns the name of the one that contains your words. Adds over a plain search: several words at once ('flux dev'), words to leave out, an index that wraps to step through the matches, the full list of matches and a plain info line.
 
 ## Inputs
 
 | Input | Type | Required | What it does | Range / options |
 |---|---|---|---|---|
-| contains | STRING | yes | Part of the checkpoint name. Capital letters do not matter. | default '' |
+| contains | STRING | yes | Part of the checkpoint name, for example 'flux dev'. Capitals do not matter. | default '' |
+| exclude | STRING | no | Words that must NOT be in the name, for example 'fp8 old'. | default '' |
+| index | INT | no | Which match to use, from 0. A too big number wraps to the start. | 0 to 2147483647, default 0 |
 
-Outputs: `STRING`, `INT`
+Outputs: `STRING`, `INT`, `STRING`, `STRING`

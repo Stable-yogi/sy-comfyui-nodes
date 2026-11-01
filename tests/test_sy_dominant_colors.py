@@ -58,4 +58,13 @@ def run():
     assert raises(m.check_settings, 5, 8); n += 1
     assert raises(m.check_settings, 5, 600); n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYDominantColors"] == "Dominant Colors SY"; n += 1
+    assert m.share_text([50, 30, 20]) == "50%, 30%, 20%"; n += 1
+    assert m.share_text([1, 1, 1]) == "33%, 33%, 33%"; n += 1
+    try:
+        m.share_text([0, 0])
+        raise SystemExit("expected ValueError")
+    except ValueError:
+        n += 1
+    assert m.SYDominantColors.RETURN_NAMES == ("hex_list", "swatches", "shares"); n += 1
+    assert list(m.SYDominantColors.INPUT_TYPES()["optional"]) == ["mask", "picture_number"]; n += 1
     return n

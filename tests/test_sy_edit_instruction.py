@@ -40,5 +40,18 @@ def run():
         n += 1
     assert _raises("dance", "x")
     assert m.SYEditInstruction().run("remove", "car", False)[0] == "Remove the car."
-    assert m.SYEditInstruction.RETURN_TYPES == ("STRING",)
+    assert m.SYEditInstruction.RETURN_TYPES == ("STRING", "STRING")
+    assert f("replace", "the hat", "a cap", False) == "Replace the hat with a cap."; n += 1
+    assert f("remove", "An old car", "", False) == "Remove the old car."; n += 1
+    assert f("remove", "theme park", "", False) == "Remove the theme park."; n += 1
+    assert f("recolour", "shirt", "blue", False, "", "the face and the pose") == "Change the colour of the shirt to blue. Keep the face and the pose exactly the same."; n += 1
+    assert f("remove", "car", "", True, "", " the face. ") == "Remove the car. Keep the face exactly the same. Keep everything else exactly the same."; n += 1
+    assert f("remove", "car", "", True, "", "") == "Remove the car. Keep everything else exactly the same."; n += 1
+    assert m.instruction_notes("remove", "car", "x") == "to_value was ignored: 'remove' does not need it."; n += 1
+    assert m.instruction_notes("replace", "the hat", "cap") == "The word 'the' at the start of target was dropped."; n += 1
+    assert m.instruction_notes("replace", "hat", "cap") == "OK: no warnings."; n += 1
+    assert "70 words long" in m.instruction_notes("remove", "car", "", "word " * 70); n += 1
+    out = m.SYEditInstruction().run("remove", "car", False, "gone", "", "")
+    assert out == ("Remove the car.", "to_value was ignored: 'remove' does not need it."); n += 1
+    assert m.SYEditInstruction.RETURN_NAMES == ("instruction", "notes"); n += 1
     return n + 3  # checks

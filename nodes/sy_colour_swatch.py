@@ -25,12 +25,20 @@ def normalise_colour(rgb):
     return "#%02x%02x%02x" % tuple(rgb)
 
 
+def colour_info(rgb):
+    """Pure function. Returns a plain line: the code, the numbers, and whether black or white text reads best on it."""
+    r, g, b = rgb
+    lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255.0
+    return "%s = rgb(%d, %d, %d), %s colour, %s text reads best" % (
+        normalise_colour(rgb), r, g, b, "light" if lum >= 0.5 else "dark", "black" if lum >= 0.5 else "white")
+
+
 class SYColourSwatch:
-    DESCRIPTION = "Reads a colour code (like d4a537), gives red, green and blue numbers, a clean code and a small colour picture."
+    DESCRIPTION = "Reads a colour code (like d4a537), gives red, green and blue numbers, a clean code, a small colour picture and an info line that says if black or white text reads best on it."
     CATEGORY = category("Values")
     FUNCTION = "run"
-    RETURN_TYPES = ("INT", "INT", "INT", "STRING", "IMAGE")
-    RETURN_NAMES = ("r", "g", "b", "hex", "swatch")
+    RETURN_TYPES = ("INT", "INT", "INT", "STRING", "IMAGE", "STRING")
+    RETURN_NAMES = ("r", "g", "b", "hex", "swatch", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -46,7 +54,7 @@ class SYColourSwatch:
         rgb = parse_colour(colour)
         values = torch.tensor([c / 255.0 for c in rgb], dtype=torch.float32)
         swatch = values.view(1, 1, 1, 3).expand(1, SWATCH_SIZE, SWATCH_SIZE, 3).contiguous()
-        return (rgb[0], rgb[1], rgb[2], normalise_colour(rgb), swatch)
+        return (rgb[0], rgb[1], rgb[2], normalise_colour(rgb), swatch, colour_info(rgb))
 
 
 NODE_CLASS_MAPPINGS = {}

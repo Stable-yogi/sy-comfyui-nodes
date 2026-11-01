@@ -62,5 +62,20 @@ def run():
     assert raises(m.edge_value, "bogus", 0, 0, 1.0, False); n += 1
     # node shape
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYEdgeDetect"] == "Edge Detect SY"; n += 1
-    assert m.SYEdgeDetect.RETURN_TYPES == ("IMAGE", "MASK"); n += 1
+    assert m.SYEdgeDetect.RETURN_TYPES[:2] == ("IMAGE", "MASK") and m.SYEdgeDetect.RETURN_TYPES[2] == "STRING"; n += 1
+    # threshold drops faint edges before the invert; default 0 keeps the old result
+    assert m.edge_value("sobel", 4.0, 0.0, 1.0, False) == m.edge_value("sobel", 4.0, 0.0, 1.0, False, 0.0); n += 1
+    assert m.edge_value("sobel", 0.8, 0.0, 1.0, False, 0.5) == 0.0; n += 1
+    assert abs(m.edge_value("sobel", 4.0, 0.0, 1.0, False, 0.5) - 1.0) < 1e-9; n += 1
+    assert m.edge_value("sobel", 0.8, 0.0, 1.0, True, 0.5) == 1.0; n += 1
+    g = [[0.0, 0.0, 1.0, 1.0] for _ in range(4)]
+    assert m.edge_map(g, "sobel", 1.0, False, 0.0) == m.edge_map(g, "sobel", 1.0, False); n += 1
+    assert max(max(r) for r in m.edge_map(g, "sobel", 0.1, False, 0.9)) == 0.0; n += 1
+    try:
+        m.check_threshold(1.5)
+        raise SystemExit("expected ValueError")
+    except ValueError as e:
+        assert "threshold" in str(e); n += 1
+    assert list(m.SYEdgeDetect.INPUT_TYPES()["optional"]) == ["blur_first", "threshold"]; n += 1
+    assert m.SYEdgeDetect.RETURN_NAMES == ("image", "mask", "info"); n += 1
     return n

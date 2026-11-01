@@ -22,13 +22,36 @@ _VIEW_TEXT = (
 )
 
 
+POSES = ("any", "neutral standing", "A-pose", "T-pose")
+_POSE_TEXT = {
+    "any": "",
+    "neutral standing": "Every figure stands relaxed in a neutral pose.",
+    "A-pose": "Every figure stands in an A-pose, arms slightly away from the body.",
+    "T-pose": "Every figure stands in a T-pose, arms straight out to the sides.",
+}
+
+
 def _join(items):
     if len(items) == 1:
         return items[0]
     return ", ".join(items[:-1]) + " and " + items[-1]
 
 
-def build_character_sheet(character, views, background, layout):
+def sheet_info(views, background, layout, pose="any"):
+    """Pure function. One plain line: how many views, which, and what canvas shape fits."""
+    chosen = [text for key, text in _VIEW_TEXT if views.get(key)]
+    n = len(chosen)
+    if n == 0:
+        return "No view is chosen."
+    if layout == "row":
+        shape = "a wide canvas, about %d:1" % n if n > 1 else "a normal canvas"
+    else:
+        shape = "a roughly square canvas" if n > 1 else "a normal canvas"
+    extra = "" if pose == "any" else ", pose %s" % pose
+    return "%d view%s (%s), %s, background %s%s. Try %s." % (n, "" if n == 1 else "s", ", ".join(chosen), layout, background, extra, shape)
+
+
+def build_character_sheet(character, views, background, layout, pose="any", style_notes=""):
     """Pure function. views is a dict like {"front": True}. Returns the prompt text."""
     c = " ".join(str(character or "").split())
     if not c:
@@ -48,6 +71,13 @@ def build_character_sheet(character, views, background, layout):
     ]
     if _BG_TEXT[background]:
         parts.append(_BG_TEXT[background])
+    if pose not in POSES:
+        raise ValueError("unknown pose %r: choose one of %s" % (pose, ", ".join(POSES)))
+    if _POSE_TEXT[pose]:
+        parts.append(_POSE_TEXT[pose])
+    notes = " ".join(str(style_notes or "").split())
+    if notes:
+        parts.append(notes if notes.endswith((".", "!", "?")) else notes + ".")
     return " ".join(parts)
 
 
@@ -56,11 +86,12 @@ def _flag(default, tip):
 
 
 class SYCharacterSheetPrompt:
-    DESCRIPTION = "Writes a prompt that asks for a character reference sheet with the views you pick, with the same face and outfit in each view."
+    DESCRIPTION = ("Writes a prompt that asks for a character reference sheet with the views you pick, with the same face and outfit in each view. "
+                   "Can also ask for a pose and add style notes, and an info line suggests a canvas shape.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("prompt",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("prompt", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -75,13 +106,18 @@ class SYCharacterSheetPrompt:
                 "full_body": _flag(False, "Include a full-body shot."),
                 "background": (list(BACKGROUNDS), {"default": "plain_white", "tooltip": "The background behind the character."}),
                 "layout": (list(LAYOUTS), {"default": "grid", "tooltip": "Put the views in a grid or in one row."}),
-            }
+            },
+            "optional": {
+                "pose": (list(POSES), {"default": "any", "tooltip": "Ask for one pose in every view. A-pose or T-pose help later 3D work."}),
+                "style_notes": ("STRING", {"default": "", "multiline": True, "tooltip": "Extra wishes, for example: flat colours, clean line art."}),
+            },
         }
 
-    def run(self, character, front, side, back, three_quarter, face_close_up, full_body, background, layout):
+    def run(self, character, front, side, back, three_quarter, face_close_up, full_body, background, layout, pose="any", style_notes=""):
         views = {"front": front, "side": side, "back": back, "three_quarter": three_quarter,
                  "face_close_up": face_close_up, "full_body": full_body}
-        return (build_character_sheet(character, views, background, layout),)
+        return (build_character_sheet(character, views, background, layout, pose, style_notes),
+                sheet_info(views, background, layout, pose))
 
 
 NODE_CLASS_MAPPINGS = {}

@@ -1,8 +1,10 @@
 """Video Size Presets SY: video sizes at 480p, 720p and 1080p in 16:9, 9:16 and 1:1."""
 try:
     from ._sy_common import category, register
+    from ._sy_b_sizeinfo import size_facts
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
+    from _sy_b_sizeinfo import size_facts
 
 RESOLUTIONS = {"480p": 480, "720p": 720, "1080p": 1080}
 ASPECTS = {"16:9": (16, 9), "9:16": (9, 16), "1:1": (1, 1)}
@@ -31,13 +33,18 @@ def video_size(resolution, aspect, multiple):
     return (_round_to(w, multiple), _round_to(h, multiple))
 
 
+def video_report(resolution, aspect, multiple):
+    """Pure function. Returns (width, height, info)."""
+    w, h = video_size(resolution, aspect, multiple)
+    return w, h, "%s %s, multiple of %d: %dx%d (%s)" % (resolution, aspect, int(multiple), w, h, size_facts(w, h))
+
+
 class SYVideoSizePresets:
-    DESCRIPTION = ("Video sizes for models like Wan and LTX. Pick 480p, 720p or 1080p and a shape: "
-                   "wide 16:9, tall 9:16 or square 1:1. Both sides are rounded to 16 or 32.")
+    DESCRIPTION = "Video sizes for models like Wan and LTX. Pick 480p, 720p or 1080p and a shape: wide 16:9, tall 9:16 or square 1:1. Both sides are rounded to 16 or 32. The info line shows the final size and its megapixels, so you can check it against your memory."
     CATEGORY = category("Resize")
     FUNCTION = "run"
-    RETURN_TYPES = ("INT", "INT")
-    RETURN_NAMES = ("width", "height")
+    RETURN_TYPES = ("INT", "INT", "STRING")
+    RETURN_NAMES = ("width", "height", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -50,7 +57,7 @@ class SYVideoSizePresets:
         }
 
     def run(self, resolution, aspect, multiple):
-        return video_size(resolution, aspect, int(multiple))
+        return video_report(resolution, aspect, int(multiple))
 
 
 NODE_CLASS_MAPPINGS = {}

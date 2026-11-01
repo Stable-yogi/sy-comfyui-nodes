@@ -21,4 +21,23 @@ def run():
             pass
     assert m.SWATCH_SIZE == 64
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYColourSwatch"] == "Colour Swatch SY"
-    return 14
+    return 14 + _extra(m)
+
+
+def _extra(m):
+    n = 0
+    def ok(c):
+        assert c
+        return 1
+    def rs(fn, *a, **k):
+        try:
+            fn(*a, **k)
+        except ValueError as e:
+            return str(e)
+        return None
+    n += ok('light colour, black text' in m.colour_info((255, 255, 255)))
+    n += ok('dark colour, white text' in m.colour_info((0, 0, 0)))
+    n += ok(m.colour_info((212, 165, 55)).startswith('#d4a537 = rgb(212, 165, 55)'))
+    n += ok(m.SYColourSwatch.RETURN_TYPES[-1] == 'STRING')
+    n += ok(len(m.SYColourSwatch.RETURN_NAMES) == 6)
+    return n

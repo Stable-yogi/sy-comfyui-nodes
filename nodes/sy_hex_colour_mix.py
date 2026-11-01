@@ -31,12 +31,20 @@ def mix_colours(colour_a, colour_b, amount):
     return _HASH + "%02x%02x%02x" % (r, g, bl), r, g, bl
 
 
+def mix_info(colour_a, colour_b, amount):
+    """Pure function. Returns a plain line: the two clean codes, the amount and the result."""
+    hex_text = mix_colours(colour_a, colour_b, amount)[0]
+    a = "%02x%02x%02x" % parse_colour(colour_a)
+    b = "%02x%02x%02x" % parse_colour(colour_b)
+    return "%s + %s at %g%% = %s" % (a, b, round(float(amount) * 100, 2), hex_text)
+
+
 class SYHexColourMix:
-    DESCRIPTION = "Blends two colours given as hex text. Amount 0 keeps the first colour and 1 gives the second."
+    DESCRIPTION = "Blends two colours given as hex text. Amount 0 keeps the first colour and 1 gives the second. The info line shows the clean codes that were used, so a typo is easy to spot."
     CATEGORY = category("Values")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING", "INT", "INT", "INT")
-    RETURN_NAMES = ("hex", "r", "g", "b")
+    RETURN_TYPES = ("STRING", "INT", "INT", "INT", "STRING")
+    RETURN_NAMES = ("hex", "r", "g", "b", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -49,7 +57,7 @@ class SYHexColourMix:
         }
 
     def run(self, colour_a, colour_b, amount):
-        return mix_colours(colour_a, colour_b, amount)
+        return mix_colours(colour_a, colour_b, amount) + (mix_info(colour_a, colour_b, amount),)
 
 
 NODE_CLASS_MAPPINGS = {}

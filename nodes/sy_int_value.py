@@ -17,19 +17,31 @@ def int_value(value):
     return value, float(value)
 
 
+def int_info(value):
+    """Pure function. Returns (text, info). The info line says which picture-size and video-length rules the number meets."""
+    v, _ = int_value(value)
+    mults = [m for m in (8, 16, 32, 64) if v % m == 0]
+    if mults:
+        mtxt = "multiple of " + ", ".join(str(m) for m in mults)
+    else:
+        mtxt = "not a multiple of 8"
+    four = "4n+1 (fits video frame rule)" if v >= 1 and (v - 1) % 4 == 0 else "not 4n+1"
+    return str(v), "%d: %s, %s, %s" % (v, "even" if v % 2 == 0 else "odd", mtxt, four)
+
+
 class SYIntValue:
-    DESCRIPTION = "A whole number. Type it once and plug it into as many nodes as you like. Also gives the same number as a decimal."
+    DESCRIPTION = "A whole number. Type it once and plug it into as many nodes as you like. Also gives the same number as a decimal, as text, and an info line that tells if it fits size rules (multiple of 8 or 64) and the video frame rule (4n+1)."
     CATEGORY = category("Values")
     FUNCTION = "run"
-    RETURN_TYPES = ("INT", "FLOAT")
-    RETURN_NAMES = ("int", "float")
+    RETURN_TYPES = ("INT", "FLOAT", "STRING", "STRING")
+    RETURN_NAMES = ("int", "float", "text", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
         return {"required": {"value": ("INT", {"default": 0, "min": -LIMIT, "max": LIMIT, "tooltip": "The whole number to send out."})}}
 
     def run(self, value):
-        return int_value(value)
+        return int_value(value) + int_info(value)
 
 
 NODE_CLASS_MAPPINGS = {}

@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_checkerboard.py`
 
-**What it does:** Makes a new picture of two alternating colour squares, handy as a test pattern or background.
+**What it does:** Makes a new picture of two alternating colour squares, handy as a test pattern or background. Also gives a mask of the first-colour squares and an info line.
 
 ## Inputs
 
@@ -15,4 +15,4 @@ Source: `nodes/sy_checkerboard.py`
 | colour_b | STRING | yes | Colour of the other squares, 3 or 6 hex digits like a web colour. | default '#c0c0c0' |
 | batch_size | INT | yes | How many identical pictures to make. | 1 to 64, step 1, default 1 |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `MASK`, `STRING`

@@ -2,7 +2,7 @@
 
 Source: `nodes/sy_layout_boxes_preview.py`
 
-**What it does:** Draws layout boxes and their labels over a picture, or over a blank canvas when no picture is connected.
+**What it does:** Draws layout boxes and their labels over a picture, or over a blank canvas when no picture is connected. Can number the boxes, tint them, and tells you which boxes fell outside the picture.
 
 ## Inputs
 
@@ -14,5 +14,7 @@ Source: `nodes/sy_layout_boxes_preview.py`
 | blank_width | INT | yes | Width of the blank canvas. Used only when no picture is connected. | 8 to 16384, default 1024 |
 | blank_height | INT | yes | Height of the blank canvas. Used only when no picture is connected. | 8 to 16384, default 1024 |
 | image | IMAGE | no | Optional picture to draw on. Leave it out to use a blank canvas. | picture batch [B,H,W,3] |
+| fill_opacity | FLOAT | no | Tint inside each box. 0 is outline only, 0.3 is a light tint, 1 is solid. | 0.0 to 1.0, step 0.05, default 0.0 |
+| show_numbers | BOOLEAN | no | Put the box number (1, 2, 3 ...) before its label, to match the numbers in check reports. | default False |
 
-Outputs: `IMAGE`
+Outputs: `IMAGE`, `STRING`

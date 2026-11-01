@@ -2,9 +2,11 @@
 try:
     from ._sy_common import category, register
     from ._sy_image_ops import need_image
+    from . import _sy_d2_common as d2
 except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
     from _sy_image_ops import need_image
+    import _sy_d2_common as d2
 
 METHODS = ("rec709", "rec601", "average", "lightness")
 
@@ -38,12 +40,21 @@ def grayscale_pixel(rgb, method, strength):
     return tuple(rgb[i] + (g - rgb[i]) * strength for i in range(3))
 
 
+def grey_info(method, strength, note=""):
+    """Pure function. One plain line about what was done."""
+    if strength <= 0.0:
+        return "Strength 0: the colours were kept."
+    word = "fully grey" if strength >= 1.0 else "%d%% grey" % round(strength * 100)
+    return d2.join_info(["Made %s using %s" % (word, method), note]) + "."
+
+
 class SYGrayscale:
-    DESCRIPTION = "Turns a picture into shades of grey. Pick how brightness is measured and how strong the effect is."
+    DESCRIPTION = ("Turns a picture into shades of grey. Pick how brightness is measured and how strong the effect is. "
+                   "Add a mask to keep colour outside it (grey background, coloured subject). Transparency is kept.")
     CATEGORY = category("Image")
     FUNCTION = "run"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "info")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -52,13 +63,17 @@ class SYGrayscale:
                 "image": ("IMAGE", {"tooltip": "The picture or batch of pictures to turn grey."}),
                 "method": (list(METHODS), {"default": "rec709", "tooltip": "How brightness is measured. rec709 matches how the eye sees modern screens; lightness keeps contrast flat."}),
                 "strength": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01, "tooltip": "0 keeps the colours, 1 is fully grey."}),
-            }
+            },
+            "optional": {
+                "mask": ("MASK", {"tooltip": "Optional. Change only where this mask is white. A different size is stretched to fit."}),
+            },
         }
 
-    def run(self, image, method, strength):
+    def run(self, image, method, strength, mask=None):
         import torch
 
         need_image(image)
+        d2.need_rgb(image, "Grayscale")
         check_method(method)
         check_strength(strength)
         rgb = image[..., :3].to(torch.float32)
@@ -74,7 +89,8 @@ class SYGrayscale:
         grey3 = grey.unsqueeze(-1).expand(-1, -1, -1, 3)
         out = image.clone()
         out[..., :3] = (rgb + (grey3 - rgb) * float(strength)).to(image.dtype)
-        return (out,)
+        out, note = d2.t_apply_with_mask(image, out, mask)
+        return (out, grey_info(method, strength, note))
 
 
 NODE_CLASS_MAPPINGS = {}
