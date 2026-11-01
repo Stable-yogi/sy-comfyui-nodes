@@ -10,10 +10,10 @@ except ImportError:  # run as a plain file by the selftest
 
 
 def vault_run(path, action, collection, seed, rating, max_entries, keep_best, pick_rank,
-              prompt="", note="", tags="", now_text=None):
-    """Pure-ish core (takes a path). Returns (best_seed, ranking, count, info). 'show' never writes."""
-    if action not in ("save", "show"):
-        raise ValueError("action must be 'save' or 'show', got %r" % (action,))
+              prompt="", note="", tags="", now_text=None, export_to=None):
+    """Pure-ish core (takes a path). Returns (best_seed, ranking, count, info). 'show' never writes; 'export' writes only the .md file."""
+    if action not in ("save", "show", "export"):
+        raise ValueError("action must be 'save', 'show' or 'export', got %r" % (action,))
     name = H.validate_inputs(collection, seed, rating, max_entries, prompt)
     if not 0 <= int(pick_rank) <= 50:
         raise ValueError("pick_rank must be from 0 to 50, got %s" % (pick_rank,))
@@ -26,7 +26,13 @@ def vault_run(path, action, collection, seed, rating, max_entries, keep_best, pi
     ranked = H.rank_entries(entries, name)
     best = H.seed_at_rank(ranked, pick_rank)
     md = H.ranking_markdown(ranked, name)
-    if action == "save":
+    if action == "export":
+        if now_text is None:
+            now_text = datetime.datetime.now().isoformat(timespec="seconds")
+        target = export_to or H.export_path(name)
+        H.write_export(target, H.export_markdown(ranked, name, now_text))
+        info = "Exported %d entries of '%s' to %s. The vault was not changed." % (len(ranked), name, target)
+    elif action == "save":
         info = "Saved seed %d in '%s' with %d star(s). %d saved in this collection." % (int(seed), name, int(rating), len(ranked))
     else:
         info = "Showing '%s': %d saved. Nothing was written." % (name, len(ranked))
@@ -35,7 +41,7 @@ def vault_run(path, action, collection, seed, rating, max_entries, keep_best, pi
 
 class SYSeedVault:
     DESCRIPTION = ("A notebook for good seeds. Save a seed with a star rating, a note and tags, see the ranked list as "
-                   "Markdown, and hand back the best seed again. Keep it at the end of a workflow.")
+                   "Markdown, hand back the best seed again, and export the ranking to a Markdown file. Keep it at the end of a workflow.")
     CATEGORY = category("Utility")
     FUNCTION = "run"
     OUTPUT_NODE = True
@@ -46,7 +52,7 @@ class SYSeedVault:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "action": (["save", "show"], {"default": "save", "tooltip": "Save adds or updates this seed. Show only reads the vault."}),
+                "action": (["save", "show", "export"], {"default": "save", "tooltip": "Save adds or updates this seed. Show only reads. Export writes the ranking to a .md file in output/sy_seed_vault."}),
                 "collection": ("STRING", {"default": "my seeds", "multiline": False, "tooltip": "Name of the group this seed belongs to, for example a look or a motion."}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": H.MAX_SEED, "tooltip": "The seed to keep."}),
                 "rating": ("INT", {"default": 3, "min": 0, "max": 5, "tooltip": "Stars from 0 to 5. Higher stars rank first."}),

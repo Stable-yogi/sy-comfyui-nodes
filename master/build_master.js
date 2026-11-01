@@ -139,7 +139,7 @@
     for (const [k, v] of Object.entries(vals)) { const w = n.widgets.find((x) => x.name === k); if (w) w.value = v; else log.noInput.push(cls + "." + k + " (no box)"); }
   }
   const WIRE = [["SYPasteBack", "crop", "SYCropByMask", 0], ["SYPasteBack", "crop_info", "SYCropByMask", 2],
-    ["SYLayoutBoxesMerge", "boxes_1", "SYLayoutBox", 0], ["SYLayoutBoxesMerge", "boxes_2", "SYLayoutBox", 0], ["SYLayoutBoxesPreview", "layout_boxes", "SYLayoutBox", 0]];
+    ["SYLayoutBoxesMerge", "boxes_1", "SYLayoutBox", 0], ["SYLayoutBoxesMerge", "boxes_2", "SYLayoutBox", 0], ["SYLayoutBoxesPreview", "layout_boxes", "SYLayoutBox", 0], ["SYLtxLatentBridge", "vae", "SYVAELoader", 0]];
   for (const [to, input, from, slot] of WIRE) {
     const d = byType[to], s = byType[from]; if (!d || !s) { log.noInput.push(to + "." + input); continue; }
     const k = d.inputs.findIndex((i) => i.name === input);

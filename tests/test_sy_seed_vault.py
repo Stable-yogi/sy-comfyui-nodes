@@ -133,8 +133,48 @@ def run():
         assert open(p, encoding="utf-8").read() == "oops"
         n += 2
         assert _raises(m.vault_run, p, "bogus", "looks", 1, 1, 500, True, 0)
+        n += 0
         assert _raises(m.vault_run, p, "show", "looks", 1, 1, 500, True, 51)
         n += 2
+    # export and table view
+    assert h.export_filename("My Looks!") == "my_looks.md" and h.export_filename("../../x") == "x.md"
+    assert h.export_filename("   ") == "seeds.md" and h.export_filename("é") == "seeds.md" and h.export_filename("a" * 90) == "a" * 60 + ".md"
+    n += 4
+    ex = _add(_add([], 9, 5, "2026-01-01T00:00:00", prompt="line1\nline2", note="good", tags="a,b"), 3, 2, "2026-01-02T00:00:00")
+    md4 = h.export_markdown(h.rank_entries(ex, "c"), "c", "NOW")
+    assert md4.startswith("# c\n\nExported NOW. 2 saved.") and "## 1. seed 9 ★★★★★" in md4 and "> line1\n> line2" in md4
+    assert "- tags: a, b" in md4 and "- note: good" in md4 and md4.index("seed 9") < md4.index("seed 3")
+    assert h.export_markdown([], "c").startswith("# c\n\n0 saved.")
+    n += 4
+    vr = h.view_rows(h.rank_entries(ex, "c"))
+    assert [r["seed"] for r in vr] == ["9", "3"] and vr[0]["rank"] == 1 and vr[0]["tags"] == ["a", "b"] and vr[0]["prompt"] == "line1 line2"
+    assert len(h.view_rows(h.rank_entries(_add(ex, 1, 1, "2026-01-03T00:00:00"), "c"), limit=2)) == 2
+    assert h.list_collections(_add(ex, 4, 3, "2026-01-03T00:00:00", coll="Zed")) == [{"name": "c", "count": 2}, {"name": "Zed", "count": 1}]
+    n += 3
+    with tempfile.TemporaryDirectory() as tmp:
+        out = os.path.join(tmp, "output")
+        ep = h.export_path("My Looks", out)
+        assert ep == os.path.join(os.path.realpath(out), "sy_seed_vault", "my_looks.md")
+        n += 1
+        vp = os.path.join(tmp, "v", "seed_vault.json")
+        m.vault_run(vp, "save", "looks", 42, 5, 500, True, 0, prompt="p", now_text="2026-05-01T00:00:00")
+        m.vault_run(vp, "save", "looks", 43, 2, 500, True, 0, now_text="2026-05-02T00:00:00")
+        before = open(vp, "rb").read()
+        best, _, cnt, info = m.vault_run(vp, "export", "looks", 1, 1, 500, True, 0, now_text="2026-05-03T00:00:00", export_to=ep)
+        assert best == 42 and cnt == 2 and "Exported 2" in info and open(vp, "rb").read() == before
+        txt = open(ep, encoding="utf-8").read()
+        assert txt.index("seed 42") < txt.index("seed 43") and "Exported 2026-05-03T00:00:00. 2 saved." in txt and not os.path.exists(ep + ".tmp")
+        n += 4
+        h.OVERRIDE_DIR = os.path.join(tmp, "ud")
+        try:
+            assert h.view_data("") == {"collections": [], "collection": "", "rows": []}
+            h.save_vault(h.vault_path(), _add([], 5, 4, "2026-01-01T00:00:00", coll="Zed"))
+            vd = h.view_data("")
+            assert vd["collection"] == "Zed" and vd["rows"][0]["seed"] == "5" and vd["collections"] == [{"name": "Zed", "count": 1}]
+            assert h.view_data("nope")["rows"] == []
+        finally:
+            h.OVERRIDE_DIR = None
+        n += 4
     cls = m.SYSeedVault
     assert cls.OUTPUT_NODE is True and cls.IS_CHANGED() != cls.IS_CHANGED()   # nan never equals itself
     assert cls.RETURN_NAMES == ("best_seed", "ranking", "count", "info")

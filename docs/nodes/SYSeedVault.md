@@ -2,13 +2,13 @@
 
 Source: `nodes/sy_seed_vault.py`
 
-**What it does:** A notebook for good seeds. Save a seed with a star rating, a note and tags, see the ranked list as Markdown, and hand back the best seed again. Keep it at the end of a workflow.
+**What it does:** A notebook for good seeds. Save a seed with a star rating, a note and tags, see the ranked list as Markdown, hand back the best seed again, and export the ranking to a Markdown file. Keep it at the end of a workflow.
 
 ## Inputs
 
 | Input | Type | Required | What it does | Range / options |
 |---|---|---|---|---|
-| action | COMBO | yes | Save adds or updates this seed. Show only reads the vault. | one of: save, show |
+| action | COMBO | yes | Save adds or updates this seed. Show only reads. Export writes the ranking to a .md file in output/sy_seed_vault. | one of: save, show, export |
 | collection | STRING | yes | Name of the group this seed belongs to, for example a look or a motion. | default 'my seeds' |
 | seed | INT | yes | The seed to keep. | 0 to 9223372036854775807, default 0 |
 | rating | INT | yes | Stars from 0 to 5. Higher stars rank first. | 0 to 5, default 3 |
@@ -31,3 +31,5 @@ Outputs: `INT`, `STRING`, `INT`, `STRING`
 max_entries limits the vault size. When it is full, keep_best on drops the lowest rated and oldest entries, off drops the oldest.
 Outputs: best_seed, ranking (Markdown), count (entries in this collection), info (what happened).
 The vault is one file in your ComfyUI user folder, so it stays between sessions.
+6. Set action to export to write the whole ranking of the collection (with the full prompts) to a Markdown file: `output/sy_seed_vault/<collection>.md`. The vault is not changed.
+7. Under the node there is a table of the saved seeds, best first. It reads the vault by itself, also before any run, and refreshes after each run. Pick another collection in the box, press **Copy table** for a Markdown copy, click a seed to copy it, or press **Use** to put that seed in the node's seed box. It is a good view for a dashboard.

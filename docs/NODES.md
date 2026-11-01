@@ -1,6 +1,6 @@
 # SY Nodes: full node list
 
-All 296 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 298 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 ## SY/Text (63)
@@ -226,7 +226,7 @@ All 296 nodes, by group. Every node is in the **SY** folder of the node library 
 - Select By Index Text SY
 - Switch SY
 
-## SY/Utility (73)
+## SY/Utility (75)
 
 - Batch Size Calc SY
 - Bundle SY
@@ -261,6 +261,7 @@ All 296 nodes, by group. Every node is in the **SY** folder of the node library 
 - Krea2TEnhancer SY
 - Krea2TEnhancerAdvanced SY
 - LinkFixer SY
+- LTX Latent Bridge SY
 - List Folder Files SY
 - Load Image From Folder SY
 - Load Text SY
@@ -269,6 +270,7 @@ All 296 nodes, by group. Every node is in the **SY** folder of the node library 
 - LoRA SY
 - Model Loader SY
 - Model Preset Bundle SY
+- MuteBypassSwitch SY
 - Pixel Count Info SY
 - Power Lora Loader SY
 - Precision Info SY

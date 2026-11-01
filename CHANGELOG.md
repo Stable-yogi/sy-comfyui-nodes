@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.14.0
+- Two new nodes (298 in all). LTX Latent Bridge SY: turns decoded video frames (for example from an H3 decode) into an LTX-shaped latent in one node. It fits the size to a multiple of 32, fits the frame count to 8n+1 (trim, pad, nearest or exact) and encodes with the LTX VAE you connect; the info line says what changed. Added after a user request, built from the plain idea, with no outside code.
+- Mute/Bypass Switch SY: one small switch for the nodes you choose. Select nodes, press Add selected nodes, and on runs them while off mutes or bypasses them. Switches with the same pair name act like radio buttons (one on, the others off). The chosen nodes are saved with the workflow, and opening a workflow changes nothing.
+- Seed Vault SY: a table of the saved seeds, best first, under the node (pick a collection, click a seed to copy it, Use puts it in the seed box, Copy table gives Markdown). It is read-only, loads before any run and refreshes after each run.
+- Seed Vault SY: new action **export** writes the ranking of a collection to a Markdown file in `output/sy_seed_vault`. The vault is not changed.
+- Link Fixer SY fix: repairs of a socket that remembers a wire that does not exist (and the matching case on an input) did nothing in the open workflow, because ComfyUI gives node numbers as text and the fixer looked for them as numbers. Now fixed, so the button and repair on open both work. Removing a wire that is missing its other end already worked.
+- Label, Bookmark, Random Unmuter, Link Fixer (including repair on open), Mute/Bypass Switch and the Seed Vault table were checked in a real ComfyUI on two frontend versions (1.57.4 and the older 1.52.7).
+
 ## 1.13.0
 - Eight new nodes (296 in all).
 - Label SY: a big text label that floats in the workflow for titles and step names. Pick the words, size, colour and side. It runs nothing.
@@ -10,7 +18,7 @@
 - Content Shuffle SY: keeps the colours and textures of a picture but scrambles where they are with a smooth random wobble (same seed, same result). Handy as a colour reference for control workflows.
 - Sketch Lines SY: turns a photo into a clean line drawing, black lines on white paper (or the reverse).
 - Repeater SY: one value in, the same value out on eight outputs.
-- Not added: a separate Mute/Bypass Switch. Fast Toggle SY already switches nodes or groups on, off or to bypass.
+- A separate Mute/Bypass Switch was left out here and added in 1.14.0.
 - Label, Bookmark, Random Unmuter and Link Fixer are page nodes and were checked in a real ComfyUI (frontend 1.57.4) before release. Seed Vault and Repeater were also run in a real ComfyUI. Content Shuffle and Sketch Lines were run with the node test tool.
 - The help pages in `docs/nodes/` and the full list in `docs/NODES.md` are updated (296 nodes).
 

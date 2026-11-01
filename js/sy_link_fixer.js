@@ -26,7 +26,8 @@ function dropLinkFromTable(graph, id) {
 // socket that names it. A socket that holds a different wire is never touched.
 export function applyOps(graph, problems) {
   let done = 0;
-  const byId = new Map((graph._nodes || []).map((n) => [n.id, n]));
+  // node ids are numbers in some ComfyUI frontends and text in others, so match them as text
+  const byId = new Map((graph._nodes || []).map((n) => [String(n.id), n]));
   for (const p of problems) {
     const f = p.fix;
     if (!f) continue;
@@ -38,10 +39,10 @@ export function applyOps(graph, problems) {
           for (const outp of n.outputs || []) if (outp.links) outp.links = outp.links.filter((x) => x !== f.id);
         }
       } else if (f.op === "clearInput") {
-        const n = byId.get(f.node);
+        const n = byId.get(String(f.node));
         if (n && n.inputs && n.inputs[f.slot]) n.inputs[f.slot].link = null;
       } else if (f.op === "dropOutputLink") {
-        const n = byId.get(f.node);
+        const n = byId.get(String(f.node));
         const o = n && n.outputs && n.outputs[f.slot];
         if (o && o.links) o.links = o.links.filter((x) => x !== f.id);
       } else {

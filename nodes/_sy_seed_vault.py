@@ -166,3 +166,83 @@ def save_vault(path, entries):
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump({"version": 1, "entries": list(entries)}, f, indent=1, ensure_ascii=True)
     os.replace(tmp, path)
+
+
+EXPORT_FOLDER = "sy_seed_vault"
+
+
+def export_filename(collection):
+    """A safe file name for one collection: letters, digits, dash and underscore only."""
+    keep = "".join(c if (c.isalnum() and c.isascii()) or c in "-_" else "_" for c in str(collection or "").strip().lower())
+    keep = "_".join(p for p in keep.split("_") if p) or "seeds"
+    return keep[:60] + ".md"
+
+
+def export_markdown(ranked, collection, now_text=""):
+    """The whole ranking (every entry, full prompts) as a Markdown file you can keep next to your reference notes."""
+    lines = ["# %s" % collection, ""]
+    if now_text:
+        lines += ["Exported %s. %d saved." % (now_text, len(ranked)), ""]
+    else:
+        lines += ["%d saved." % len(ranked), ""]
+    for n, e in enumerate(ranked, 1):
+        lines.append("## %d. seed %d %s" % (n, e["seed"], stars(e["rating"])))
+        lines.append("")
+        lines.append("- saved %d time(s), last on %s" % (e["count"], e["saved_at"]))
+        note = " ".join(str(e.get("note", "")).split())
+        if note:
+            lines.append("- note: " + note)
+        if e.get("tags"):
+            lines.append("- tags: " + ", ".join(e["tags"]))
+        prompt = str(e.get("prompt", "")).strip()
+        if prompt:
+            lines += ["", "> " + prompt.replace("\n", "\n> ")]
+        lines.append("")
+    return "\n".join(lines)
+
+
+def export_path(collection, output_dir=None):
+    """<output folder>/sy_seed_vault/<collection>.md. ComfyUI is imported only when no folder is given."""
+    base = output_dir
+    if not base:
+        import folder_paths
+        base = folder_paths.get_output_directory()
+    return safe_join(base, EXPORT_FOLDER + "/" + export_filename(collection))
+
+
+def write_export(path, text):
+    """Atomic write of the Markdown file (a .tmp file first, then os.replace)."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
+    os.replace(tmp, path)
+
+
+def view_rows(ranked, limit=200):
+    """Rows for the dashboard table, ready for JSON. The seed is TEXT so a big seed keeps every digit in the browser."""
+    rows = []
+    for n, e in enumerate(ranked[:limit], 1):
+        prompt = " ".join(str(e.get("prompt", "")).split())
+        rows.append({"rank": n, "seed": str(int(e["seed"])), "rating": int(e["rating"]), "count": int(e["count"]),
+                     "note": " ".join(str(e.get("note", "")).split()), "tags": list(e.get("tags") or []),
+                     "prompt": prompt[:PROMPT_CUT], "saved_at": str(e["saved_at"])})
+    return rows
+
+
+def list_collections(entries):
+    """[{name, count}] sorted by name, for the collection picker."""
+    counts = {}
+    for e in entries:
+        counts[e["collection"]] = counts.get(e["collection"], 0) + 1
+    return [{"name": k, "count": counts[k]} for k in sorted(counts, key=str.lower)]
+
+
+def view_data(collection=None, base_dir=None):
+    """Everything the dashboard table needs: all collections, and the rows of the chosen one (or the first)."""
+    entries = load_vault(vault_path(base_dir))
+    cols = list_collections(entries)
+    name = str(collection or "").strip()
+    if not name and cols:
+        name = cols[0]["name"]
+    return {"collections": cols, "collection": name, "rows": view_rows(rank_entries(entries, name))}

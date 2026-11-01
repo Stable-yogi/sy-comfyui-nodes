@@ -52,4 +52,10 @@ try:  # web helpers for the Review Pause node (the answer buttons)
 except Exception as _err:  # the node then passes through without stopping
     print("[SY] review pause buttons not available:", _err)
 
+try:  # web helper for the Seed Vault table (read only)
+    from .nodes import _sy_seed_vault_api
+    _sy_seed_vault_api.register_routes()
+except Exception as _err:  # the node still works without the table
+    print("[SY] seed vault table not available:", _err)
+
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]
