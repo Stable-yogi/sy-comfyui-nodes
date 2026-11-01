@@ -63,7 +63,7 @@ def run():
     assert "text" in refuses(L.parse_cube, 5); n += 1
     assert "bigger than 20 MB" in refuses(L.parse_cube, "x" * (L.MAX_FILE_BYTES + 1)); n += 1
     # ---- built-in looks
-    assert len(L.BUILTIN_NAMES) == 7 and L.BUILTIN_NAMES[0] == "none"; n += 1
+    assert len(L.BUILTIN_NAMES) == 15 and L.BUILTIN_NAMES[0] == "none"; n += 1
     for name in L.BUILTIN_NAMES:
         c = L.builtin_cube(name)
         assert c["size"] == 17 and len(c["table"]) == 17 ** 3 * 3 and all(0.0 <= v <= 1.0 for v in c["table"]), name
@@ -86,10 +86,26 @@ def run():
     assert L.sample_cube(hc, (0.25, 0.25, 0.25))[0] < 0.25 and L.sample_cube(hc, (0.75, 0.75, 0.75))[0] > 0.75; n += 1
     ff = L.sample_cube(L.builtin_cube("faded film"), (0.0, 0.0, 0.0))
     assert ff[0] > 0.05; n += 1
+    # the eight newer looks do what their names say
+    def look(name, px):
+        return L.sample_cube(L.builtin_cube(name), px)
+    sg = look("sunset glow", (0.7, 0.7, 0.7)); assert sg[0] > sg[2] + 0.1; n += 1
+    cm = look("cold moon", (0.5, 0.5, 0.5)); assert cm[2] > cm[0] + 0.05; n += 1
+    nd, nl = look("night city", (0.1, 0.1, 0.1)), look("night city", (0.9, 0.9, 0.9))
+    assert nd[2] > nd[0] and nl[0] > nl[1]; n += 1                  # cyan-blue in the dark, magenta in the light
+    pa = look("pastel", (0.0, 0.0, 0.0)); assert min(pa) > 0.15; n += 1  # blacks are lifted
+    pr = look("pastel", (1.0, 0.0, 0.0)); assert max(pr) - min(pr) < 1.0 - 0.0; n += 1
+    bb = look("bleach bypass", (0.9, 0.2, 0.1)); grey = 0.2126 * 0.9 + 0.7152 * 0.2 + 0.0722 * 0.1
+    assert abs(bb[0] - bb[1]) < abs(0.9 - 0.2); n += 1              # less colour than the original
+    vv = look("vivid", (0.6, 0.4, 0.4)); assert vv[0] - vv[1] > 0.6 - 0.4; n += 1   # more colour
+    fs = look("film stock", (0.0, 0.0, 0.0)); assert 0.02 < fs[1] < 0.08 and look("film stock", (1.0, 1.0, 1.0))[1] < 0.99; n += 1
+    nr = look("noir", (0.8, 0.3, 0.2)); assert abs(nr[0] - nr[1]) < 1e-6 and abs(nr[1] - nr[2]) < 1e-6; n += 1
+    assert look("noir", (0.2, 0.2, 0.2))[0] < 0.2 and look("noir", (0.8, 0.8, 0.8))[0] > 0.8; n += 1
     assert close(L.sample_cube(L.identity_cube(9), (0.31, 0.62, 0.93)), (0.31, 0.62, 0.93), 1e-9); n += 1
     # ---- name helpers
     ch = m.lut_choices(["b.cube", "a.cube", "readme.txt", "a.cube", "sub/c.CUBE"])
-    assert ch[:7] == list(L.BUILTIN_NAMES) and ch[7:] == ["a.cube", "b.cube", "sub/c.CUBE"]; n += 1
+    nb = len(L.BUILTIN_NAMES)
+    assert ch[:nb] == list(L.BUILTIN_NAMES) and ch[nb:] == ["a.cube", "b.cube", "sub/c.CUBE"]; n += 1
     assert m.lut_choices(None) == list(L.BUILTIN_NAMES); n += 1
     assert refuses(m.check_lut_name, "../x.cube") and refuses(m.check_lut_name, "a/../../x.cube"); n += 1
     assert refuses(m.check_lut_name, "/etc/x.cube") and refuses(m.check_lut_name, "C:/x.cube") and refuses(m.check_lut_name, "C:\\x.cube"); n += 1
@@ -118,7 +134,7 @@ def run():
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYApplyLUT"] == "Apply LUT SY" and m.NODE_CLASS_MAPPINGS["SYApplyLUT"] is c; n += 1
     spec = c.INPUT_TYPES()
     assert list(spec["required"]) == ["image", "lut", "strength"] and list(spec["optional"]) == ["lut_text"]; n += 1
-    assert spec["required"]["lut"][0][:7] == list(L.BUILTIN_NAMES) and spec["required"]["lut"][1]["default"] == "none"; n += 1
+    assert spec["required"]["lut"][0][:len(L.BUILTIN_NAMES)] == list(L.BUILTIN_NAMES) and spec["required"]["lut"][1]["default"] == "none"; n += 1
     assert spec["optional"]["lut_text"][1]["multiline"] is True; n += 1
     for sect in ("required", "optional"):
         for k, dd in spec[sect].items():

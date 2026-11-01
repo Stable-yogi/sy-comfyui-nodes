@@ -4,7 +4,8 @@ import math
 MAX_FILE_BYTES = 20 * 1024 * 1024
 MAX_SIZE_3D = 65
 MAX_SIZE_1D = 16384
-BUILTIN_NAMES = ("none", "warm", "cool", "teal and orange", "faded film", "black and white", "high contrast")
+BUILTIN_NAMES = ("none", "warm", "cool", "teal and orange", "faded film", "black and white", "high contrast",
+                 "sunset glow", "cold moon", "night city", "pastel", "bleach bypass", "vivid", "film stock", "noir")
 
 
 def _clamp(v):
@@ -155,8 +156,67 @@ def _look_contrast(r, g, b):
     return out[0], out[1], out[2]
 
 
+def _sat(r, g, b, k):
+    """Colour strength: k 1 keeps it, 0 is grey, above 1 is stronger."""
+    y = _luma(r, g, b)
+    return y + (r - y) * k, y + (g - y) * k, y + (b - y) * k
+
+
+def _curve(c, amount=1.0):
+    c = _clamp(c)
+    return c + amount * (c * c * (3.0 - 2.0 * c) - c)
+
+
+def _look_sunset(r, g, b):
+    y = _luma(r, g, b)
+    r2, g2, b2 = r * 1.06 + 0.05 * y, g * 1.0 + 0.012 * y, b * 0.84 + 0.02 * (1.0 - y)   # gold in the light, a little rose in the dark
+    return _curve(r2, 0.25), _curve(g2, 0.25), _curve(b2, 0.25)
+
+
+def _look_cold_moon(r, g, b):
+    r2, g2, b2 = _sat(r, g, b, 0.82)
+    y = _luma(r, g, b)
+    return r2 * 0.88, g2 * 0.97 + 0.01, b2 * 1.08 + 0.04 * (1.0 - y)
+
+
+def _look_night_city(r, g, b):
+    t = _luma(r, g, b) - 0.5          # cyan in the dark, magenta in the light
+    r2, g2, b2 = r + 0.14 * t, g - 0.10 * abs(t) * (1.0 if t > 0 else -0.6), b + 0.06 + 0.10 * t
+    r2, g2, b2 = _sat(r2, g2, b2, 1.15)
+    return _curve(r2, 0.35), _curve(g2, 0.35), _curve(b2, 0.35)
+
+
+def _look_pastel(r, g, b):
+    r2, g2, b2 = _sat(r, g, b, 0.7)
+    return r2 * 0.72 + 0.26, g2 * 0.72 + 0.24, b2 * 0.72 + 0.27
+
+
+def _look_bleach(r, g, b):
+    y = _curve(_luma(r, g, b), 0.8)
+    return 0.45 * r + 0.55 * y, 0.45 * g + 0.55 * y, 0.45 * b + 0.55 * y
+
+
+def _look_vivid(r, g, b):
+    r2, g2, b2 = _sat(r, g, b, 1.35)
+    return _curve(r2, 0.3), _curve(g2, 0.3), _curve(b2, 0.3)
+
+
+def _look_film_stock(r, g, b):
+    out = []
+    for c in (r, g, b):
+        out.append(0.035 + _curve(c, 0.3) * 0.925)      # lifted blacks, softer whites
+    return out[0] + 0.012, out[1] + 0.004, out[2] - 0.012
+
+
+def _look_noir(r, g, b):
+    y = _curve(_luma(r, g, b), 1.0)
+    return y, y, y
+
+
 _LOOKS = {"warm": _look_warm, "cool": _look_cool, "teal and orange": _look_teal_orange,
-          "faded film": _look_faded, "black and white": _look_bw, "high contrast": _look_contrast}
+          "faded film": _look_faded, "black and white": _look_bw, "high contrast": _look_contrast,
+          "sunset glow": _look_sunset, "cold moon": _look_cold_moon, "night city": _look_night_city, "pastel": _look_pastel,
+          "bleach bypass": _look_bleach, "vivid": _look_vivid, "film stock": _look_film_stock, "noir": _look_noir}
 
 
 def builtin_cube(name, size=17):

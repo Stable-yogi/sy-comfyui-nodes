@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.12.1
+- Apply LUT SY: eight more built-in looks, made from our own simple colour maths, no files needed: sunset glow, cold moon, night city, pastel, bleach bypass, vivid, film stock and noir (15 in all, with the old ones).
+- Two older self-tests that disagreed with their nodes (Compare Metrics SY, Image Batch Split Every N SY) are corrected. The nodes were right.
+
 ## 1.12.0
 - One new node. Stacking Keeper SY: ComfyUI forgets which node lies on top of which when a workflow is closed and opened again, so nodes you raised (Set and Get nodes for example) fall back behind others. Put one Stacking Keeper SY anywhere in the workflow: it notes every time a node is raised or lowered, saves the stacking with the workflow, and puts it back when the workflow opens. Nodes added after the save go on top, deleted nodes are skipped. It has no wires and never runs. A button puts the saved stacking back by hand, and **restore_on_open** turns the automatic part off. It also works inside a subgraph: put a Stacking Keeper SY inside that subgraph, and its stacking comes back when you open the subgraph. Each graph needs its own keeper. Tested on ComfyUI frontend 1.57.4, including real Set and Get nodes.
 - Workflow Header SY: the subtitle and the three help texts now understand a few marks. A line that starts with `#`, `##` or `###` becomes a big, medium or small header, `- ` starts a list, `**bold**`, `*italic*` and `` `code` `` work, and a blank line starts a new paragraph. The subtitle box in the Edit window is now a multi-line box. Anything else is shown as typed, and no HTML is ever read. Saved headers keep working.

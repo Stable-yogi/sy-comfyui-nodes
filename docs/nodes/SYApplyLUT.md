@@ -9,7 +9,7 @@ Source: `nodes/sy_apply_lut.py`
 | Input | Type | Required | What it does | Range / options |
 |---|---|---|---|---|
 | image | IMAGE | yes | The picture to colour. RGB or RGBA; transparency is kept. | picture batch [B,H,W,3] |
-| lut | COMBO | yes | A built-in look, or a .cube file from models/luts or input/luts. | one of: none, warm, cool, teal and orange, faded film, black and white, high contrast |
+| lut | COMBO | yes | A built-in look, or a .cube file from models/luts or input/luts. | one of: none, warm, cool, teal and orange, faded film, black and white, high contrast, sunset glow, cold moon, night city, pastel, bleach bypass ... |
 | strength | FLOAT | yes | 0 = original colours, 1 = the full look. | 0.0 to 1.0, step 0.01, default 1.0 |
 | lut_text | STRING | no | Paste the text of a .cube file here. If filled, it is used instead of the list. | default '', multiline |
 
@@ -18,6 +18,6 @@ Outputs: `IMAGE`
 ## How to use
 
 1. Connect your picture to image.
-2. Pick a built-in look in lut, or a .cube file from the models/luts, input/luts or the node pack's own luts folder. To use your own, paste the .cube text into lut_text (it wins over the list).
+2. Pick a built-in look in lut (15 are built in), or a .cube file from the models/luts, input/luts or the node pack's own luts folder. To use your own, paste the .cube text into lut_text (it wins over the list).
 3. Set strength: 0 keeps the original colours, 1 gives the full look.
 4. The recoloured picture comes out as image. Transparency is kept.

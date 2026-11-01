@@ -63,7 +63,7 @@ def run():
         out = node.run(imgs, 4, 2, False, "pad")
         ok(out[0].shape[0] == 4 and out[2] == 4 and out[3] == 8 and float(out[0][3, 0, 0, 0]) == 9.0)
         out = node.run(imgs, 4, 5, True)
-        ok(out[0].shape[0] == 4 and out[3] == 4 and out[1] == 3)
+        ok(out[0].shape[0] == 2 and out[3] == 8 and out[1] == 3)  # part counts from 0: part 5 wraps to slice 2 (pictures 8 and 9)
         out = node.run(imgs, 4, 2)
         ok(out[0].shape[0] == 2 and out[2] == 2)
     except ImportError:

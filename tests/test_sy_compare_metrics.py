@@ -40,10 +40,12 @@ def run():
         return n  # tensor path skipped: torch not installed
     a = torch.zeros(2, 4, 4, 3)
     b = torch.full((2, 4, 4, 3), 0.1)
-    score, img = m.SYCompareMetrics().run(a, b, 4.0)
+    score, img, top, psnr, info = m.SYCompareMetrics().run(a, b, 4.0)
     assert abs(score - 0.1) < 1e-6
     n += 1
     assert img.shape == a.shape and abs(float(img.max()) - 0.4) < 1e-6
+    n += 1
+    assert abs(top - 0.1) < 1e-6 and abs(psnr - 20.0) < 1e-4 and "PSNR" in info
     n += 1
     try:
         m.SYCompareMetrics().run(a, torch.zeros(2, 4, 5, 3))
