@@ -60,6 +60,7 @@
     const n = mk(t);
     if (!n) continue;
     byType[t] = n;
+    if (t === "SYReviewPause") n.mode = 2; // it waits for a person, so the automatic test mutes it
     nodes.push({ n, cat, t });
     log.made++;
   }
@@ -78,6 +79,7 @@
     SYKrea2ConditioningRebalance: { conditioning: [byType.SYKrea2EditGroundedEncode, 0] },
     SYTileMerge: { tiles: [byType.SYTileSplit, 0], tile_info: [byType.SYTileSplit, 1] },
     SYIndexSwitch: { input1: [load, 0] },
+    SYDoneAlert: { anything: [seedSrc, 0] }, SYRepeater: { value: [seedSrc, 0] },
     SYH3ChainSettings: { sampler: [ksel, 0], sigmas: [sched, 0] },
     SYH3RenderSegment: { settings: [byType.SYH3ChainSettings, 0], chain_state: null },
     SYH3RepairSegment: { settings: [byType.SYH3ChainSettings, 0], chain_state: null },
@@ -114,6 +116,7 @@
     SYH3RepairSegment: { prompt: "a calm beach", seconds: 1, handoff_seconds: 0 },
     SYH3Prompt: { style: "soft daylight, calm film look", action: "a knight walks along a quiet beach" },
     SYH3PromptBuilder: { style: "soft daylight, calm film look", action: "a knight walks along a quiet beach" },
+    SYLoaderNamePicker: { folder: "loras" },
     SYVoiceLengthEstimate: { text: "Hello there, this is a short test line." },
     SYImageMetadataReader: { file: load.widgets[0].value },
     SYJSONFieldGet: { json_text: '{"a": {"b": 2}}', path: "a.b" },

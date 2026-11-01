@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.13.0
+- Eight new nodes (296 in all).
+- Label SY: a big text label that floats in the workflow for titles and step names. Pick the words, size, colour and side. It runs nothing.
+- Bookmark SY: marks a spot in a large workflow. Press its number key (1 to 9) while you are not typing and the view jumps there at the zoom you set. Two bookmarks with the same key show a warning.
+- Random Unmuter SY: before each run it switches on one node out of a set (every node whose title holds one of your words) and switches the rest off (mute or bypass). Pick at random, or one after the other. A seed makes the order repeat. It also works when you press Queue.
+- Link Fixer SY: looks for broken wires (a wire to a node that is gone, a socket that remembers a wire that does not exist, and so on) and removes them on a button press. It can also check a saved workflow file as it is on disk and open a repaired copy; the file itself is never changed. Wires that join two different kinds of data are only reported. This ComfyUI frontend already heals most broken wires when it loads a workflow, so the file check is where this node helps most.
+- Seed Vault SY: a notebook for good seeds at the end of a workflow. Save a seed with a star rating, a note and tags, per collection and per prompt. It gives back a ranked Markdown list and the best seed (or the second best, and so on) to reuse. The vault is one file in the ComfyUI user folder and has a size limit with a choice of what to drop when it is full.
+- Content Shuffle SY: keeps the colours and textures of a picture but scrambles where they are with a smooth random wobble (same seed, same result). Handy as a colour reference for control workflows.
+- Sketch Lines SY: turns a photo into a clean line drawing, black lines on white paper (or the reverse).
+- Repeater SY: one value in, the same value out on eight outputs.
+- Not added: a separate Mute/Bypass Switch. Fast Toggle SY already switches nodes or groups on, off or to bypass.
+- Label, Bookmark, Random Unmuter and Link Fixer are page nodes and were checked in a real ComfyUI (frontend 1.57.4) before release. Seed Vault and Repeater were also run in a real ComfyUI. Content Shuffle and Sketch Lines were run with the node test tool.
+- The help pages in `docs/nodes/` and the full list in `docs/NODES.md` are updated (296 nodes).
+
 ## 1.12.1
 - Apply LUT SY: eight more built-in looks, made from our own simple colour maths, no files needed: sunset glow, cold moon, night city, pastel, bleach bypass, vivid, film stock and noir (15 in all, with the old ones).
 - Two older self-tests that disagreed with their nodes (Compare Metrics SY, Image Batch Split Every N SY) are corrected. The nodes were right.

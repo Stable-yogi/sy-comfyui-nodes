@@ -1,6 +1,6 @@
 # SY Nodes: full node list
 
-All 288 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 296 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 ## SY/Text (63)
@@ -69,7 +69,7 @@ All 288 nodes, by group. Every node is in the **SY** folder of the node library 
 - Token Estimate SY
 - Wildcard Prompt SY
 
-## SY/Image (92)
+## SY/Image (94)
 
 - Add Border SY
 - Apply LUT SY
@@ -89,6 +89,7 @@ All 288 nodes, by group. Every node is in the **SY** folder of the node library 
 - Colour Overlay SY
 - Colour Temperature SY
 - Compare Metrics SY
+- ContentShuffle SY
 - Crop Square Centre For Training SY
 - Crop To Aspect SY
 - CropByMask SY
@@ -155,6 +156,7 @@ All 288 nodes, by group. Every node is in the **SY** folder of the node library 
 - Save Result SY
 - Sepia SY
 - Sharpen SY
+- SketchLines SY
 - Solarize SY
 - Stroke SY
 - Threshold SY
@@ -209,21 +211,22 @@ All 288 nodes, by group. Every node is in the **SY** folder of the node library 
 - Time Code SY
 - VoiceLengthEstimate SY
 
-## SY/Logic (11)
+## SY/Logic (12)
 
 - Assert SY
 - Bool Logic SY
 - Counter SY
 - CyclePick SY
-- GroupSwitch SY
 - Group Picker SY
+- GroupSwitch SY
 - If Else Number SY
 - If Else Text SY
 - IndexSwitch SY
+- RandomUnmuter SY
 - Select By Index Text SY
 - Switch SY
 
-## SY/Utility (70)
+## SY/Utility (73)
 
 - Batch Size Calc SY
 - Bundle SY
@@ -257,6 +260,7 @@ All 288 nodes, by group. Every node is in the **SY** folder of the node library 
 - Krea2OneClick SY
 - Krea2TEnhancer SY
 - Krea2TEnhancerAdvanced SY
+- LinkFixer SY
 - List Folder Files SY
 - Load Image From Folder SY
 - Load Text SY
@@ -268,6 +272,7 @@ All 288 nodes, by group. Every node is in the **SY** folder of the node library 
 - Pixel Count Info SY
 - Power Lora Loader SY
 - Precision Info SY
+- Repeater SY
 - Review Pause SY
 - Run Timer SY
 - Safetensors Header Info SY
@@ -277,6 +282,7 @@ All 288 nodes, by group. Every node is in the **SY** folder of the node library 
 - Save Image To Folder SY
 - Save Text SY
 - Save With Caption SY
+- SeedVault SY
 - Short ID SY
 - Show SY
 - Stacking Keeper SY
@@ -309,8 +315,10 @@ All 288 nodes, by group. Every node is in the **SY** folder of the node library 
 - Layout JSON Check SY
 - Paint Mask SY
 
-## SY/Notes (3)
+## SY/Notes (5)
 
+- Bookmark SY
+- Label SY
 - Model Downloader SY
 - Note SY
 - Workflow Header SY
