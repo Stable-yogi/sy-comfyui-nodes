@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.17.0
+- Twenty-five new nodes (348 in all). Each has a help page with a How to use section and is in the four master test workflows.
+- Picture: Halftone Dots SY (newspaper-print dots), High Pass SY (keeps only fine detail, for sharpening), Seamless Tile Blend SY (fades the edges so a texture repeats without a seam), Glitch Slices SY (shifted horizontal slices), Radial Zoom Blur SY (blur that streaks away from a centre point), Scanlines SY (old-monitor lines), Median Despeckle SY (removes specks and noise), Value Noise Image SY (cloud, paper or grain texture from a seed), Mask Island Cleanup SY (deletes tiny white specks and fills tiny black holes in a mask).
+- Video: Echo Trail SY (ghost trails from earlier frames), Freeze Hold SY (holds one frame still for a while), Scene Cut Finder SY (finds the frames where the scene changes), Slide Transition SY (push or wipe from one clip into the next), Sharpest Frame Pick SY (keeps the sharpest frames of a clip).
+- Text: Case Style Convert SY (rewrites a phrase into another naming style), Key Value Lookup SY (a tiny dictionary of key = text lines), Strip Markdown SY (plain text from marked-up text), Escape Text SY (make text safe for JSON, a web address or one line, or turn it back), Text Similarity SY (how alike two texts are, as a number).
+- Utility and logic: Humanize Number SY (a big raw number as a file size, a duration or a count), Colour Harmony SY (a matching set of colours from one colour), Colour Contrast Check SY (is the text readable on this background), Range Bucket SY (turns a number into a label by the range it falls in), Coalesce Text SY (first text that is not empty), Latch Value SY (keeps a value until you tell it to take a new one).
+
 ## 1.16.0
 - Fifteen new nodes (323 in all). Each has a help page with a How to use section and is in the four master test workflows.
 - Picture: Letterbox SY (cinema bars or a crop to a wanted shape), Chromatic Aberration SY (colour fringes that grow toward the edges), Bloom SY (soft glow from the bright parts), Tilt Shift SY (miniature look: a sharp band with blur growing away from it), Palette Limit SY (reduce a picture to N colours, optional ordered dither).

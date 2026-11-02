@@ -52,6 +52,8 @@
   two.connect(0, four, 0); two.connect(0, four, 1);
   const eight = mk("ImageBatch", "Eight pictures as one batch (for the loop finder)");
   four.connect(0, eight, 0); four.connect(0, eight, 1);
+  const sixteen = mk("ImageBatch", "Sixteen pictures as one batch (for the slide transition)");
+  eight.connect(0, sixteen, 0); eight.connect(0, sixteen, 1);
   const ksel = mk("KSamplerSelect", "Sampler (for the H3 chain)");
   const sched = mk("BasicScheduler", "Sigmas (for the H3 chain)");
   sched.widgets.find((w) => w.name === "steps").value = 4;
@@ -78,7 +80,7 @@
     SYShowText: { value: [seedSrc, 0] }, SYTextNumberFormat: { number_in: [seedSrc, 0] },
     SYSwitch: { a: [load, 0], b: [byType.SYColourSwatch, 0] },
     SYLayoutBoxesMerge: { boxes_3: [byType.SYLayoutBox, 0], boxes_4: [byType.SYLayoutBox, 0], boxes_5: [byType.SYLayoutBox, 0], boxes_6: [byType.SYLayoutBox, 0], boxes_7: [byType.SYLayoutBox, 0], boxes_8: [byType.SYLayoutBox, 0] },
-    SYPasteBackBox: { crop_box: [boxSrc, 0] }, SYAssert: { condition: [yes, 0] }, SYFrameInterpolateBlend: { images: [two, 0] }, SYSeamlessLoopFinder: { images: [eight, 0] }, SYSpeedRamp: { images: [eight, 0] },
+    SYPasteBackBox: { crop_box: [boxSrc, 0] }, SYAssert: { condition: [yes, 0] }, SYFrameInterpolateBlend: { images: [two, 0] }, SYSeamlessLoopFinder: { images: [eight, 0] }, SYSpeedRamp: { images: [eight, 0] }, SYSlideTransition: { images_a: [sixteen, 0], images_b: [sixteen, 0] },
     SYInpaintStitch: { stitch: [byType.SYInpaintCrop, 0] },
     SYKrea2ConditioningRebalance: { conditioning: [byType.SYKrea2EditGroundedEncode, 0] },
     SYTileMerge: { tiles: [byType.SYTileSplit, 0], tile_info: [byType.SYTileSplit, 1] },

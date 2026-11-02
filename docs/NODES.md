@@ -1,21 +1,23 @@
 # SY Nodes: full node list
 
-All 323 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 348 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 
-## SY/Text (68)
+## SY/Text (73)
 
 - Base64 Text SY
 - Caption Prefix Suffix SY
 - Caption Review SY
 - Caption Style Request SY
+- Case Style Convert SY
 - CharacterSheetPrompt SY
 - Chat Prompt Builder SY
 - Dataset Pair Check SY
 - EditInstruction SY
 - EditPresetPick SY
 - EditStepsList SY
+- Escape Text SY
 - Few Shot Block SY
 - Find Replace SY
 - H3 Prompt SY
@@ -24,6 +26,7 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - JSON Field Get SY
 - JSON From Reply SY
 - JSON Prompt Builder SY
+- Key Value Lookup SY
 - Line Numbers SY
 - LinePick SY
 - LLM Reply Clean SY
@@ -52,6 +55,7 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - Show Text SY
 - Slugify SY
 - Sort Dedupe Lines SY
+- Strip Markdown SY
 - System Prompt Presets SY
 - Tag Frequency SY
 - Tag Remove SY
@@ -63,6 +67,7 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - Text Diff Lines SY
 - Text Join SY
 - Text Number Format SY
+- Text Similarity SY
 - Text Split Lines SY
 - Text Stats SY
 - Text SY
@@ -75,7 +80,7 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - Token Estimate SY
 - Wildcard Prompt SY
 
-## SY/Image (108)
+## SY/Image (122)
 
 - Add Border SY
 - Apply LUT SY
@@ -108,6 +113,7 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - Dominant Colors SY
 - Drop Shadow SY
 - Duotone SY
+- Echo Trail SY
 - Edge Detect SY
 - Emboss SY
 - Face Detect SY
@@ -119,11 +125,15 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - Frame Interpolate Blend SY
 - Frame Number Overlay SY
 - Frame Select SY
+- Freeze Hold SY
 - Gaussian Blur SY
+- Glitch Slices SY
 - Gradient Image SY
 - Gradient Map SY
 - Grayscale SY
 - H3 Tiled Upscale SY
+- Halftone Dots SY
+- High Pass SY
 - Hue Shift SY
 - Image Adjust SY
 - Image Blend SY
@@ -143,6 +153,7 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - Load Image Mini SY
 - Luminance Mask SY
 - Mask From Words SY
+- Mask Island Cleanup SY
 - Mask Tools SY
 - MaskCombine SY
 - MaskFeather SY
@@ -152,6 +163,7 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - MaskInvertThreshold SY
 - MaskOverlayPreview SY
 - MaskToBox SY
+- Median Despeckle SY
 - Mirror Image SY
 - Orientation SY
 - Outer Glow SY
@@ -163,6 +175,7 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - Ping Pong SY
 - Pixelate SY
 - Posterize SY
+- Radial Zoom Blur SY
 - Reference Picture SY
 - Remove Background SY
 - Reverse Batch SY
@@ -172,9 +185,14 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - Saturation SY
 - Save Pack SY
 - Save Result SY
+- Scanlines SY
+- Scene Cut Finder SY
+- Seamless Tile Blend SY
 - Sepia SY
 - Sharpen SY
+- Sharpest Frame Pick SY
 - SketchLines SY
+- Slide Transition SY
 - Solarize SY
 - Speed Ramp SY
 - Stroke SY
@@ -184,6 +202,7 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - Tilt Shift SY
 - Tone Curve SY
 - Upscale SY
+- Value Noise Image SY
 - Vignette SY
 
 ## SY/Resize (11)
@@ -232,10 +251,11 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - Time Code SY
 - VoiceLengthEstimate SY
 
-## SY/Logic (12)
+## SY/Logic (15)
 
 - Assert SY
 - Bool Logic SY
+- Coalesce Text SY
 - Counter SY
 - CyclePick SY
 - Group Picker SY
@@ -243,11 +263,13 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - If Else Number SY
 - If Else Text SY
 - IndexSwitch SY
+- Latch Value SY
 - RandomUnmuter SY
+- Range Bucket SY
 - Select By Index Text SY
 - Switch SY
 
-## SY/Utility (80)
+## SY/Utility (83)
 
 - Batch Size Calc SY
 - Bundle SY
@@ -255,6 +277,8 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - Checkpoint Name Filter SY
 - CLIP Loader SY
 - CLIPLoaderGGUF SY
+- Colour Contrast Check SY
+- Colour Harmony SY
 - Date Parts SY
 - Done Alert SY
 - DualCLIPLoaderGGUF SY
@@ -274,6 +298,7 @@ All 323 nodes, by group. Every node is in the **SY** folder of the node library 
 - H3LowVRAM SY
 - H3SaveBundle SY
 - H3SpeedOptimizer SY
+- Humanize Number SY
 - Image Batch Split Every N SY
 - Image Metadata Reader SY
 - ImageExists SY
