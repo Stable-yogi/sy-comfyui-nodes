@@ -1,14 +1,14 @@
 # H3 workflows
 
-Seven ComfyUI workflows for the MiniMax H3 video model. They use the SY nodes in this pack.
+Eight ComfyUI workflows for the MiniMax H3 video model. They use the SY nodes in this pack.
 Every workflow has a header box at the top: what it does, how to use it, and which model files it needs.
 Groups marked **(optional)** are switched off at the start. Use the Group Switch SY panel next to the header to switch a group on.
 
 ## Model files
 
-Six of the workflows carry a Model Downloader SY box at the top, next to the header. It lists the files below, shows which ones you already have, and downloads the missing ones from Hugging Face when you press a button (it shows the size and your free disk space and asks first). The two files that are not in the box: `RealESRGAN_x2.pth` and `minimax_h3_flf2v_lora_v1.safetensors` (get them by hand).
+Seven of the workflows carry a Model Downloader SY box at the top, next to the header. It lists the files below, shows which ones you already have, and downloads the missing ones from Hugging Face when you press a button (it shows the size and your free disk space and asks first). The two files that are not in the box: `RealESRGAN_x2.pth` and `minimax_h3_flf2v_lora_v1.safetensors` (get them by hand).
 
-The same files are used by all seven workflows. Put each file in the folder shown.
+The same files are used by all eight workflows. Put each file in the folder shown.
 
 | File | Folder |
 |---|---|
@@ -33,6 +33,7 @@ Extra files for some workflows:
 | `SY - H3 Character Sheet v1.json` | One picture that shows your character from the front, the side and the back. |
 | `SY - H3 Turnaround v1.json` | A short turn-around clip, plus a sheet of frames cut from it. |
 | `SY - H3 Image v1.json` | One picture from up to four reference pictures. |
+| `SY - H3 Image v2.json` | The same as Image v1, with fewer boxes: the model, reference pictures, prompt, sampler and saving each sit in one SY node. |
 | `SY - H3 Voice v1.json` | A voice line from text, with an optional voice sample. |
 | `SY - H3 Video v1.json` | A video with sound from a story, reference pictures, an optional acting clip, start and end pictures and a voice line. |
 | `SY - H3 Upscale v1.json` | A sharper, bigger copy of a clip. The model draws fine detail again. |

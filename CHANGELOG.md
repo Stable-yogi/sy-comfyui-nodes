@@ -5,6 +5,7 @@
 - Picture: Letterbox SY (cinema bars or a crop to a wanted shape), Chromatic Aberration SY (colour fringes that grow toward the edges), Bloom SY (soft glow from the bright parts), Tilt Shift SY (miniature look: a sharp band with blur growing away from it), Palette Limit SY (reduce a picture to N colours, optional ordered dither).
 - Video: Speed Ramp SY (playback speed that changes over time), Ken Burns SY (one picture into a slow zoom and pan clip), Deflicker SY (evens out brightness jumps between frames), Fade In Out SY (fade a clip in from and out to a colour), Frame Number Overlay SY (frame number and time burned into a corner).
 - Text: Tag Remove SY (take unwanted tags out of a prompt), Prompt Conflict Check SY (warns about opposite pairs such as day and night), Prompt Variants SY ({red|blue} choices expanded into every combination), Prompt Slot Fill SY (fills [subject] style slots and drops empty ones cleanly), Text Diff Lines SY (which lines are only in A, only in B, or in both).
+- H3 workflows: new SY - H3 Image v2 (the picture workflow rebuilt with fewer boxes). Image v1 now uses the euler sampler: with the 4-step fast mode the old sampler gave over-bright, banded pictures.
 
 ## 1.15.0
 - Ten new nodes (308 in all).

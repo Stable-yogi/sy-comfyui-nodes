@@ -58,7 +58,7 @@ with its inputs and what it does.
 ## Workflows that use the pack
 
 Our workflows put an install box at the top. It names this pack, the model files the workflow needs, and the folder each file goes in.
-The seven H3 video workflows are in [`workflows/h3/`](workflows/h3/README.md). Load one in ComfyUI.
+The eight H3 workflows are in [`workflows/h3/`](workflows/h3/README.md). Load one in ComfyUI.
 Some workflows also use free packs from other authors. The banner of each workflow lists the ones it uses.
 Face Detect SY uses the `opencv-python-headless` package for its built-in detector. If it is missing, the node tells you how to add it.
 Face Detect SY also works with a small optional face-finder file. It is not part of this pack. Download it from https://github.com/Stable-yogi/sy-face-model and put it in `ComfyUI/models/sy_face_detect/`.
