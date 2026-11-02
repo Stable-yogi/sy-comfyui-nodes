@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.17.1
+- Fixed the sampler in four H3 workflows (Character Sheet, Turnaround, Video, Voice). They came with a sampler that left the picture banded, smeared and over-saturated in the fast mode; they now use `euler`, which gives a clean result. Upscale was tested both ways and keeps its sampler. Each was run on a real GPU and compared by eye.
+
 ## 1.17.0
 - Twenty-five new nodes (348 in all). Each has a help page with a How to use section and is in the four master test workflows.
 - Picture: Halftone Dots SY (newspaper-print dots), High Pass SY (keeps only fine detail, for sharpening), Seamless Tile Blend SY (fades the edges so a texture repeats without a seam), Glitch Slices SY (shifted horizontal slices), Radial Zoom Blur SY (blur that streaks away from a centre point), Scanlines SY (old-monitor lines), Median Despeckle SY (removes specks and noise), Value Noise Image SY (cloud, paper or grain texture from a seed), Mask Island Cleanup SY (deletes tiny white specks and fills tiny black holes in a mask).

@@ -1097,7 +1097,7 @@
     "Node name for S&R": "KSamplerSelect"
    },
    "widgets_values": [
-    "res_multistep"
+    "euler"
    ],
    "title": "Sampler"
   },
