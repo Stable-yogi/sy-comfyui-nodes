@@ -1,0 +1,20 @@
+import assert from "node:assert/strict";
+import { percent, level, tempLevel, formatGb, cleanInterval, cornerCss, meterRows } from "../js/sy_resource_monitor_logic.js";
+
+let n = 0;
+const eq = (a, b) => { assert.deepEqual(a, b); n++; };
+eq(percent(50, 200), 25); eq(percent(1, 3), 33.3); eq(percent(5, 0), 0); eq(percent("x", 10), 0); eq(percent(300, 100), 100); eq(percent(-5, 100), 0); eq(percent(null, null), 0);
+eq(level(10), "ok"); eq(level(70), "warn"); eq(level(89.9), "warn"); eq(level(90), "hot"); eq(level("x"), "ok");
+eq(tempLevel(60), "ok"); eq(tempLevel(75), "warn"); eq(tempLevel(85), "hot"); eq(tempLevel(null), "ok");
+eq(formatGb(1024 ** 3), "1.0 GB"); eq(formatGb(-5), "0.0 GB"); eq(formatGb("x"), "0.0 GB");
+eq(cleanInterval(0.1), 0.5); eq(cleanInterval(99), 10); eq(cleanInterval("x"), 1); eq(cleanInterval(NaN), 1);
+eq(cornerCss("top right").right, "12px"); eq(cornerCss("bottom left").bottom, "12px"); eq(cornerCss("bottom left").left, "12px"); eq(cornerCss("nonsense").top, "40px");
+const G = 1024 ** 3;
+const rows = meterRows({ cpu: 12.3, ram: { used: 8 * G, total: 32 * G, percent: 25 }, gpus: [{ name: "RTX", util: 40, vram: { used: 12 * G, total: 24 * G, percent: 50 }, temp: 61 }] });
+eq(rows.map((r) => r.key), ["cpu", "ram", "gpu0", "vram0", "temp0"]);
+eq(rows.map((r) => r.label), ["CPU", "RAM", "GPU", "VRAM", "Temp"]);
+eq(rows[1].text, "8.0 GB / 32.0 GB"); eq(rows[4].text, "61 °C"); eq(rows[0].text, "12%");
+const two = meterRows({ cpu: null, ram: null, gpus: [{ util: null, vram: null, temp: null }, { util: 5, vram: { used: 0, total: G, percent: 0 }, temp: 90 }] });
+eq(two.map((r) => r.label), ["GPU1", "VRAM1", "Temp1"]); eq(two[2].level, "hot");
+eq(meterRows(null), []); eq(meterRows({}), []);
+console.log("resource monitor logic checks:", n);

@@ -48,6 +48,10 @@
   boxSrc.widgets[0].value = "0,0,64,64";
   const two = mk("ImageBatch", "Two pictures as one batch (for frame nodes)");
   load.connect(0, two, 0); load.connect(0, two, 1);
+  const four = mk("ImageBatch", "Four pictures as one batch (for the loop finder)");
+  two.connect(0, four, 0); two.connect(0, four, 1);
+  const eight = mk("ImageBatch", "Eight pictures as one batch (for the loop finder)");
+  four.connect(0, eight, 0); four.connect(0, eight, 1);
   const ksel = mk("KSamplerSelect", "Sampler (for the H3 chain)");
   const sched = mk("BasicScheduler", "Sigmas (for the H3 chain)");
   sched.widgets.find((w) => w.name === "steps").value = 4;
@@ -74,7 +78,7 @@
     SYShowText: { value: [seedSrc, 0] }, SYTextNumberFormat: { number_in: [seedSrc, 0] },
     SYSwitch: { a: [load, 0], b: [byType.SYColourSwatch, 0] },
     SYLayoutBoxesMerge: { boxes_3: [byType.SYLayoutBox, 0], boxes_4: [byType.SYLayoutBox, 0], boxes_5: [byType.SYLayoutBox, 0], boxes_6: [byType.SYLayoutBox, 0], boxes_7: [byType.SYLayoutBox, 0], boxes_8: [byType.SYLayoutBox, 0] },
-    SYPasteBackBox: { crop_box: [boxSrc, 0] }, SYAssert: { condition: [yes, 0] }, SYFrameInterpolateBlend: { images: [two, 0] },
+    SYPasteBackBox: { crop_box: [boxSrc, 0] }, SYAssert: { condition: [yes, 0] }, SYFrameInterpolateBlend: { images: [two, 0] }, SYSeamlessLoopFinder: { images: [eight, 0] },
     SYInpaintStitch: { stitch: [byType.SYInpaintCrop, 0] },
     SYKrea2ConditioningRebalance: { conditioning: [byType.SYKrea2EditGroundedEncode, 0] },
     SYTileMerge: { tiles: [byType.SYTileSplit, 0], tile_info: [byType.SYTileSplit, 1] },
@@ -119,6 +123,7 @@
     SYLoaderNamePicker: { folder: "loras" },
     SYVoiceLengthEstimate: { text: "Hello there, this is a short test line." },
     SYImageMetadataReader: { file: load.widgets[0].value },
+    SYMetadataCompare: { image_a_path: load.widgets[0].value, image_b_path: load.widgets[0].value },
     SYJSONFieldGet: { json_text: '{"a": {"b": 2}}', path: "a.b" },
     SYJSONFromReply: { text: 'Here you go: {"a": 1}' },
     SYLinePick: { text: "one\ntwo\nthree" },
@@ -126,6 +131,7 @@
     SYPromptEnhanceRequest: { idea: "a fox in the snow" },
     SYRandomChoice: { lines: "one\ntwo\nthree" },
     SYSaveWithCaption: { caption: "master test" },
+    SYSeamlessLoopFinder: { min_length: 2 },
     SYTagFrequency: { captions: "cat, dog\ncat, bird" },
     SYTextBetween: { text: "a [b] c", start_marker: "[", end_marker: "]" },
     SYTextChunker: { text: "one two three four five six seven eight nine ten" },

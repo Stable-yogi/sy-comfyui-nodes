@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.15.0
+- Ten new nodes (308 in all).
+- Progress Bar SY: a bar at the top or bottom of the screen with percent, step, the running node and the time. Good for screen recordings.
+- Global Seed SY: one seed box that writes its seed into every other seed box in the graph before each run, then moves on by mode (fixed, random, increment, decrement). Nodes can be skipped by title.
+- Resource Monitor SY: small live meters in a screen corner for CPU, RAM, GPU load, VRAM and GPU temperature. Reads through one read-only route.
+- Crossfade Slideshow SY: turns a batch of pictures into a slideshow with a hold time and a soft melt between pictures, with an optional loop.
+- Fade Mask Batch SY: a batch of masks that fades or wipes over time, for fading an effect in or out.
+- Camera Shake SY: a hand-held shake for a clip, with strength, rotation, speed and a seed. Edges are cropped and zoomed so no empty border shows.
+- Gradient Map SY: recolours a picture by its brightness with two or three colours, with strength, invert and an optional mask.
+- Metadata Compare SY: compares the prompt, seed, steps, cfg, sampler, model and size stored in two PNG files and lists the differences.
+- Seamless Loop Finder SY: finds the best start and end frame in a clip so it repeats without a visible jump.
+- Save Video Formats SY: saves frames as mp4, webm, gif or animated webp into the output folder, never over an old file.
+- Set SY / Get SY (wireless links) got helpers: double-click a Get to jump to its Set, a Set shows how many Gets read it, a missing or doubled name turns red, and the right-click menu can make a Get for a Set.
+
 ## 1.14.0
 - Two new nodes (298 in all). LTX Latent Bridge SY: turns decoded video frames (for example from an H3 decode) into an LTX-shaped latent in one node. It fits the size to a multiple of 32, fits the frame count to 8n+1 (trim, pad, nearest or exact) and encodes with the LTX VAE you connect; the info line says what changed. Added after a user request, built from the plain idea, with no outside code.
 - Mute/Bypass Switch SY: one small switch for the nodes you choose. Select nodes, press Add selected nodes, and on runs them while off mutes or bypasses them. Switches with the same pair name act like radio buttons (one on, the others off). The chosen nodes are saved with the workflow, and opening a workflow changes nothing.

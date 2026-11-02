@@ -58,4 +58,10 @@ try:  # web helper for the Seed Vault table (read only)
 except Exception as _err:  # the node still works without the table
     print("[SY] seed vault table not available:", _err)
 
+try:  # web helper for the Resource Monitor meters (read only)
+    from .nodes import _sy_resource_api
+    _sy_resource_api.register_routes()
+except Exception as _err:  # the node still loads; the meters stay empty
+    print("[SY] resource monitor meters not available:", _err)
+
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]

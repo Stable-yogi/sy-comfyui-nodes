@@ -1,6 +1,7 @@
 # SY Nodes: full node list
 
-All 298 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 308 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+
 
 
 ## SY/Text (63)
@@ -69,7 +70,7 @@ All 298 nodes, by group. Every node is in the **SY** folder of the node library 
 - Token Estimate SY
 - Wildcard Prompt SY
 
-## SY/Image (94)
+## SY/Image (98)
 
 - Add Border SY
 - Apply LUT SY
@@ -83,6 +84,7 @@ All 298 nodes, by group. Every node is in the **SY** folder of the node library 
 - Batch To List SY
 - Before After SY
 - Brightness Contrast SY
+- Camera Shake SY
 - Channel Split SY
 - Checkerboard SY
 - Colour Match SY
@@ -93,6 +95,7 @@ All 298 nodes, by group. Every node is in the **SY** folder of the node library 
 - Crop Square Centre For Training SY
 - Crop To Aspect SY
 - CropByMask SY
+- Crossfade Slideshow SY
 - Decode SY
 - Dominant Colors SY
 - Drop Shadow SY
@@ -101,12 +104,14 @@ All 298 nodes, by group. Every node is in the **SY** folder of the node library 
 - Emboss SY
 - Face Detect SY
 - FaceDetail SY
+- Fade Mask Batch SY
 - Film Grain SY
 - Flip Rotate SY
 - Frame Interpolate Blend SY
 - Frame Select SY
 - Gaussian Blur SY
 - Gradient Image SY
+- Gradient Map SY
 - Grayscale SY
 - H3 Tiled Upscale SY
 - Hue Shift SY
@@ -180,7 +185,7 @@ All 298 nodes, by group. Every node is in the **SY** folder of the node library 
 - Video Size Fit SY
 - Video Size Presets SY
 
-## SY/Values (28)
+## SY/Values (29)
 
 - Bool Value SY
 - Clamp Remap SY
@@ -190,6 +195,7 @@ All 298 nodes, by group. Every node is in the **SY** folder of the node library 
 - Ease Curve SY
 - Float Value SY
 - Frame Count Snap SY
+- Global Seed SY
 - H3 Length SY
 - HexColourMix SY
 - Int Value SY
@@ -226,7 +232,7 @@ All 298 nodes, by group. Every node is in the **SY** folder of the node library 
 - Select By Index Text SY
 - Switch SY
 
-## SY/Utility (75)
+## SY/Utility (80)
 
 - Batch Size Calc SY
 - Bundle SY
@@ -261,20 +267,23 @@ All 298 nodes, by group. Every node is in the **SY** folder of the node library 
 - Krea2TEnhancer SY
 - Krea2TEnhancerAdvanced SY
 - LinkFixer SY
-- LTX Latent Bridge SY
 - List Folder Files SY
 - Load Image From Folder SY
 - Load Text SY
 - Loader Name Picker SY
 - Lora Loader Stack SY
 - LoRA SY
+- LTX Latent Bridge SY
+- Metadata Compare SY
 - Model Loader SY
 - Model Preset Bundle SY
 - MuteBypassSwitch SY
 - Pixel Count Info SY
 - Power Lora Loader SY
 - Precision Info SY
+- Progress Bar SY
 - Repeater SY
+- Resource Monitor SY
 - Review Pause SY
 - Run Timer SY
 - Safetensors Header Info SY
@@ -283,7 +292,9 @@ All 298 nodes, by group. Every node is in the **SY** folder of the node library 
 - Sampler SY
 - Save Image To Folder SY
 - Save Text SY
+- Save Video Formats SY
 - Save With Caption SY
+- Seamless Loop Finder SY
 - SeedVault SY
 - Short ID SY
 - Show SY

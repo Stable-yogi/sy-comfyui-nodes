@@ -1,0 +1,20 @@
+import assert from "node:assert/strict";
+import { overallPercent as p, formatElapsed, shortTitle, barText, positionStyle } from "../js/sy_progress_bar_logic.js";
+
+let n = 0;
+const eq = (a, b) => { assert.deepEqual(a, b); n++; };
+eq(p(10, 0), 0); eq(p(10, 5), 50); eq(p(0, 3), 0);
+eq(p(10, 5, 15, 30), 55); eq(p(10, 5, 99, 30), 60);
+eq(p(10, 10), 99); eq(p(10, 10, 5, 5), 99); eq(p(10, 99), 99);
+eq(p(10, 3, 0, 0, true), 100);
+eq(p(null, 3), 0); eq(p("x", 3), 0); eq(p(10, -4), 0); eq(p(10, 1, 1, 0), 10);
+eq(formatElapsed(0), "0:00"); eq(formatElapsed(7999), "0:07"); eq(formatElapsed(65000), "1:05");
+eq(formatElapsed(3723000), "1:02:03"); eq(formatElapsed(-5), "0:00"); eq(formatElapsed("x"), "0:00");
+eq(shortTitle("  Load   Checkpoint "), "Load Checkpoint"); eq(shortTitle("a".repeat(40), 10), "a".repeat(9) + "…"); eq(shortTitle(null), ""); eq(shortTitle("abc", 1), "abc");
+eq(barText({ state: "running", percent: 41.6, subValue: 12, subMax: 30, node: "KSampler", elapsedMs: 65000, showStep: true, showNode: true, showTime: true }), "42%  ·  step 12 of 30  ·  KSampler  ·  1:05");
+eq(barText({ state: "running", percent: 5, showTime: false }), "5%");
+eq(barText({ state: "done", percent: 100, elapsedMs: 9000, showTime: true, showNode: true, node: "x" }), "Done  ·  0:09");
+eq(barText({ state: "error", elapsedMs: 0, showTime: true }), "Stopped by an error  ·  0:00");
+eq(barText({ state: "stopped" }), "Stopped"); eq(barText(null), "0%");
+eq(positionStyle("Bottom"), "bottom"); eq(positionStyle("middle"), "top"); eq(positionStyle(null), "top");
+console.log("progress bar logic checks:", n);
