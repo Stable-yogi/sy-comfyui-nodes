@@ -1,10 +1,10 @@
 # SY Nodes: full node list
 
-All 308 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 323 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 
-## SY/Text (63)
+## SY/Text (68)
 
 - Base64 Text SY
 - Caption Prefix Suffix SY
@@ -34,14 +34,17 @@ All 308 nodes, by group. Every node is in the **SY** folder of the node library 
 - Negative Prompt Presets SY
 - Prompt Choice SY
 - Prompt Cleaner SY
+- Prompt Conflict Check SY
 - Prompt Diff SY
 - Prompt Emphasis Strip SY
 - Prompt Enhance Request SY
 - Prompt Schedule List SY
 - Prompt Schedule SY
 - Prompt Sections SY
+- Prompt Slot Fill SY
 - Prompt Style Templates SY
 - Prompt Tidy SY
+- Prompt Variants SY
 - Prompt Weight Wrap SY
 - Random Choice SY
 - Regex Extract SY
@@ -51,11 +54,13 @@ All 308 nodes, by group. Every node is in the **SY** folder of the node library 
 - Sort Dedupe Lines SY
 - System Prompt Presets SY
 - Tag Frequency SY
+- Tag Remove SY
 - Tag Sort SY
 - Text Between SY
 - Text Case Trim SY
 - Text Chunker SY
 - Text Contains SY
+- Text Diff Lines SY
 - Text Join SY
 - Text Number Format SY
 - Text Split Lines SY
@@ -70,7 +75,7 @@ All 308 nodes, by group. Every node is in the **SY** folder of the node library 
 - Token Estimate SY
 - Wildcard Prompt SY
 
-## SY/Image (98)
+## SY/Image (108)
 
 - Add Border SY
 - Apply LUT SY
@@ -83,10 +88,12 @@ All 308 nodes, by group. Every node is in the **SY** folder of the node library 
 - Batch Repeat SY
 - Batch To List SY
 - Before After SY
+- Bloom SY
 - Brightness Contrast SY
 - Camera Shake SY
 - Channel Split SY
 - Checkerboard SY
+- Chromatic Aberration SY
 - Colour Match SY
 - Colour Overlay SY
 - Colour Temperature SY
@@ -97,6 +104,7 @@ All 308 nodes, by group. Every node is in the **SY** folder of the node library 
 - CropByMask SY
 - Crossfade Slideshow SY
 - Decode SY
+- Deflicker SY
 - Dominant Colors SY
 - Drop Shadow SY
 - Duotone SY
@@ -104,10 +112,12 @@ All 308 nodes, by group. Every node is in the **SY** folder of the node library 
 - Emboss SY
 - Face Detect SY
 - FaceDetail SY
+- Fade In Out SY
 - Fade Mask Batch SY
 - Film Grain SY
 - Flip Rotate SY
 - Frame Interpolate Blend SY
+- Frame Number Overlay SY
 - Frame Select SY
 - Gaussian Blur SY
 - Gradient Image SY
@@ -124,7 +134,9 @@ All 308 nodes, by group. Every node is in the **SY** folder of the node library 
 - Image Resize SY
 - Image Stats SY
 - Invert Image SY
+- Ken Burns SY
 - Labelled AB Grid SY
+- Letterbox SY
 - Levels Adjust SY
 - List To Batch SY
 - Load Clip SY
@@ -145,6 +157,7 @@ All 308 nodes, by group. Every node is in the **SY** folder of the node library 
 - Outer Glow SY
 - Outpaint Pad SY
 - Pad Image SY
+- Palette Limit SY
 - Paste Back Box SY
 - PasteBack SY
 - Ping Pong SY
@@ -163,10 +176,12 @@ All 308 nodes, by group. Every node is in the **SY** folder of the node library 
 - Sharpen SY
 - SketchLines SY
 - Solarize SY
+- Speed Ramp SY
 - Stroke SY
 - Threshold SY
 - Tile Merge SY
 - Tile Split SY
+- Tilt Shift SY
 - Tone Curve SY
 - Upscale SY
 - Vignette SY
