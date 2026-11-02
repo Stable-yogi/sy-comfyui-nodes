@@ -93,7 +93,7 @@ class SYHalftoneDots:
     def INPUT_TYPES(cls):
         return {"required": {
             "image": ("IMAGE", {"tooltip": "The picture (or batch of pictures) to turn into dots."}),
-            "cell_size": ("INT", {"default": 8, "min": 3, "max": 64, "tooltip": "Width of one dot cell in pixels. Bigger cells give coarser dots."}),
+            "cell_size": ("INT", {"default": 5, "min": 3, "max": 64, "tooltip": "Width of one dot cell in pixels. Bigger cells give coarser dots."}),
             "angle": ("FLOAT", {"default": 45.0, "min": 0.0, "max": 90.0, "step": 1.0, "tooltip": "Tilt of the dot grid in degrees. 45 is the classic print angle."}),
             "colour_mode": (list(COLOUR_MODES), {"default": "black on white", "tooltip": "Black dots on white paper, or dots that keep the colour of their cell."}),
             "softness": ("FLOAT", {"default": 0.2, "min": 0.0, "max": 1.0, "step": 0.01, "tooltip": "How soft the dot edges are. 0 is crisp, 1 is very blurry."}),

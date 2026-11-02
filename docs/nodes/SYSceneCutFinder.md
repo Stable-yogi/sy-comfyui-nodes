@@ -9,7 +9,7 @@ Source: `nodes/sy_scene_cut_finder.py`
 | Input | Type | Required | What it does | Range / options |
 |---|---|---|---|---|
 | images | IMAGE | yes | The frames of the clip, in order. | picture batch [B,H,W,3] |
-| sensitivity | FLOAT | yes | Average pixel change between two frames that counts as a cut. Lower finds more cuts. | 0.01 to 1.0, step 0.01, default 0.25 |
+| sensitivity | FLOAT | yes | Average pixel change between two frames that counts as a cut. Lower finds more cuts. | 0.01 to 1.0, step 0.01, default 0.15 |
 | downscale | INT | yes | Shrinks frames before comparing. Bigger is faster and ignores fine noise. | 1 to 16, default 4 |
 
 Outputs: `STRING`, `INT`, `STRING`

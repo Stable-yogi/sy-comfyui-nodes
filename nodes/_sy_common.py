@@ -8,7 +8,7 @@ _THEME_PATH = os.path.join(_ROOT, "js", "sy_theme.json")
 PREFIX = "SY"                 # class id prefix: SYSeed
 SUFFIX = " SY"                # display name suffix: "Seed SY"
 CATEGORY_ROOT = "SY"          # menu folder: SY/Image
-GROUPS = ("Image", "Text", "Values", "Logic", "Resize", "Utility", "Editors", "Notes")
+GROUPS = ("Image", "Text", "Values", "Logic", "Resize", "Utility", "Editors", "Notes", "Audio")
 
 _theme_cache = None
 

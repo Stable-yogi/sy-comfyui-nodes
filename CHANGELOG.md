@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.18.0
+- Twenty-five new nodes (373 in all), and a new group: SY/Audio. Each node has a help page with a How to use section and is in the four master test workflows.
+- Picture: Vibrance SY (lifts dull colours more than strong ones), Colour Balance 3-Way SY (tints shadows, mid-tones and highlights separately), Selective Colour SY (changes only one range of colours), Clarity SY (local contrast without glow halos), Lens Distortion SY (barrel or pincushion warp), Ripple Warp SY (water-ripple waves), Cel Shade SY (cartoon look with ink outlines), Oil Paint SY (painterly smoothing that keeps edges).
+- Mask: Mask Distance Falloff SY (a soft edge that depends on distance from the shape), Mask Shape Draw SY (draw a rectangle, ellipse or gradient mask from numbers).
+- Video: Video Stabilise SY (cancels camera shake), Motion Mask SY (shows what moved), Duplicate Frame Drop SY (drops frames that did not change), Zoom Punch SY (a quick pulse zoom on chosen frames).
+- Audio (new group): Audio Fade SY, Audio Normalise SY, Audio Trim Silence SY, Audio Loop To Length SY, Audio Mix SY.
+- Text: Table Pick SY (one cell from pasted CSV), JSON To Lines SY (JSON as plain lines), Text Pad Align SY (lines of equal width).
+- Utility and batch: Batch Shuffle SY (seeded order), Batch Interleave SY (weave two batches), Grid Positions SY (where each cell of a grid sits).
+- Changed defaults: Halftone Dots SY dot size 8 to 5, Scene Cut Finder SY sensitivity 0.25 to 0.15 (it now catches smaller changes).
+
 ## 1.17.1
 - Fixed the sampler in four H3 workflows (Character Sheet, Turnaround, Video, Voice). They came with a sampler that left the picture banded, smeared and over-saturated in the fast mode; they now use `euler`, which gives a clean result. Upscale was tested both ways and keeps its sampler. Each was run on a real GPU and compared by eye.
 

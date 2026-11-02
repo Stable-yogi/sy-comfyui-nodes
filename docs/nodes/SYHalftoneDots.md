@@ -9,7 +9,7 @@ Source: `nodes/sy_halftone_dots.py`
 | Input | Type | Required | What it does | Range / options |
 |---|---|---|---|---|
 | image | IMAGE | yes | The picture (or batch of pictures) to turn into dots. | picture batch [B,H,W,3] |
-| cell_size | INT | yes | Width of one dot cell in pixels. Bigger cells give coarser dots. | 3 to 64, default 8 |
+| cell_size | INT | yes | Width of one dot cell in pixels. Bigger cells give coarser dots. | 3 to 64, default 5 |
 | angle | FLOAT | yes | Tilt of the dot grid in degrees. 45 is the classic print angle. | 0.0 to 90.0, step 1.0, default 45.0 |
 | colour_mode | COMBO | yes | Black dots on white paper, or dots that keep the colour of their cell. | one of: black on white, keep colour |
 | softness | FLOAT | yes | How soft the dot edges are. 0 is crisp, 1 is very blurry. | 0.0 to 1.0, step 0.01, default 0.2 |

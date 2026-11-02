@@ -56,7 +56,7 @@ class SYSceneCutFinder:
         return {
             "required": {
                 "images": ("IMAGE", {"tooltip": "The frames of the clip, in order."}),
-                "sensitivity": ("FLOAT", {"default": 0.25, "min": 0.01, "max": 1.0, "step": 0.01, "tooltip": "Average pixel change between two frames that counts as a cut. Lower finds more cuts."}),
+                "sensitivity": ("FLOAT", {"default": 0.15, "min": 0.01, "max": 1.0, "step": 0.01, "tooltip": "Average pixel change between two frames that counts as a cut. Lower finds more cuts."}),
                 "downscale": ("INT", {"default": 4, "min": 1, "max": 16, "tooltip": "Shrinks frames before comparing. Bigger is faster and ignores fine noise."}),
             },
         }

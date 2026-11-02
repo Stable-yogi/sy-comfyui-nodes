@@ -1,10 +1,9 @@
 # SY Nodes: full node list
 
-All 348 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 373 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
-
-## SY/Text (73)
+## SY/Text (76)
 
 - Base64 Text SY
 - Caption Prefix Suffix SY
@@ -26,6 +25,7 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - JSON Field Get SY
 - JSON From Reply SY
 - JSON Prompt Builder SY
+- JSON To Lines SY
 - Key Value Lookup SY
 - Line Numbers SY
 - LinePick SY
@@ -57,6 +57,7 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - Sort Dedupe Lines SY
 - Strip Markdown SY
 - System Prompt Presets SY
+- Table Pick SY
 - Tag Frequency SY
 - Tag Remove SY
 - Tag Sort SY
@@ -67,6 +68,7 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - Text Diff Lines SY
 - Text Join SY
 - Text Number Format SY
+- Text Pad Align SY
 - Text Similarity SY
 - Text Split Lines SY
 - Text Stats SY
@@ -80,7 +82,7 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - Token Estimate SY
 - Wildcard Prompt SY
 
-## SY/Image (122)
+## SY/Image (138)
 
 - Add Border SY
 - Apply LUT SY
@@ -89,16 +91,21 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - Auto Contrast SY
 - Batch Concat SY
 - Batch Info SY
+- Batch Interleave SY
 - Batch Pick SY
 - Batch Repeat SY
+- Batch Shuffle SY
 - Batch To List SY
 - Before After SY
 - Bloom SY
 - Brightness Contrast SY
 - Camera Shake SY
+- Cel Shade SY
 - Channel Split SY
 - Checkerboard SY
 - Chromatic Aberration SY
+- Clarity SY
+- Colour Balance 3-Way SY
 - Colour Match SY
 - Colour Overlay SY
 - Colour Temperature SY
@@ -113,6 +120,7 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - Dominant Colors SY
 - Drop Shadow SY
 - Duotone SY
+- Duplicate Frame Drop SY
 - Echo Trail SY
 - Edge Detect SY
 - Emboss SY
@@ -146,14 +154,17 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - Invert Image SY
 - Ken Burns SY
 - Labelled AB Grid SY
+- Lens Distortion SY
 - Letterbox SY
 - Levels Adjust SY
 - List To Batch SY
 - Load Clip SY
 - Load Image Mini SY
 - Luminance Mask SY
+- Mask Distance Falloff SY
 - Mask From Words SY
 - Mask Island Cleanup SY
+- Mask Shape Draw SY
 - Mask Tools SY
 - MaskCombine SY
 - MaskFeather SY
@@ -165,6 +176,8 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - MaskToBox SY
 - Median Despeckle SY
 - Mirror Image SY
+- Motion Mask SY
+- Oil Paint SY
 - Orientation SY
 - Outer Glow SY
 - Outpaint Pad SY
@@ -179,6 +192,7 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - Reference Picture SY
 - Remove Background SY
 - Reverse Batch SY
+- Ripple Warp SY
 - Roll Image SY
 - Rounded Corners SY
 - RTX Upscale SY
@@ -188,6 +202,7 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - Scanlines SY
 - Scene Cut Finder SY
 - Seamless Tile Blend SY
+- Selective Colour SY
 - Sepia SY
 - Sharpen SY
 - Sharpest Frame Pick SY
@@ -203,7 +218,10 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - Tone Curve SY
 - Upscale SY
 - Value Noise Image SY
+- Vibrance SY
+- Video Stabilise SY
 - Vignette SY
+- Zoom Punch SY
 
 ## SY/Resize (11)
 
@@ -219,7 +237,7 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - Video Size Fit SY
 - Video Size Presets SY
 
-## SY/Values (29)
+## SY/Values (30)
 
 - Bool Value SY
 - Clamp Remap SY
@@ -230,6 +248,7 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - Float Value SY
 - Frame Count Snap SY
 - Global Seed SY
+- Grid Positions SY
 - H3 Length SY
 - HexColourMix SY
 - Int Value SY
@@ -375,3 +394,11 @@ All 348 nodes, by group. Every node is in the **SY** folder of the node library 
 - Model Downloader SY
 - Note SY
 - Workflow Header SY
+
+## SY/Audio (5)
+
+- Audio Fade SY
+- Audio Loop To Length SY
+- Audio Mix SY
+- Audio Normalise SY
+- Audio Trim Silence SY

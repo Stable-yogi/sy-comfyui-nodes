@@ -100,6 +100,33 @@ def make_notes(port):
         print("note: could not create notes.txt:", e)
 
 
+def make_sound(port):
+    """The audio nodes need a sound: make a one second tone as a wav file and put it in the ComfyUI input folder."""
+    import io, math, struct, wave
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as w:
+        w.setnchannels(2)
+        w.setsampwidth(2)
+        w.setframerate(44100)
+        frames = bytearray()
+        for i in range(44100):
+            v = int(12000 * math.sin(2 * math.pi * 440 * i / 44100))
+            frames += struct.pack("<hh", v, v)
+        w.writeframes(bytes(frames))
+    boundary = "----symastersound"
+    crlf = "\r\n"
+    head = ("--" + boundary + crlf + 'Content-Disposition: form-data; name="image"; filename="sy-master-test.wav"' + crlf +
+            "Content-Type: audio/wav" + crlf + crlf).encode("utf-8")
+    tail = (crlf + "--" + boundary + crlf + 'Content-Disposition: form-data; name="overwrite"' + crlf + crlf + "true" + crlf +
+            "--" + boundary + "--" + crlf).encode("utf-8")
+    req = urllib.request.Request("http://127.0.0.1:%d/upload/image" % port, data=head + buf.getvalue() + tail)
+    req.add_header("Content-Type", "multipart/form-data; boundary=" + boundary)
+    try:
+        urllib.request.urlopen(req, timeout=30).read()
+    except Exception as e:  # the Load Audio node will then report the missing file
+        print("note: could not create the test sound:", e)
+
+
 def run_one(port, prompt, info, max_rounds, deadline):
     """Run one prompt, taking broken nodes out round by round. Returns a dict with removed, live, ran_ok, rounds, fail."""
     removed = {}  # id -> reason
@@ -164,6 +191,7 @@ def check_parts(port, paths, report_path, max_rounds=250):
     pics = (info.get("LoadImage", {}).get("input", {}).get("required", {}).get("image") or [[]])[0]
     png = next((p for p in pics if p.lower().endswith(".png")), pics[0] if pics else "")  # the test picture: first picture in the input folder
     make_notes(port)
+    make_sound(port)
     t0 = time.time()
     deadline = t0 + 3600
     body, parts, fitted_all = [], [], []

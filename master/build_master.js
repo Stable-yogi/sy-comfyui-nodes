@@ -9,7 +9,7 @@
   const PARTS = {
     text: { n: 1, name: "Text", cats: ["SY/Text"] },
     picture: { n: 2, name: "Picture", cats: ["SY/Image", "SY/Resize"] },
-    tools: { n: 3, name: "Tools", cats: ["SY/Utility", "SY/Editors"] },
+    tools: { n: 3, name: "Tools", cats: ["SY/Utility", "SY/Editors", "SY/Audio"] },
     numbers: { n: 4, name: "Numbers and logic", cats: ["SY/Values", "SY/Logic", "SY/Notes"] },
   };
   const PART = PARTS[window.__masterPart] || null;
@@ -46,6 +46,7 @@
   yes.widgets[0].value = true;
   const boxSrc = mk("PrimitiveString", "A box x,y,width,height (for Paste Back Box)");
   boxSrc.widgets[0].value = "0,0,64,64";
+  const sound = mk("LoadAudio", "Test sound (any sound works)");
   const two = mk("ImageBatch", "Two pictures as one batch (for frame nodes)");
   load.connect(0, two, 0); load.connect(0, two, 1);
   const four = mk("ImageBatch", "Four pictures as one batch (for the loop finder)");
@@ -90,6 +91,7 @@
     SYH3RenderSegment: { settings: [byType.SYH3ChainSettings, 0], chain_state: null },
     SYH3RepairSegment: { settings: [byType.SYH3ChainSettings, 0], chain_state: null },
     SYH3ChainToVideo: { chain: [byType.SYH3RenderSegment, 1] },
+    SYVideoStabilise: { images: [two, 0] }, SYMotionMask: { images: [two, 0] }, SYDuplicateFrameDrop: { images: [two, 0] }, SYZoomPunch: { images: [two, 0] },
   };
   for (const { n, t } of nodes) {
     const ins = (n.inputs || []).filter((i) => !i.widget);
@@ -103,6 +105,7 @@
         else if (inp.type === "MASK") from = [toMask, 0];
         else if (inp.type === "MODEL") from = [unet, 0];
         else if (inp.type === "CLIP") from = [clip, 0];
+        else if (inp.type === "AUDIO" && t.startsWith("SYAudio")) from = [sound, 0];
         else if (producerOf[inp.type]) from = producerOf[inp.type];
       }
       if (from && from[0] && from[0] !== n) from[0].connect(from[1], n, k); else log.noInput.push(t + "." + inp.name);
@@ -141,6 +144,10 @@
     SYTextInImage: { text: "SY" },
     SYTextSplitLines: { text: "one\ntwo\nthree" },
     SYXYLabelStrip: { x_values: "1, 2, 3", y_values: "a, b" },
+    SYZoomPunch: { frames: "1" },
+    SYTablePick: { table: "name,age\nAnn,30\nBob,41", column: "name" },
+    SYJSONToLines: { json_text: '{"a": 1, "b": [2, 3]}' },
+    SYTextPadAlign: { text: "one\nthree" },
   };
   for (const [cls, vals] of Object.entries(FILL)) {
     const n = byType[cls]; if (!n) continue;
@@ -158,6 +165,7 @@
   // ---- a preview for the first useful output of every node
   const sinkOf = (n) => {
     for (const [i, o] of (n.outputs || []).entries()) {
+      if (o.type === "AUDIO") { const p = mk("PreviewAudio", "Result: sound"); n.connect(i, p, 0); return [p]; }
       if (o.type === "IMAGE") { const p = mk("PreviewImage", "Result: picture"); n.connect(i, p, 0); return [p]; }
       if (o.type === "MASK") {
         const m = mk("MaskToImage", "Mask as picture"); n.connect(i, m, 0);
@@ -196,7 +204,7 @@
   }
   // ---- layout
   const GAP = 60, TITLE = 30;
-  for (const c of cells) { size(c.n); for (const s of c.sinks) { s.size = s.type === "PreviewImage" ? [240, 240] : (s.type === "MaskToImage" || s.type === "VAEDecode") ? [200, 60] : [240, 110]; } }
+  for (const c of cells) { size(c.n); for (const s of c.sinks) { s.size = s.type === "PreviewImage" ? [240, 240] : s.type === "PreviewAudio" ? [260, 90] : (s.type === "MaskToImage" || s.type === "VAEDecode") ? [200, 60] : [240, 110]; } }
   const groups = [];
   const placeGroup = (title, list, x0, y0, cols, color) => {
     let x = x0 + 20, y = y0 + 80, rowH = 0, col = 0, maxX = x0 + 400;
@@ -220,11 +228,11 @@
   head.pos = [20, 40]; head.size = [1800, 170];
   let y = 280;
   // sources group
-  const srcList = [{ n: load, sinks: [] }, { n: toMask, sinks: [] }, { n: two, sinks: [] }, { n: yes, sinks: [] }, { n: boxSrc, sinks: [] }, { n: seedSrc, sinks: [] }, { n: unet, sinks: [] }, { n: clip, sinks: [] }]
+  const srcList = [{ n: load, sinks: [] }, { n: toMask, sinks: [] }, { n: two, sinks: [] }, { n: yes, sinks: [] }, { n: boxSrc, sinks: [] }, { n: sound, sinks: [] }, { n: seedSrc, sinks: [] }, { n: unet, sinks: [] }, { n: clip, sinks: [] }]
     .filter((s) => !PART || graph._nodes.includes(s.n));
   for (const c of srcList) size(c.n);
   y = placeGroup("SOURCES: picture, mask, seed, two model files", srcList, 0, y, 5, "#1f4e79");
-  const order = ["SY/Image", "SY/Resize", "SY/Editors", "SY/Text", "SY/Values", "SY/Logic", "SY/Utility", "SY/Notes", "HELPERS"];
+  const order = ["SY/Image", "SY/Resize", "SY/Editors", "SY/Text", "SY/Values", "SY/Logic", "SY/Utility", "SY/Audio", "SY/Notes", "HELPERS"];
   for (const cat of order) {
     const list = cells.filter((c) => c.cat === cat && !srcList.some((s) => s.n === c.n));
     if (list.length) y = placeGroup(cat.replace("SY/", "").toUpperCase() + " nodes (" + list.length + ")", list, 0, y, 5, roleColor(cat));
@@ -235,7 +243,7 @@
   head.properties.sy_subtitle = PART ? "Groups: " + PART.cats.map((c) => c.replace("SY/", "")).join(", ") + ". Press Run after each ComfyUI update." : "Every SY node in one workflow. Press Run after each ComfyUI update.";
   head.properties.sy_install = "This workflow needs only SY Nodes by Stable Yogi.\nTwo model files make the model nodes work: the Krea 2 Turbo model and the Qwen text encoder (the same two as in the Krea 2 Turbo workflow).\nThe test picture is the first picture in your ComfyUI input folder.";
   head.properties.sy_howto = "1. Press Run.\n2. Every SY node runs once. Each one has a Result box next to it.\n3. A red node means that node is broken now. Write down its name.\n4. Model nodes stay red if the two model files are missing. That is fine.\n\nFor a report with no clicking, run sy_master_check.py (see the docs).";
-  head.properties.sy_info = "Groups follow the node groups: Image, Resize, Editors, Text, Values, Logic, Utility, Notes.\nThe SOURCES box feeds one picture, one mask and one seed to all nodes.\nWires can be hidden with the link button at the bottom right of the canvas.";
+  head.properties.sy_info = "Groups follow the node groups: Image, Resize, Editors, Text, Values, Logic, Utility, Audio, Notes.\nThe SOURCES box feeds one picture, one mask and one seed to all nodes.\nWires can be hidden with the link button at the bottom right of the canvas.";
   head._syBannerRefresh && head._syBannerRefresh();
   app.canvas.setDirty(true, true);
   window.__masterLog = log;

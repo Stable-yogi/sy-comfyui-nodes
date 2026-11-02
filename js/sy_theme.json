@@ -60,6 +60,10 @@
     "Notes": {
       "color": "#313338",
       "bgcolor": "#232428"
+    },
+    "Audio": {
+      "color": "#1f6b6b",
+      "bgcolor": "#2b2d31"
     }
   },
   "note_styles": {
