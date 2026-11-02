@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.19.0
+- Thirty new nodes (403 in all). Each has a help page with a How to use section and is in the four master test workflows.
+- Picture: Swirl Pinch Bulge Warp SY (twist, pinch or bulge around a point), Perspective Warp SY (pull the four corners of a picture), Dither SY (retro few-colour dots), Motion Blur SY (smear along a direction), Defocus Blur SY (round camera-lens blur), Split Toning SY (one tint for the shadows, another for the highlights), Shadows Highlights SY (opens dark areas and calms very bright ones), Dehaze SY (removes fog and haze).
+- Mask: Mask Fill Holes SY (fills closed holes), Mask Keep Largest SY (keeps the biggest blobs), Mask Outline Ring SY (a band around the edge), Mask Noise Texture SY (a cloudy mask from a seed).
+- Video and batch: Batch Average SY (all frames into one long-exposure picture), Batch Max Blend SY (light trails: the brightest value at every pixel), Split Screen SY (two clips side by side, stacked or split on a diagonal), Picture In Picture SY (a small clip inside a big one, with a border), Strobe Flash SY (flashes on a beat pattern).
+- Audio: Audio Gain dB SY, Audio Reverse SY, Audio Speed Change SY, Audio Beat Finder SY (times and frame numbers of the loud hits), Audio Info SY, Audio Waveform Picture SY (the sound drawn as a picture), Audio High Low Pass SY (cuts rumble or hiss).
+- Text: CSV To JSON SY (pasted table to JSON), Text Extract Numbers SY (pulls numbers out of text), Text Redact SY (hides names, emails, numbers and links before sharing).
+- Utility: Date Add SY (days, weeks, months, years or business days), Unit Convert SY (length, weight, temperature, speed, data size, time), Cumulative Sum SY (running total, average, maximum, minimum or step).
+
 ## 1.18.0
 - Twenty-five new nodes (373 in all), and a new group: SY/Audio. Each node has a help page with a How to use section and is in the four master test workflows.
 - Picture: Vibrance SY (lifts dull colours more than strong ones), Colour Balance 3-Way SY (tints shadows, mid-tones and highlights separately), Selective Colour SY (changes only one range of colours), Clarity SY (local contrast without glow halos), Lens Distortion SY (barrel or pincushion warp), Ripple Warp SY (water-ripple waves), Cel Shade SY (cartoon look with ink outlines), Oil Paint SY (painterly smoothing that keeps edges).

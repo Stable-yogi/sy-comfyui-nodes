@@ -1,6 +1,6 @@
 # SY Nodes for ComfyUI
 
-373 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
+403 helper nodes by Stable Yogi. Every node name ends with **SY** and sits in the **SY** folder of the node library.
 They load models, set sizes and seeds, switch parts of a graph on and off, edit masks and pictures, work with text,
 and save results. Our workflows use them, so one install of this pack gives you the nodes the workflows need.
 
@@ -43,15 +43,15 @@ Replace the folder with the new one and restart ComfyUI. Saved workflows keep wo
 
 | Group | Nodes | What is in it |
 |---|---|---|
-| SY/Text | 76 | Prompt and caption helpers, text join, find and replace, JSON, chat prompt builders |
-| SY/Image | 138 | Picture tools, masks, crop and paste, compare, grids, loaders and save steps |
+| SY/Text | 79 | Prompt and caption helpers, text join, find and replace, JSON, chat prompt builders |
+| SY/Image | 155 | Picture tools, masks, crop and paste, compare, grids, loaders and save steps |
 | SY/Resize | 11 | Sizes, aspect ratios, video sizes, H3 latent upscaler |
-| SY/Values | 30 | Seed, numbers, switches, lists |
+| SY/Values | 33 | Seed, numbers, switches, lists |
 | SY/Logic | 15 | Switch, pick by number, compare, gate |
 | SY/Utility | 83 | Model and LoRA loaders, batch and video helpers, timers, memory tools, H3 bundle save and load |
 | SY/Editors | 10 | Mask editor, 3D scene, XY grids, paint |
 | SY/Notes | 5 | Workflow header, model downloader and notes |
-| SY/Audio | 5 | Sound tools: fade, normalise, trim silence, loop to length, mix |
+| SY/Audio | 12 | Sound tools: fade, normalise, trim silence, loop to length, mix, gain, reverse, speed, beat finder, info, waveform picture, high and low pass |
 
 The full list: [`docs/NODES.md`](docs/NODES.md). Every node has its own help page in [`docs/nodes/`](docs/nodes/)
 with its inputs and what it does.

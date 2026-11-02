@@ -1,9 +1,9 @@
 # SY Nodes: full node list
 
-All 373 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 403 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
-## SY/Text (76)
+## SY/Text (79)
 
 - Base64 Text SY
 - Caption Prefix Suffix SY
@@ -12,6 +12,7 @@ All 373 nodes, by group. Every node is in the **SY** folder of the node library 
 - Case Style Convert SY
 - CharacterSheetPrompt SY
 - Chat Prompt Builder SY
+- CSV To JSON SY
 - Dataset Pair Check SY
 - EditInstruction SY
 - EditPresetPick SY
@@ -66,9 +67,11 @@ All 373 nodes, by group. Every node is in the **SY** folder of the node library 
 - Text Chunker SY
 - Text Contains SY
 - Text Diff Lines SY
+- Text Extract Numbers SY
 - Text Join SY
 - Text Number Format SY
 - Text Pad Align SY
+- Text Redact SY
 - Text Similarity SY
 - Text Split Lines SY
 - Text Stats SY
@@ -82,16 +85,18 @@ All 373 nodes, by group. Every node is in the **SY** folder of the node library 
 - Token Estimate SY
 - Wildcard Prompt SY
 
-## SY/Image (138)
+## SY/Image (155)
 
 - Add Border SY
 - Apply LUT SY
 - ApplyMaskToImage SY
 - Aspect Bucket SY
 - Auto Contrast SY
+- Batch Average SY
 - Batch Concat SY
 - Batch Info SY
 - Batch Interleave SY
+- Batch Max Blend SY
 - Batch Pick SY
 - Batch Repeat SY
 - Batch Shuffle SY
@@ -117,6 +122,9 @@ All 373 nodes, by group. Every node is in the **SY** folder of the node library 
 - Crossfade Slideshow SY
 - Decode SY
 - Deflicker SY
+- Defocus Blur SY
+- Dehaze SY
+- Dither SY
 - Dominant Colors SY
 - Drop Shadow SY
 - Duotone SY
@@ -162,8 +170,12 @@ All 373 nodes, by group. Every node is in the **SY** folder of the node library 
 - Load Image Mini SY
 - Luminance Mask SY
 - Mask Distance Falloff SY
+- Mask Fill Holes SY
 - Mask From Words SY
 - Mask Island Cleanup SY
+- Mask Keep Largest SY
+- Mask Noise Texture SY
+- Mask Outline Ring SY
 - Mask Shape Draw SY
 - Mask Tools SY
 - MaskCombine SY
@@ -176,6 +188,7 @@ All 373 nodes, by group. Every node is in the **SY** folder of the node library 
 - MaskToBox SY
 - Median Despeckle SY
 - Mirror Image SY
+- Motion Blur SY
 - Motion Mask SY
 - Oil Paint SY
 - Orientation SY
@@ -185,6 +198,8 @@ All 373 nodes, by group. Every node is in the **SY** folder of the node library 
 - Palette Limit SY
 - Paste Back Box SY
 - PasteBack SY
+- Perspective Warp SY
+- Picture In Picture SY
 - Ping Pong SY
 - Pixelate SY
 - Posterize SY
@@ -204,13 +219,18 @@ All 373 nodes, by group. Every node is in the **SY** folder of the node library 
 - Seamless Tile Blend SY
 - Selective Colour SY
 - Sepia SY
+- Shadows Highlights SY
 - Sharpen SY
 - Sharpest Frame Pick SY
 - SketchLines SY
 - Slide Transition SY
 - Solarize SY
 - Speed Ramp SY
+- Split Screen SY
+- Split Toning SY
+- Strobe Flash SY
 - Stroke SY
+- Swirl Pinch Bulge Warp SY
 - Threshold SY
 - Tile Merge SY
 - Tile Split SY
@@ -237,12 +257,14 @@ All 373 nodes, by group. Every node is in the **SY** folder of the node library 
 - Video Size Fit SY
 - Video Size Presets SY
 
-## SY/Values (30)
+## SY/Values (33)
 
 - Bool Value SY
 - Clamp Remap SY
 - Colour Swatch SY
 - Control Panel SY
+- Cumulative Sum SY
+- Date Add SY
 - Duration Frames SY
 - Ease Curve SY
 - Float Value SY
@@ -268,6 +290,7 @@ All 373 nodes, by group. Every node is in the **SY** folder of the node library 
 - Seed SY
 - Size Text SY
 - Time Code SY
+- Unit Convert SY
 - VoiceLengthEstimate SY
 
 ## SY/Logic (15)
@@ -395,10 +418,17 @@ All 373 nodes, by group. Every node is in the **SY** folder of the node library 
 - Note SY
 - Workflow Header SY
 
-## SY/Audio (5)
+## SY/Audio (12)
 
+- Audio Beat Finder SY
 - Audio Fade SY
+- Audio Gain dB SY
+- Audio High Low Pass SY
+- Audio Info SY
 - Audio Loop To Length SY
 - Audio Mix SY
 - Audio Normalise SY
+- Audio Reverse SY
+- Audio Speed Change SY
 - Audio Trim Silence SY
+- Audio Waveform Picture SY

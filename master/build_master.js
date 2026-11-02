@@ -148,6 +148,9 @@
     SYTablePick: { table: "name,age\nAnn,30\nBob,41", column: "name" },
     SYJSONToLines: { json_text: '{"a": 1, "b": [2, 3]}' },
     SYTextPadAlign: { text: "one\nthree" },
+    SYCsvToJson: { table: "name,age\nAnn,30\nBob,41" },
+    SYTextExtractNumbers: { text: "I paid 1,234.5 for 3 items and -7 back" },
+    SYTextRedact: { text: "Mail ann@example.com or call 0123456 7890. Ann lives in New York.", words: "Ann\nNew York", also_hide: "all of these" },
   };
   for (const [cls, vals] of Object.entries(FILL)) {
     const n = byType[cls]; if (!n) continue;
