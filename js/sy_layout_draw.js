@@ -229,7 +229,8 @@ function setup(node) {
     if (hit) { e.preventDefault(); e.stopPropagation(); removeAt(hit.index); }
   });
   canvas.addEventListener("keydown", (e) => {
-    if ((e.key === "Delete" || e.key === "Backspace") && state.sel >= 0) { e.preventDefault(); removeAt(state.sel); }
+    // stopPropagation: ComfyUI's own Delete key would otherwise remove the whole node too
+    if ((e.key === "Delete" || e.key === "Backspace") && state.sel >= 0) { e.preventDefault(); e.stopPropagation(); removeAt(state.sel); }
   });
   colourBtn.addEventListener("click", () => {
     if (state.sel >= 0) { const b = state.boxes[state.sel]; state.boxes[state.sel] = { ...b, colour: nextColour(b.colour) }; write(); }

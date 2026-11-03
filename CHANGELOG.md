@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.20.1
+- Layout Box Draw SY: pressing Delete on a selected box removed the box but also deleted the whole node. It now removes only the box.
+
 ## 1.20.0
 - Five new nodes (408 in all). Each has a help page with a How to use section and is in the master test workflows.
 - Video and batch: Overlap Window Planner SY (cuts a long clip into overlapping windows, with start and end frames), Overlap Blend SY (joins two clips with a smooth cross-fade over the frames they share), Colour Drift Check SY (shows how much brightness and colour strength crept up or down along a clip).
