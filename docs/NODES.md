@@ -1,6 +1,6 @@
 # SY Nodes: full node list
 
-All 403 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 408 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 ## SY/Text (79)
@@ -85,7 +85,7 @@ All 403 nodes, by group. Every node is in the **SY** folder of the node library 
 - Token Estimate SY
 - Wildcard Prompt SY
 
-## SY/Image (155)
+## SY/Image (158)
 
 - Add Border SY
 - Apply LUT SY
@@ -111,6 +111,7 @@ All 403 nodes, by group. Every node is in the **SY** folder of the node library 
 - Chromatic Aberration SY
 - Clarity SY
 - Colour Balance 3-Way SY
+- Colour Drift Check SY
 - Colour Match SY
 - Colour Overlay SY
 - Colour Temperature SY
@@ -194,6 +195,8 @@ All 403 nodes, by group. Every node is in the **SY** folder of the node library 
 - Orientation SY
 - Outer Glow SY
 - Outpaint Pad SY
+- Overlap Blend SY
+- Overlap Window Planner SY
 - Pad Image SY
 - Palette Limit SY
 - Paste Back Box SY
@@ -311,7 +314,7 @@ All 403 nodes, by group. Every node is in the **SY** folder of the node library 
 - Select By Index Text SY
 - Switch SY
 
-## SY/Utility (83)
+## SY/Utility (84)
 
 - Batch Size Calc SY
 - Bundle SY
@@ -392,18 +395,20 @@ All 403 nodes, by group. Every node is in the **SY** folder of the node library 
 - Video Frames Calc SY
 - Video Loop Frames SY
 - VRAM Estimate SY
+- Workflow Check SY
 - XY Grid Assemble SY
 - XY Label Strip SY
 - XY Pick SY
 - XY Values List SY
 
-## SY/Editors (10)
+## SY/Editors (11)
 
 - 3D Scene SY
 - InpaintCrop SY
 - InpaintStitch SY
 - Krea2EditGroundedEncode SY
 - Krea2EditModelPatch SY
+- Layout Box Draw SY
 - Layout Box SY
 - Layout Boxes Merge SY
 - Layout Boxes Preview SY

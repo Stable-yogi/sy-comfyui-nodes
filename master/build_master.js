@@ -82,6 +82,7 @@
     SYSwitch: { a: [load, 0], b: [byType.SYColourSwatch, 0] },
     SYLayoutBoxesMerge: { boxes_3: [byType.SYLayoutBox, 0], boxes_4: [byType.SYLayoutBox, 0], boxes_5: [byType.SYLayoutBox, 0], boxes_6: [byType.SYLayoutBox, 0], boxes_7: [byType.SYLayoutBox, 0], boxes_8: [byType.SYLayoutBox, 0] },
     SYPasteBackBox: { crop_box: [boxSrc, 0] }, SYAssert: { condition: [yes, 0] }, SYFrameInterpolateBlend: { images: [two, 0] }, SYSeamlessLoopFinder: { images: [eight, 0] }, SYSpeedRamp: { images: [eight, 0] }, SYSlideTransition: { images_a: [sixteen, 0], images_b: [sixteen, 0] },
+    SYOverlapBlend: { clip_a: [eight, 0], clip_b: [eight, 0] }, SYColourDriftCheck: { images: [eight, 0] },
     SYInpaintStitch: { stitch: [byType.SYInpaintCrop, 0] },
     SYKrea2ConditioningRebalance: { conditioning: [byType.SYKrea2EditGroundedEncode, 0] },
     SYTileMerge: { tiles: [byType.SYTileSplit, 0], tile_info: [byType.SYTileSplit, 1] },
@@ -150,6 +151,8 @@
     SYTextPadAlign: { text: "one\nthree" },
     SYCsvToJson: { table: "name,age\nAnn,30\nBob,41" },
     SYTextExtractNumbers: { text: "I paid 1,234.5 for 3 items and -7 back" },
+    SYWorkflowCheck: { workflow_json: '{"nodes": [{"id": 1, "type": "LoadImage", "widgets_values": ["example.png"]}, {"id": 2, "type": "SomeMissingNode", "widgets_values": ["missing_model.safetensors"]}]}' },
+    SYLayoutBoxDraw: { boxes: '[{"x": 64, "y": 64, "w": 256, "h": 256, "label": "sign", "colour": "green"}]' },
     SYTextRedact: { text: "Mail ann@example.com or call 0123456 7890. Ann lives in New York.", words: "Ann\nNew York", also_hide: "all of these" },
   };
   for (const [cls, vals] of Object.entries(FILL)) {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.20.0
+- Five new nodes (408 in all). Each has a help page with a How to use section and is in the master test workflows.
+- Video and batch: Overlap Window Planner SY (cuts a long clip into overlapping windows, with start and end frames), Overlap Blend SY (joins two clips with a smooth cross-fade over the frames they share), Colour Drift Check SY (shows how much brightness and colour strength crept up or down along a clip).
+- Utility: Workflow Check SY (paste a shared workflow before loading it and see which nodes and which model files are missing on this PC).
+- Editors: Layout Box Draw SY (draw layout boxes with the mouse on a small canvas inside the node; the boxes come out as box text for the layout nodes).
+
 ## 1.19.0
 - Thirty new nodes (403 in all). Each has a help page with a How to use section and is in the four master test workflows.
 - Picture: Swirl Pinch Bulge Warp SY (twist, pinch or bulge around a point), Perspective Warp SY (pull the four corners of a picture), Dither SY (retro few-colour dots), Motion Blur SY (smear along a direction), Defocus Blur SY (round camera-lens blur), Split Toning SY (one tint for the shadows, another for the highlights), Shadows Highlights SY (opens dark areas and calms very bright ones), Dehaze SY (removes fog and haze).
