@@ -1,6 +1,6 @@
 # SY Nodes: full node list
 
-All 408 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 409 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 ## SY/Text (79)
@@ -314,7 +314,7 @@ All 408 nodes, by group. Every node is in the **SY** folder of the node library 
 - Select By Index Text SY
 - Switch SY
 
-## SY/Utility (84)
+## SY/Utility (85)
 
 - Batch Size Calc SY
 - Bundle SY
@@ -362,6 +362,7 @@ All 408 nodes, by group. Every node is in the **SY** folder of the node library 
 - Metadata Compare SY
 - Model Loader SY
 - Model Preset Bundle SY
+- MOSS Speed Up SY
 - MuteBypassSwitch SY
 - Pixel Count Info SY
 - Power Lora Loader SY
