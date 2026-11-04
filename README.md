@@ -73,6 +73,10 @@ Face Detect SY also works with a small optional face-finder file. It is not part
 - **Your ComfyUI is older than v0.42.1.** Update ComfyUI first.
 - **Still stuck.** Open an issue here and tell us your ComfyUI version, the node name, and the red error text.
 
+## Questions, problems and ideas
+
+Stuck with a node, have a question, or want a new node? Join the Diffusion Masters Discord and post in the comfyui-nodes channel: https://discord.gg/Kj5GCTuE5x
+
 ## Tests
 
 Each ComfyUI release is checked with four test workflows that hold every SY node (folder `master/`).
