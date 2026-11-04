@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.21.1
+- Tested on ComfyUI v0.44.0: all 409 nodes pass the four master test workflows. MOSS Speed Up SY gives the same pictures and the same speed as on v0.43.0.
+
 ## 1.21.0
 - New node (409 in all): MOSS Speed Up SY (Utility). Makes a MOSS-Image picture faster: after a few normal steps it skips the full model on some steps and predicts them from the steps that ran. Presets off, mild, middle and strong, plus manual numbers. The plan output shows how many steps each preset skips; after a run the node shows how many steps and model calls were skipped. Works with every sampler, er_sde included. Needs ComfyUI 0.43 or newer. Help page with a How to use section; in the master test workflows.
 - New workflow: workflows/moss/SY - MOSS Image Speed Up v1 (text to picture with the speed-up node, Sampler SY, Decode SY and Save Result SY).
