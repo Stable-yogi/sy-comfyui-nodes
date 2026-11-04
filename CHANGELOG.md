@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.22.2
+- H3 workflows Video, Turnaround, Upscale and Upscale RTX 4K: on ComfyUI 0.44 a run stopped at the Create Video node with "Value not in list", because ComfyUI 0.44 added a new setting to that node. Fixed: the workflows load and run on ComfyUI 0.44 and still on 0.43.
+
 ## 1.22.1
 - H3 Forecast Speed Up SY now works together with ComfyUI's own H3 control nodes (Fun ControlNet). Before, when the speed-up node came after the control node, it replaced the control, so the layout video had no effect. Put the speed-up node after the control node: then the control is skipped on the skipped steps too. Using it together with H3 Speed Optimizer SY (or a second copy of itself) now stops with a clear message.
 - H3 workflows: Video, Image v1, Image v2, Character Sheet, Turnaround and Voice now have a Speed up node (preset mild). Set it to off for the exact normal result.

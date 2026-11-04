@@ -1601,6 +1601,7 @@
     24.0,
     "auto",
     "sRGB",
+    "auto",
     "none"
    ],
    "title": "Make video"
