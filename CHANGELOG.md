@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.24.0
+- New node (414 in all): Ref Image Size SY (Resize). Puts a reference picture into the shape and size of the video before a video model reads it: fit, fill (crop) or pad to the video shape, with a max side for speed. Warns when a lot of the picture is cut off.
+- New node (415 in all): Pick Best References SY (Image). Takes the stills of a character datasheet and hands out three of them as Picture 1, 2 and 3, by shot name or number, plus the sentence that tells the model what each picture shows.
+- New node (416 in all): Voice Split SY (Audio). Cuts a long voice or song into up to 6 pieces at its pauses, so each piece fits one chained video segment, with the length of each piece and an overlap for the chain handoff.
+- Help pages with a How to use section for all three.
+
 ## 1.23.0
 - New node (411 in all): H3 Swap Prompt SY (Text). Writes the prompt for swapping one person in a video with a character from a picture: who to swap, who to keep, how much of the new look to take (face and hair, or the whole look). It keeps the movement, timing, background and light of the source video, and warns when the target is too vague.
 - New node (412 in all): H3 Look Sheet Prompt SY (Text). Writes one video prompt for a character look sheet: hard cuts to a still camera, one framing per shot (face, profiles, full body, back, details). Presets face set, body set, full set, or your own list. Also gives the frame where each shot starts and the shot names.
