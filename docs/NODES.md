@@ -1,6 +1,6 @@
 # SY Nodes: full node list
 
-All 409 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
+All 410 nodes, by group. Every node is in the **SY** folder of the node library and its name ends with **SY**. The help page for each node (inputs and what it does) is in `docs/nodes/`.
 
 
 ## SY/Text (79)
@@ -314,7 +314,7 @@ All 409 nodes, by group. Every node is in the **SY** folder of the node library 
 - Select By Index Text SY
 - Switch SY
 
-## SY/Utility (85)
+## SY/Utility (86)
 
 - Batch Size Calc SY
 - Bundle SY
@@ -335,6 +335,7 @@ All 409 nodes, by group. Every node is in the **SY** folder of the node library 
 - Free VRAM SY
 - H3 Chain Settings SY
 - H3 Chain To Video SY
+- H3 Forecast Speed Up SY
 - H3 Guides SY
 - H3 Load Session SY
 - H3 Render Segment SY

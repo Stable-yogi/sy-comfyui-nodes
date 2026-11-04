@@ -346,7 +346,7 @@
         "Node name for S&R": "CLIPTextEncode"
       },
       "widgets_values": [
-        "nsfw, worst quality, bad anatomy, watermark, jpeg artifact"
+        "worst quality, bad anatomy, watermark, jpeg artifact"
       ],
       "title": "Negative prompt"
     },

@@ -29,7 +29,8 @@ WAITS_FOR_PERSON = {"SYReviewPause"}  # stops the run until a person answers: le
 SOFT_WORDS = ("model is installed", "were found", "found in the input folder", "no checkpoints", "could not auto-find",
               "needs an H3 video latent", "there is no saved session",
               "no model is picked", "no GGUF model is picked", "No text encoder is picked", "pick a video or a sound file first",
-              "RTX upscaler is not installed", "works with MOSS-Image models only")  # "needs a file", not a fault (the H3 upscaler needs a real H3 latent, which only a model run makes; Load Session needs a session an earlier H3 run saved)
+              "RTX upscaler is not installed", "works with MOSS-Image models only",
+              "works with MiniMax H3 models only")  # "needs a file", not a fault (the H3 upscaler needs a real H3 latent, which only a model run makes; Load Session needs a session an earlier H3 run saved)
 
 
 def call(port, path, data=None, timeout=120):

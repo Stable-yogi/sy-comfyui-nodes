@@ -19,6 +19,18 @@ _SOL_ATTN_ERROR = None
 TAG = "[H3SpeedOptimizer SY]"
 
 
+def _outside_step_memory():
+    """ComfyUI 0.44 plans the GPU memory of each block; tensors kept past the block must be made with that plan
+    paused (as ComfyUI's own H3 control patch does), else sampling stops with "aimdo memory compile error".
+    Older ComfyUI: nothing to pause."""
+    try:
+        import comfy.model_prefetch as P
+        return P.pause_malloc_graph()
+    except (ImportError, AttributeError):
+        import contextlib
+        return contextlib.nullcontext()
+
+
 def load_sol_attn():
     """Find the sparse attention kernel once. It is not bundled: it comes from an installed `sol_attn` package or
     from the ComfyUI-TeaCache pack when that is installed. Returns the function or None (then dense attention runs)."""
@@ -174,25 +186,27 @@ class H3Optimizer:
             cache = self.caches.setdefault(self.cond_key, _CondCache())
 
             if index == 0:
-                h_in = img.clone()
+                with _outside_step_memory():
+                    h_in = img.clone()
                 out = original(args)["img"]
-                resid = (out - h_in)
-                del h_in
-                skip = False
-                if cache.prev_resid is not None and cache.tail_resid is not None and self.fbc_window_open():
-                    prev = self._from_cache_device(cache.prev_resid, resid.device)
-                    delta = ((resid - prev).abs().float().mean()
-                             / prev.abs().float().mean().clamp_min(1e-8)).item()
-                    self.accum_delta = delta
-                    skip, cache.accum, cache.consec = L.fbc_decide(
-                        delta, cache.accum, cache.consec, self.fbc_threshold, self.fbc_max_consecutive)
-                cache.prev_resid = self._to_cache_device(resid)
-                cache.skip = skip
-                if skip:
-                    self.fbc_skipped_steps += 1
-                else:
-                    self.fbc_computed_steps += 1
-                    cache.h_b0 = out.clone()
+                with _outside_step_memory():  # kept past this block: made outside ComfyUI 0.44's per-block memory plan
+                    resid = (out - h_in)
+                    del h_in
+                    skip = False
+                    if cache.prev_resid is not None and cache.tail_resid is not None and self.fbc_window_open():
+                        prev = self._from_cache_device(cache.prev_resid, resid.device)
+                        delta = ((resid - prev).abs().float().mean()
+                                 / prev.abs().float().mean().clamp_min(1e-8)).item()
+                        self.accum_delta = delta
+                        skip, cache.accum, cache.consec = L.fbc_decide(
+                            delta, cache.accum, cache.consec, self.fbc_threshold, self.fbc_max_consecutive)
+                    cache.prev_resid = self._to_cache_device(resid)
+                    cache.skip = skip
+                    if skip:
+                        self.fbc_skipped_steps += 1
+                    else:
+                        self.fbc_computed_steps += 1
+                        cache.h_b0 = out.clone()
                 return {"img": out}
 
             if cache.skip:
@@ -204,7 +218,8 @@ class H3Optimizer:
 
             out = original(args)["img"]
             if index == self.last_block and cache.h_b0 is not None:
-                cache.tail_resid = self._to_cache_device(out - cache.h_b0)
+                with _outside_step_memory():
+                    cache.tail_resid = self._to_cache_device(out - cache.h_b0)
                 cache.h_b0 = None
             if index == self.last_block:
                 self._maybe_log_final_step()

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.22.0
+- New node (410 in all): H3 Forecast Speed Up SY (Utility). Makes MiniMax H3 videos and H3 pictures faster: after a few normal steps it skips the full model on some steps and predicts them from the steps that ran. Presets off, mild, middle and strong, plus manual numbers. At 20 steps mild skips 6 model calls, middle 8 and strong 10. Use 20 or more steps: the 4-step fast mode has nothing to skip. Needs ComfyUI 0.44 or newer. Help page with a How to use section; in the master test workflows.
+- H3 Speed Optimizer SY: on ComfyUI 0.44 a run stopped with "aimdo memory compile error". Fixed: the saved steps are now kept outside the memory plan of each model block, like ComfyUI's own H3 nodes do. Older ComfyUI works as before.
+- MOSS Image Speed Up workflow: one word removed from the default negative prompt.
+
 ## 1.21.1
 - Tested on ComfyUI v0.44.0: all 409 nodes pass the four master test workflows. MOSS Speed Up SY gives the same pictures and the same speed as on v0.43.0.
 
