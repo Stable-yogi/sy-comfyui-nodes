@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.23.0
+- New node (411 in all): H3 Swap Prompt SY (Text). Writes the prompt for swapping one person in a video with a character from a picture: who to swap, who to keep, how much of the new look to take (face and hair, or the whole look). It keeps the movement, timing, background and light of the source video, and warns when the target is too vague.
+- New node (412 in all): H3 Look Sheet Prompt SY (Text). Writes one video prompt for a character look sheet: hard cuts to a still camera, one framing per shot (face, profiles, full body, back, details). Presets face set, body set, full set, or your own list. Also gives the frame where each shot starts and the shot names.
+- New node (413 in all): Best Frames Per Shot SY (Image). Picks the sharpest (or middle) still from every shot of a clip with hard cuts, skips the blurred frames at each cut, joins tiny false shots, and can leave out pictures you do not want. Feed it into Image Grid SY for a labelled datasheet.
+- Help pages with a How to use section for all three. Not yet in the master test workflows.
+
 ## 1.22.2
 - H3 workflows Video, Turnaround, Upscale and Upscale RTX 4K: on ComfyUI 0.44 a run stopped at the Create Video node with "Value not in list", because ComfyUI 0.44 added a new setting to that node. Fixed: the workflows load and run on ComfyUI 0.44 and still on 0.43.
 
