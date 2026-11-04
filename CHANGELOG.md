@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.22.1
+- H3 Forecast Speed Up SY now works together with ComfyUI's own H3 control nodes (Fun ControlNet). Before, when the speed-up node came after the control node, it replaced the control, so the layout video had no effect. Put the speed-up node after the control node: then the control is skipped on the skipped steps too. Using it together with H3 Speed Optimizer SY (or a second copy of itself) now stops with a clear message.
+- H3 workflows: Video, Image v1, Image v2, Character Sheet, Turnaround and Voice now have a Speed up node (preset mild). Set it to off for the exact normal result.
+
 ## 1.22.0
 - New node (410 in all): H3 Forecast Speed Up SY (Utility). Makes MiniMax H3 videos and H3 pictures faster: after a few normal steps it skips the full model on some steps and predicts them from the steps that ran. Presets off, mild, middle and strong, plus manual numbers. At 20 steps mild skips 6 model calls, middle 8 and strong 10. Use 20 or more steps: the 4-step fast mode has nothing to skip. Needs ComfyUI 0.44 or newer. Help page with a How to use section; in the master test workflows.
 - H3 Speed Optimizer SY: on ComfyUI 0.44 a run stopped with "aimdo memory compile error". Fixed: the saved steps are now kept outside the memory plan of each model block, like ComfyUI's own H3 nodes do. Older ComfyUI works as before.

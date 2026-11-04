@@ -27,7 +27,7 @@ Outputs: `MODEL`, `STRING`
 3. Pick a **preset**. Start with **mild**. **middle** and **strong** skip more steps. **off** gives the normal video.
 4. Connect **plan** to a text preview to see, before you run, how many steps each preset skips at 4, 8, 20 and 30 steps. R = the model runs, . = skipped.
 5. Run. After the run the node shows a **last run** line, for example "20 steps: 6 skipped, 14 ran. Model calls: 6 of 20 skipped (30% fewer)." The same line is printed in the ComfyUI console.
-6. Use it alone: together with **H3 Speed Optimizer SY** the run stops with a clear message. Pick one of the two.
+6. Use one speed-up node: together with **H3 Speed Optimizer SY** (or a second copy of this node) the run stops with a clear message. ComfyUI's own H3 control nodes work with it. Put this node after the control node: then the control is skipped on the skipped steps too, which is faster.
 7. **manual**: set **warmup_steps**, **window**, **window_growth** and **tail_steps** yourself. Warm-up below 2, window below 1 or tail below 1 is refused.
 
 Works for videos and for H3 pictures (length 5). The speed-up is only on the model steps; loading, text encoding and decoding take the same time as before. Without the node, or on **off**, the model is not changed at all.

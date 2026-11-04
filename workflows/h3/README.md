@@ -49,6 +49,8 @@ because the model sees your reference pictures while it draws.
 
 Each workflow has a switch called **Fast mode (turbo LoRA)**. On: 4 steps with the turbo file. Off: 20 steps and no turbo file.
 
+The Video, Image, Character Sheet, Turnaround and Voice workflows also have a **Speed up** node (H3 Forecast Speed Up SY, preset mild). With fast mode off it skips the full model on 6 of the 20 steps, so a run takes about a quarter less time. With fast mode on it skips nothing. Set its preset to off for the exact normal result.
+
 ## Size
 
 Width and height must be a multiple of 16. The Resolution node in these workflows snaps to 32.

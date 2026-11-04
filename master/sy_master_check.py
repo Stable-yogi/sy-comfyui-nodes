@@ -205,6 +205,8 @@ def check_parts(port, paths, report_path, max_rounds=250):
                 n["inputs"]["image"] = png
             if n["class_type"] == "SYImageMetadataReader" and png:
                 n["inputs"]["file"] = png
+            if n["class_type"] == "SYMetadataCompare" and png:
+                n["inputs"]["image_a_path"] = n["inputs"]["image_b_path"] = png
         fitted_all += fit_lists(prompt, info)
         r = run_one(port, prompt, info, max_rounds, deadline)
         total_rounds += r["rounds"]

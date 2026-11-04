@@ -17,7 +17,7 @@ class _Layout:
         self.segments = [(0, text, "text")] + ([(text, a, "ref_img")] if ref else []) + [(a, a + audio, "audio"), (a + audio, a + audio + video, "video")]
 
 
-def _fake_sampling(steps, preset, video=12, audio=4, width=8, size_change_at=None):
+def _fake_sampling(steps, preset, video=12, audio=4, width=8, size_change_at=None, pre_patch=None):
     """A stand-in for MiniMax H3 and a sampler: 2D hidden state, packed [text | ref | audio | video], blocks change
     rows in place like the real ones, the output head reads only audio + video."""
     import torch
@@ -33,7 +33,8 @@ def _fake_sampling(steps, preset, video=12, audio=4, width=8, size_change_at=Non
             self.model_options = dict(opts or {"transformer_options": {}})
 
         def clone(self):
-            return Patcher({"transformer_options": {"patches_replace": {}}})
+            reps = self.model_options.get("transformer_options", {}).get("patches_replace", {})
+            return Patcher({"transformer_options": {"patches_replace": {k: dict(v) for k, v in reps.items()}}})
 
         def set_model_patch_replace(self, patch, name, block_name, number):
             self.model_options["transformer_options"].setdefault("patches_replace", {}).setdefault(name, {})[(block_name, number)] = patch
@@ -56,7 +57,11 @@ def _fake_sampling(steps, preset, video=12, audio=4, width=8, size_change_at=Non
         a, b = m.target_span(layout.segments)
         return h[a:b].clone()
 
-    p = m.patch_model(Patcher(), preset, {}, 4, 0.1, 8, None)
+    start = Patcher()
+    if pre_patch is not None:  # another node (like ComfyUI's H3 control) patched the blocks first
+        for i in range(len(net.blocks)):
+            start.set_model_patch_replace(pre_patch, "dit", "double_block", i)
+    p = m.patch_model(start, preset, {}, 4, 0.1, 8, None)
     wrap = p.model_options["model_function_wrapper"]
     patches = p.model_options["transformer_options"]["patches_replace"]["dit"]
     sigmas = torch.linspace(1.0, 0.0, steps + 1)
@@ -89,11 +94,27 @@ def run():
     moss = type("MOSSImage", (), {"__module__": "comfy.ldm.moss_image.model"})()
     moss.layers = [0]
     assert not m.is_h3(moss) and not m.is_h3(None); n += 1
-    # another node already patches the H3 blocks: refused with a clear message
+    # block patches of other nodes: an SY speed-up is refused, ComfyUI's H3 control is kept (chained)
     busy = type("P", (), {})()
-    busy.model_options = {"transformer_options": {"patches_replace": {"dit": {("double_block", 0): None}}}}
-    assert m.has_block_patches(busy); n += 1
-    assert not m.has_block_patches(type("P", (), {"model_options": {}})()); n += 1
+    busy.model_options = {"transformer_options": {"patches_replace": {"dit": {("double_block", 0): None, ("single_block", 1): None}}}}
+    assert list(m.block_patches(busy)) == [0]; n += 1
+    assert m.block_patches(type("P", (), {"model_options": {}})()) == {}; n += 1
+    speed = type("Fn", (), {"__module__": "custom_nodes.sy-comfyui-nodes.nodes._sy_h3_speed_core"})()
+    control = type("Ctl", (), {"__module__": "comfy_extras.nodes_minimax_h3"})()
+    assert m.has_speed_patches([control, speed]); n += 1
+    assert not m.has_speed_patches([control, None]); n += 1
+    # our block passes ComfyUI's to / models / cleanup on to the control patch it wraps, so its weights still load
+    class Ctl:
+        moved = None
+        def models(self): return ["control weights"]
+        def to(self, d): self.moved = d; return self
+        def cleanup(self): self.moved = "clean"
+    ctl = Ctl()
+    b = m._Block(None, True, True, ctl)
+    assert b.models() == ["control weights"] and b.to("cuda") is b and ctl.moved == "cuda"; n += 1
+    b.cleanup()
+    assert ctl.moved == "clean" and m._Block(None, True, True).models() == []; n += 1
+    assert m.has_speed_patches([b]); n += 1
     # node shape
     it = m.SYH3ForecastSpeedUp.INPUT_TYPES()
     assert it["required"]["preset"][0] == m.PRESETS and it["required"]["preset"][1]["default"] == "mild"; n += 1
@@ -114,4 +135,39 @@ def run():
     # the length changes halfway: the first skip after the change runs the full model instead
     outs3, runs3, _ = _fake_sampling(20, "strong", size_change_at=10)
     assert len(runs3) > len(runs2) and outs3[-1].shape == (22, 8); n += 1
+    # ComfyUI's H3 control patched first: it runs inside our blocks on every real step, the plan stays the same
+    calls = []
+
+    def control_patch(args, extra):
+        calls.append(1)
+        return extra["original_block"](args)
+    outs4, runs4, _ = _fake_sampling(20, "mild", pre_patch=control_patch)
+    assert len(calls) == len(runs4) == len(runs), (len(calls), len(runs4)); n += 1
+    assert all(torch.allclose(a, b) for a, b in zip(outs4, outs)); n += 1
+    # a second H3 Forecast Speed Up SY after the first one is refused
+    first = m.patch_model(_fake_patcher(), "mild", {}, 4, 0.1, 8)
+    assert _raises(m.patch_model, first, "mild", {}, 4, 0.1, 8); n += 1
     return n
+
+
+def _fake_patcher():
+    """The smallest H3 model patcher patch_model accepts."""
+    net = type("MiniMaxH3Model", (), {"__module__": "comfy.ldm.minimax.model"})()
+    net.blocks = [0, 1]
+
+    class P:
+        def __init__(self, opts=None):
+            self.model = type("M", (), {})()
+            self.model.diffusion_model = net
+            self.model_options = opts or {"transformer_options": {}}
+
+        def clone(self):
+            reps = self.model_options.get("transformer_options", {}).get("patches_replace", {})
+            return P({"transformer_options": {"patches_replace": {k: dict(v) for k, v in reps.items()}}})
+
+        def set_model_patch_replace(self, patch, name, block_name, number):
+            self.model_options["transformer_options"].setdefault("patches_replace", {}).setdefault(name, {})[(block_name, number)] = patch
+
+        def set_model_unet_function_wrapper(self, fn):
+            self.model_options["model_function_wrapper"] = fn
+    return P()

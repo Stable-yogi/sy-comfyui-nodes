@@ -71,11 +71,33 @@ def _outside_step_memory():
         return contextlib.nullcontext()
 
 
-def _make_block(state, first, last):
-    def block(args, extra):
+class _Block:
+    """One H3 block. previous = a patch another node put on this block first (ComfyUI's H3 control): it runs on
+    real steps, and ComfyUI still reaches its weights through to / models / cleanup."""
+
+    def __init__(self, state, first, last, previous=None):
+        self.state, self.first, self.last, self.previous = state, first, last, previous
+
+    def real(self, args, extra):
+        return self.previous(args, extra) if self.previous is not None else extra["original_block"](args)
+
+    def to(self, device_or_dtype):
+        if hasattr(self.previous, "to"):
+            self.previous = self.previous.to(device_or_dtype)
+        return self
+
+    def models(self):
+        return self.previous.models() if hasattr(self.previous, "models") else []
+
+    def cleanup(self):
+        if hasattr(self.previous, "cleanup"):
+            self.previous.cleanup()
+
+    def __call__(self, args, extra):
+        state, first, last = self.state, self.first, self.last
         cur = state.current
         if cur is None:
-            return extra["original_block"](args)
+            return self.real(args, extra)
         if first:
             cur["span"] = target_span(args["layout"].segments)
             if cur["mode"] == "skip":
@@ -92,12 +114,11 @@ def _make_block(state, first, last):
             if last:
                 img[a:b] = cur["pred"].to(img.dtype)
             return {"img": img}
-        out = extra["original_block"](args)
+        out = self.real(args, extra)
         if last:
             with _outside_step_memory():
                 cur["grab"].append(out["img"][a:b].detach().clone())
         return out
-    return block
 
 
 def _make_wrapper(state, prev):
@@ -153,10 +174,20 @@ def is_h3(dm):
     return dm is not None and "minimax" in type(dm).__module__ and hasattr(dm, "blocks")
 
 
-def has_block_patches(model):
-    """Pure check: another node already replaces the H3 blocks (for example H3 Speed Optimizer SY)."""
+SPEED_MODULES = ("_sy_h3_speed_core", "sy_h3_forecast_speed_up")
+
+
+def block_patches(model):
+    """Pure. {block number: patch} for the H3 blocks another node already replaced."""
     reps = (getattr(model, "model_options", {}) or {}).get("transformer_options", {}).get("patches_replace", {})
-    return any(k[0] == "double_block" for k in reps.get("dit", {}))
+    return {k[1]: v for k, v in reps.get("dit", {}).items() if k[0] == "double_block"}
+
+
+def has_speed_patches(patches):
+    """Pure check: one of the block patches comes from an SY speed-up node (H3 Speed Optimizer SY or this node).
+    Other patches, like ComfyUI's H3 Fun ControlNet, are kept and run inside this node's blocks."""
+    return any(str(getattr(p, "__module__", "") or "").rsplit(".", 1)[-1] in SPEED_MODULES for p in patches)
+# note: a _Block instance's __module__ is this module, so a second copy of this node is refused too
 
 
 def patch_model(model, preset, manual, degree, lam, history, node_id=None):
@@ -168,14 +199,15 @@ def patch_model(model, preset, manual, degree, lam, history, node_id=None):
     if not is_h3(dm):
         raise ValueError("%s works with MiniMax H3 models only (ComfyUI 0.44 or newer). "
                          "This model is %s. Set preset to off or remove the node." % (TITLE, type(dm).__name__ if dm is not None else "unknown"))
-    if has_block_patches(model):
-        raise ValueError("%s: another speed-up node (for example H3 Speed Optimizer SY) already changes the H3 blocks. "
-                         "Use one of them, not both." % TITLE)
+    prev = block_patches(model)
+    if has_speed_patches(prev.values()):
+        raise ValueError("%s: another speed-up node (H3 Speed Optimizer SY or a second %s) already changes the H3 blocks. "
+                         "Use one of them, not both." % (TITLE, TITLE))
     m = model.clone()
     state = H3State(preset, manual, degree, lam, history, node_id)
     n = len(dm.blocks)
     for i in range(n):
-        m.set_model_patch_replace(_make_block(state, i == 0, i == n - 1), "dit", "double_block", i)
+        m.set_model_patch_replace(_Block(state, i == 0, i == n - 1, prev.get(i)), "dit", "double_block", i)
     m.set_model_unet_function_wrapper(_make_wrapper(state, m.model_options.get("model_function_wrapper")))
     return m
 

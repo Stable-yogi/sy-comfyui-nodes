@@ -1,8 +1,8 @@
 {
  "id": "sy-sy---h3-turnaround-v1",
  "revision": 0,
- "last_node_id": 32,
- "last_link_id": 31,
+ "last_node_id": 33,
+ "last_link_id": 32,
  "nodes": [
   {
    "id": 1,
@@ -869,8 +869,7 @@
      "name": "MODEL",
      "type": "MODEL",
      "links": [
-      15,
-      16
+      32
      ]
     }
    ],
@@ -1780,6 +1779,67 @@
    ],
    "color": "#8b6914",
    "bgcolor": "#2d2616"
+  },
+  {
+   "id": 33,
+   "type": "SYH3ForecastSpeedUp",
+   "pos": [
+    2710,
+    700
+   ],
+   "size": [
+    400,
+    330
+   ],
+   "flags": {},
+   "order": 16,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 32
+    }
+   ],
+   "outputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "links": [
+      15,
+      16
+     ]
+    },
+    {
+     "name": "plan",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "title": "Speed up",
+   "properties": {
+    "Node name for S&R": "SYH3ForecastSpeedUp"
+   },
+   "widgets_values": [
+    "mild",
+    6,
+    2.0,
+    0.25,
+    2,
+    4,
+    0.1,
+    8
+   ],
+   "widgets_values_named": {
+    "preset": "mild",
+    "warmup_steps": 6,
+    "window": 2.0,
+    "window_growth": 0.25,
+    "tail_steps": 2,
+    "curve_degree": 4,
+    "smoothing": 0.1,
+    "history": 8
+   }
   }
  ],
  "links": [
@@ -1897,7 +1957,7 @@
   ],
   [
    15,
-   16,
+   33,
    0,
    20,
    0,
@@ -1905,7 +1965,7 @@
   ],
   [
    16,
-   16,
+   33,
    0,
    22,
    0,
@@ -2030,6 +2090,14 @@
    30,
    0,
    "IMAGE"
+  ],
+  [
+   32,
+   16,
+   0,
+   33,
+   0,
+   "MODEL"
   ]
  ],
  "groups": [
@@ -2092,7 +2160,7 @@
     2690,
     -70,
     1330,
-    800
+    1130
    ],
    "color": "#b85c5c",
    "font_size": 24,
