@@ -121,16 +121,18 @@ def make_mlp_forward(chunks, min_tokens):
     return forward
 
 
-def block_forward(self, x, t_emb, mod_segments, rope_freqs, transformer_options={}):
+def block_forward(self, x, t_emb, mod_segments, rope_freqs, transformer_options={}, attention=None):
     """DiTBlock.forward that hands its normed attention input over to attn.
 
     The handoff is checked per call: another node may own this block's attn.forward, and only a forward that
-    advertises _h3_accepts_list knows what to do with the list. Anything else gets the plain tensor."""
+    advertises _h3_accepts_list knows what to do with the list. Anything else gets the plain tensor.
+    attention: ComfyUI 0.44+ passes a replacement attention module through block patches (None = self.attn)."""
     _mod_scale_shift, _mod_gate = h3_helpers()
+    attn = self.attn if attention is None else attention
     shift_msa, scale_msa, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.adaln_proj(t_emb)
     h = _mod_scale_shift(self.norm1(x), shift_msa, scale_msa, mod_segments)
-    if getattr(self.attn.forward, "_h3_accepts_list", False):
+    if getattr(attn.forward, "_h3_accepts_list", False):
         h = [h]
-    x = _mod_gate(x, gate_msa, self.attn(h, rope_freqs=rope_freqs, transformer_options=transformer_options), mod_segments)
+    x = _mod_gate(x, gate_msa, attn(h, rope_freqs=rope_freqs, transformer_options=transformer_options), mod_segments)
     h = _mod_scale_shift(self.norm2(x), shift_mlp, scale_mlp, mod_segments)
     return _mod_gate(x, gate_mlp, self.mlp(h), mod_segments)

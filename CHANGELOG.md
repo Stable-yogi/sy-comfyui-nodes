@@ -8,6 +8,7 @@
   - Story Studio: three shots made one after the other, each starting where the last one ended, joined into one video.
 - Every H3 workflow above has a Memory and speed group (Low VRAM SY off, Speed up mild) and the Model Downloader SY box.
 - Master test workflows: now hold H3 Look Sheet Prompt SY, H3 Swap Prompt SY, Best Frames Per Shot SY, Ref Image Size SY and Pick Best References SY.
+- Fix: H3 Low VRAM SY works again on ComfyUI 0.44 together with a Speed up node (error "unexpected keyword argument 'attention'").
 
 ## 1.24.0
 - New node (414 in all): Ref Image Size SY (Resize). Puts a reference picture into the shape and size of the video before a video model reads it: fit, fill (crop) or pad to the video shape, with a max side for speed. Warns when a lot of the picture is cut off.
