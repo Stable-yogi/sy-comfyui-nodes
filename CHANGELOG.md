@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.24.2
+- Fix: VAE Loader SY no longer refuses the MiniMax H3 video VAE (it was taken for a diffusion model).
+- Fix: Pick Best References SY reads one shot name per line, so names with commas pick the right still; 'back' also finds 'seen from behind'.
+
 ## 1.24.1
 - Four new H3 workflows in workflows/h3, each solving one problem:
   - Character Kit: one picture becomes a look sheet video, a labelled sheet of the best frame of each shot, and 3 reference pictures (face, full body, back).
