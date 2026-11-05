@@ -279,4 +279,5 @@ class SYH3SkinPromptGuard:
 
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
-register(NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS, "H3 Skin Prompt Guard", SYH3SkinPromptGuard)
+register(NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS, "H3SkinPromptGuard", SYH3SkinPromptGuard)
+NODE_DISPLAY_NAME_MAPPINGS["SYH3SkinPromptGuard"] = "H3 Skin Prompt Guard SY"
