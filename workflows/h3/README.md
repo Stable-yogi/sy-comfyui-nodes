@@ -40,7 +40,7 @@ Extra files for some workflows:
 | `SY - H3 Upscale RTX 4K v1.json` | A fast bigger copy of a clip with the RTX video upscaler. Needs an RTX graphics card and a ComfyUI that has the RTX Video Super Resolution node. |
 | `SY - H3 Character Kit Free v1.json` | From one picture: a short look sheet video (12 shots), a labelled sheet of the best frame of each shot, and 3 reference pictures (face, full body, back). |
 | `SY - H3 Talking Video Free v1.json` | One picture and a voice file (up to 15 seconds) become a talking or singing clip. The first frame is your picture and the lips follow your file. |
-| `SY - H3 Recast Free v1.json` | Replace the person in a video (2 to 15 seconds) with your character. Same moves, same camera, same sound. |
+| `SY - H3 Recast Free v1.json` | Replace the person in a video (2 to 15 seconds) with your character. Same moves, same camera, same sound. Needs the character swap LoRA `h3_character_swap_v1.5.safetensors` in models/loras. If the old person stays for the first seconds, try 2 or 3 seeds. |
 | `SY - H3 Story Studio Free v1.json` | Three shots made one after the other, each starting where the last one ended, joined into one video of about 21 seconds. |
 
 ## The one-frame trick
