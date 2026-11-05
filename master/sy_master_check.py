@@ -33,6 +33,13 @@ SOFT_WORDS = ("model is installed", "were found", "found in the input folder", "
               "works with MiniMax H3 models only")  # "needs a file", not a fault (the H3 upscaler needs a real H3 latent, which only a model run makes; Load Session needs a session an earlier H3 run saved)
 
 
+def is_free_pack(node_info):
+    """True for a node of this pack. ComfyUI gives python_module as "custom_nodes.<folder>"; a second SY pack in the same
+    ComfyUI (folder sy-comfyui-nodes-pro) is not this pack and has its own tests."""
+    module = str(node_info.get("python_module", "custom_nodes.sy-comfyui-nodes"))
+    return module.replace("\\", "/").rstrip("/").rsplit(".", 1)[-1].rsplit("/", 1)[-1] == "sy-comfyui-nodes"
+
+
 def call(port, path, data=None, timeout=120):
     req = urllib.request.Request("http://127.0.0.1:%d%s" % (port, path))
     if data is not None:
@@ -188,7 +195,7 @@ def check_parts(port, paths, report_path, max_rounds=250):
     code, info = call(port, "/object_info")
     if code != 200:
         return "ERROR", ["FAIL: no ComfyUI answers on port %d" % port], []
-    sy_types = sorted(k for k, v in info.items() if k.startswith("SY") and "sy-comfyui-nodes" in str(v.get("python_module", "sy-comfyui-nodes")))
+    sy_types = sorted(k for k, v in info.items() if k.startswith("SY") and is_free_pack(v))
     pics = (info.get("LoadImage", {}).get("input", {}).get("required", {}).get("image") or [[]])[0]
     png = next((p for p in pics if p.lower().endswith(".png")), pics[0] if pics else "")  # the test picture: first picture in the input folder
     make_notes(port)
