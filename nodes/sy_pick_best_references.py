@@ -5,10 +5,17 @@ except ImportError:  # run as a plain file by the selftest
     from _sy_common import category, register
 
 SLOTS = 3
+# a word that also finds a still named with another word ("back" finds "seen from behind")
+ALSO = {"back": ("behind", "rear")}
 
 
 def _lines(text):
     return [" ".join(t.split()) for t in str(text or "").replace(",", "\n").splitlines() if t.strip()]
+
+
+def _label_lines(text):
+    # one shot name per line: a name may hold commas ("full body, seen from behind")
+    return [" ".join(t.split()) for t in str(text or "").splitlines() if t.strip()]
 
 
 def pick_references(labels, wanted, count):
@@ -18,7 +25,7 @@ def pick_references(labels, wanted, count):
     count = int(count)
     if count < 1:
         raise ValueError("there are no stills: connect the pictures from Best Frames Per Shot SY")
-    names = _lines(labels)
+    names = _label_lines(labels)
     wants = _lines(wanted)[:SLOTS]
     if len(_lines(wanted)) > SLOTS:
         raise ValueError("wanted has more than 3 lines: the video model reads 3 reference pictures here")
@@ -37,7 +44,7 @@ def pick_references(labels, wanted, count):
         else:
             low = want.lower()
             for i, name in enumerate(names):
-                if i not in used and low in name.lower():
+                if i not in used and any(w in name.lower() for w in (low,) + ALSO.get(low, ())):
                     hit = i
                     break
             if hit is None:

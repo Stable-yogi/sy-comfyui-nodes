@@ -19,6 +19,10 @@ def run():
     assert picks == [0, 1, 1] and names == ["shot 1", "shot 2", "shot 2"] and "repeats" in notes[0], (picks, notes); n += 1
     picks, names, notes = m.pick_references("face", "face", 2)
     assert names[1] == "shot 2" and "1 labels for 2 stills" in notes[0], notes; n += 1
+    sheet = ("close-up of the face, front view\nclose-up of the face in left profile\nfull body, front view, standing straight\n"
+             "full body, seen from behind\nclose-up of the hands")
+    picks, names, notes = m.pick_references(sheet, "face, full body, back", 5)
+    assert picks == [0, 2, 3] and names[2] == "full body, seen from behind" and notes == [], (picks, notes); n += 1
     for bad in ((LABELS, "face", 0), (LABELS, "9", 5), (LABELS, "a\nb\nc\nd", 5)):
         try:
             m.pick_references(*bad)
