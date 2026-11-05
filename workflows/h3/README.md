@@ -1,14 +1,14 @@
 # H3 workflows
 
-Eight ComfyUI workflows for the MiniMax H3 video model. They use the SY nodes in this pack.
+Twelve ComfyUI workflows for the MiniMax H3 video model. They use the SY nodes in this pack.
 Every workflow has a header box at the top: what it does, how to use it, and which model files it needs.
 Groups marked **(optional)** are switched off at the start. Use the Group Switch SY panel next to the header to switch a group on.
 
 ## Model files
 
-Seven of the workflows carry a Model Downloader SY box at the top, next to the header. It lists the files below, shows which ones you already have, and downloads the missing ones from Hugging Face when you press a button (it shows the size and your free disk space and asks first). The two files that are not in the box: `RealESRGAN_x2.pth` and `minimax_h3_flf2v_lora_v1.safetensors` (get them by hand).
+Eleven of the workflows carry a Model Downloader SY box at the top, next to the header. It lists the files below, shows which ones you already have, and downloads the missing ones from Hugging Face when you press a button (it shows the size and your free disk space and asks first). The two files that are not in the box: `RealESRGAN_x2.pth` and `minimax_h3_flf2v_lora_v1.safetensors` (get them by hand).
 
-The same files are used by all eight workflows. Put each file in the folder shown.
+The same files are used by all twelve workflows. Put each file in the folder shown.
 
 | File | Folder |
 |---|---|
@@ -38,6 +38,10 @@ Extra files for some workflows:
 | `SY - H3 Video v1.json` | A video with sound from a story, reference pictures, an optional acting clip, start and end pictures and a voice line. |
 | `SY - H3 Upscale v1.json` | A sharper, bigger copy of a clip. The model draws fine detail again. |
 | `SY - H3 Upscale RTX 4K v1.json` | A fast bigger copy of a clip with the RTX video upscaler. Needs an RTX graphics card and a ComfyUI that has the RTX Video Super Resolution node. |
+| `SY - H3 Character Kit Free v1.json` | From one picture: a short look sheet video (12 shots), a labelled sheet of the best frame of each shot, and 3 reference pictures (face, full body, back). |
+| `SY - H3 Talking Video Free v1.json` | One picture and a voice file (up to 15 seconds) become a talking or singing clip. The first frame is your picture and the lips follow your file. |
+| `SY - H3 Recast Free v1.json` | Replace the person in a video (2 to 15 seconds) with your character. Same moves, same camera, same sound. |
+| `SY - H3 Story Studio Free v1.json` | Three shots made one after the other, each starting where the last one ended, joined into one video of about 21 seconds. |
 
 ## The one-frame trick
 

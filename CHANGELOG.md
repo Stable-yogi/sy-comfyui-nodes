@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.24.1
+- Four new H3 workflows in workflows/h3, each solving one problem:
+  - Character Kit: one picture becomes a look sheet video, a labelled sheet of the best frame of each shot, and 3 reference pictures (face, full body, back).
+  - Talking Video: one picture and a voice file (up to 15 seconds) become a talking or singing clip, lips on the words, no lip sync pass after.
+  - Recast: replace the person in a video with your character, same moves, same camera, same sound.
+  - Story Studio: three shots made one after the other, each starting where the last one ended, joined into one video.
+- Every H3 workflow above has a Memory and speed group (Low VRAM SY off, Speed up mild) and the Model Downloader SY box.
+- Master test workflows: now hold H3 Look Sheet Prompt SY, H3 Swap Prompt SY, Best Frames Per Shot SY, Ref Image Size SY, Pick Best References SY and Voice Split SY.
+
 ## 1.24.0
 - New node (414 in all): Ref Image Size SY (Resize). Puts a reference picture into the shape and size of the video before a video model reads it: fit, fill (crop) or pad to the video shape, with a max side for speed. Warns when a lot of the picture is cut off.
 - New node (415 in all): Pick Best References SY (Image). Takes the stills of a character datasheet and hands out three of them as Picture 1, 2 and 3, by shot name or number, plus the sentence that tells the model what each picture shows.
@@ -10,7 +19,7 @@
 - New node (411 in all): H3 Swap Prompt SY (Text). Writes the prompt for swapping one person in a video with a character from a picture: who to swap, who to keep, how much of the new look to take (face and hair, or the whole look). It keeps the movement, timing, background and light of the source video, and warns when the target is too vague.
 - New node (412 in all): H3 Look Sheet Prompt SY (Text). Writes one video prompt for a character look sheet: hard cuts to a still camera, one framing per shot (face, profiles, full body, back, details). Presets face set, body set, full set, or your own list. Also gives the frame where each shot starts and the shot names.
 - New node (413 in all): Best Frames Per Shot SY (Image). Picks the sharpest (or middle) still from every shot of a clip with hard cuts, skips the blurred frames at each cut, joins tiny false shots, and can leave out pictures you do not want. Feed it into Image Grid SY for a labelled datasheet.
-- Help pages with a How to use section for all three. Not yet in the master test workflows.
+- Help pages with a How to use section for all three.
 
 ## 1.22.2
 - H3 workflows Video, Turnaround, Upscale and Upscale RTX 4K: on ComfyUI 0.44 a run stopped at the Create Video node with "Value not in list", because ComfyUI 0.44 added a new setting to that node. Fixed: the workflows load and run on ComfyUI 0.44 and still on 0.43.
