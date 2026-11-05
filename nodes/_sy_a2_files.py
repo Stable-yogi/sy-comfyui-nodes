@@ -77,9 +77,11 @@ def kind_guess(header):
     has_text = any(k.startswith(("cond_stage_model.", "conditioner.", "text_encoders.")) for k in low)
     if has_unet and (has_vae or has_text):
         return "full checkpoint (model + VAE/text encoder)"
-    if has_unet or any(("double_blocks" in k or "single_blocks" in k or "transformer_blocks" in k or "input_blocks" in k) for k in low):
+    # a VAE whose decoder is a transformer (MiniMax H3) has "decoder.transformer_blocks": the VAE shape wins over block words
+    vae_shape = any(k.startswith(("encoder.down", "decoder.up", "decoder.conv_in", "encoder.conv_in", "quant_conv", "post_quant_conv")) for k in low)
+    if has_unet or (not vae_shape and any(("double_blocks" in k or "single_blocks" in k or "transformer_blocks" in k or "input_blocks" in k) for k in low)):
         return "diffusion model"
-    if any(k.startswith(("encoder.down", "decoder.up", "decoder.conv_in", "encoder.conv_in", "quant_conv", "post_quant_conv")) for k in low):
+    if vae_shape:
         return "VAE"
     if any(("text_model" in k or "embed_tokens" in k or k.startswith(("shared.", "encoder.block"))) for k in low):
         return "text encoder"

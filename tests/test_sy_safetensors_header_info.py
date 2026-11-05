@@ -89,6 +89,9 @@ def run():
     assert hf.kind_guess({"model.diffusion_model.a": {}}) == "diffusion model"; n += 1
     assert hf.kind_guess({"double_blocks.0.x": {}}) == "diffusion model"; n += 1
     assert hf.kind_guess({"decoder.conv_in.weight": {}, "encoder.down.0": {}}) == "VAE"; n += 1
+    h3_vae = {"encoder.conv_in.weight": {}, "encoder.down.0.x": {}, "decoder.transformer_blocks.0.attn.to_qkv.weight": {}, "quant_conv.weight": {}}
+    assert hf.kind_guess(h3_vae) == "VAE"; n += 1
+    assert hf.kind_guess({"transformer_blocks.0.attn.to_q.weight": {}}) == "diffusion model"; n += 1
     assert hf.kind_guess({"text_model.encoder.x": {}}) == "text encoder"; n += 1
     assert hf.kind_guess({"zzz": {}}) == "unknown" and hf.kind_guess({}) == "empty file"; n += 1
     assert hf.main_dtype_text({"a": {"dtype": "BF16", "shape": [2, 2]}}) == "bf16 (100%)"; n += 1
