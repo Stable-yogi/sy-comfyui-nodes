@@ -1,0 +1,54 @@
+# Word lists for H3 Skin Prompt Guard SY.
+# One word or phrase per line. Lines that start with # are comments.
+# Sections: [shine] [skin_detail] [negation] [opening]
+# You can edit this file. Missing sections fall back to the built-in lists.
+
+[shine]
+# Words that make video skin look shiny, wet or plastic.
+flawless
+glow
+glowing
+glowy
+shimmer
+shimmering
+shiny
+shine
+highlighter
+wet skin
+wet look
+dewy
+glossy
+oily
+sheen
+luminous skin
+radiant skin
+porcelain skin
+airbrushed
+
+[skin_detail]
+# Skin detail words. Three or more in one prompt can overload the skin, so only the first is kept.
+pores
+visible pores
+skin pores
+peach fuzz
+vellus hair
+freckles
+faint freckles
+skin texture
+fine lines
+matte skin
+natural skin texture
+imperfections
+
+[negation]
+# A negation word followed (within 4 words) by a skin or shine word removes that whole clause.
+no
+not
+without
+avoid
+never
+free of
+
+[opening]
+# name = the sentence that is put in front of the prompt
+photoreal deep focus = A photoreal video, deep focus, natural soft light.

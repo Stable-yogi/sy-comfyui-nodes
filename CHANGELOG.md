@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.25.0
+- New node (416 in all): H3 Skin Recipe SY (Utility). One node puts the speed, people and detail LoRAs on the H3 video model and gives the steps, sampler and scheduler for realistic skin. Tiers: fast (4 steps), balanced (8 steps), max skin (10 steps plus the detail LoRA).
+- New node (417 in all): H3 Skin Prompt Guard SY (Text). Cleans a video prompt of words that make skin look shiny or plastic (shiny, glossy, flawless and so on), and puts the LoRA trigger words first. Mode clean changes the prompt, mode warn only lists the words.
+- New node (418 in all): Dataset Scene List SY (Text). One character, up to 40 ready scenes (close-ups, studio backgrounds, places, light) as a list, so one run makes one picture per scene for a LoRA training set.
+
 ## 1.24.2
 - Fix: VAE Loader SY no longer refuses the MiniMax H3 video VAE (it was taken for a diffusion model).
 - Fix: Pick Best References SY reads one shot name per line, so names with commas pick the right still; 'back' also finds 'seen from behind'.
