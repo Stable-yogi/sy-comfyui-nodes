@@ -7,13 +7,12 @@
   - Recast: replace the person in a video with your character, same moves, same camera, same sound.
   - Story Studio: three shots made one after the other, each starting where the last one ended, joined into one video.
 - Every H3 workflow above has a Memory and speed group (Low VRAM SY off, Speed up mild) and the Model Downloader SY box.
-- Master test workflows: now hold H3 Look Sheet Prompt SY, H3 Swap Prompt SY, Best Frames Per Shot SY, Ref Image Size SY, Pick Best References SY and Voice Split SY.
+- Master test workflows: now hold H3 Look Sheet Prompt SY, H3 Swap Prompt SY, Best Frames Per Shot SY, Ref Image Size SY and Pick Best References SY.
 
 ## 1.24.0
 - New node (414 in all): Ref Image Size SY (Resize). Puts a reference picture into the shape and size of the video before a video model reads it: fit, fill (crop) or pad to the video shape, with a max side for speed. Warns when a lot of the picture is cut off.
 - New node (415 in all): Pick Best References SY (Image). Takes the stills of a character datasheet and hands out three of them as Picture 1, 2 and 3, by shot name or number, plus the sentence that tells the model what each picture shows.
-- New node (416 in all): Voice Split SY (Audio). Cuts a long voice or song into up to 6 pieces at its pauses, so each piece fits one chained video segment, with the length of each piece and an overlap for the chain handoff.
-- Help pages with a How to use section for all three.
+- Help pages with a How to use section for both.
 
 ## 1.23.0
 - New node (411 in all): H3 Swap Prompt SY (Text). Writes the prompt for swapping one person in a video with a character from a picture: who to swap, who to keep, how much of the new look to take (face and hair, or the whole look). It keeps the movement, timing, background and light of the source video, and warns when the target is too vague.
