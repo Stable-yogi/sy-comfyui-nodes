@@ -4,6 +4,8 @@
 - New node (419 in all): Sampler Preset SY (Values). Pick a model family (MOSS, MOSS + turbo LoRA, Krea 2 Turbo), then one sampler and scheduler pair tested for it. Gives sampler, scheduler, steps and cfg. Pairs that spoil the picture are not offered.
 - New node (420 in all): Video File Upscale SY (Resize). Upscales a long video file a few frames at a time with an upscale model, so it never runs out of memory, and copies the sound unchanged. detail_strength below 1 blends in a smooth enlargement to calm sharp skin.
 - Master tests hold the 2 new nodes (Picture test: Video File Upscale SY on a short clip at a small size; Numbers test: Sampler Preset SY), each with a Result box.
+- New node (421 in all): H3 Tile Refine SY (Resize). Runs the last sampling steps of a MiniMax H3 video one tile at a time, so the peak graphics memory stays low. It can also split the video in time (window_frames, window_overlap, carry); 0 (the default) keeps the whole length at once.
+- Master Tools test holds H3 Tile Refine SY, with a Result box.
 
 ## 1.25.0
 - New node (416 in all): H3 Skin Recipe SY (Utility). One node puts the speed, people and detail LoRAs on the H3 video model and gives the steps, sampler and scheduler for realistic skin. Tiers: fast (4 steps), balanced (8 steps), max skin (10 steps plus the detail LoRA).
