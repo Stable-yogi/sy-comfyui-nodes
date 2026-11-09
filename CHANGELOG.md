@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+- New node (419 in all): Sampler Preset SY (Values). Pick a model family (MOSS, MOSS + turbo LoRA, Krea 2 Turbo), then one sampler and scheduler pair tested for it. Gives sampler, scheduler, steps and cfg. Pairs that spoil the picture are not offered.
+- New node (420 in all): Video File Upscale SY (Resize). Upscales a long video file a few frames at a time with an upscale model, so it never runs out of memory, and copies the sound unchanged. detail_strength below 1 blends in a smooth enlargement to calm sharp skin.
+
 ## 1.25.0
 - New node (416 in all): H3 Skin Recipe SY (Utility). One node puts the speed, people and detail LoRAs on the H3 video model and gives the steps, sampler and scheduler for realistic skin. Tiers: fast (4 steps), balanced (8 steps), max skin (10 steps plus the detail LoRA).
 - New node (417 in all): H3 Skin Prompt Guard SY (Text). Cleans a video prompt of words that make skin look shiny or plastic (shiny, glossy, flawless and so on), and puts the LoRA trigger words first. Mode clean changes the prompt, mode warn only lists the words.
