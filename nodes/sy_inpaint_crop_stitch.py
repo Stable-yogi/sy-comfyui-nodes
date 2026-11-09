@@ -72,6 +72,19 @@ def _resize_mask(mask, w, h):
     return F.interpolate(mask.unsqueeze(1), size=(h, w), mode="bilinear", align_corners=False).squeeze(1).clamp(0, 1)
 
 
+def channel_plan(out_channels, new_channels):
+    """Pure function. How a crop with new_channels is blended into a picture with out_channels.
+    Returns (blend_channels, grey): blend the first blend_channels; grey=True means the crop is turned grey first.
+    Extra channels of the picture (such as a see-through layer) stay as they were; extra channels of the crop are dropped."""
+    if out_channels < 1 or new_channels < 1:
+        raise ValueError("pictures need at least 1 channel, got %s and %s" % (out_channels, new_channels))
+    if out_channels == 1:
+        return 1, new_channels >= 3
+    if new_channels == 1:
+        return min(out_channels, 3), False
+    return min(out_channels, new_channels, 3), False
+
+
 def _match_batch(t, b):
     return t if t.shape[0] == b else t[:1].expand(b, *t.shape[1:])
 
@@ -153,9 +166,15 @@ class SYInpaintStitch:
 
         part = _resize_image(inpainted.to(out.device, out.dtype), x1 - x0, y1 - y0)
         part = _match_batch(part, b)
+        n, grey = channel_plan(out.shape[-1], part.shape[-1])
+        if grey:
+            part = part[..., :3].mean(dim=-1, keepdim=True)
+        elif part.shape[-1] == 1:
+            part = part.expand(*part.shape[:-1], n)
+        part = part[..., :n]
         alpha = mask[:, y0:y1, x0:x1].unsqueeze(-1).to(out.device, out.dtype)
-        region = out[:, y0:y1, x0:x1, :]
-        out[:, y0:y1, x0:x1, :] = blend(region, part, alpha)
+        region = out[:, y0:y1, x0:x1, :n]
+        out[:, y0:y1, x0:x1, :n] = blend(region, part, alpha)
         return (out,)
 
 

@@ -6,6 +6,7 @@
 - Master tests hold the 2 new nodes (Picture test: Video File Upscale SY on a short clip at a small size; Numbers test: Sampler Preset SY), each with a Result box.
 - New node (421 in all): H3 Tile Refine SY (Resize). Runs the last sampling steps of a MiniMax H3 video one tile at a time, so the peak graphics memory stays low. It can also split the video in time (window_frames, window_overlap, carry); 0 (the default) keeps the whole length at once.
 - Master Tools test holds H3 Tile Refine SY, with a Result box.
+- Fix: Inpaint Stitch SY no longer stops on a picture with a see-through layer (4 channels) or a grey one. The see-through layer stays as it was.
 
 ## 1.25.0
 - New node (416 in all): H3 Skin Recipe SY (Utility). One node puts the speed, people and detail LoRAs on the H3 video model and gives the steps, sampler and scheduler for realistic skin. Tiers: fast (4 steps), balanced (8 steps), max skin (10 steps plus the detail LoRA).

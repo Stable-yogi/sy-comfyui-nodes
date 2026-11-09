@@ -44,6 +44,14 @@ def run():
     assert list(m.SYInpaintStitch.INPUT_TYPES()["required"]) == ["stitch", "inpainted"]; n += 1
     assert set(m.NODE_CLASS_MAPPINGS) == {"SYInpaintCrop", "SYInpaintStitch"}; n += 1
     assert m.NODE_DISPLAY_NAME_MAPPINGS["SYInpaintCrop"] == "InpaintCrop SY"; n += 1
+    # channel rule: a see-through picture keeps its layer, grey stays grey, extra crop channels drop
+    assert m.channel_plan(4, 3) == (3, False); n += 1
+    assert m.channel_plan(3, 4) == (3, False); n += 1
+    assert m.channel_plan(3, 3) == (3, False); n += 1
+    assert m.channel_plan(4, 4) == (3, False); n += 1
+    assert m.channel_plan(1, 3) == (1, True); n += 1
+    assert m.channel_plan(3, 1) == (3, False); n += 1
+    assert raises(m.channel_plan, 0, 3); n += 1
     # stitch refuses a wrong stitch value
     assert raises(m.SYInpaintStitch().stitch, {}, None); n += 1
     return n
