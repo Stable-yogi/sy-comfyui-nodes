@@ -2,6 +2,7 @@
 
 ## Unreleased
 - New node (422 in all): Setup Doctor SY (Utility). Press Run for one plain report: ComfyUI version, node packs that failed to load, start settings and model folders, each problem with one fix. It changes nothing.
+- Setup Doctor SY now reads the small header of a file it thinks is in the wrong folder and only reports it when the file inside agrees. Big LoRAs are no longer called full models.
 - New node (423 in all): Checkpoint Contact Sheet SY (Utility). The same prompts and seed on each checkpoint you list, on one labelled sheet.
 - New node (424 in all): H3 Sharpen Helper SY (Video). Gets a MiniMax H3 draft ready for the sharpen pass: adds the sharpen LoRA and shift, makes the draft bigger with its sound and gives the 3 tested steps and the new size.
 - New workflows: H3 Sharpen Helper (workflows/h3), Setup Doctor and Checkpoint Contact Sheet (new workflows/tools folder).

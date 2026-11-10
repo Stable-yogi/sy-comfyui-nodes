@@ -22,6 +22,27 @@ def run():
     assert len(notes) == 2 and "--cpu" in notes[0] and "--lowvram" in notes[1]; n += 1
     assert len(m.flag_notes({"lowvram": True, "novram": True})) == 1; n += 1  # novram wins
 
+    k = m.kind_from_names
+    assert k(["lora_unet_down.lora_down.weight", "lora_unet_down.lora_up.weight", "lora_unet_down.alpha"]) == "LoRA"; n += 1
+    assert k(["encoder.conv_in.weight", "decoder.conv_out.weight"]) == "VAE"; n += 1
+    assert k(["diffusion_model.blocks.%d.mod.lin.diff" % i for i in range(300)]) == "LoRA"; n += 1  # full-weight difference LoRA
+    assert k(["encoder.block.0.layer.0.SelfAttention.q.weight", "shared.weight"]) == "text encoder"; n += 1
+    assert k(["model.diffusion_model.input_blocks.0.0.weight"]) == "model"; n += 1
+    assert k(["blocks.%d.attn.q.weight" % i for i in range(300)]) == "model"; n += 1
+    assert k([]) == "" and k(None) == "" and k(["foo.bar"]) == ""; n += 1
+    assert m.check_guess("checkpoints or diffusion_models", "LoRA") == "drop"; n += 1
+    assert m.check_guess("text_encoders", "text encoder") == "sure"; n += 1
+    assert m.check_guess("vae", "") == "name" and m.check_guess("upscale_models", "model") == "name"; n += 1
+    import json, struct, tempfile
+    d = tempfile.mkdtemp()
+    good = os.path.join(d, "x.safetensors")
+    h = json.dumps({"__metadata__": {}, "encoder.a": {"dtype": "F16", "shape": [1], "data_offsets": [0, 2]},
+                    "decoder.b": {"dtype": "F16", "shape": [1], "data_offsets": [2, 4]}}).encode()
+    open(good, "wb").write(struct.pack("<Q", len(h)) + h + bytes(4))
+    assert m.read_keys(good) == ["encoder.a", "decoder.b"]; n += 1
+    bad = os.path.join(d, "y.safetensors"); open(bad, "wb").write(bytes([255]) * 16)
+    assert m.read_keys(bad) is None and m.read_keys(os.path.join(d, "z.pth")) is None and m.read_keys(os.path.join(d, "missing.safetensors")) is None; n += 1
+
     c = m.classify_misplaced
     assert c("checkpoints", "my_style_lora.safetensors", 0.2 * GB)[0] == "loras"; n += 1
     assert c("checkpoints", "sdxl_vae.safetensors", 0.3 * GB)[0] == "vae"; n += 1

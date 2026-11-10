@@ -10,6 +10,6 @@ Source: `nodes/sy_setup_doctor.py`
 |---|---|---|---|---|
 | check_node_packs | BOOLEAN | yes | Look for node packs that did not load (they make red nodes). | default True |
 | check_start_settings | BOOLEAN | yes | Explain start settings such as --lowvram or --cpu that change speed or memory. | default True |
-| check_model_places | BOOLEAN | yes | Look for empty model folders and for files in the wrong folder (by name and size). | default True |
+| check_model_places | BOOLEAN | yes | Look for empty model folders and for files in the wrong folder (a first guess from name and size, then the small file header is read to confirm it, so a big LoRA is not called a full model). | default True |
 
 Outputs: `STRING`, `STRING`, `INT`

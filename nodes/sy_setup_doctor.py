@@ -1,5 +1,7 @@
 """Setup Doctor SY: checks this ComfyUI (Manager, node packs, start settings, model folders, file places) and says each fix in plain words."""
+import json
 import os
+import struct
 
 try:
     from ._sy_common import category, register
@@ -53,7 +55,7 @@ def flag_notes(flags):
 
 def classify_misplaced(folder, name, size_bytes):
     """Pure function. Returns (better_folder, why) when a file looks like it sits in the wrong model folder, else None.
-    It only reads the file name and size; it never opens the file."""
+    It only reads the file name and size; run() then reads the small file header to confirm it."""
     low = os.path.basename(str(name)).lower()
     gb = (size_bytes or 0) / GB
     if folder in ("checkpoints", "diffusion_models", "unet"):
@@ -127,6 +129,53 @@ def _device_line():
         return "No NVIDIA graphics card seen by PyTorch %s." % torch.__version__
     except Exception:
         return ""
+
+
+def read_keys(path):
+    """Reads only the small header at the start of a .safetensors file (never the weights). Returns its tensor names,
+    or None when the file is not a readable .safetensors file."""
+    if not str(path).lower().endswith(".safetensors"):
+        return None
+    try:
+        with open(path, "rb") as f:
+            n = struct.unpack("<Q", f.read(8))[0]
+            if n <= 2 or n > 100 * 1024 * 1024:
+                return None
+            header = json.loads(f.read(n).decode("utf-8"))
+    except (OSError, ValueError, struct.error, UnicodeDecodeError):
+        return None
+    return [k for k in header if k != "__metadata__"] if isinstance(header, dict) else None
+
+
+def kind_from_names(keys):
+    """Pure function. What a file is from its tensor names: 'LoRA', 'VAE', 'text encoder', 'model' or '' (cannot tell)."""
+    low = [str(k).lower() for k in keys or []]
+    if not low:
+        return ""
+    lora = sum(1 for k in low if "lora_" in k or ".lora." in k or k.endswith((".alpha", ".diff", ".diff_b")) or ".hada_" in k or ".lokr_" in k)
+    if lora >= max(1, len(low) // 3):
+        return "LoRA"
+    if any(k.startswith("model.diffusion_model.") for k in low):
+        return "model"
+    if any(k.startswith("encoder.") for k in low) and any(k.startswith("decoder.") for k in low) and not any("embed_tokens" in k for k in low):
+        return "VAE"
+    if any(k.startswith(("text_model.", "encoder.block.", "shared.", "token_embedding")) or "embed_tokens" in k for k in low):
+        return "text encoder"
+    if len(low) > 200 and any(w in k for k in low for w in ("double_blocks.", "single_blocks.", "transformer_blocks.", "joint_blocks.", "blocks.")):
+        return "model"
+    return ""
+
+
+GUESS_KIND = {"loras": "LoRA", "vae": "VAE", "text_encoders": "text encoder", "checkpoints or diffusion_models": "model"}
+
+
+def check_guess(guess_folder, kind):
+    """Pure function. The name guess said `guess_folder`; the header says `kind`.
+    Returns 'drop' when the header shows the guess is wrong, 'sure' when it agrees, 'name' when the header cannot tell."""
+    want = GUESS_KIND.get(guess_folder)
+    if not kind or not want:
+        return "name"
+    return "sure" if kind == want else "drop"
 
 
 def gather_model_files(folder_paths, folders):
@@ -211,7 +260,16 @@ class SYSetupDoctor:
                     hit = classify_misplaced(folder, name, size)
                     if hit and name not in seen:
                         seen.add(name)
-                        misplaced.append((folder, name, hit[0], hit[1]))
+                        try:
+                            full = folder_paths.get_full_path(folder, name)
+                        except Exception:
+                            full = None
+                        kind = kind_from_names(read_keys(full)) if full else ""
+                        verdict = check_guess(hit[0], kind)
+                        if verdict == "drop":
+                            continue  # the name looked wrong, but the file inside is what this folder holds
+                        why = "inside, the file is a %s" % kind if verdict == "sure" else hit[1]
+                        misplaced.append((folder, name, hit[0], why))
         report, fixes, count = build_report(version, packs, has_manager, flags, empty, misplaced, _sy_version(), _device_line())
         return {"ui": {"text": [report]}, "result": (report, fixes, count)}
 
