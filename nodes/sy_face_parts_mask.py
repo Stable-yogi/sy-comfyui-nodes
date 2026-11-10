@@ -105,7 +105,7 @@ def model_folder():
     for t in tries:
         if not missing_files(t):
             return t
-    raise ValueError("Face Parts Mask SY needs a Segformer face-parsing model in models/%s (files: %s). "
+    raise ValueError("No face-parsing model files were found. Face Parts Mask SY needs a Segformer face-parsing model in models/%s (files: %s). "
                      "Missing in %s: %s" % (FOLDER, ", ".join(NEEDED), tries[-1], ", ".join(missing_files(tries[-1]))))
 
 

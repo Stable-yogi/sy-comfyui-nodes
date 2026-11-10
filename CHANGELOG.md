@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Test prompts: Face Parts Mask SY, Checkpoint Contact Sheet SY, H3 Sharpen Helper SY and Setup Doctor SY are now in the master test (all 425 nodes covered). Face Parts Mask SY says "No face-parsing model files were found" when the model is missing.
 - New node (425 in all): Face Parts Mask SY (Image). Tick face parts (skin, eyes, brows, lips, hair, neck and more) and get one mask, plus a coloured map of every part. Replaces the old 4-node face parsing chain; needs the face-parsing model in models/face_parsing.
 - New node (422 in all): Setup Doctor SY (Utility). Press Run for one plain report: ComfyUI version, node packs that failed to load, start settings and model folders, each problem with one fix. It changes nothing.
 - Setup Doctor SY now reads the small header of a file it thinks is in the wrong folder and only reports it when the file inside agrees. Big LoRAs are no longer called full models.
