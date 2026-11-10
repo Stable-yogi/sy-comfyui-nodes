@@ -1,6 +1,10 @@
 # Changelog
 
 ## Unreleased
+- New node (422 in all): Setup Doctor SY (Utility). Press Run for one plain report: ComfyUI version, node packs that failed to load, start settings and model folders, each problem with one fix. It changes nothing.
+- New node (423 in all): Checkpoint Contact Sheet SY (Utility). The same prompts and seed on each checkpoint you list, on one labelled sheet.
+- New node (424 in all): H3 Sharpen Helper SY (Video). Gets a MiniMax H3 draft ready for the sharpen pass: adds the sharpen LoRA and shift, makes the draft bigger with its sound and gives the 3 tested steps and the new size.
+- New workflows: H3 Sharpen Helper (workflows/h3), Setup Doctor and Checkpoint Contact Sheet (new workflows/tools folder).
 - New node (419 in all): Sampler Preset SY (Values). Pick a model family (MOSS, MOSS + turbo LoRA, Krea 2 Turbo), then one sampler and scheduler pair tested for it. Gives sampler, scheduler, steps and cfg. Pairs that spoil the picture are not offered.
 - New node (420 in all): Video File Upscale SY (Resize). Upscales a long video file a few frames at a time with an upscale model, so it never runs out of memory, and copies the sound unchanged. detail_strength below 1 blends in a smooth enlargement to calm sharp skin.
 - Master tests hold the 2 new nodes (Picture test: Video File Upscale SY on a short clip at a small size; Numbers test: Sampler Preset SY), each with a Result box.
