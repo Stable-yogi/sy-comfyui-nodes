@@ -30,7 +30,7 @@ SOFT_WORDS = ("model is installed", "were found", "found in the input folder", "
               "needs an H3 video latent", "there is no saved session",
               "no model is picked", "no GGUF model is picked", "No text encoder is picked", "pick a video or a sound file first",
               "RTX upscaler is not installed", "works with MOSS-Image models only",
-              "works with MiniMax H3 models only")  # "needs a file", not a fault (the H3 upscaler needs a real H3 latent, which only a model run makes; Load Session needs a session an earlier H3 run saved)
+              "works with MiniMax H3 models only", "needs a MiniMax H3 model")  # "needs a file", not a fault (the H3 upscaler needs a real H3 latent, which only a model run makes; Load Session needs a session an earlier H3 run saved)
 
 
 def is_free_pack(node_info):
