@@ -12,6 +12,7 @@ PAIRS = {  # MOSS rows: card test 2026-11-10, one prompt, seed 101, 1024x1024, s
              ("euler", "beta", 25, 4.0), ("sa_solver", "simple", 25, 4.0)],
     "MOSS + turbo LoRA": [("euler", "simple", 8, 1.0), ("euler", "normal", 8, 1.0), ("euler", "beta", 8, 1.0)],
     "Krea 2 Turbo": [("euler", "simple", 8, 1.0)],  # from the official Krea 2 Turbo template
+    "H3 Image": [("euler", "simple", 6, 1.0)],  # News Desk first look 2026-11-12: 2048x2048 and 4096x4096, 3 seeds
 }
 
 # family: one plain sentence shown in the info text.
@@ -19,6 +20,7 @@ NOTES = {
     "MOSS": "Tested pairs for the normal MOSS model. er_sde gives the most skin detail.",
     "MOSS + turbo LoRA": "Few steps and cfg 1 because the turbo LoRA does the speed-up.",
     "Krea 2 Turbo": "Few steps and cfg 1, as in the official Turbo example.",
+    "H3 Image": "MiniMax H3 Image: 6 steps, cfg 1, tested at 4 MP and 16 MP. Needs ComfyUI 0.45 or newer.",
 }
 
 SEP = ": "

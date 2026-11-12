@@ -21,7 +21,7 @@ def run():
     n = 0
     labels = m.pair_labels(m.PAIRS)
     assert labels[0] == "MOSS: er_sde + normal"; n += 1
-    assert len(labels) == 9 and len(set(labels)) == 9; n += 1
+    assert len(labels) == 10 and len(set(labels)) == 10; n += 1
     assert m.parse_label("Krea 2 Turbo: euler + simple") == ("Krea 2 Turbo", "euler", "simple"); n += 1
     for lab in labels:  # round trip
         f, s, c = m.parse_label(lab)
@@ -45,4 +45,6 @@ def run():
     spec = m.SYSamplerPreset.INPUT_TYPES()["required"]
     assert spec["pair"][1]["default"] == labels[0] and list(spec) == ["family", "pair", "steps_override"]; n += 1
     assert len(m.SYSamplerPreset().run("MOSS", "MOSS: euler + simple", 0)) == len(m.SYSamplerPreset.RETURN_TYPES); n += 1
+    out = m.pick("H3 Image", "H3 Image: euler + simple", 0, SAMP, SCHED)
+    assert out[:4] == ("euler", "simple", 6, 1.0) and "0.45" in out[4]; n += 1
     return n
