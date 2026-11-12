@@ -1,6 +1,10 @@
 """Face Parts Mask SY: tick face parts (skin, eyes, brows, lips, hair, neck ...) and get one mask of them, from a
 face-parsing model file. One node does what used to take a model loader, a processor loader, a parser and a picker.
-Model: a Segformer face-parsing model (config.json, preprocessor_config.json, model.safetensors) in models/face_parsing."""
+Two engines:
+- "free to sell (MediaPipe)" (default): Google MediaPipe models, Apache 2.0, in models/mediapipe
+  (selfie_multiclass_256x256.tflite for hair, face skin, neck, clothes; face_landmarker.task for eyes, brows, lips, nose).
+- "research only (face-parsing)": a Segformer face-parsing model in models/face_parsing (config.json,
+  preprocessor_config.json, model.safetensors). The common one is licensed for non-commercial research only."""
 import json
 import os
 
@@ -38,6 +42,133 @@ DEFAULT_MEAN = (0.485, 0.456, 0.406)
 DEFAULT_STD = (0.229, 0.224, 0.225)
 DEFAULT_SIZE = 512
 _CACHE = {}
+ENGINES = ("free to sell (MediaPipe)", "research only (face-parsing)")
+MP_FOLDER = "mediapipe"
+MP_SEG = "selfie_multiclass_256x256.tflite"
+MP_LMK = "face_landmarker.task"
+MP_CLASS = {"background": 0, "hair": 1, "body_skin": 2, "face_skin": 3, "clothes": 4, "other": 5}
+# face mesh landmark rings; left/right = the person's own side, like the face-parsing labels
+RING = {
+    "l_eye": (263, 249, 390, 373, 374, 380, 381, 382, 362, 398, 384, 385, 386, 387, 388, 466),
+    "r_eye": (33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161, 246),
+    "l_brow": (300, 293, 334, 296, 336, 285, 295, 282, 283, 276),
+    "r_brow": (70, 63, 105, 66, 107, 55, 65, 52, 53, 46),
+    "u_lip": (61, 185, 40, 39, 37, 0, 267, 269, 270, 409, 291, 308, 415, 310, 311, 312, 13, 82, 81, 80, 191, 78),
+    "l_lip": (61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291, 308, 324, 318, 402, 317, 14, 87, 178, 88, 95, 78),
+    "mouth": (78, 191, 80, 81, 82, 13, 312, 311, 310, 415, 308, 324, 318, 402, 317, 14, 87, 178, 88, 95),
+}
+NOSE_POINTS = (168, 6, 197, 195, 5, 4, 1, 19, 94, 2, 98, 327, 64, 294, 48, 278, 49, 279, 102, 331, 129, 358,
+               219, 439, 115, 344, 220, 440, 45, 275, 51, 281, 3, 248, 236, 456)
+# where each part comes from in the free-to-sell engine: (kind, source)
+MP_SOURCE = {"background": ("class", "background"), "skin": ("skin", None), "nose": ("hull", None),
+             "eye_g": ("none", None), "l_eye": ("ring", "l_eye"), "r_eye": ("ring", "r_eye"),
+             "l_brow": ("ring", "l_brow"), "r_brow": ("ring", "r_brow"), "l_ear": ("none", None),
+             "r_ear": ("none", None), "mouth": ("ring", "mouth"), "u_lip": ("ring", "u_lip"),
+             "l_lip": ("ring", "l_lip"), "hair": ("class", "hair"), "hat": ("none", None),
+             "ear_r": ("none", None), "neck_l": ("none", None), "neck": ("class", "body_skin"),
+             "cloth": ("class", "clothes")}
+
+
+def convex_hull(points):
+    """Pure function. Convex hull of (x, y) points, counter-clockwise, no repeats."""
+    pts = sorted(set((float(x), float(y)) for x, y in points))
+    if len(pts) <= 2:
+        return pts
+
+    def cross(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    lower, upper = [], []
+    for q in pts:
+        while len(lower) >= 2 and cross(lower[-2], lower[-1], q) <= 0:
+            lower.pop()
+        lower.append(q)
+    for q in reversed(pts):
+        while len(upper) >= 2 and cross(upper[-2], upper[-1], q) <= 0:
+            upper.pop()
+        upper.append(q)
+    return lower[:-1] + upper[:-1]
+
+
+def unsupported(labels):
+    """Pure function. Labels the free-to-sell engine cannot find (they stay empty)."""
+    return [l for l in labels if MP_SOURCE[l][0] == "none"]
+
+
+def ring_points(landmarks, ring, w, h):
+    """Pure function. Pixel (x, y) points for one landmark ring; landmarks have .x and .y from 0 to 1."""
+    return [(landmarks[i].x * w, landmarks[i].y * h) for i in ring]
+
+
+def mp_model_files():
+    """Paths of the two MediaPipe files, or a clear error naming what is missing."""
+    import folder_paths
+    folder = os.path.join(folder_paths.models_dir, MP_FOLDER)
+    missing = [f for f in (MP_SEG, MP_LMK) if not os.path.isfile(os.path.join(folder, f))]
+    if missing:
+        raise ValueError("No MediaPipe model files were found. Face Parts Mask SY (free to sell) needs %s in %s. "
+                         "Get them from Google's MediaPipe model pages (Apache 2.0), or pick the research-only engine."
+                         % (" and ".join(missing), folder))
+    return os.path.join(folder, MP_SEG), os.path.join(folder, MP_LMK)
+
+
+def _mp_tools():
+    key = ("mediapipe",)
+    if key not in _CACHE:
+        try:
+            import mediapipe as mp
+            from mediapipe.tasks.python import BaseOptions, vision
+        except ImportError:
+            raise ValueError("The free-to-sell engine needs the Python package mediapipe in the ComfyUI Python "
+                             "(pip install mediapipe), or pick the research-only engine.")
+        seg_path, lmk_path = mp_model_files()
+        cpu = BaseOptions.Delegate.CPU
+        seg = vision.ImageSegmenter.create_from_options(vision.ImageSegmenterOptions(
+            base_options=BaseOptions(model_asset_path=seg_path, delegate=cpu), output_category_mask=True))
+        lmk = vision.FaceLandmarker.create_from_options(vision.FaceLandmarkerOptions(
+            base_options=BaseOptions(model_asset_path=lmk_path, delegate=cpu), num_faces=4))
+        _CACHE.clear()
+        _CACHE[key] = (mp, seg, lmk)
+    return _CACHE[key]
+
+
+def mp_label_masks(rgb):
+    """{label: HxW bool array} for every part of one picture (uint8 HxWx3), free-to-sell engine; plus faces found."""
+    import numpy as np
+    from PIL import Image, ImageDraw
+    mp, seg, lmk = _mp_tools()
+    h, w = rgb.shape[:2]
+    img = mp.Image(image_format=mp.ImageFormat.SRGB, data=np.ascontiguousarray(rgb))
+    cls = np.asarray(seg.segment(img).category_mask.numpy_view()).reshape(h, w)
+    faces = lmk.detect(img).face_landmarks or []
+
+    def fill(polys):
+        im = Image.new("L", (w, h), 0)
+        d = ImageDraw.Draw(im)
+        for poly in polys:
+            if len(poly) >= 3:
+                d.polygon(poly, fill=255)
+        return np.asarray(im) > 0
+    shapes = {name: fill([ring_points(f, ring, w, h) for f in faces]) for name, ring in RING.items()}
+    shapes["nose"] = fill([convex_hull(ring_points(f, NOSE_POINTS, w, h)) for f in faces])
+    shapes["u_lip"] &= ~shapes["mouth"]
+    shapes["l_lip"] &= ~shapes["mouth"]
+    cut = np.zeros((h, w), bool)
+    for name in ("l_eye", "r_eye", "l_brow", "r_brow", "u_lip", "l_lip", "mouth", "nose"):
+        cut |= shapes[name]
+    out = {}
+    for _, label, _ in PARTS:
+        kind, src = MP_SOURCE[label]
+        if kind == "class":
+            out[label] = cls == MP_CLASS[src]
+        elif kind == "skin":
+            out[label] = (cls == MP_CLASS["face_skin"]) & ~cut
+        elif kind == "ring":
+            out[label] = shapes[src]
+        elif kind == "hull":
+            out[label] = shapes["nose"]
+        else:
+            out[label] = np.zeros((h, w), bool)
+    return out, len(faces)
 
 
 def picked_labels(flags):
@@ -145,7 +276,8 @@ def parse_faces(image, folder, device):
 class SYFacePartsMask:
     DESCRIPTION = ("Tick the face parts you want (skin, eyes, brows, lips, hair, neck and more) and get one white mask "
                    "of them, ready for skin fixes, face detail or inpainting. Also gives a coloured map of all parts "
-                   "so you can see what the model found. Needs the face-parsing model files in models/face_parsing.")
+                   "so you can see what the model found. Default engine: Google MediaPipe models in models/mediapipe "
+                   "(free to sell). Research-only engine: face-parsing model files in models/face_parsing.")
     CATEGORY = category("Image")
     FUNCTION = "run"
     RETURN_TYPES = ("MASK", "IMAGE", "STRING")
@@ -156,12 +288,47 @@ class SYFacePartsMask:
         req = {"image": ("IMAGE", {"tooltip": "The picture(s) with a face."})}
         for name, label, default in PARTS:
             req[name] = ("BOOLEAN", {"default": default, "tooltip": "On: %s goes into the mask." % name.replace("_", " ")})
-        return {"required": req}
+        return {"required": req, "optional": {"engine": (list(ENGINES), {"default": ENGINES[0], "tooltip":
+                "MediaPipe: fine for paid work, no glasses/ears/hat/jewellery. face-parsing: all parts, research use only."})}}
 
-    def run(self, image, **flags):
+    def run(self, image, engine=ENGINES[0], **flags):
+        if engine not in ENGINES:
+            raise ValueError("unknown engine %r; pick one of: %s" % (engine, ", ".join(ENGINES)))
+        labels = picked_labels(flags)
+        if engine == ENGINES[0]:
+            return self._run_mp(image, labels, flags)
+        return self._run_parsing(image, labels, flags)
+
+    def _run_mp(self, image, labels, flags):
+        import numpy as np
+        import torch
+        pal = np.array(palette(len(PARTS)), dtype=np.float32)
+        masks, maps, found = [], [], 0
+        for i in range(image.shape[0]):
+            rgb = (image[i, :, :, :3].clamp(0, 1).cpu().numpy() * 255).round().astype(np.uint8)
+            parts, nf = mp_label_masks(rgb)
+            found += nf
+            m = np.zeros(rgb.shape[:2], bool)
+            for l in labels:
+                m |= parts[l]
+            idx = np.zeros(rgb.shape[:2], np.int64)
+            for k, (_, l, _) in enumerate(PARTS):
+                if k:
+                    idx[parts[l]] = k
+            masks.append(torch.from_numpy(m.astype(np.float32)))
+            maps.append(torch.from_numpy(pal[idx]))
+        mask, parts_map = torch.stack(masks), torch.stack(maps)
+        cover = float(mask.mean()) * 100.0
+        info = "FACE PARTS MASK (free to sell: MediaPipe)\n%d picture(s), %d face(s) found, parts: %s\nMask covers %.1f%% of the picture." % (
+            image.shape[0], found, ", ".join(n for n, _, _ in PARTS if flags.get(n)) or "(none ticked: empty mask)", cover)
+        miss = unsupported(labels)
+        if miss:
+            info += "\nNot found by this engine (left empty): %s." % ", ".join(n for n, l, _ in PARTS if l in miss)
+        return (mask, parts_map, info)
+
+    def _run_parsing(self, image, labels, flags):
         import torch
         import comfy.model_management as mm
-        labels = picked_labels(flags)
         folder = model_folder()
         device = mm.get_torch_device()
         model, _ = _load(folder, device)
@@ -173,7 +340,7 @@ class SYFacePartsMask:
         pal = torch.tensor(palette(len(model.config.id2label)), dtype=torch.float32)
         parts_map = pal[cls_map.clamp(0, len(pal) - 1)]
         cover = float(mask.mean()) * 100.0
-        info = "FACE PARTS MASK\n%d picture(s), parts: %s\nMask covers %.1f%% of the picture." % (
+        info = "FACE PARTS MASK (research only: face-parsing)\n%d picture(s), parts: %s\nMask covers %.1f%% of the picture." % (
             image.shape[0], ", ".join(n for n, _, _ in PARTS if flags.get(n)) or "(none ticked: empty mask)", cover)
         return (mask, parts_map, info)
 

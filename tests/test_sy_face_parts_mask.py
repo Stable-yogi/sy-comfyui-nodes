@@ -62,6 +62,24 @@ def run():
     assert it["skin"][1]["default"] is True and it["hair"][1]["default"] is False; n += 1
     assert m.SYFacePartsMask.RETURN_TYPES == ("MASK", "IMAGE", "STRING"); n += 1
     assert "SYFacePartsMask" in m.NODE_CLASS_MAPPINGS and m.NODE_DISPLAY_NAME_MAPPINGS["SYFacePartsMask"].endswith(" SY"); n += 1
+    # ---- free-to-sell engine (MediaPipe): pure parts
+    opt = m.SYFacePartsMask.INPUT_TYPES()["optional"]["engine"]
+    assert opt[0] == list(m.ENGINES) and opt[1]["default"] == m.ENGINES[0] and "MediaPipe" in m.ENGINES[0]; n += 1
+    assert set(m.MP_SOURCE) == set(ID2LABEL.values()); n += 1
+    assert all(src in m.RING for k, src in m.MP_SOURCE.values() if k == "ring"); n += 1
+    assert all(src in m.MP_CLASS for k, src in m.MP_SOURCE.values() if k == "class"); n += 1
+    assert all(0 <= i < 478 for r in m.RING.values() for i in r) and all(0 <= i < 478 for i in m.NOSE_POINTS); n += 1
+    assert m.unsupported(["skin", "eye_g", "hat", "l_eye"]) == ["eye_g", "hat"]; n += 1
+    assert m.unsupported([l for l in ID2LABEL.values()]) == ["eye_g", "l_ear", "r_ear", "hat", "ear_r", "neck_l"]; n += 1
+    hull = m.convex_hull([(0, 0), (2, 0), (2, 2), (0, 2), (1, 1), (1, 0)])
+    assert sorted(hull) == [(0.0, 0.0), (0.0, 2.0), (2.0, 0.0), (2.0, 2.0)] and len(hull) == 4; n += 1
+    assert m.convex_hull([(1, 1)]) == [(1.0, 1.0)] and m.convex_hull([]) == []; n += 1
+
+    class P:
+        def __init__(self, x, y):
+            self.x, self.y = x, y
+    assert m.ring_points([P(0.5, 0.25), P(1.0, 1.0)], (1, 0), 200, 100) == [(200.0, 100.0), (100.0, 25.0)]; n += 1
+    assert "unknown engine" in refuses(m.SYFacePartsMask().run, None, engine="magic"); n += 1
     return n
 
 
