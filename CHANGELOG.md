@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Test prompts: H3 Image Size SY is now in the master test (all 426 nodes covered).
 - New node (426 in all): H3 Image Size SY (Values). Pick 4, 8 or 16 megapixels and a shape; gives width and height in steps of 32 for MiniMax H3 Image, and says if ComfyUI is older than 0.45.
 - Sampler Preset SY: new family H3 Image (euler + simple, 6 steps, cfg 1), tested at 2048x2048 and 4096x4096.
 - Face Parts Mask SY: new engine choice, default "free to sell (MediaPipe)". It uses Google's MediaPipe models (Apache 2.0, fine for paid work): selfie_multiclass_256x256.tflite and face_landmarker.task in models/mediapipe. It finds skin, nose, eyes, brows, lips, mouth, ears, neck, hair and clothes, and glasses, earrings and necklaces from its accessories class; only hat stays empty and the info text says so. The old face-parsing model is now "research only (face-parsing)" because its licence is non-commercial. Old saved workflows load with the new default.
