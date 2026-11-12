@@ -69,8 +69,13 @@ def run():
     assert all(src in m.RING for k, src in m.MP_SOURCE.values() if k == "ring"); n += 1
     assert all(src in m.MP_CLASS for k, src in m.MP_SOURCE.values() if k == "class"); n += 1
     assert all(0 <= i < 478 for r in m.RING.values() for i in r) and all(0 <= i < 478 for i in m.NOSE_POINTS); n += 1
-    assert m.unsupported(["skin", "eye_g", "hat", "l_eye"]) == ["eye_g", "hat"]; n += 1
-    assert m.unsupported([l for l in ID2LABEL.values()]) == ["eye_g", "l_ear", "r_ear", "hat", "ear_r", "neck_l"]; n += 1
+    assert m.unsupported(["skin", "eye_g", "hat", "l_eye"]) == ["hat"]; n += 1
+    assert m.unsupported([l for l in ID2LABEL.values()]) == ["hat"]; n += 1
+    assert all(src in m.ZONES for k, src in m.MP_SOURCE.values() if k == "zone"); n += 1
+    assert all(z[0] in m.MP_CLASS and z[1] in ("in", "out", "any") for z in m.ZONES.values()); n += 1
+    assert all(z[4] in (None, "left", "right", "face_width") for z in m.ZONES.values()); n += 1
+    assert m.zone_rows(100, 300, 0.5, 1.0, 1000) == (200, 300); n += 1
+    assert m.zone_rows(100, 300, -1.0, 9.0, 500) == (0, 500) and m.zone_rows(100, 100, 0, 1, 50) == (50, 50); n += 1
     hull = m.convex_hull([(0, 0), (2, 0), (2, 2), (0, 2), (1, 1), (1, 0)])
     assert sorted(hull) == [(0.0, 0.0), (0.0, 2.0), (2.0, 0.0), (2.0, 2.0)] and len(hull) == 4; n += 1
     assert m.convex_hull([(1, 1)]) == [(1.0, 1.0)] and m.convex_hull([]) == []; n += 1

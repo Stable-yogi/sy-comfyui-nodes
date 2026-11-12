@@ -57,16 +57,32 @@ RING = {
     "l_lip": (61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291, 308, 324, 318, 402, 317, 14, 87, 178, 88, 95, 78),
     "mouth": (78, 191, 80, 81, 82, 13, 312, 311, 310, 415, 308, 324, 318, 402, 317, 14, 87, 178, 88, 95),
 }
+FACE_OVAL = (10, 338, 297, 332, 284, 251, 389, 356, 454, 323, 361, 288, 397, 365, 379, 378, 400, 377, 152, 148,
+             176, 149, 150, 136, 172, 58, 132, 93, 234, 127, 162, 21, 54, 103, 67, 109)
 NOSE_POINTS = (168, 6, 197, 195, 5, 4, 1, 19, 94, 2, 98, 327, 64, 294, 48, 278, 49, 279, 102, 331, 129, 358,
                219, 439, 115, 344, 220, 440, 45, 275, 51, 281, 3, 248, 236, 456)
 # where each part comes from in the free-to-sell engine: (kind, source)
 MP_SOURCE = {"background": ("class", "background"), "skin": ("skin", None), "nose": ("hull", None),
-             "eye_g": ("none", None), "l_eye": ("ring", "l_eye"), "r_eye": ("ring", "r_eye"),
-             "l_brow": ("ring", "l_brow"), "r_brow": ("ring", "r_brow"), "l_ear": ("none", None),
-             "r_ear": ("none", None), "mouth": ("ring", "mouth"), "u_lip": ("ring", "u_lip"),
+             "eye_g": ("zone", "glasses"), "l_eye": ("ring", "l_eye"), "r_eye": ("ring", "r_eye"),
+             "l_brow": ("ring", "l_brow"), "r_brow": ("ring", "r_brow"), "l_ear": ("zone", "l_ear"),
+             "r_ear": ("zone", "r_ear"), "mouth": ("ring", "mouth"), "u_lip": ("ring", "u_lip"),
              "l_lip": ("ring", "l_lip"), "hair": ("class", "hair"), "hat": ("none", None),
-             "ear_r": ("none", None), "neck_l": ("none", None), "neck": ("class", "body_skin"),
+             "ear_r": ("zone", "earring"), "neck_l": ("zone", "necklace"), "neck": ("zone", "neck"),
              "cloth": ("class", "clothes")}
+# zone parts: (model class, which side of the face outline, rows as face heights from the face top)
+# side: "in" = inside the face outline, "out" = outside it, "any"; left/right = the person's own side;
+# face_width = only columns under the face (keeps the neck off the shoulders)
+ZONES = {"glasses": ("other", "in", -0.05, 0.62, None), "l_ear": ("face_skin", "out", 0.2, 0.85, "left"),
+         "r_ear": ("face_skin", "out", 0.2, 0.85, "right"), "earring": ("other", "out", 0.35, 1.15, None),
+         "necklace": ("other", "out", 1.0, 2.2, None), "neck": ("body_skin", "any", 0.85, 1.35, "face_width")}
+
+
+def zone_rows(top, bottom, start, end, height):
+    """Pure function. (first_row, last_row_exclusive) for a zone given as face heights below the face top."""
+    fh = max(1.0, bottom - top)
+    a = int(max(0, min(height, round(top + start * fh))))
+    b = int(max(0, min(height, round(top + end * fh))))
+    return a, max(a, b)
 
 
 def convex_hull(points):
@@ -150,6 +166,30 @@ def mp_label_masks(rgb):
         return np.asarray(im) > 0
     shapes = {name: fill([ring_points(f, ring, w, h) for f in faces]) for name, ring in RING.items()}
     shapes["nose"] = fill([convex_hull(ring_points(f, NOSE_POINTS, w, h)) for f in faces])
+    zones = {name: np.zeros((h, w), bool) for name in ZONES}
+    xs = np.arange(w)[None, :]
+    for f in faces:
+        oval = fill([ring_points(f, FACE_OVAL, w, h)])
+        pts = ring_points(f, FACE_OVAL, w, h)
+        top, bottom = min(y for _, y in pts), max(y for _, y in pts)
+        mid = sum(x for x, _ in pts) / len(pts)
+        left_x, right_x = min(x for x, _ in pts), max(x for x, _ in pts)
+        for name, (cname, side, start, end, lr) in ZONES.items():
+            a, b = zone_rows(top, bottom, start, end, h)
+            if a == b:
+                continue
+            area = cls[a:b] == MP_CLASS[cname]
+            if side == "in":
+                area &= oval[a:b]
+            elif side == "out":
+                area &= ~oval[a:b]
+            if lr == "left":      # the person's left = the right side of the picture
+                area &= xs >= mid
+            elif lr == "right":
+                area &= xs < mid
+            elif lr == "face_width":
+                area &= (xs >= left_x) & (xs <= right_x)
+            zones[name][a:b] |= area
     shapes["u_lip"] &= ~shapes["mouth"]
     shapes["l_lip"] &= ~shapes["mouth"]
     cut = np.zeros((h, w), bool)
@@ -166,6 +206,8 @@ def mp_label_masks(rgb):
             out[label] = shapes[src]
         elif kind == "hull":
             out[label] = shapes["nose"]
+        elif kind == "zone":
+            out[label] = zones[src]
         else:
             out[label] = np.zeros((h, w), bool)
     return out, len(faces)
@@ -289,7 +331,7 @@ class SYFacePartsMask:
         for name, label, default in PARTS:
             req[name] = ("BOOLEAN", {"default": default, "tooltip": "On: %s goes into the mask." % name.replace("_", " ")})
         return {"required": req, "optional": {"engine": (list(ENGINES), {"default": ENGINES[0], "tooltip":
-                "MediaPipe: fine for paid work, no glasses/ears/hat/jewellery. face-parsing: all parts, research use only."})}}
+                "MediaPipe: fine for paid work, finds every part but hats. face-parsing: all parts, research use only."})}}
 
     def run(self, image, engine=ENGINES[0], **flags):
         if engine not in ENGINES:
