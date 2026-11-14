@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- New node (427 in all): MOSS Layout Prompt SY (Text). Turns layout boxes into a MOSS-Image layout prompt, y first and from the picture centre as MOSS needs. Label a box 'text: WORDS | look', 'person: who', or just name the object. In the master test.
 - Test prompts: H3 Image Size SY is now in the master test (all 426 nodes covered).
 - New node (426 in all): H3 Image Size SY (Values). Pick 4, 8 or 16 megapixels and a shape; gives width and height in steps of 32 for MiniMax H3 Image, and says if ComfyUI is older than 0.45.
 - Sampler Preset SY: new family H3 Image (euler + simple, 6 steps, cfg 1), tested at 2048x2048 and 4096x4096.
