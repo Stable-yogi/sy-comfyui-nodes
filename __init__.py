@@ -64,4 +64,10 @@ try:  # web helper for the Resource Monitor meters (read only)
 except Exception as _err:  # the node still loads; the meters stay empty
     print("[SY] resource monitor meters not available:", _err)
 
+try:  # web helper for the Video Frame Picker slider (read only, inside the input folder)
+    from .nodes import _sy_video_info_api
+    _sy_video_info_api.register_routes()
+except Exception as _err:  # the node still works; the slider then cannot show the frame count
+    print("[SY] video frame picker slider info not available:", _err)
+
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]
