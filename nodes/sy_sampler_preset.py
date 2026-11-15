@@ -12,7 +12,7 @@ PAIRS = {  # MOSS rows: card test 2026-11-10, one prompt, seed 101, 1024x1024, s
              ("euler", "beta", 25, 4.0), ("sa_solver", "simple", 25, 4.0)],
     "MOSS + turbo LoRA": [("euler", "simple", 8, 1.0), ("euler", "normal", 8, 1.0), ("euler", "beta", 8, 1.0)],
     "Krea 2 Turbo": [("euler", "simple", 8, 1.0)],  # from the official Krea 2 Turbo template
-    "H3 Image": [("euler", "simple", 6, 1.0)],  # News Desk first look 2026-11-12: 2048x2048 and 4096x4096, 3 seeds
+    "H3 Image": [("euler_ancestral", "simple", 6, 1.0), ("euler", "simple", 6, 1.0)],  # News Desk timed runs 2026-11-12 used euler_ancestral; euler kept for saved workflows
 }
 
 # family: one plain sentence shown in the info text.

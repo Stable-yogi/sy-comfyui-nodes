@@ -4,7 +4,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "nodes"))
 import sy_sampler_preset as m
 
-SAMP = ["euler", "er_sde", "heun"]
+SAMP = ["euler", "euler_ancestral", "er_sde", "heun"]
 SCHED = ["normal", "simple", "beta"]
 
 
@@ -21,7 +21,7 @@ def run():
     n = 0
     labels = m.pair_labels(m.PAIRS)
     assert labels[0] == "MOSS: er_sde + normal"; n += 1
-    assert len(labels) == 10 and len(set(labels)) == 10; n += 1
+    assert len(labels) == 11 and len(set(labels)) == 11; n += 1
     assert m.parse_label("Krea 2 Turbo: euler + simple") == ("Krea 2 Turbo", "euler", "simple"); n += 1
     for lab in labels:  # round trip
         f, s, c = m.parse_label(lab)
@@ -47,4 +47,7 @@ def run():
     assert len(m.SYSamplerPreset().run("MOSS", "MOSS: euler + simple", 0)) == len(m.SYSamplerPreset.RETURN_TYPES); n += 1
     out = m.pick("H3 Image", "H3 Image: euler + simple", 0, SAMP, SCHED)
     assert out[:4] == ("euler", "simple", 6, 1.0) and "0.45" in out[4]; n += 1
+    out = m.pick("H3 Image", "H3 Image: euler_ancestral + simple", 0, SAMP, SCHED)
+    assert out[:4] == ("euler_ancestral", "simple", 6, 1.0); n += 1
+    assert m.pair_labels({"H3 Image": m.PAIRS["H3 Image"]})[0] == "H3 Image: euler_ancestral + simple"; n += 1
     return n

@@ -1,6 +1,10 @@
 # Changelog
 
 ## Unreleased
+- New node (429 in all): LoRA Strength Sweep SY (Utility). Pick one LoRA and a list of strengths (for example 0, 0.6, 0.8, 1.0). It gives one model per strength, so the sampler after it makes one picture per strength with the same seed; 0 is the picture without the LoRA. It also gives one main model at the strength you pick for the rest of the workflow, and labels for an Image Grid SY sheet. Tested on MiniMax H3 Image at 2048x2048.
+- Sampler Preset SY: H3 Image now starts with euler_ancestral + simple (6 steps, cfg 1); euler + simple stays as the second choice.
+- New workflow: SY - H3 Character LoRA Free v1 (workflows/h3). MiniMax H3 Image with LoRA SY and a trigger-word note: pick your character LoRA, put its trigger word at the start of the prompt, 6 steps at 2048x2048. Runs with no LoRA too.
+- Test prompts: LoRA Strength Sweep SY is in the master Tools test (all 429 nodes covered).
 - New node (428 in all): Video Frame Picker SY (Image). Shows a video inside the node with a timeline slider, -1/+1 and -10/+10 buttons, arrow keys and Play. Leave the slider on a frame and the run exports exactly that frame as a picture, with its frame number and time. The chosen frame is saved with the workflow. It is in the master test.
 - New node (427 in all): MOSS Layout Prompt SY (Text). Turns layout boxes into a MOSS-Image layout prompt, y first and from the picture centre as MOSS needs. Label a box 'text: WORDS | look', 'person: who', or just name the object. In the master test.
 - Test prompts: H3 Image Size SY is now in the master test (all 426 nodes covered).
