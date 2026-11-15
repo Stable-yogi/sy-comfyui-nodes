@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- SY - H3 Character LoRA Free v1: the video note now holds the link to the video page.
 - New node (429 in all): LoRA Strength Sweep SY (Utility). Pick one LoRA and a list of strengths (for example 0, 0.6, 0.8, 1.0). It gives one model per strength, so the sampler after it makes one picture per strength with the same seed; 0 is the picture without the LoRA. It also gives one main model at the strength you pick for the rest of the workflow, and labels for an Image Grid SY sheet. Tested on MiniMax H3 Image at 2048x2048.
 - Sampler Preset SY: H3 Image now starts with euler_ancestral + simple (6 steps, cfg 1); euler + simple stays as the second choice.
 - New workflow: SY - H3 Character LoRA Free v1 (workflows/h3). MiniMax H3 Image with LoRA SY and a trigger-word note: pick your character LoRA, put its trigger word at the start of the prompt, 6 steps at 2048x2048. Runs with no LoRA too.
