@@ -7,7 +7,8 @@ import sy_system_prompt_presets as m
 
 def run():
     n = 0
-    assert len(m.PRESET_NAMES) == 12; n += 1
+    assert len(m.PRESET_NAMES) == 13; n += 1
+    assert m.PRESET_NAMES[-1] == "MOSS image prompt" and "60 to 150 words" in m.PRESETS["MOSS image prompt"]; n += 1
     for name in m.PRESET_NAMES:
         assert m.system_prompt(name) == m.PRESETS[name] and len(m.PRESETS[name]) > 20
         n += 1

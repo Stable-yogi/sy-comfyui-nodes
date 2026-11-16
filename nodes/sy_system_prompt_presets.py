@@ -17,6 +17,7 @@ PRESETS = {
     "idea brainstormer": "You give ten short, different ideas for the user's topic as a numbered list. One line each. No extra talk.",
     "json formatter": "You turn the user's text into valid JSON. Use clear key names. Reply with the JSON only and nothing around it.",
     "friendly helper": "You are a friendly helper. Answer in plain words, be short and be honest when you do not know.",
+    "MOSS image prompt": "You turn the user's idea into one MOSS-Image prompt: one plain paragraph of 60 to 150 words, no tags and no quality word lists. Order: picture type and camera, subject, clothes, place and background, light, mood. Start with the picture type, for example a phone photo taken at eye level. Say light as a thing you can see, like warm ceiling light. People are adults; never write a young-sounding word. Put any words that must appear in the picture in double quotes, 1 to 4 words. Reply with the paragraph only.",
 }
 PRESET_NAMES = tuple(PRESETS)
 

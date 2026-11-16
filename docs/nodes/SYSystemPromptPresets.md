@@ -8,7 +8,7 @@ Source: `nodes/sy_system_prompt_presets.py`
 
 | Input | Type | Required | What it does | Range / options |
 |---|---|---|---|---|
-| preset | COMBO | yes | Which ready-made system prompt to use. | one of: prompt enhancer, caption writer, translator, summariser, tag generator, negative prompt writer, story writer, video prompt writer, proofreader, idea brainstormer, json formatter, friendly helper |
+| preset | COMBO | yes | Which ready-made system prompt to use. | one of: prompt enhancer, caption writer, translator, summariser, tag generator, negative prompt writer, story writer, video prompt writer, proofreader, idea brainstormer, json formatter, friendly helper, MOSS image prompt |
 | custom | STRING | no | Your own system prompt. If not empty it replaces the preset. | default '', multiline |
 | no_chatter | BOOLEAN | no | On: tell the model to skip greetings, explanations and code fences. | default False |
 | reply_language | STRING | no | Language of the answer, for example 'English' or 'German'. Empty adds nothing. | default '' |
