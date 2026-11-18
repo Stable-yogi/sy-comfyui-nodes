@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- New node (431 in all): H3 Sheet Designer SY (Image). Pick the views of a character sheet (a preset or your own list) and a size of 4, 8 or 16 MP. It writes an H3 Image prompt that keeps text and labels out of the picture, draws a plain layout guide (grey shapes, no text) and gives the width and height. In the master Text test.
 - LoRA Key Check SY (new node): checks a LoRA against your loaded model and says OK, PARTLY or NO MATCH, with the list of parts that do not fit (the "lora key not loaded" lines). The model goes through unchanged.
 - System Prompt Presets SY: new preset "MOSS image prompt". Your LLM node turns a short idea into one plain MOSS-Image paragraph (picture type and camera, subject, clothes, place, light, mood; sign words in quotes). Added at the end of the list, so saved workflows keep their pick.
 - SY - H3 Character LoRA Free v1: the video note now holds the link to the video page.
