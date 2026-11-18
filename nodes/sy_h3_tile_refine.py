@@ -137,7 +137,7 @@ class SYH3TileRefine:
                 "window_frames": ("INT", {"default": 0, "min": 0, "max": 3600, "step": 1, "tooltip": "Video frames per time window. 0 = the whole length at once. Smaller uses less memory."}),
                 "window_overlap": ("INT", {"default": 22, "min": 5, "max": 1000, "step": 1, "tooltip": "Video frames shared by neighbour windows, softly crossfaded."}),
                 "carry": ("BOOLEAN", {"default": True, "tooltip": "Each window starts from the finished frames of the window before it."}),
-                "keep_light": ("FLOAT", {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.05, "tooltip": "Tiles keep the broad light and colour of the input, so no bright or dark seams. 1 = full, 0 = off."}),
+                "keep_light": ("FLOAT", {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.05, "tooltip": "Pictures: tiles keep the input light, so no bright or dark seams (1 = full, 0 = off). Video: leave at 0."}),
             },
         }
 
