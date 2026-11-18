@@ -1,0 +1,1859 @@
+{
+ "id": "sy-sy---h3-character-sheet-pro-v2",
+ "revision": 0,
+ "last_node_id": 18,
+ "last_link_id": 27,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "SYWorkflowHeader",
+   "pos": [
+    0,
+    -430
+   ],
+   "size": [
+    980,
+    330
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "properties": {
+    "Node name for S&R": "SYWorkflowHeader"
+   },
+   "widgets_values": [],
+   "title": "Header"
+  },
+  {
+   "id": 2,
+   "type": "SYNote",
+   "pos": [
+    1020,
+    -430
+   ],
+   "size": [
+    560,
+    160
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "text",
+     "type": "STRING",
+     "widget": {
+      "name": "text"
+     },
+     "link": null
+    },
+    {
+     "name": "style",
+     "type": "COMBO",
+     "widget": {
+      "name": "style"
+     },
+     "link": null
+    },
+    {
+     "name": "add_style_label",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "add_style_label"
+     },
+     "link": null
+    },
+    {
+     "name": "trim",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "trim"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "text",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "name": "info",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SYNote"
+   },
+   "widgets_values": [
+    "Video for this workflow: the link is added when the video is out.",
+    "info",
+    false,
+    false
+   ],
+   "title": "Video"
+  },
+  {
+   "id": 3,
+   "type": "SYModelLoader",
+   "pos": [
+    0,
+    0
+   ],
+   "size": [
+    400,
+    346
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "format",
+     "type": "COMBO",
+     "widget": {
+      "name": "format"
+     },
+     "link": null
+    },
+    {
+     "name": "model_safetensors",
+     "type": "COMBO",
+     "widget": {
+      "name": "model_safetensors"
+     },
+     "link": null
+    },
+    {
+     "name": "model_gguf",
+     "type": "COMBO",
+     "widget": {
+      "name": "model_gguf"
+     },
+     "link": null
+    },
+    {
+     "name": "text_encoder",
+     "type": "COMBO",
+     "widget": {
+      "name": "text_encoder"
+     },
+     "link": null
+    },
+    {
+     "name": "text_encoder_gguf",
+     "type": "COMBO",
+     "widget": {
+      "name": "text_encoder_gguf"
+     },
+     "link": null
+    },
+    {
+     "name": "family",
+     "type": "COMBO",
+     "widget": {
+      "name": "family"
+     },
+     "link": null
+    },
+    {
+     "name": "vae",
+     "type": "COMBO",
+     "widget": {
+      "name": "vae"
+     },
+     "link": null
+    },
+    {
+     "name": "text_encoder_2",
+     "type": "COMBO",
+     "widget": {
+      "name": "text_encoder_2"
+     },
+     "link": null
+    },
+    {
+     "name": "audio_vae",
+     "type": "COMBO",
+     "widget": {
+      "name": "audio_vae"
+     },
+     "link": null
+    },
+    {
+     "name": "weight_dtype",
+     "type": "COMBO",
+     "widget": {
+      "name": "weight_dtype"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "links": [
+      10,
+      23
+     ]
+    },
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "links": [
+      1,
+      18
+     ]
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "links": [
+      2,
+      15,
+      19,
+      24
+     ]
+    },
+    {
+     "name": "audio_vae",
+     "type": "VAE",
+     "links": null
+    },
+    {
+     "name": "info",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SYModelLoader"
+   },
+   "widgets_values": [
+    "Safetensors",
+    "minimax_h3_image_pruned_w4a8.safetensors",
+    "(none)",
+    "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+    "(none)",
+    "minimax",
+    "minimax_h3_image_vae_fp16.safetensors",
+    "(none)",
+    "(none)",
+    "default"
+   ],
+   "title": "Models"
+  },
+  {
+   "id": 4,
+   "type": "SYNote",
+   "pos": [
+    0,
+    400
+   ],
+   "size": [
+    770,
+    260
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "text",
+     "type": "STRING",
+     "widget": {
+      "name": "text"
+     },
+     "link": null
+    },
+    {
+     "name": "style",
+     "type": "COMBO",
+     "widget": {
+      "name": "style"
+     },
+     "link": null
+    },
+    {
+     "name": "add_style_label",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "add_style_label"
+     },
+     "link": null
+    },
+    {
+     "name": "trim",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "trim"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "text",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "name": "info",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SYNote"
+   },
+   "widgets_values": [
+    "Put these 3 files in your ComfyUI models folder:\n- minimax_h3_image_pruned_w4a8.safetensors  (diffusion_models)\n- qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors  (text_encoders)\n- minimax_h3_image_vae_fp16.safetensors  (vae)\nPut your character LoRA in models/loras.\nNeeds ComfyUI 0.45 or newer. First run is slow (it loads every file); judge the second run.",
+    "model",
+    false,
+    false
+   ],
+   "title": "Model files"
+  },
+  {
+   "id": 5,
+   "type": "SYNote",
+   "pos": [
+    0,
+    700
+   ],
+   "size": [
+    770,
+    220
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "text",
+     "type": "STRING",
+     "widget": {
+      "name": "text"
+     },
+     "link": null
+    },
+    {
+     "name": "style",
+     "type": "COMBO",
+     "widget": {
+      "name": "style"
+     },
+     "link": null
+    },
+    {
+     "name": "add_style_label",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "add_style_label"
+     },
+     "link": null
+    },
+    {
+     "name": "trim",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "trim"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "text",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "name": "info",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SYNote"
+   },
+   "widgets_values": [
+    "1. Load ONE clear picture of your character (face visible; full body is best).\n2. Pick the views in H3 Sheet Designer SY (Free: Standard 5 = 2 faces + front, side, back).\n3. Run. The sheet is saved in output/H3 Character Sheet.\nThe layout guide only tells the model where each view goes; it never shows in the result.",
+    "tip",
+    false,
+    false
+   ],
+   "title": "How to use"
+  },
+  {
+   "id": 6,
+   "type": "SYLoadImageMini",
+   "pos": [
+    860,
+    0
+   ],
+   "size": [
+    360,
+    420
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "name": "crop_to_multiple",
+     "type": "INT",
+     "widget": {
+      "name": "crop_to_multiple"
+     },
+     "link": null
+    },
+    {
+     "name": "max_megapixels",
+     "type": "FLOAT",
+     "widget": {
+      "name": "max_megapixels"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "links": [
+      6,
+      20
+     ]
+    },
+    {
+     "name": "mask",
+     "type": "MASK",
+     "links": null
+    },
+    {
+     "name": "width",
+     "type": "INT",
+     "links": null
+    },
+    {
+     "name": "height",
+     "type": "INT",
+     "links": null
+    },
+    {
+     "name": "info",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SYLoadImageMini"
+   },
+   "widgets_values": [
+    "example.png",
+    1,
+    0.0
+   ],
+   "title": "Your character picture"
+  },
+  {
+   "id": 7,
+   "type": "SYH3SheetDesigner",
+   "pos": [
+    1260,
+    0
+   ],
+   "size": [
+    420,
+    300
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "preset",
+     "type": "COMBO",
+     "widget": {
+      "name": "preset"
+     },
+     "link": null
+    },
+    {
+     "name": "size",
+     "type": "COMBO",
+     "widget": {
+      "name": "size"
+     },
+     "link": null
+    },
+    {
+     "name": "style",
+     "type": "COMBO",
+     "widget": {
+      "name": "style"
+     },
+     "link": null
+    },
+    {
+     "name": "use_layout_guide",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "use_layout_guide"
+     },
+     "link": null
+    },
+    {
+     "name": "views",
+     "type": "STRING",
+     "widget": {
+      "name": "views"
+     },
+     "link": null
+    },
+    {
+     "name": "notes",
+     "type": "STRING",
+     "widget": {
+      "name": "notes"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "prompt",
+     "type": "STRING",
+     "links": [
+      3
+     ]
+    },
+    {
+     "name": "layout_guide",
+     "type": "IMAGE",
+     "links": [
+      7,
+      9
+     ]
+    },
+    {
+     "name": "width",
+     "type": "INT",
+     "links": [
+      4
+     ]
+    },
+    {
+     "name": "height",
+     "type": "INT",
+     "links": [
+      5
+     ]
+    },
+    {
+     "name": "info",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SYH3SheetDesigner"
+   },
+   "widgets_values": [
+    "Full 7 (2 faces, 3 bodies, hands, feet)",
+    "8 MP (more detail)",
+    "as in the picture",
+    true,
+    "",
+    ""
+   ],
+   "title": "H3 Sheet Designer SY"
+  },
+  {
+   "id": 8,
+   "type": "MiniMaxH3ImageConditioning",
+   "pos": [
+    1720,
+    0
+   ],
+   "size": [
+    520,
+    360
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 1
+    },
+    {
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": 3
+    },
+    {
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": 4
+    },
+    {
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": 5
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 2,
+     "shape": 7
+    },
+    {
+     "localized_name": "image_1",
+     "name": "images.image_1",
+     "shape": 7,
+     "type": "IMAGE",
+     "link": 6
+    },
+    {
+     "localized_name": "image_2",
+     "name": "images.image_2",
+     "shape": 7,
+     "type": "IMAGE",
+     "link": 7
+    },
+    {
+     "localized_name": "image_3",
+     "name": "images.image_3",
+     "shape": 7,
+     "type": "IMAGE",
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "links": [
+      8,
+      11
+     ]
+    },
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      12
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "MiniMaxH3ImageConditioning"
+   },
+   "widgets_values": [
+    "",
+    2048,
+    2048
+   ],
+   "title": "Sheet prompt"
+  },
+  {
+   "id": 9,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    1720,
+    420
+   ],
+   "size": [
+    320,
+    50
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 8
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      13
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "ConditioningZeroOut"
+   },
+   "widgets_values": [],
+   "title": "Negative (empty)"
+  },
+  {
+   "id": 10,
+   "type": "PreviewImage",
+   "pos": [
+    1260,
+    360
+   ],
+   "size": [
+    420,
+    300
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 9
+    }
+   ],
+   "outputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "PreviewImage"
+   },
+   "widgets_values": [],
+   "title": "Layout guide (not in the result)"
+  },
+  {
+   "id": 11,
+   "type": "SYSampler",
+   "pos": [
+    2340,
+    0
+   ],
+   "size": [
+    380,
+    330
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 10
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 11
+    },
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "link": 12
+    },
+    {
+     "name": "seed",
+     "type": "INT",
+     "widget": {
+      "name": "seed"
+     },
+     "link": null
+    },
+    {
+     "name": "fast_mode",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "fast_mode"
+     },
+     "link": null
+    },
+    {
+     "name": "steps",
+     "type": "INT",
+     "widget": {
+      "name": "steps"
+     },
+     "link": null
+    },
+    {
+     "name": "fast_steps",
+     "type": "INT",
+     "widget": {
+      "name": "fast_steps"
+     },
+     "link": null
+    },
+    {
+     "name": "cfg",
+     "type": "FLOAT",
+     "widget": {
+      "name": "cfg"
+     },
+     "link": null
+    },
+    {
+     "name": "sampler",
+     "type": "COMBO",
+     "widget": {
+      "name": "sampler"
+     },
+     "link": null
+    },
+    {
+     "name": "scheduler",
+     "type": "COMBO",
+     "widget": {
+      "name": "scheduler"
+     },
+     "link": null
+    },
+    {
+     "name": "denoise",
+     "type": "FLOAT",
+     "widget": {
+      "name": "denoise"
+     },
+     "link": null
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 13,
+     "shape": 7
+    }
+   ],
+   "outputs": [
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "links": [
+      14
+     ]
+    },
+    {
+     "name": "denoised",
+     "type": "LATENT",
+     "links": null
+    },
+    {
+     "name": "settings",
+     "type": "STRING",
+     "links": [
+      17
+     ]
+    },
+    {
+     "name": "seed",
+     "type": "INT",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SYSampler"
+   },
+   "widgets_values": [
+    101,
+    "fixed",
+    false,
+    6,
+    4,
+    1.0,
+    "euler_ancestral",
+    "simple",
+    1.0
+   ],
+   "title": "Sampler"
+  },
+  {
+   "id": 12,
+   "type": "SYDecode",
+   "pos": [
+    2800,
+    0
+   ],
+   "size": [
+    300,
+    190
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 14
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 15
+    },
+    {
+     "name": "mode",
+     "type": "COMBO",
+     "widget": {
+      "name": "mode"
+     },
+     "link": null
+    },
+    {
+     "name": "tiles",
+     "type": "COMBO",
+     "widget": {
+      "name": "tiles"
+     },
+     "link": null
+    },
+    {
+     "name": "tile_size",
+     "type": "INT",
+     "widget": {
+      "name": "tile_size"
+     },
+     "link": null
+    },
+    {
+     "name": "overlap",
+     "type": "INT",
+     "widget": {
+      "name": "overlap"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "links": [
+      16,
+      22
+     ]
+    },
+    {
+     "name": "audio",
+     "type": "AUDIO",
+     "links": null
+    },
+    {
+     "name": "info",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SYDecode"
+   },
+   "widgets_values": [
+    "Picture or video",
+    "Auto (retry in tiles)",
+    512,
+    64
+   ],
+   "title": "Decode"
+  },
+  {
+   "id": 13,
+   "type": "SYSaveResult",
+   "pos": [
+    3180,
+    0
+   ],
+   "size": [
+    320,
+    260
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "project",
+     "type": "STRING",
+     "widget": {
+      "name": "project"
+     },
+     "link": null
+    },
+    {
+     "name": "name",
+     "type": "STRING",
+     "widget": {
+      "name": "name"
+     },
+     "link": null
+    },
+    {
+     "name": "folder_by_date",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "folder_by_date"
+     },
+     "link": null
+    },
+    {
+     "name": "image_format",
+     "type": "COMBO",
+     "widget": {
+      "name": "image_format"
+     },
+     "link": null
+    },
+    {
+     "name": "quality",
+     "type": "INT",
+     "widget": {
+      "name": "quality"
+     },
+     "link": null
+    },
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 16,
+     "shape": 7
+    },
+    {
+     "name": "video",
+     "type": "VIDEO",
+     "link": null,
+     "shape": 7
+    },
+    {
+     "name": "audio",
+     "type": "AUDIO",
+     "link": null,
+     "shape": 7
+    },
+    {
+     "name": "settings",
+     "type": "STRING",
+     "link": 17,
+     "shape": 7
+    }
+   ],
+   "outputs": [
+    {
+     "name": "saved_path",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SYSaveResult"
+   },
+   "widgets_values": [
+    "H3 Character Sheet",
+    "sheet",
+    true,
+    "png",
+    95
+   ],
+   "title": "Save sheet"
+  },
+  {
+   "id": 14,
+   "type": "SYNote",
+   "pos": [
+    0,
+    960
+   ],
+   "size": [
+    770,
+    260
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "text",
+     "type": "STRING",
+     "widget": {
+      "name": "text"
+     },
+     "link": null
+    },
+    {
+     "name": "style",
+     "type": "COMBO",
+     "widget": {
+      "name": "style"
+     },
+     "link": null
+    },
+    {
+     "name": "add_style_label",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "add_style_label"
+     },
+     "link": null
+    },
+    {
+     "name": "trim",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "trim"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "text",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "name": "info",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SYNote"
+   },
+   "widgets_values": [
+    "Pro tips:\n- 8 MP gives sharper faces; 16 MP is the best and about 5x slower.\n- Style: keep 'as in the picture', or turn the character into photo, anime, 3D render or painted.\n- Custom preset: type views in the views box, for example face_front, face_3q_left, body_front, hands.\n- The face pass redraws every face on the sheet at 1024 px with your picture as reference. Denoise 0.3 to 0.45 keeps the face; higher changes it.",
+    "info",
+    false,
+    false
+   ],
+   "title": "Pro tips"
+  },
+  {
+   "id": 15,
+   "type": "MiniMaxH3ImageConditioning",
+   "pos": [
+    2340,
+    500
+   ],
+   "size": [
+    480,
+    260
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 18
+    },
+    {
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": null
+    },
+    {
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": null
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 19,
+     "shape": 7
+    },
+    {
+     "localized_name": "image_1",
+     "name": "images.image_1",
+     "shape": 7,
+     "type": "IMAGE",
+     "link": 20
+    },
+    {
+     "localized_name": "image_2",
+     "name": "images.image_2",
+     "shape": 7,
+     "type": "IMAGE",
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "links": [
+      21,
+      25
+     ]
+    },
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "MiniMaxH3ImageConditioning"
+   },
+   "widgets_values": [
+    "A sharp, detailed close-up of the face of the character in <Picture 1>. The very same face, eyes, skin, hair and colours as in <Picture 1>. Natural detail, no text.",
+    1024,
+    1024
+   ],
+   "title": "Face prompt"
+  },
+  {
+   "id": 16,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    2340,
+    800
+   ],
+   "size": [
+    320,
+    50
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 21
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      26
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "ConditioningZeroOut"
+   },
+   "widgets_values": [],
+   "title": "Negative (empty)"
+  },
+  {
+   "id": 17,
+   "type": "SYFaceDetail",
+   "pos": [
+    2860,
+    500
+   ],
+   "size": [
+    380,
+    520
+   ],
+   "flags": {},
+   "order": 16,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 22
+    },
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 23
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 24
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 25
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 26
+    },
+    {
+     "name": "detector",
+     "type": "COMBO",
+     "widget": {
+      "name": "detector"
+     },
+     "link": null
+    },
+    {
+     "name": "pick",
+     "type": "COMBO",
+     "widget": {
+      "name": "pick"
+     },
+     "link": null
+    },
+    {
+     "name": "crop_size",
+     "type": "INT",
+     "widget": {
+      "name": "crop_size"
+     },
+     "link": null
+    },
+    {
+     "name": "padding",
+     "type": "FLOAT",
+     "widget": {
+      "name": "padding"
+     },
+     "link": null
+    },
+    {
+     "name": "denoise",
+     "type": "FLOAT",
+     "widget": {
+      "name": "denoise"
+     },
+     "link": null
+    },
+    {
+     "name": "steps",
+     "type": "INT",
+     "widget": {
+      "name": "steps"
+     },
+     "link": null
+    },
+    {
+     "name": "cfg",
+     "type": "FLOAT",
+     "widget": {
+      "name": "cfg"
+     },
+     "link": null
+    },
+    {
+     "name": "sampler_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "sampler_name"
+     },
+     "link": null
+    },
+    {
+     "name": "scheduler",
+     "type": "COMBO",
+     "widget": {
+      "name": "scheduler"
+     },
+     "link": null
+    },
+    {
+     "name": "seed",
+     "type": "INT",
+     "widget": {
+      "name": "seed"
+     },
+     "link": null
+    },
+    {
+     "name": "feather",
+     "type": "INT",
+     "widget": {
+      "name": "feather"
+     },
+     "link": null
+    },
+    {
+     "name": "min_face",
+     "type": "INT",
+     "widget": {
+      "name": "min_face"
+     },
+     "link": null
+    },
+    {
+     "name": "mask",
+     "type": "MASK",
+     "link": null,
+     "shape": 7
+    }
+   ],
+   "outputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "links": [
+      27
+     ]
+    },
+    {
+     "name": "face_crops",
+     "type": "IMAGE",
+     "links": null
+    },
+    {
+     "name": "mask",
+     "type": "MASK",
+     "links": null
+    },
+    {
+     "name": "count",
+     "type": "INT",
+     "links": null
+    },
+    {
+     "name": "info",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SYFaceDetail"
+   },
+   "widgets_values": [
+    "Built-in (no file needed)",
+    "all",
+    1024,
+    0.35,
+    0.4,
+    6,
+    1.0,
+    "euler",
+    "simple",
+    7,
+    "fixed",
+    24,
+    48
+   ],
+   "title": "Face pass"
+  },
+  {
+   "id": 18,
+   "type": "SYSaveResult",
+   "pos": [
+    3280,
+    500
+   ],
+   "size": [
+    320,
+    260
+   ],
+   "flags": {},
+   "order": 17,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "project",
+     "type": "STRING",
+     "widget": {
+      "name": "project"
+     },
+     "link": null
+    },
+    {
+     "name": "name",
+     "type": "STRING",
+     "widget": {
+      "name": "name"
+     },
+     "link": null
+    },
+    {
+     "name": "folder_by_date",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "folder_by_date"
+     },
+     "link": null
+    },
+    {
+     "name": "image_format",
+     "type": "COMBO",
+     "widget": {
+      "name": "image_format"
+     },
+     "link": null
+    },
+    {
+     "name": "quality",
+     "type": "INT",
+     "widget": {
+      "name": "quality"
+     },
+     "link": null
+    },
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 27,
+     "shape": 7
+    },
+    {
+     "name": "video",
+     "type": "VIDEO",
+     "link": null,
+     "shape": 7
+    },
+    {
+     "name": "audio",
+     "type": "AUDIO",
+     "link": null,
+     "shape": 7
+    },
+    {
+     "name": "settings",
+     "type": "STRING",
+     "link": null,
+     "shape": 7
+    }
+   ],
+   "outputs": [
+    {
+     "name": "saved_path",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SYSaveResult"
+   },
+   "widgets_values": [
+    "H3 Character Sheet",
+    "sheet_faces",
+    true,
+    "png",
+    95
+   ],
+   "title": "Save sheet with face pass"
+  }
+ ],
+ "links": [
+  [
+   1,
+   3,
+   1,
+   8,
+   0,
+   "CLIP"
+  ],
+  [
+   2,
+   3,
+   2,
+   8,
+   4,
+   "VAE"
+  ],
+  [
+   3,
+   7,
+   0,
+   8,
+   1,
+   "STRING"
+  ],
+  [
+   4,
+   7,
+   2,
+   8,
+   2,
+   "INT"
+  ],
+  [
+   5,
+   7,
+   3,
+   8,
+   3,
+   "INT"
+  ],
+  [
+   6,
+   6,
+   0,
+   8,
+   5,
+   "IMAGE"
+  ],
+  [
+   7,
+   7,
+   1,
+   8,
+   6,
+   "IMAGE"
+  ],
+  [
+   8,
+   8,
+   0,
+   9,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   9,
+   7,
+   1,
+   10,
+   0,
+   "IMAGE"
+  ],
+  [
+   10,
+   3,
+   0,
+   11,
+   0,
+   "MODEL"
+  ],
+  [
+   11,
+   8,
+   0,
+   11,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   12,
+   8,
+   1,
+   11,
+   2,
+   "LATENT"
+  ],
+  [
+   13,
+   9,
+   0,
+   11,
+   11,
+   "CONDITIONING"
+  ],
+  [
+   14,
+   11,
+   0,
+   12,
+   0,
+   "LATENT"
+  ],
+  [
+   15,
+   3,
+   2,
+   12,
+   1,
+   "VAE"
+  ],
+  [
+   16,
+   12,
+   0,
+   13,
+   5,
+   "IMAGE"
+  ],
+  [
+   17,
+   11,
+   2,
+   13,
+   8,
+   "STRING"
+  ],
+  [
+   18,
+   3,
+   1,
+   15,
+   0,
+   "CLIP"
+  ],
+  [
+   19,
+   3,
+   2,
+   15,
+   4,
+   "VAE"
+  ],
+  [
+   20,
+   6,
+   0,
+   15,
+   5,
+   "IMAGE"
+  ],
+  [
+   21,
+   15,
+   0,
+   16,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   22,
+   12,
+   0,
+   17,
+   0,
+   "IMAGE"
+  ],
+  [
+   23,
+   3,
+   0,
+   17,
+   1,
+   "MODEL"
+  ],
+  [
+   24,
+   3,
+   2,
+   17,
+   2,
+   "VAE"
+  ],
+  [
+   25,
+   15,
+   0,
+   17,
+   3,
+   "CONDITIONING"
+  ],
+  [
+   26,
+   16,
+   0,
+   17,
+   4,
+   "CONDITIONING"
+  ],
+  [
+   27,
+   17,
+   0,
+   18,
+   5,
+   "IMAGE"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "1 Models",
+   "bounding": [
+    -20,
+    -70,
+    820,
+    1010
+   ],
+   "color": "#3f789e",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 2,
+   "title": "2 Character and sheet plan",
+   "bounding": [
+    840,
+    -70,
+    1420,
+    760
+   ],
+   "color": "#d4a537",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 3,
+   "title": "3 Render and save",
+   "bounding": [
+    2320,
+    -70,
+    1240,
+    420
+   ],
+   "color": "#b85c5c",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 4,
+   "title": "4 Face pass (sharper faces)",
+   "bounding": [
+    2320,
+    430,
+    1320,
+    640
+   ],
+   "color": "#57a06b",
+   "font_size": 24,
+   "flags": {}
+  }
+ ],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.5,
+   "offset": [
+    200,
+    100
+   ]
+  },
+  "frontendVersion": "1.57.4"
+ },
+ "version": 0.4
+}

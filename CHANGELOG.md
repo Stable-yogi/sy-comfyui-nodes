@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+- H3 Tile Refine SY: new setting keep_light (0 to 1, default 0 = the same result as before). At 1 every tile keeps the broad light and colour of the input, so a picture or video refined in tiles gets no brighter or darker patches at the seams. Tested on a 3072 x 2048 MiniMax H3 Image picture: the light drift went from +4.5 to -0.1 (0-255 scale), fine detail kept.
+- New workflows: SY - H3 Character Sheet Free v2 and SY - H3 Character Sheet Pro v2 (workflows/h3). One picture of a character in, a full reference sheet out with MiniMax H3 Image and H3 Sheet Designer SY: each view once, no text or labels. Free: 2 faces + front, side, back at 4 MP. Pro: any preset at 8 or 16 MP, a style picker and a face pass that redraws every face with the character picture as reference. Tested on a photo, a cartoon robot and an anime character.
 - New node (431 in all): H3 Sheet Designer SY (Image). Pick the views of a character sheet (a preset or your own list) and a size of 4, 8 or 16 MP. It writes an H3 Image prompt that keeps text and labels out of the picture, draws a plain layout guide (grey shapes, no text) and gives the width and height. In the master Text test.
 - LoRA Key Check SY (new node): checks a LoRA against your loaded model and says OK, PARTLY or NO MATCH, with the list of parts that do not fit (the "lora key not loaded" lines). The model goes through unchanged.
 - System Prompt Presets SY: new preset "MOSS image prompt". Your LLM node turns a short idea into one plain MOSS-Image paragraph (picture type and camera, subject, clothes, place, light, mood; sign words in quotes). Added at the end of the list, so saved workflows keep their pick.

@@ -64,4 +64,23 @@ def run():
     assert keys["optional"]["tile_width"][1]["default"] == 896 and keys["optional"]["tile_height"][1]["default"] == 704; n += 1
     assert keys["optional"]["window_frames"][1]["default"] == 0 and keys["optional"]["window_overlap"][1]["default"] == 22 and keys["optional"]["carry"][1]["default"] is True; n += 1
     assert "SYH3TileRefine" in m.NODE_CLASS_MAPPINGS and m.NODE_DISPLAY_NAME_MAPPINGS["SYH3TileRefine"] == "H3 Tile Refine SY"; n += 1
+    # keep_light: new input is optional, last, off by default (old results stay the same)
+    assert list(keys["optional"])[-1] == "keep_light" and keys["optional"]["keep_light"][1]["default"] == 0.0; n += 1
+    assert m.light_radius(56, 44) == 11 and m.light_radius(2, 2) == 1 and m.light_radius(0, 9) == 1; n += 1
+    try:
+        import torch
+    except ImportError:
+        return n
+    g = torch.Generator().manual_seed(3)
+    base = torch.randn(1, 4, 1, 40, 56, generator=g)
+    detail = torch.randn(1, 4, 1, 40, 56, generator=g) * 0.3
+    done = base + detail + 0.8  # a tile that came out brighter than the base, with new fine detail
+    fixed = m.match_light(done, base, 1.0, m.light_radius(56, 40))
+    assert abs(float((done - base).mean()) - 0.8) < 0.05 and abs(float((fixed - base).mean())) < 0.05; n += 1
+    hi = lambda t: t - m._soft(t, 2)  # noqa: E731  fine detail only
+    assert float((hi(fixed) - hi(done)).abs().mean()) < 0.1 * float(hi(done).abs().mean()); n += 1
+    assert torch.equal(m.match_light(done, base, 0.0, 10), done); n += 1
+    half = m.match_light(done, base, 0.5, 10)
+    assert abs(float((half - base).mean()) - 0.4) < 0.05; n += 1
+    assert m._soft(torch.ones(1, 1, 1, 3, 2), 9).shape == (1, 1, 1, 3, 2); n += 1  # radius larger than the tile
     return n

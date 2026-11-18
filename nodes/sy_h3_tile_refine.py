@@ -44,6 +44,31 @@ def _crop(t, x, y, w, h):
     return t[..., y:y + h, x:x + w]
 
 
+def light_radius(w, h):
+    """Pure function. Blur radius in latent cells for the light match: a quarter of the shorter tile side, at least 1."""
+    return max(1, min(int(w), int(h)) // 4)
+
+
+def _soft(t, r):
+    """Wide blur (two box passes) over the last two axes: keeps only the broad light and colour of a latent piece."""
+    import torch.nn.functional as F
+    shape = t.shape
+    flat = t.reshape(-1, 1, shape[-2], shape[-1]).float()
+    for _ in range(2):
+        rr_h, rr_w = min(r, shape[-2] - 1), min(r, shape[-1] - 1)
+        flat = F.avg_pool2d(F.pad(flat, (rr_w, rr_w, rr_h, rr_h), mode="replicate"), (2 * rr_h + 1, 2 * rr_w + 1), stride=1)
+    return flat.reshape(shape)
+
+
+def match_light(done, base, strength, radius):
+    """A finished tile takes the broad light and colour of the same piece of the base latent; its fine detail stays.
+    strength 0 = unchanged, 1 = full match. This stops tiles from coming out brighter or darker than their neighbours."""
+    if strength <= 0:
+        return done
+    base = base.to(done.device).float()
+    return (done.float() + float(strength) * (_soft(base, radius) - _soft(done, radius))).to(done.dtype)
+
+
 def fit_keyframe(latent, cells_w, cells_h):
     """A keyframe must share the target grid. One made for the small draft is stretched to the big size first."""
     if tuple(latent.shape[-2:]) == (cells_h, cells_w):
@@ -112,10 +137,11 @@ class SYH3TileRefine:
                 "window_frames": ("INT", {"default": 0, "min": 0, "max": 3600, "step": 1, "tooltip": "Video frames per time window. 0 = the whole length at once. Smaller uses less memory."}),
                 "window_overlap": ("INT", {"default": 22, "min": 5, "max": 1000, "step": 1, "tooltip": "Video frames shared by neighbour windows, softly crossfaded."}),
                 "carry": ("BOOLEAN", {"default": True, "tooltip": "Each window starts from the finished frames of the window before it."}),
+                "keep_light": ("FLOAT", {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.05, "tooltip": "Tiles keep the broad light and colour of the input, so no bright or dark seams. 1 = full, 0 = off."}),
             },
         }
 
-    def run(self, model, positive, latent, sampler, sigmas, seed=7, tile_width=896, tile_height=704, overlap_x=256, overlap_y=256, window_frames=0, window_overlap=22, carry=True):
+    def run(self, model, positive, latent, sampler, sigmas, seed=7, tile_width=896, tile_height=704, overlap_x=256, overlap_y=256, window_frames=0, window_overlap=22, carry=True, keep_light=0.0):
         import torch
         import comfy.nested_tensor
         import comfy.sample
@@ -154,6 +180,7 @@ class SYH3TileRefine:
                 guider = core("BasicGuider", WHO, model=model, conditioning=tile_cond)[0]
                 done = core("SamplerCustomAdvanced", WHO, noise=_TileNoise(seed, part_noise), guider=guider, sampler=sampler, sigmas=sigmas, latent_image=piece)[0]["samples"]
                 done = done.tensors[0] if getattr(done, "is_nested", False) else done
+                done = match_light(done, part, keep_light, light_radius(w, h))
                 ramp = torch.tensor(ramp_1d(h, ly, ty)).view(-1, 1) * torch.tensor(ramp_1d(w, lx, tx)).view(1, -1)
                 total[..., y:y + h, x:x + w] += done.detach().cpu().float() * ramp
                 weight[..., y:y + h, x:x + w] += ramp
