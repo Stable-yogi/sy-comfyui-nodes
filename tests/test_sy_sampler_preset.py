@@ -21,7 +21,7 @@ def run():
     n = 0
     labels = m.pair_labels(m.PAIRS)
     assert labels[0] == "MOSS: er_sde + normal"; n += 1
-    assert len(labels) == 11 and len(set(labels)) == 11; n += 1
+    assert len(labels) == 13 and len(set(labels)) == 13; n += 1
     assert m.parse_label("Krea 2 Turbo: euler + simple") == ("Krea 2 Turbo", "euler", "simple"); n += 1
     for lab in labels:  # round trip
         f, s, c = m.parse_label(lab)

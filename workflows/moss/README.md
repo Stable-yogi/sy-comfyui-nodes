@@ -8,6 +8,12 @@ Text to picture with **MOSS Speed Up SY** between the model and **Sampler SY**. 
 
 Settings in the file: 1024 x 1024, 25 steps, er_sde sampler, simple scheduler, guidance 2.5, seed 42.
 
+## SY - MOSS Sampler Compare v1
+
+One prompt, several sampler + scheduler pairs, the same seed. **Sampler Sweep SY** runs every pair you type (one per line, for example `er_sde + beta`) and times each one. **Image Grid SY** puts all pictures on one sheet with the pair and its time under each picture, and a time table shows the pairs fastest first.
+
+Settings in the file: 1024 x 1024, 25 steps, guidance 2.5, seed 42.
+
 ## Model files
 
 | File | Folder |

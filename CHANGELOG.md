@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- New node Sampler Sweep SY (Utility): runs one prompt with several sampler + scheduler pairs and the same seed, gives every picture with its pair and time, and a time table. New workflow SY - MOSS Sampler Compare v1. Sampler Preset SY: two more MOSS + turbo LoRA pairs (er_sde + simple and lcm + simple, 8 steps).
 - Tested on ComfyUI v0.46.0: all 431 nodes pass the four master test workflows, and all 22 workflows load.
 - New workflow: SY - H3 Picture Upscale Pro v1 (workflows/h3). Like SY - H3 Picture Upscale v1, but 4x: two rounds of 2x, the second one turned into a latent in tiles so very big pictures fit in memory (round 2 denoise 0.2 keeps plain backgrounds clean). Tested on a photo (5376 x 3072), a cartoon robot and an anime character (4096 x 6144).
 - New workflow: SY - H3 Picture Upscale v1 (workflows/h3). Load a picture, it is made twice as large and redrawn in tiles with MiniMax H3 Image and H3 Tile Refine SY (keep_light 1, so no bright or dark patches at the seams). Tested on a photo, a cartoon robot and an anime character.
