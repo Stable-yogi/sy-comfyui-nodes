@@ -10,7 +10,8 @@ except ImportError:  # run as a plain file by the selftest
 PAIRS = {  # MOSS rows: card test 2026-11-10, one prompt, seed 101, 1024x1024, shift 5. karras and exponential spoil MOSS pictures, so they are left out.
     "MOSS": [("er_sde", "normal", 25, 4.0), ("er_sde", "simple", 25, 4.0), ("euler", "simple", 25, 4.0),
              ("euler", "beta", 25, 4.0), ("sa_solver", "simple", 25, 4.0)],
-    "MOSS + turbo LoRA": [("euler", "simple", 8, 1.0), ("euler", "normal", 8, 1.0), ("euler", "beta", 8, 1.0)],
+    "MOSS + turbo LoRA": [("euler", "simple", 8, 1.0), ("euler", "normal", 8, 1.0), ("euler", "beta", 8, 1.0),
+                          ("er_sde", "simple", 8, 1.0), ("lcm", "simple", 8, 1.0)],
     "Krea 2 Turbo": [("euler", "simple", 8, 1.0)],  # from the official Krea 2 Turbo template
     "H3 Image": [("euler_ancestral", "simple", 6, 1.0), ("euler", "simple", 6, 1.0)],  # News Desk timed runs 2026-11-12 used euler_ancestral; euler kept for saved workflows
 }
@@ -18,7 +19,7 @@ PAIRS = {  # MOSS rows: card test 2026-11-10, one prompt, seed 101, 1024x1024, s
 # family: one plain sentence shown in the info text.
 NOTES = {
     "MOSS": "Tested pairs for the normal MOSS model. er_sde gives the most skin detail.",
-    "MOSS + turbo LoRA": "Few steps and cfg 1 because the turbo LoRA does the speed-up.",
+    "MOSS + turbo LoRA": "Few steps and cfg 1 because the turbo LoRA does the speed-up. er_sde or lcm with simple kept words cleanest in the 2026-11-20 test.",
     "Krea 2 Turbo": "Few steps and cfg 1, as in the official Turbo example.",
     "H3 Image": "MiniMax H3 Image: 6 steps, cfg 1, tested at 4 MP and 16 MP. Needs ComfyUI 0.45 or newer.",
 }
