@@ -12,7 +12,7 @@ Missing a node? Tell me.
 
 | | |
 |---|---|
-| ComfyUI | **v0.42.1 or newer.** Tested on v0.42.1, v0.43.0 and v0.44.0. Older versions are not tested. |
+| ComfyUI | **v0.42.1 or newer.** Tested on v0.42.1, v0.43.0, v0.44.0 and v0.46.0. Older versions are not tested. |
 | Python packages | Most nodes use only what ComfyUI already has. A few need one extra package (the node page says which). If it is missing, the node tells you so and how to add it. |
 | Models | The nodes hold none. A workflow tells you which model files it needs (see its banner). |
 
