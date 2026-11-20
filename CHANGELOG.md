@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.26.1
+- Tested on ComfyUI v0.46.2: all 433 nodes pass the four master test workflows, and every workflow loads. No node changes.
+
 ## 1.26.0
 - New node Big Render Shrink SY (Resize): shrinks a big render (8 or 16 MP) to 2 MP, 1 MP, 4 MP or a long side you pick, with a high quality filter. Fine detail stays and the harsh, crusty edges of a direct small render calm down. Three looks: clean, crisp (light sharpen) and soft. The shape is kept and the picture is never enlarged. New workflow SY - H3 Big Render Shrink Free v1: an 8 MP H3 Image render shrunk to a clean 2 MP picture.
 - Tested on ComfyUI v0.46.1: all 433 nodes pass the four master test workflows, and every workflow loads.
