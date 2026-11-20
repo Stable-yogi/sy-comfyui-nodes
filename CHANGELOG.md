@@ -1,7 +1,8 @@
 # Changelog
 
 ## 1.26.0
-- Tested on ComfyUI v0.46.1: all 432 nodes pass the four master test workflows, and every workflow loads.
+- New node Big Render Shrink SY (Resize): shrinks a big render (8 or 16 MP) to 2 MP, 1 MP, 4 MP or a long side you pick, with a high quality filter. Fine detail stays and the harsh, crusty edges of a direct small render calm down. Three looks: clean, crisp (light sharpen) and soft. The shape is kept and the picture is never enlarged. New workflow SY - H3 Big Render Shrink Free v1: an 8 MP H3 Image render shrunk to a clean 2 MP picture.
+- Tested on ComfyUI v0.46.1: all 433 nodes pass the four master test workflows, and every workflow loads.
 - Dataset Scene List SY: new setting outfits (one clothes description per line, used in turn, one per scene) and a training caption for each scene with your trigger word, so the clothes are not learned as part of the character.
 - New node Sampler Sweep SY (Utility): runs one prompt with several sampler + scheduler pairs and the same seed, gives every picture with its pair and time, and a time table. New workflow SY - MOSS Sampler Compare v1. Sampler Preset SY: two more MOSS + turbo LoRA pairs (er_sde + simple and lcm + simple, 8 steps).
 - Tested on ComfyUI v0.46.0: all 431 nodes pass the four master test workflows, and all 22 workflows load.
