@@ -13,6 +13,7 @@ Source: `nodes/sy_colour_match.py`
 | strength | FLOAT | yes | How far to move towards the reference. 0 changes nothing, 1 is a full match. | 0.0 to 1.0, step 0.01, default 1.0 |
 | mask | MASK | no | Optional. White = apply the effect, black = keep the original. A different size is stretched to fit. | mask [B,H,W] |
 | enabled | BOOLEAN | no | Turn off to pass the picture through untouched (handy to compare before and after). | default True |
+| measure_in_mask | BOOLEAN | no | On: measure colours only inside the mask, in both pictures. Off: measure the whole pictures. | default False |
 
 Outputs: `IMAGE`, `STRING`
 

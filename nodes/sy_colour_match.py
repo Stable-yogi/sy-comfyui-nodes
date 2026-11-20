@@ -33,6 +33,25 @@ def match_values(values, ref_mean, ref_std, strength):
     return out
 
 
+def masked_stats(pixels, mask):
+    """Torch. Mean and spread per channel of pixels [B,H,W,C], counting only the white part of mask.
+    An empty mask measures the whole picture."""
+    import torch
+
+    m = mask if mask.dim() == 3 else mask.unsqueeze(0)
+    if m.shape[1:] != pixels.shape[1:3]:
+        m = torch.nn.functional.interpolate(m.unsqueeze(1).float(), size=tuple(pixels.shape[1:3]), mode="bilinear", align_corners=False).squeeze(1)
+    if m.shape[0] != pixels.shape[0]:
+        m = m[[i % m.shape[0] for i in range(pixels.shape[0])]]
+    w = m.to(pixels.dtype).clamp(0.0, 1.0).unsqueeze(-1)
+    total = w.sum(dim=(1, 2), keepdim=True)
+    w = torch.where(total >= 1.0, w, torch.ones_like(w))
+    total = w.sum(dim=(1, 2), keepdim=True)
+    mean = (pixels * w).sum(dim=(1, 2), keepdim=True) / total
+    var = (((pixels - mean) ** 2) * w).sum(dim=(1, 2), keepdim=True) / total
+    return mean, var.sqrt()
+
+
 class SYColourMatch:
     DESCRIPTION = ("Makes a picture look like the colours of a reference picture. Good for keeping a series of pictures in one look. "
                    "Adds a mask (match only the white part), an on/off switch and an info line, and keeps transparency.")
@@ -52,10 +71,11 @@ class SYColourMatch:
             "optional": {
                 "mask": ("MASK", {"tooltip": MASK_TIP}),
                 "enabled": ("BOOLEAN", {"default": True, "tooltip": ENABLED_TIP}),
+                "measure_in_mask": ("BOOLEAN", {"default": False, "tooltip": "On: measure colours only inside the mask, in both pictures. Off: measure the whole pictures."}),
             },
         }
 
-    def run(self, image, reference, strength, mask=None, enabled=True):
+    def run(self, image, reference, strength, mask=None, enabled=True, measure_in_mask=False):
         import torch
 
         need_image(image)
@@ -70,10 +90,14 @@ class SYColourMatch:
             reference = reference[[i % reference.shape[0] for i in range(image.shape[0])]]
         src = image[..., :rgb]
         ref = reference[..., :rgb]
-        s_mean = src.mean(dim=(1, 2), keepdim=True)
-        s_std = src.std(dim=(1, 2), keepdim=True, unbiased=False)
-        r_mean = ref.mean(dim=(1, 2), keepdim=True)
-        r_std = ref.std(dim=(1, 2), keepdim=True, unbiased=False)
+        if measure_in_mask and mask is not None:
+            s_mean, s_std = masked_stats(src, mask)
+            r_mean, r_std = masked_stats(ref, mask)
+        else:
+            s_mean = src.mean(dim=(1, 2), keepdim=True)
+            s_std = src.std(dim=(1, 2), keepdim=True, unbiased=False)
+            r_mean = ref.mean(dim=(1, 2), keepdim=True)
+            r_std = ref.std(dim=(1, 2), keepdim=True, unbiased=False)
         scale = torch.where(s_std > 1e-6, r_std / s_std.clamp_min(1e-6), torch.ones_like(s_std))
         matched = (src - s_mean) * scale + r_mean
         out = image.clone()

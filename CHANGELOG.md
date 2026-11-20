@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 1.26.0
+- Tested on ComfyUI v0.46.1: all 432 nodes pass the four master test workflows, and every workflow loads.
+- Dataset Scene List SY: new setting outfits (one clothes description per line, used in turn, one per scene) and a training caption for each scene with your trigger word, so the clothes are not learned as part of the character.
 - New node Sampler Sweep SY (Utility): runs one prompt with several sampler + scheduler pairs and the same seed, gives every picture with its pair and time, and a time table. New workflow SY - MOSS Sampler Compare v1. Sampler Preset SY: two more MOSS + turbo LoRA pairs (er_sde + simple and lcm + simple, 8 steps).
 - Tested on ComfyUI v0.46.0: all 431 nodes pass the four master test workflows, and all 22 workflows load.
 - New workflow: SY - H3 Picture Upscale Pro v1 (workflows/h3). Like SY - H3 Picture Upscale v1, but 4x: two rounds of 2x, the second one turned into a latent in tiles so very big pictures fit in memory (round 2 denoise 0.2 keeps plain backgrounds clean). Tested on a photo (5376 x 3072), a cartoon robot and an anime character (4096 x 6144).
@@ -17,6 +19,7 @@
 - Test prompts: LoRA Strength Sweep SY is in the master Tools test (all 429 nodes covered).
 - New node (428 in all): Video Frame Picker SY (Image). Shows a video inside the node with a timeline slider, -1/+1 and -10/+10 buttons, arrow keys and Play. Leave the slider on a frame and the run exports exactly that frame as a picture, with its frame number and time. The chosen frame is saved with the workflow. It is in the master test.
 - New node (427 in all): MOSS Layout Prompt SY (Text). Turns layout boxes into a MOSS-Image layout prompt, y first and from the picture centre as MOSS needs. Label a box 'text: WORDS | look', 'person: who', or just name the object. In the master test.
+- New workflow: SY - H3 Image Maker v1 (workflows/h3). Text to picture with MiniMax H3 Image: Model Loader SY, H3 Image Size SY, the built-in MiniMax H3 Image Conditioning, Sampler SY (euler_ancestral, simple, 6 steps, cfg 1, seed 101), Decode SY and Save Result SY.
 - Test prompts: H3 Image Size SY is now in the master test (all 426 nodes covered).
 - New node (426 in all): H3 Image Size SY (Values). Pick 4, 8 or 16 megapixels and a shape; gives width and height in steps of 32 for MiniMax H3 Image, and says if ComfyUI is older than 0.45.
 - Sampler Preset SY: new family H3 Image (euler + simple, 6 steps, cfg 1), tested at 2048x2048 and 4096x4096.
@@ -34,6 +37,7 @@
 - New node (421 in all): H3 Tile Refine SY (Resize). Runs the last sampling steps of a MiniMax H3 video one tile at a time, so the peak graphics memory stays low. It can also split the video in time (window_frames, window_overlap, carry); 0 (the default) keeps the whole length at once.
 - Master Tools test holds H3 Tile Refine SY, with a Result box.
 - Fix: Inpaint Stitch SY no longer stops on a picture with a see-through layer (4 channels) or a grey one. The see-through layer stays as it was.
+- Colour Match SY: new setting measure_in_mask. On, it measures colours only inside the mask, in both pictures, so a face crop matches skin to skin. Off (the default) works as before.
 
 ## 1.25.0
 - New node (416 in all): H3 Skin Recipe SY (Utility). One node puts the speed, people and detail LoRAs on the H3 video model and gives the steps, sampler and scheduler for realistic skin. Tiers: fast (4 steps), balanced (8 steps), max skin (10 steps plus the detail LoRA).

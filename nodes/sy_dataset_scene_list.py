@@ -9,6 +9,7 @@ except ImportError:  # run as a plain file by the selftest
 
 DEFAULT_CHARACTER = "the person from <image1>"
 DEFAULT_KEEP = "Keep the face, hair and clothes exactly the same as <image1>."
+OUTFIT_KEEP = "Keep the face and hair exactly the same as <image1>."
 DEFAULT_STYLE = "realistic photo"
 MAX_COUNT = 40
 
@@ -91,8 +92,16 @@ def safe_name(text):
     return s or "scene"
 
 
-def scene_prompts(character, count, keep_line, style, start_seed):
-    """Pure function. Returns (prompts, seeds, names), each a list of `count` items (the first `count` templates)."""
+def outfit_list(outfits):
+    """Pure function. One clothes description per non-empty line."""
+    return [ln.strip() for ln in str(outfits).splitlines() if ln.strip()]
+
+
+def scene_prompts(character, count, keep_line, style, start_seed, outfits=""):
+    """Pure function. Returns (prompts, seeds, names), each a list of `count` items (the first `count` templates).
+
+    outfits: one clothes description per line, used in turn, one per scene. Empty keeps the clothes of the picture.
+    """
     character = str(character).strip()
     if not character:
         raise ValueError("character is empty: write a few words for the character, for example 'the person from <image1>'")
@@ -104,10 +113,14 @@ def scene_prompts(character, count, keep_line, style, start_seed):
         raise ValueError("start_seed must be 0 or more, got %d" % start_seed)
     keep_line = str(keep_line).strip()
     style = str(style).strip()
+    clothes = outfit_list(outfits)
+    if clothes and keep_line == DEFAULT_KEEP:
+        keep_line = OUTFIT_KEEP  # the default line asks for the same clothes, which would fight the outfit
     prompts, seeds, names = [], [], []
     for i in range(count):
         key, short, template = TEMPLATES[i]
-        text = template.replace("{character}", character)
+        who = "%s, wearing %s," % (character, clothes[i % len(clothes)]) if clothes else character
+        text = template.replace("{character}", who)
         if style:
             text += ", " + style
         text += "."
@@ -119,6 +132,13 @@ def scene_prompts(character, count, keep_line, style, start_seed):
     return prompts, seeds, names
 
 
+def scene_captions(trigger, count, style, outfits=""):
+    """Pure function. One training caption per scene: the same words as the prompt, with the trigger word as the character.
+    Naming the clothes keeps them out of the trained character."""
+    trigger = " ".join(str(trigger).split()) or "the person"
+    return [p.rsplit(".", 1)[0] for p in (x[:x.index(".") + 1] for x in scene_prompts(trigger, count, "", style, 0, outfits)[0])]
+
+
 def numbered_text(prompts):
     """Pure function. One numbered line per prompt, for reading."""
     return "\n".join("%d. %s" % (i + 1, p) for i, p in enumerate(prompts))
@@ -126,12 +146,13 @@ def numbered_text(prompts):
 
 class SYDatasetSceneList:
     DESCRIPTION = ("Makes up to 40 different scene prompts for one character: close-ups, full body, side and back views, "
-                   "indoor and outdoor places, plain backgrounds. Each output is a list, so one click makes one picture per scene.")
+                   "indoor and outdoor places, plain backgrounds. Each output is a list, so one click makes one picture per scene. "
+                   "Optional: a list of outfits used in turn, and a caption per scene for training.")
     CATEGORY = category("Text")
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING", "INT", "STRING", "STRING")
-    RETURN_NAMES = ("prompt", "seed", "name", "all_prompts")
-    OUTPUT_IS_LIST = (True, True, True, False)
+    RETURN_TYPES = ("STRING", "INT", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("prompt", "seed", "name", "all_prompts", "caption")
+    OUTPUT_IS_LIST = (True, True, True, False, True)
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -142,12 +163,16 @@ class SYDatasetSceneList:
                 "keep_line": ("STRING", {"default": DEFAULT_KEEP, "multiline": True, "tooltip": "A sentence added to every prompt so the character stays the same."}),
                 "style": ("STRING", {"default": DEFAULT_STYLE, "tooltip": "The look of the pictures, added after each scene. Empty adds nothing."}),
                 "start_seed": ("INT", {"default": 1, "min": 0, "max": 2 ** 53, "tooltip": "Seed of the first picture. Each next picture adds one."}),
-            }
+            },
+            "optional": {
+                "outfits": ("STRING", {"default": "", "multiline": True, "tooltip": "One outfit per line, used in turn, for example a red summer dress. Empty keeps the clothes of the picture."}),
+                "trigger_word": ("STRING", {"default": "", "tooltip": "The word that names the character in the caption output, for example sks_woman. Empty writes 'the person'."}),
+            },
         }
 
-    def run(self, character, count, keep_line, style, start_seed):
-        prompts, seeds, names = scene_prompts(character, count, keep_line, style, start_seed)
-        return (prompts, seeds, names, numbered_text(prompts))
+    def run(self, character, count, keep_line, style, start_seed, outfits="", trigger_word=""):
+        prompts, seeds, names = scene_prompts(character, count, keep_line, style, start_seed, outfits)
+        return (prompts, seeds, names, numbered_text(prompts), scene_captions(trigger_word, count, style, outfits))
 
 
 NODE_CLASS_MAPPINGS = {}
