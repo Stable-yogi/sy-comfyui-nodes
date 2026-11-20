@@ -35,7 +35,7 @@ def run():
     assert raises(m.match_values, [0.1], 0.5, 0.1, 2.0); n += 1
     assert raises(m.mean_std, []); n += 1
     spec = m.SYColourMatch.INPUT_TYPES()
-    assert list(spec["required"]) == ["image", "reference", "strength"] and list(spec["optional"]) == ["mask", "enabled"]; n += 1
+    assert list(spec["required"]) == ["image", "reference", "strength"] and list(spec["optional"]) == ["mask", "enabled", "measure_in_mask"]; n += 1
     assert m.SYColourMatch.RETURN_NAMES == ("image", "info"); n += 1
     try:
         import torch
@@ -47,4 +47,20 @@ def run():
         info = m.SYColourMatch().run(img, ref, 0.4)[1]
         assert "mix 40%" in info and "strength" not in info, info; n += 1
         assert "mix 100%" in m.SYColourMatch().run(img, ref, 1.0)[1]; n += 1
+        # a pale patch on black, reference a dark patch on the same black: only measuring inside the mask reaches the dark patch
+        mask = torch.zeros(1, 8, 8)
+        mask[:, 2:6, 2:6] = 1.0
+        pale, dark = torch.zeros(1, 8, 8, 3), torch.zeros(1, 8, 8, 3)
+        pale[:, 2:6, 2:6, :] = 0.9
+        dark[:, 2:6, 2:6, :] = 0.3
+        inside = m.SYColourMatch().run(pale, dark, 1.0, mask, True, True)[0]
+        assert near(float(inside[0, 3, 3, 0]), 0.3, 1e-4), float(inside[0, 3, 3, 0]); n += 1
+        assert near(float(inside[0, 0, 0, 0]), 0.0, 1e-4); n += 1
+        whole = m.SYColourMatch().run(pale, dark, 1.0, mask)[0]
+        assert float(whole[0, 3, 3, 0]) > 0.25; n += 1
+        empty = m.SYColourMatch().run(pale, dark, 1.0, torch.zeros(1, 8, 8), True, True)[0]
+        assert torch.equal(empty, pale); n += 1
+        small = torch.zeros(1, 4, 4)
+        small[:, 1:3, 1:3] = 1.0
+        assert near(float(m.SYColourMatch().run(pale, dark, 1.0, small, True, True)[0][0, 3, 3, 0]), 0.3, 1e-3); n += 1
     return n

@@ -34,7 +34,22 @@ def run():
     assert m.safe_name("a b/c..d") == "a_b_c_d" and m.safe_name("///") == "scene"; n += 1
     assert m.numbered_text(["a", "b"]) == "1. a\n2. b"; n += 1
     c = m.SYDatasetSceneList
-    assert c.OUTPUT_IS_LIST == (True, True, True, False) and len(c.RETURN_TYPES) == len(c.RETURN_NAMES) == 4; n += 1
+    assert c.OUTPUT_IS_LIST == (True, True, True, False, True) and len(c.RETURN_TYPES) == len(c.RETURN_NAMES) == 5; n += 1
     out = c().run(char, 3, keep, "realistic photo", 7)
     assert len(out[0]) == 3 and out[1] == [7, 8, 9] and out[3].startswith("1. "); n += 1
+    assert out[0] == m.scene_prompts(char, 3, keep, "realistic photo", 7)[0]; n += 1  # no outfits: same prompts as before
+    assert all(x.endswith(keep) and "wearing" not in x for x in out[0]); n += 1
+    fits = "a red summer dress\n\n  a black leather jacket  \r\na white shirt"
+    assert m.outfit_list(fits) == ["a red summer dress", "a black leather jacket", "a white shirt"] and m.outfit_list(" \n") == []; n += 1
+    p4 = m.scene_prompts(char, 4, keep, "realistic photo", 1, fits)[0]
+    assert "wearing a red summer dress," in p4[0] and "wearing a black leather jacket," in p4[1]; n += 1
+    assert "wearing a white shirt," in p4[2] and "wearing a red summer dress," in p4[3]; n += 1  # the list starts again
+    assert all(x.endswith(m.OUTFIT_KEEP) and "clothes" not in x for x in p4); n += 1  # the default line must not fight the outfit
+    assert m.scene_prompts(char, 2, "My own line.", "", 1, fits)[0][0].endswith("My own line."); n += 1  # his own line stays
+    cap = m.scene_captions("sks_woman", 4, "realistic photo", fits)
+    assert cap[0] == "close-up portrait of sks_woman, wearing a red summer dress, in a kitchen with soft morning light from the window, realistic photo", cap[0]; n += 1
+    assert len(cap) == 4 and not any("<image" in x or x.endswith(".") or "Keep" in x for x in cap); n += 1
+    assert m.scene_captions("", 1, "", "")[0] == "close-up portrait of the person in a kitchen with soft morning light from the window"; n += 1
+    out = c().run(char, 3, keep, "realistic photo", 7, fits, "sks_woman")
+    assert len(out[4]) == 3 and "sks_woman" in out[4][1] and "wearing" in out[0][1]; n += 1
     return n

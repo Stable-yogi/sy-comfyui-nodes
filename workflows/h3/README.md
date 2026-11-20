@@ -34,6 +34,7 @@ Extra files for some workflows:
 | `SY - H3 Turnaround v1.json` | A short turn-around clip, plus a sheet of frames cut from it. |
 | `SY - H3 Image v1.json` | One picture from up to four reference pictures. |
 | `SY - H3 Image v2.json` | The same as Image v1, with fewer boxes: the model, reference pictures, prompt, sampler and saving each sit in one SY node. |
+| `SY - H3 Image Maker v1.json` | A picture from a text prompt with the new MiniMax H3 Image model (no reference pictures). It uses the small set of model files (see the note in the workflow), 6 steps, and a 2048 x 2048 size picked in H3 Image Size SY. Needs ComfyUI 0.45 or newer. |
 | `SY - H3 Voice v1.json` | A voice line from text, with an optional voice sample. |
 | `SY - H3 Video v1.json` | A video with sound from a story, reference pictures, an optional acting clip, start and end pictures and a voice line. |
 | `SY - H3 Upscale v1.json` | A sharper, bigger copy of a clip. The model draws fine detail again. |
