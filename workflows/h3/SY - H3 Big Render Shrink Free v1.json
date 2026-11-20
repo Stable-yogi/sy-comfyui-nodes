@@ -1,0 +1,770 @@
+{
+  "id": "sy-sy---h3-big-render-shrink-free-v1",
+  "revision": 0,
+  "last_node_id": 11,
+  "last_link_id": 16,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "SYWorkflowHeader",
+      "pos": [
+        0,
+        -430
+      ],
+      "size": [
+        980,
+        330
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Header",
+      "properties": {
+        "Node name for S&R": "SYWorkflowHeader",
+        "sy_title": "H3 Big Render Shrink Free",
+        "sy_subtitle": "Made with Stable Yogi Nodes (SY Nodes) by Stable Yogi",
+        "sy_install": "Stable Yogi Nodes (SY Nodes): search \"SY Nodes\" in ComfyUI Manager, or use the folder sy-comfyui-nodes.\nComfyUI 0.45 or newer (the MiniMax H3 Image nodes are built in).",
+        "sy_howto": "1. Check the 3 model files in the Models box (see the Model files note).\n2. Write your picture idea in the MiniMax H3 Image Conditioning box and pick a shape in Picture size.\n3. Press Run. The picture is drawn at 8 MP, then shrunk to a clean 2 MP picture.\nThe first run is slow, judge the second.",
+        "sy_info": "Model Loader SY: model, text encoder and VAE in one box.\nH3 Image Size SY: picture size in steps of 32 (4 MP is what the model is tuned for).\nMiniMax H3 Image Conditioning: your prompt and the empty picture to draw on.\nSampler SY: seed, steps and sampler in one box.\nDecode SY, Save Result SY: the picture, saved with its settings.\nBig Render Shrink SY: shrinks the big render to a smaller size with a high quality filter, so fine detail stays and harsh edges calm down."
+      },
+      "widgets_values": [
+        ""
+      ],
+      "widgets_values_named": {
+        "sy_banner": ""
+      },
+      "color": "#8b6914",
+      "bgcolor": "#2d2616"
+    },
+    {
+      "id": 2,
+      "type": "SYModelLoader",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        400,
+        346
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "links": [
+            3,
+            11
+          ]
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "links": null
+        },
+        {
+          "name": "info",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Models",
+      "properties": {
+        "Node name for S&R": "SYModelLoader"
+      },
+      "widgets_values": [
+        "Safetensors",
+        "minimax_h3_image_pruned_w4a8.safetensors",
+        "(none)",
+        "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "(none)",
+        "minimax",
+        "minimax_h3_image_vae_fp16.safetensors",
+        "(none)",
+        "(none)",
+        "default"
+      ],
+      "color": "#1f4e79",
+      "bgcolor": "#172a3d"
+    },
+    {
+      "id": 3,
+      "type": "SYNote",
+      "pos": [
+        0,
+        400
+      ],
+      "size": [
+        770,
+        260
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "info",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Model files",
+      "properties": {
+        "Node name for S&R": "SYNote"
+      },
+      "widgets_values": [
+        "Put these 3 files in your ComfyUI models folder:\n- minimax_h3_image_pruned_w4a8.safetensors  (diffusion_models)\n- qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors  (text_encoders)\n- minimax_h3_image_vae_fp16.safetensors  (vae)\nThis is the small set for cards with less video memory. On a big card you can use minimax_h3_image_pruned_int8_convrot.safetensors (diffusion_models) instead of the first file.\nNeeds ComfyUI 0.45 or newer.\nFirst run is slow (it loads every file); judge the second run.",
+        "model",
+        false,
+        false
+      ],
+      "widgets_values_named": {
+        "text": "Put these 3 files in your ComfyUI models folder:\n- minimax_h3_image_pruned_w4a8.safetensors  (diffusion_models)\n- qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors  (text_encoders)\n- minimax_h3_image_vae_fp16.safetensors  (vae)\nThis is the small set for cards with less video memory. On a big card you can use minimax_h3_image_pruned_int8_convrot.safetensors (diffusion_models) instead of the first file.\nNeeds ComfyUI 0.45 or newer.\nFirst run is slow (it loads every file); judge the second run.",
+        "style": "model",
+        "add_style_label": false,
+        "trim": false
+      },
+      "color": "#4e3d80",
+      "bgcolor": "#241f38"
+    },
+    {
+      "id": 4,
+      "type": "SYH3ImageSize",
+      "pos": [
+        880,
+        0
+      ],
+      "size": [
+        340,
+        130
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            4
+          ]
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            5
+          ]
+        },
+        {
+          "name": "info",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Picture size",
+      "properties": {
+        "Node name for S&R": "SYH3ImageSize"
+      },
+      "widgets_values": [
+        "8 MP",
+        "1:1 square"
+      ],
+      "color": "#2e6b3f",
+      "bgcolor": "#1a2d21"
+    },
+    {
+      "id": 5,
+      "type": "MiniMaxH3ImageConditioning",
+      "pos": [
+        1300,
+        0
+      ],
+      "size": [
+        560,
+        360
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 2
+        },
+        {
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": 3
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": null
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 4
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            6,
+            7
+          ]
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "title": "MiniMax H3 Image Conditioning",
+      "properties": {
+        "Node name for S&R": "MiniMaxH3ImageConditioning"
+      },
+      "widgets_values": [
+        "Portrait of a young woman with freckles and windswept auburn hair, soft window light, shallow depth of field, photograph, sharp detail",
+        2912,
+        2912
+      ]
+    },
+    {
+      "id": 6,
+      "type": "ConditioningZeroOut",
+      "pos": [
+        1300,
+        420
+      ],
+      "size": [
+        320,
+        50
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 6
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "title": "Negative (empty)",
+      "properties": {
+        "Node name for S&R": "ConditioningZeroOut"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 7,
+      "type": "SYSampler",
+      "pos": [
+        1940,
+        0
+      ],
+      "size": [
+        380,
+        330
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 7
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "link": 8
+        },
+        {
+          "name": "negative",
+          "shape": 7,
+          "type": "CONDITIONING",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": [
+            10
+          ]
+        },
+        {
+          "name": "denoised",
+          "type": "LATENT",
+          "links": null
+        },
+        {
+          "name": "settings",
+          "type": "STRING",
+          "links": [
+            16
+          ]
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "title": "Sampler",
+      "properties": {
+        "Node name for S&R": "SYSampler"
+      },
+      "widgets_values": [
+        101,
+        "fixed",
+        false,
+        6,
+        4,
+        1.0,
+        "euler_ancestral",
+        "simple",
+        1.0
+      ],
+      "widgets_values_named": {
+        "seed": 101,
+        "control_after_generate": "fixed",
+        "fast_mode": false,
+        "steps": 6,
+        "fast_steps": 4,
+        "cfg": 1.0,
+        "sampler": "euler_ancestral",
+        "scheduler": "simple",
+        "denoise": 1.0
+      },
+      "color": "#2e6b3f",
+      "bgcolor": "#1a2d21"
+    },
+    {
+      "id": 8,
+      "type": "SYDecode",
+      "pos": [
+        2400,
+        0
+      ],
+      "size": [
+        300,
+        190
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 10
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            14
+          ]
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "info",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Decode",
+      "properties": {
+        "Node name for S&R": "SYDecode"
+      },
+      "widgets_values": [
+        "Picture or video",
+        "Auto (retry in tiles)",
+        512,
+        64
+      ],
+      "color": "#2e6b3f",
+      "bgcolor": "#1a2d21"
+    },
+    {
+      "id": 10,
+      "type": "SYBigRenderShrink",
+      "pos": [
+        2780,
+        0
+      ],
+      "size": [
+        320,
+        210
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            15
+          ]
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "info",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Shrink to 2 MP",
+      "properties": {
+        "Node name for S&R": "SYBigRenderShrink"
+      },
+      "widgets_values": [
+        "2 MP",
+        "clean",
+        2048,
+        0.3,
+        16
+      ],
+      "color": "#2e6b3f",
+      "bgcolor": "#1a2d21"
+    },
+    {
+      "id": 11,
+      "type": "SYSaveResult",
+      "pos": [
+        3140,
+        0
+      ],
+      "size": [
+        320,
+        260
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 15
+        },
+        {
+          "name": "video",
+          "shape": 7,
+          "type": "VIDEO",
+          "link": null
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "settings",
+          "shape": 7,
+          "type": "STRING",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "saved_path",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "New picture (2 MP)",
+      "properties": {
+        "Node name for S&R": "SYSaveResult"
+      },
+      "widgets_values": [
+        "H3 Big Render Shrink Free",
+        "pic",
+        true,
+        "png",
+        95
+      ],
+      "widgets_values_named": {
+        "project": "H3 Big Render Shrink Free",
+        "name": "pic",
+        "folder_by_date": true,
+        "image_format": "png",
+        "quality": 95
+      },
+      "color": "#2e6b3f",
+      "bgcolor": "#1a2d21"
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      7,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      2,
+      1,
+      5,
+      0,
+      "CLIP"
+    ],
+    [
+      3,
+      2,
+      2,
+      5,
+      1,
+      "VAE"
+    ],
+    [
+      4,
+      4,
+      0,
+      5,
+      3,
+      "INT"
+    ],
+    [
+      5,
+      4,
+      1,
+      5,
+      4,
+      "INT"
+    ],
+    [
+      6,
+      5,
+      0,
+      6,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      7,
+      5,
+      0,
+      7,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      8,
+      5,
+      1,
+      7,
+      2,
+      "LATENT"
+    ],
+    [
+      9,
+      6,
+      0,
+      7,
+      3,
+      "CONDITIONING"
+    ],
+    [
+      10,
+      7,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      11,
+      2,
+      2,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      14,
+      8,
+      0,
+      10,
+      0,
+      "IMAGE"
+    ],
+    [
+      15,
+      10,
+      0,
+      11,
+      0,
+      "IMAGE"
+    ],
+    [
+      16,
+      7,
+      2,
+      11,
+      3,
+      "STRING"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "1 Models",
+      "bounding": [
+        -20,
+        -70,
+        820,
+        760
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "2 Size",
+      "bounding": [
+        860,
+        -70,
+        380,
+        260
+      ],
+      "color": "#57a06b",
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "3 Prompt",
+      "bounding": [
+        1280,
+        -70,
+        600,
+        600
+      ],
+      "color": "#d4a537",
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "4 Render and save",
+      "bounding": [
+        1920,
+        -70,
+        1600,
+        420
+      ],
+      "color": "#b85c5c",
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.3,
+      "offset": [
+        200,
+        100
+      ]
+    },
+    "frontendVersion": "1.57.4"
+  },
+  "version": 0.4
+}
