@@ -385,7 +385,7 @@
     "Node name for S&R": "SYNote"
    },
    "widgets_values": [
-    "1. Load the picture you want bigger.\n2. Optional: describe it in the prompt (a short line helps the model keep the right detail).\n3. Run. The result is 4x wider and 4x taller (two rounds of 2x), saved in output/H3 Picture Upscale Pro.\nKeep light 1 stops bright or dark patches where tiles meet. Round 2 denoise 0.15 to 0.3: lower keeps more, higher adds more detail.",
+    "1. Load the picture you want bigger.\n2. Optional: describe it in the prompt (a short line helps the model keep the right detail).\n3. Run. The result is 4x wider and 4x taller (two rounds of 2x), saved in output/H3 Picture Upscale Pro.\nKeep light 1 stops bright or dark patches where tiles meet. Denoise round 1 0.1, round 2 0.08 (defaults), up to 0.3: lower keeps the face as it is, higher adds detail but can change skin and age.",
     "tip",
     false,
     false
@@ -747,7 +747,7 @@
    "widgets_values": [
     "simple",
     6,
-    0.45
+    0.1
    ],
    "title": "Steps and denoise",
    "color": "#6b5420",
@@ -1218,7 +1218,7 @@
    "widgets_values": [
     "simple",
     6,
-    0.2
+    0.08
    ],
    "title": "Round 2 steps and denoise",
    "color": "#6b5420",
