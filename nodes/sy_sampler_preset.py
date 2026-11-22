@@ -12,16 +12,19 @@ PAIRS = {  # MOSS rows: card test 2026-11-10, one prompt, seed 101, 1024x1024, s
              ("euler", "beta", 25, 4.0), ("sa_solver", "simple", 25, 4.0)],
     "MOSS + turbo LoRA": [("euler", "simple", 8, 1.0), ("euler", "normal", 8, 1.0), ("euler", "beta", 8, 1.0),
                           ("er_sde", "simple", 8, 1.0), ("lcm", "simple", 8, 1.0)],
+    "MOSS + 4-step LoRA": [("euler", "simple", 4, 1.0)],  # 4-step LoRA 30K (2026-11-20), card test 2026-11-23: same look as the author's own sigmas, 3 prompts
     "Krea 2 Turbo": [("euler", "simple", 8, 1.0)],  # from the official Krea 2 Turbo template
-    "H3 Image": [("euler_ancestral", "simple", 6, 1.0), ("euler", "simple", 6, 1.0)],  # News Desk timed runs 2026-11-12 used euler_ancestral; euler kept for saved workflows
+    "H3 Image": [("euler_ancestral", "simple", 6, 1.0), ("euler", "simple", 6, 1.0),  # News Desk timed runs 2026-11-12 used euler_ancestral; euler kept for saved workflows
+                 ("sa_solver", "simple", 4, 1.0)],  # fast: card test 2026-11-21, 4 s against 6 s for euler_ancestral 6, same look on 2 prompts
 }
 
 # family: one plain sentence shown in the info text.
 NOTES = {
     "MOSS": "Tested pairs for the normal MOSS model. er_sde gives the most skin detail.",
     "MOSS + turbo LoRA": "Few steps and cfg 1 because the turbo LoRA does the speed-up. er_sde or lcm with simple kept words cleanest in the 2026-11-20 test.",
+    "MOSS + 4-step LoRA": "4 steps and cfg 1 with the MOSS 4-step LoRA (30K) at strength 1.0. Kept skin, sign words and dark scenes close to the full 25 steps in the 2026-11-23 test, about 5 times quicker.",
     "Krea 2 Turbo": "Few steps and cfg 1, as in the official Turbo example.",
-    "H3 Image": "MiniMax H3 Image: 6 steps, cfg 1, tested at 4 MP and 16 MP. Needs ComfyUI 0.45 or newer.",
+    "H3 Image": "MiniMax H3 Image: 6 steps, cfg 1, tested at 4 MP and 16 MP. sa_solver + simple is the fast pair: 4 steps, about a third quicker. Needs ComfyUI 0.45 or newer.",
 }
 
 SEP = ": "

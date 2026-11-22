@@ -1,8 +1,8 @@
 {
   "id": "sy-sy---h3-big-render-shrink-free-v1",
   "revision": 0,
-  "last_node_id": 11,
-  "last_link_id": 16,
+  "last_node_id": 13,
+  "last_link_id": 17,
   "nodes": [
     {
       "id": 1,
@@ -224,6 +224,14 @@
           "shape": 7,
           "type": "VAE",
           "link": 3
+        },
+        {
+          "label": "image_0",
+          "localized_name": "images.image_0",
+          "name": "images.image_0",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 17
         },
         {
           "name": "prompt",
@@ -589,6 +597,71 @@
       },
       "color": "#2e6b3f",
       "bgcolor": "#1a2d21"
+    },
+    {
+      "id": 12,
+      "type": "EmptyImage",
+      "pos": [
+        880,
+        300
+      ],
+      "size": [
+        320,
+        170
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "title": "Empty reference picture (calmer skin)",
+      "properties": {
+        "Node name for S&R": "EmptyImage"
+      },
+      "widgets_values": [
+        512,
+        512,
+        1,
+        0
+      ]
+    },
+    {
+      "id": 13,
+      "type": "SYGroupSwitch",
+      "pos": [
+        1000,
+        -430
+      ],
+      "size": [
+        340,
+        230
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Switches",
+      "properties": {
+        "Node name for S&R": "SYGroupSwitch"
+      },
+      "widgets_values": [
+        "optional",
+        "bypass",
+        "position",
+        false,
+        ""
+      ],
+      "color": "#6b5420",
+      "bgcolor": "#3d3012"
     }
   ],
   "links": [
@@ -703,6 +776,14 @@
       11,
       3,
       "STRING"
+    ],
+    [
+      17,
+      12,
+      0,
+      5,
+      2,
+      "IMAGE"
     ]
   ],
   "groups": [
@@ -752,6 +833,18 @@
         420
       ],
       "color": "#b85c5c",
+      "flags": {}
+    },
+    {
+      "id": 5,
+      "title": "Optional: calmer skin (empty reference picture)",
+      "bounding": [
+        860,
+        230,
+        380,
+        260
+      ],
+      "color": "#8b6ad0",
       "flags": {}
     }
   ],

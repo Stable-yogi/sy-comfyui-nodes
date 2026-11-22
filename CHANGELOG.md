@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.27.0
+- Sampler Preset SY: new family MOSS + 4-step LoRA, euler + simple at 4 steps, cfg 1. In our test it kept skin, sign words and dark scenes close to the full 25 steps, about 5 times quicker.
+- Sampler Preset SY: new fast pair for H3 Image, sa_solver + simple at 4 steps. About a third quicker than euler_ancestral at 6 steps, with the same look in our test.
+- SY - H3 Image Maker v1 and SY - H3 Big Render Shrink Free v1: new switch "Optional: calmer skin (empty reference picture)", off by default. Turn it on in the Switches box to give the model a plain black picture as a reference. In our test this calmed harsh grain on skin by about a third. It adds a few seconds and can change the pose and clothes a little.
+
 ## 1.26.1
 - Tested on ComfyUI v0.46.2: all 433 nodes pass the four master test workflows, and every workflow loads. No node changes.
 
