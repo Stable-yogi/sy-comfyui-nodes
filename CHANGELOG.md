@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.27.1
+- Tested on ComfyUI v0.46.3: all nodes pass the four master test workflows, and every workflow loads. No node changes.
+
 ## 1.27.0
 - Sampler Preset SY: new family MOSS + 4-step LoRA, euler + simple at 4 steps, cfg 1. In our test it kept skin, sign words and dark scenes close to the full 25 steps, about 5 times quicker.
 - Sampler Preset SY: new fast pair for H3 Image, sa_solver + simple at 4 steps. About a third quicker than euler_ancestral at 6 steps, with the same look in our test.
