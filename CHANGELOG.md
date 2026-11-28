@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.27.2
+- Tested on ComfyUI v0.46.4: all nodes pass the four master test workflows, and every workflow loads. No node changes.
+
 ## 1.27.1
 - Tested on ComfyUI v0.46.3: all nodes pass the four master test workflows, and every workflow loads. No node changes.
 
